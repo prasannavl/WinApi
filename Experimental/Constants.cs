@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+
 // ReSharper disable InconsistentNaming
 
 namespace WinApi.Experimental
@@ -27,7 +24,7 @@ namespace WinApi.Experimental
         ACCENT_ENABLE_GRADIENT = 1,
         ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
         ACCENT_ENABLE_BLURBEHIND = 3,
-        ACCENT_INVALID_STATE = 4,
+        ACCENT_INVALID_STATE = 4
     }
 
     [Flags]
@@ -37,7 +34,7 @@ namespace WinApi.Experimental
         DrawTopBorder = 0x40,
         DrawRightBorder = 0x80,
         DrawBottomBorder = 0x100,
-        DrawAllBorders = (DrawLeftBorder | DrawTopBorder | DrawRightBorder | DrawBottomBorder)
+        DrawAllBorders = DrawLeftBorder | DrawTopBorder | DrawRightBorder | DrawBottomBorder
     }
 
     [StructLayout(LayoutKind.Sequential)]

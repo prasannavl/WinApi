@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace WinApi
 {
@@ -101,11 +98,12 @@ namespace WinApi
         [DllImport("user32.dll")]
         internal static extern bool WinHelp(IntPtr hWndMain, string lpszHelp, uint uCommand, uint dwData);
 
-        // Definite review needed before making it public:
+//            int cbSize);
+//            [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs,
+//        internal static extern uint SendInput(uint nInputs,
 
 //        [DllImport("user32.dll")]
-//        internal static extern uint SendInput(uint nInputs,
-//            [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs,
-//            int cbSize);
+
+        // Definite review needed before making it public:
     }
 }

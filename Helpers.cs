@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinApi
 {
@@ -10,22 +6,22 @@ namespace WinApi
     {
         public static IntPtr GetWindowLongPtr(IntPtr hwnd, WindowLongFlag nIndex)
         {
-            return NativeMethods.GetWindowLongPtr(hwnd, (int)nIndex);
+            return NativeMethods.GetWindowLongPtr(hwnd, (int) nIndex);
         }
 
         public static IntPtr SetWindowLongPtr(IntPtr hwnd, WindowLongFlag nIndex, IntPtr dwNewLong)
         {
-            return NativeMethods.SetWindowLongPtr(hwnd, (int)nIndex, dwNewLong);
+            return NativeMethods.SetWindowLongPtr(hwnd, (int) nIndex, dwNewLong);
         }
 
         public static IntPtr LoadIcon(IntPtr hInstance, SystemIcon icon)
         {
-            return NativeMethods.LoadIcon(hInstance, new IntPtr((int)icon));
+            return NativeMethods.LoadIcon(hInstance, new IntPtr((int) icon));
         }
 
         public static IntPtr LoadCursor(IntPtr hInstance, SystemCursor cursor)
         {
-            return NativeMethods.LoadCursor(hInstance, new IntPtr((int)cursor));
+            return NativeMethods.LoadCursor(hInstance, new IntPtr((int) cursor));
         }
 
         public static IntPtr GetStockObject(StockObject fnObject)
@@ -36,7 +32,7 @@ namespace WinApi
         public static int DrawText(IntPtr hdc, string lpString, int nCount, ref Rectangle lpRect,
             DrawTextFormat uFormat)
         {
-            return NativeMethods.DrawText(hdc, lpString, nCount, ref lpRect, (uint)uFormat);
+            return NativeMethods.DrawText(hdc, lpString, nCount, ref lpRect, (uint) uFormat);
         }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinApi
 {
@@ -53,7 +49,7 @@ namespace WinApi
         COLORDEVICE = 32,
         NUP = 33,
         MEDIATYPENAMES = 34,
-        MEDIATYPES = 35,
+        MEDIATYPES = 35
     }
 
     public enum WM : uint

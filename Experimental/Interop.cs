@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 
 // ReSharper disable InconsistentNaming
+
 namespace WinApi.Experimental
 {
     [SuppressUnmanagedCodeSecurity]
