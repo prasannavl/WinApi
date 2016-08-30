@@ -1314,7 +1314,7 @@ namespace WinApi
         HWND_TOPMOST = -1
     }
 
-    public enum WindowRegion
+    public enum WindowRegionType
     {
         /// <summary>
         ///     The specified window does not have a region, or an error occurred while attempting to return the region.
