@@ -4,12 +4,12 @@ namespace WinApi
 {
     public static partial class Helpers
     {
-        public static IntPtr GetWindowLongPtr(IntPtr hwnd, WindowLongFlag nIndex)
+        public static IntPtr GetWindowLongPtr(IntPtr hwnd, WindowLongFlags nIndex)
         {
             return NativeMethods.GetWindowLongPtr(hwnd, (int) nIndex);
         }
 
-        public static IntPtr SetWindowLongPtr(IntPtr hwnd, WindowLongFlag nIndex, IntPtr dwNewLong)
+        public static IntPtr SetWindowLongPtr(IntPtr hwnd, WindowLongFlags nIndex, IntPtr dwNewLong)
         {
             return NativeMethods.SetWindowLongPtr(hwnd, (int) nIndex, dwNewLong);
         }
@@ -30,9 +30,15 @@ namespace WinApi
         }
 
         public static int DrawText(IntPtr hdc, string lpString, int nCount, ref Rectangle lpRect,
-            DrawTextFormat uFormat)
+            DrawTextFormatFlags uFormat)
         {
             return NativeMethods.DrawText(hdc, lpString, nCount, ref lpRect, (uint) uFormat);
+        }
+
+        public static bool SetWindowPos(IntPtr hwnd, HwndZOrder order, int x, int y, int cx, int cy,
+            SetWindowPosFlags flags)
+        {
+            return NativeMethods.SetWindowPos(hwnd, new IntPtr((int) order), x, y, cx, cy, flags);
         }
     }
 }

@@ -5,15 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace WinApi.Experimental
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct WindowCompositionAttributeData
-    {
-        public WindowCompositionAttribute Attribute;
-        public IntPtr Data;
-        public int DataSize;
-    }
-
-    public enum WindowCompositionAttribute
+    public enum WindowCompositionAttributeType
     {
         WCA_ACCENT_POLICY = 19
     }
@@ -30,19 +22,10 @@ namespace WinApi.Experimental
     [Flags]
     public enum AccentFlags
     {
-        DrawLeftBorder = 0x20,
-        DrawTopBorder = 0x40,
-        DrawRightBorder = 0x80,
-        DrawBottomBorder = 0x100,
-        DrawAllBorders = DrawLeftBorder | DrawTopBorder | DrawRightBorder | DrawBottomBorder
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct AccentPolicy
-    {
-        public AccentState AccentState;
-        public AccentFlags AccentFlags;
-        public int GradientColor;
-        public int AnimationId;
+        AF_LEFTBORDER = 0x20,
+        AF_TOPBORDER = 0x40,
+        AF_RIGHTBORDER = 0x80,
+        AF_BOTTOMBORDER = 0x100,
+        AF_ALLBORDERS = AF_LEFTBORDER | AF_TOPBORDER | AF_RIGHTBORDER | AF_BOTTOMBORDER
     }
 }

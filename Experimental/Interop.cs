@@ -6,6 +6,23 @@ using System.Security;
 
 namespace WinApi.Experimental
 {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct WindowCompositionAttributeData
+    {
+        public WindowCompositionAttributeType Attribute;
+        public IntPtr Data;
+        public int DataSize;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AccentPolicy
+    {
+        public AccentState AccentState;
+        public AccentFlags AccentFlags;
+        public int GradientColor;
+        public int AnimationId;
+    }
+
     [SuppressUnmanagedCodeSecurity]
     public static class NativeMethods
     {

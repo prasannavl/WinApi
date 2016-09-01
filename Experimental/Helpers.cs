@@ -16,7 +16,7 @@ namespace WinApi.Experimental
                 Marshal.StructureToPtr(accent, accentPtr, false);
                 var data = new WindowCompositionAttributeData
                 {
-                    Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
+                    Attribute = WindowCompositionAttributeType.WCA_ACCENT_POLICY,
                     DataSize = accentStructSize,
                     Data = accentPtr
                 };
