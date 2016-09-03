@@ -14,13 +14,6 @@ namespace WinApi
     [SuppressUnmanagedCodeSecurity]
     public static partial class NativeMethods
     {
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr CreatePolygonRgn(Point[] lppt, int cPoints,
-            int fnPolyFillMode);
-
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr CreatePolyPolygonRgn(Point[] lppt, int[] lpPolyCounts,
-            int nCount, int fnPolyFillMode);
 
         //        [DllImport("user32.dll")]
 

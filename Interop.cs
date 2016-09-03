@@ -12,8 +12,8 @@ namespace WinApi
     {
         public IntPtr WindowHandle;
         public uint Value;
-        public UIntPtr WParam;
-        public UIntPtr LParam;
+        public IntPtr WParam;
+        public IntPtr LParam;
         public uint Time;
         public Point Point;
     }
@@ -34,19 +34,40 @@ namespace WinApi
     public struct Rectangle
     {
         public int Left, Top, Right, Bottom;
+
+        public int Width
+        {
+            get { return Right - Left; }
+            set { Right = Left + value; }
+        }
+
+        public int Height
+        {
+            get { return Bottom - Top; }
+            set { Bottom = Top + value; }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct PaintStruct
+    public unsafe struct PaintStruct
     {
         public IntPtr HandleDC;
-        public bool ShouldEraseBackground;
+        public int EraseBackgroundValue;
         public Rectangle PaintRectangle;
-        public bool ReservedInternalRestore;
-        public bool ReservedInternalIncUpdate;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] ReservedInternalRgb;
+        public int ReservedInternalRestore;
+        public int ReservedInternalIncUpdate;
+        public fixed byte ReservedInternalRgb[32];
+
+        public bool ShouldEraseBackground
+        {
+            get { return EraseBackgroundValue > 0; }
+            set { EraseBackgroundValue = value ? 1 : 0; }
+        }
     }
 
+    /// <summary>
+    /// Note: Marshalled
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowClass
     {
@@ -58,14 +79,17 @@ namespace WinApi
         public IntPtr IconHandle;
         public IntPtr CursorHandle;
         public IntPtr BackgroundBrushHandle;
-        [MarshalAs(UnmanagedType.LPTStr)] public string MenuName;
-        [MarshalAs(UnmanagedType.LPTStr)] public string ClassName;
+        public string MenuName;
+        public string ClassName;
     }
 
+    /// <summary>
+    /// Note: Marshalled
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowClassEx
     {
-        public int Size;
+        public uint Size;
         public WindowClassStyles Styles;
         [MarshalAs(UnmanagedType.FunctionPtr)] public WindowProc WindowProc;
         public int ClassExtraBytes;
@@ -80,7 +104,7 @@ namespace WinApi
 
         public static void Initialize(ref WindowClassEx obj)
         {
-            obj.Size = Marshal.SizeOf<WindowClassEx>();
+            obj.Size = (uint)Marshal.SizeOf<WindowClassEx>();
         }
     }
 
@@ -189,7 +213,7 @@ namespace WinApi
         ///     Interface.
         /// </remarks>
         [DllImport("user32.dll")]
-        public static extern bool TranslateMessage([In] ref Message lpMsg);
+        public static extern int TranslateMessage([In] ref Message lpMsg);
 
         /// <summary>
         ///     Retrieves a message from the calling thread's message queue. The function dispatches incoming sent messages until a
@@ -339,10 +363,10 @@ namespace WinApi
         internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hwnd, ShowWindowCommands nCmdShow);
+        public static extern int ShowWindow(IntPtr hwnd, ShowWindowCommands nCmdShow);
 
         [DllImport("user32.dll")]
-        public static extern bool UpdateWindow(IntPtr hwnd);
+        public static extern int UpdateWindow(IntPtr hwnd);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr CreateWindowEx(
@@ -391,13 +415,13 @@ namespace WinApi
         public static extern ushort RegisterClassEx([In] ref WindowClassEx lpwcx);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
+        public static extern int UnregisterClass(string lpClassName, IntPtr hInstance);
 
         [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hwnd, out Rectangle lpRect);
+        public static extern int GetWindowRect(IntPtr hwnd, out Rectangle lpRect);
 
         [DllImport("user32.dll")]
-        public static extern bool GetClientRect(IntPtr hwnd, out Rectangle lpRect);
+        public static extern int GetClientRect(IntPtr hwnd, out Rectangle lpRect);
 
         [DllImport("user32.dll")]
         public static extern void PostQuitMessage(int nExitCode);
@@ -425,16 +449,22 @@ namespace WinApi
         public static extern IntPtr BeginPaint(IntPtr hwnd, out PaintStruct lpPaint);
 
         [DllImport("user32.dll")]
-        public static extern bool EndPaint(IntPtr hwnd, [In] ref PaintStruct lpPaint);
+        public static extern void EndPaint(IntPtr hwnd, [In] ref PaintStruct lpPaint);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int DrawText(IntPtr hdc, string lpString, int nCount, ref Rectangle lpRect, uint uFormat);
+        public static extern int DrawText(IntPtr hdc, string lpString, int nCount, [In] ref Rectangle lpRect, uint uFormat);
 
         [DllImport("kernel32.dll")]
         public static extern uint GetLastError();
 
         [DllImport("kernel32.dll")]
-        public static extern bool CloseHandle(IntPtr hObject);
+        public static extern int CloseHandle(IntPtr hObject);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetModuleHandle(IntPtr modulePtr);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [DllImport("gdi32.dll")]
         public static extern IntPtr GetStockObject(int fnObject);
@@ -454,7 +484,7 @@ namespace WinApi
 
 
         [DllImport("dwmapi.dll")]
-        public static extern bool DwmDefWindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam,
+        public static extern int DwmDefWindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam,
             out IntPtr lResult);
 
         [DllImport("uxtheme.dll")]
@@ -465,14 +495,13 @@ namespace WinApi
             int size);
 
         [DllImport("user32.dll")]
-        public static extern bool ValidateRect(IntPtr hWnd, ref Rectangle lpRect);
+        public static extern int ValidateRect(IntPtr hWnd, [In] ref Rectangle lpRect);
 
         [DllImport("user32.dll")]
-        public static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
+        public static extern int InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
 
         [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool PeekMessage(out Message lpMsg, IntPtr hWnd, uint wMsgFilterMin,
+        public static extern int PeekMessage(out Message lpMsg, IntPtr hWnd, uint wMsgFilterMin,
             uint wMsgFilterMax, uint wRemoveMsg);
 
         [DllImport("user32.dll")]
@@ -485,40 +514,39 @@ namespace WinApi
         public static extern IntPtr WindowFromDC(IntPtr hdc);
 
         [DllImport("user32.dll")]
-        public static extern bool ReleaseDC(IntPtr hwnd, IntPtr hdc);
+        public static extern int ReleaseDC(IntPtr hwnd, IntPtr hdc);
 
         [DllImport("user32.dll")]
-        public static extern bool InvertRect(IntPtr hdc, [In] ref Rectangle lprc);
+        public static extern int InvertRect(IntPtr hdc, [In] ref Rectangle lprc);
 
         [DllImport("user32.dll")]
-        public static extern bool SetRectEmpty(out Rectangle lprc);
+        public static extern int SetRectEmpty(out Rectangle lprc);
 
         [DllImport("user32.dll")]
-        public static extern bool CopyRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc);
+        public static extern int CopyRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc);
 
         [DllImport("user32.dll")]
-        public static extern bool IntersectRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc1,
+        public static extern int IntersectRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc1,
             [In] ref Rectangle lprcSrc2);
 
         [DllImport("user32.dll")]
-        public static extern bool UnionRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc1,
+        public static extern int UnionRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc1,
             [In] ref Rectangle lprcSrc2);
 
         [DllImport("user32.dll")]
-        public static extern bool IsRectEmpty([In] ref Rectangle lprc);
+        public static extern int IsRectEmpty([In] ref Rectangle lprc);
 
         [DllImport("user32.dll")]
-        public static extern bool PtInRect([In] ref Rectangle lprc, Point pt);
+        public static extern int PtInRect([In] ref Rectangle lprc, Point pt);
 
         [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+        public static extern int EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
 
         [DllImport("user32.dll")]
-        public static extern bool OffsetRect(ref Rectangle lprc, int dx, int dy);
+        public static extern int OffsetRect([In, Out] ref Rectangle lprc, int dx, int dy);
 
         [DllImport("user32.dll")]
-        public static extern bool InflateRect(ref Rectangle lprc, int dx, int dy);
+        public static extern int InflateRect([In, Out] ref Rectangle lprc, int dx, int dy);
 
         [DllImport("user32.dll")]
         public static extern int FrameRect(IntPtr hdc, [In] ref Rectangle lprc, IntPtr hbr);
@@ -534,14 +562,13 @@ namespace WinApi
             string lpszWindow);
 
         [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetForegroundWindow(IntPtr hwnd);
+        public static extern int SetForegroundWindow(IntPtr hwnd);
 
         [DllImport("user32.dll")]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
         [DllImport("user32.dll")]
-        public static extern bool SetWindowPos(IntPtr hwnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
+        public static extern int SetWindowPos(IntPtr hwnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
             SetWindowPosFlags flags);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -554,21 +581,20 @@ namespace WinApi
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
 
         [DllImport("user32.dll")]
-        internal static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
+        internal static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
-        [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("user32.dll")]
-        public static extern bool GetWindowInfo(IntPtr hwnd, ref WindowInfo pwi);
+        public static extern int GetWindowInfo(IntPtr hwnd, [In, Out] ref WindowInfo pwi);
 
         [DllImport("user32.dll")]
         public static extern WindowRegionType GetWindowRgn(IntPtr hWnd, IntPtr hRgn);
 
 
         [DllImport("user32.dll")]
-        public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+        public static extern int SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
         [DllImport("user32.dll")]
-        internal static extern bool WinHelp(IntPtr hWndMain, string lpszHelp, uint uCommand, uint dwData);
+        internal static extern int WinHelp(IntPtr hWndMain, string lpszHelp, uint uCommand, uint dwData);
 
         [DllImport("user32.dll")]
         public static extern int SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw);
@@ -578,11 +604,10 @@ namespace WinApi
         public static extern IntPtr CreateRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect);
 
         [DllImport("gdi32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DeleteObject(IntPtr hObject);
+        public static extern int DeleteObject(IntPtr hObject);
 
         [DllImport("gdi32.dll")]
-        public static extern bool DeleteDC(IntPtr hdc);
+        public static extern int DeleteDC(IntPtr hdc);
 
         [DllImport("gdi32.dll")]
         public static extern IntPtr CreateRectRgnIndirect([In] ref Rectangle lprc);
@@ -603,10 +628,10 @@ namespace WinApi
             IntPtr hrgnSrc2, int fnCombineMode);
 
         [DllImport("gdi32.dll")]
-        public static extern bool OffsetViewportOrgEx(IntPtr hdc, int nXOffset, int nYOffset, out Point lpPoint);
+        public static extern int OffsetViewportOrgEx(IntPtr hdc, int nXOffset, int nYOffset, out Point lpPoint);
 
         [DllImport("gdi32.dll")]
-        public static extern bool SetViewportOrgEx(IntPtr hdc, int x, int y, out Point lpPoint);
+        public static extern int SetViewportOrgEx(IntPtr hdc, int x, int y, out Point lpPoint);
 
         [DllImport("gdi32.dll")]
         public static extern int SetMapMode(IntPtr hdc, int fnMapMode);
@@ -618,69 +643,77 @@ namespace WinApi
         public static extern int ExtSelectClipRgn(IntPtr hdc, IntPtr hrgn, int fnMode);
 
         [DllImport("user32.dll")]
-        public static extern bool InvalidateRgn(IntPtr hWnd, IntPtr hRgn, bool bErase);
+        public static extern int InvalidateRgn(IntPtr hWnd, IntPtr hRgn, bool bErase);
 
         [DllImport("user32.dll")]
-        public static extern bool ValidateRgn(IntPtr hWnd, IntPtr hRgn);
+        public static extern int ValidateRgn(IntPtr hWnd, IntPtr hRgn);
 
         [DllImport("gdi32.dll")]
-        public static extern bool FillRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr);
+        public static extern int FillRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr);
 
         [DllImport("gdi32.dll")]
         public static extern IntPtr CreateSolidBrush(uint crColor);
 
         [DllImport("gdi32.dll")]
-        public static extern bool FrameRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr, int nWidth,
+        public static extern int FrameRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr, int nWidth,
             int nHeight);
 
         [DllImport("gdi32.dll")]
-        public static extern bool PaintRgn(IntPtr hdc, IntPtr hrgn);
+        public static extern int PaintRgn(IntPtr hdc, IntPtr hrgn);
 
         [DllImport("gdi32.dll")]
-        public static extern bool InvertRgn(IntPtr hdc, IntPtr hrgn);
+        public static extern int InvertRgn(IntPtr hdc, IntPtr hrgn);
 
         [DllImport("gdi32.dll")]
-        public static extern bool LineTo(IntPtr hdc, int nXEnd, int nYEnd);
+        public static extern int LineTo(IntPtr hdc, int nXEnd, int nYEnd);
 
         [DllImport("gdi32.dll")]
-        public static extern bool MoveToEx(IntPtr hdc, int x, int y, IntPtr lpPoint);
+        public static extern int MoveToEx(IntPtr hdc, int x, int y, IntPtr lpPoint);
 
         [DllImport("gdi32.dll")]
-        public static extern bool RoundRect(IntPtr hdc, int nLeftRect, int nTopRect,
+        public static extern int RoundRect(IntPtr hdc, int nLeftRect, int nTopRect,
             int nRightRect, int nBottomRect, int nWidth, int nHeight);
 
         [DllImport("gdi32.dll")]
         public static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
-        public static extern bool TextOut(IntPtr hdc, int nXStart, int nYStart,
+        public static extern int TextOut(IntPtr hdc, int nXStart, int nYStart,
             string lpString, int cbString);
 
         [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetWindowPlacement(IntPtr hWnd,
+        public static extern int SetWindowPlacement(IntPtr hWnd,
             [In] ref WindowPlacement lpwndpl);
 
         [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowPlacement(IntPtr hWnd, out WindowPlacement lpwndpl);
+        public static extern int GetWindowPlacement(IntPtr hWnd, out WindowPlacement lpwndpl);
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetDCEx(IntPtr hWnd, IntPtr hrgnClip, DeviceContextFlags flags);
 
         [DllImport("gdi32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight,
+        public static extern int BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight,
             IntPtr hdcSrc,
             int nXSrc, int nYSrc, BitBltFlags dwRop);
 
         [DllImport("gdi32.dll")]
-        public static extern bool StretchBlt(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
+        public static extern int StretchBlt(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
             int nWidthDest, int nHeightDest,
             IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc,
             BitBltFlags dwRop);
 
         [DllImport("gdi32.dll")]
         public static extern IntPtr PathToRegion(IntPtr hdc);
+
+        [DllImport("gdi32.dll")]
+        public static extern IntPtr CreatePolygonRgn(
+            Point[] lppt,
+            int cPoints,
+            int fnPolyFillMode);
+
+        [DllImport("gdi32.dll")]
+        public static extern IntPtr CreatePolyPolygonRgn(Point[] lppt,
+            int[] lpPolyCounts,
+            int nCount, int fnPolyFillMode);
     }
 }

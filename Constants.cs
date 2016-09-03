@@ -8,7 +8,7 @@ namespace WinApi
     #region Multi-flag constants
 
     [Flags]
-    public enum WindowStyles
+    public enum WindowStyles : uint
     {
         /// <summary>
         ///     The window has a thin-line border.
@@ -113,7 +113,7 @@ namespace WinApi
         /// <summary>
         ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
         /// </summary>
-        WS_POPUP = unchecked((int) 0x80000000),
+        WS_POPUP = 0x80000000,
 
         /// <summary>
         ///     The window is a pop-up window. The WS_CAPTION and WS_POPUPWINDOW styles must be combined to make the window menu
@@ -169,7 +169,7 @@ namespace WinApi
     }
 
     [Flags]
-    public enum WindowExStyles
+    public enum WindowExStyles : uint
     {
         /// <summary>
         ///     The window accepts drag-drop files.
@@ -341,7 +341,7 @@ namespace WinApi
     }
 
     [Flags]
-    public enum WindowClassStyles
+    public enum WindowClassStyles : uint
     {
         /// <summary>
         ///     Aligns the window's client area on a byte boundary (in the x direction). This style affects the width of the window
@@ -423,7 +423,7 @@ namespace WinApi
     }
 
     [Flags]
-    public enum AnimateWindowFlags
+    public enum AnimateWindowFlags : uint
     {
         /// <summary>
         ///     Activates the window. Do not use this value with AW_HIDE.
@@ -477,7 +477,7 @@ namespace WinApi
     }
 
     [Flags]
-    public enum DrawTextFormatFlags
+    public enum DrawTextFormatFlags : uint
     {
         /// <summary>
         ///     Justifies the text to the bottom of the rectangle. This value is used only with the DT_SINGLELINE value.
@@ -1042,7 +1042,7 @@ namespace WinApi
     }
 
     [Flags]
-    public enum BitBltFlags
+    public enum BitBltFlags : uint
     {
         /// <summary>dest = source</summary>
         SRCCOPY = 0x00CC0020,
@@ -1098,7 +1098,7 @@ namespace WinApi
         /// <summary>
         ///     Prevents the bitmap from being mirrored.
         /// </summary>
-        NOMIRRORBITMAP = unchecked((int) 0x80000000)
+        NOMIRRORBITMAP = 0x80000000
     }
 
     [Flags]
