@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using WinApi.User32;
 
 namespace WinApi.User32.Experimental
 {

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 // ReSharper disable InconsistentNaming
 
 namespace WinApi.User32
 {
+
     #region Multi-flag constants
 
     [Flags]
@@ -653,7 +651,7 @@ namespace WinApi.User32
         /// <summary>
         ///     Use default values
         /// </summary>
-        CW_USEDEFAULT = unchecked((int)0x80000000)
+        CW_USEDEFAULT = unchecked((int) 0x80000000)
     }
 
     [Flags]

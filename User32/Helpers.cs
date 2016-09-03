@@ -1,5 +1,4 @@
 ﻿using System;
-using WinApi.User32;
 
 namespace WinApi.User32
 {

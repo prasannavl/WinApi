@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using WinApi.Core;
 
 namespace WinApi.User32
 {
     public delegate IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
+
     public delegate int EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+
     public delegate IntPtr GetMsgProc(int code, IntPtr wParam, IntPtr lParam);
 
     [StructLayout(LayoutKind.Sequential)]
@@ -49,7 +47,7 @@ namespace WinApi.User32
         public Rectangle PaintRectangle;
         public int ReservedInternalRestore;
         public int ReservedInternalIncUpdate;
-        public fixed byte ReservedInternalRgb[32];
+        public fixed byte ReservedInternalRgb [32];
 
         public bool ShouldEraseBackground
         {
@@ -59,14 +57,13 @@ namespace WinApi.User32
     }
 
     /// <summary>
-    /// Note: Marshalled
+    ///     Note: Marshalled
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowClass
     {
         public WindowClassStyles Styles;
-        [MarshalAs(UnmanagedType.FunctionPtr)]
-        public WindowProc WindowProc;
+        [MarshalAs(UnmanagedType.FunctionPtr)] public WindowProc WindowProc;
         public int ClassExtraBytes;
         public int WindowExtraBytes;
         public IntPtr InstanceHandle;
@@ -78,15 +75,14 @@ namespace WinApi.User32
     }
 
     /// <summary>
-    /// Note: Marshalled
+    ///     Note: Marshalled
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowClassEx
     {
         public uint Size;
         public WindowClassStyles Styles;
-        [MarshalAs(UnmanagedType.FunctionPtr)]
-        public WindowProc WindowProc;
+        [MarshalAs(UnmanagedType.FunctionPtr)] public WindowProc WindowProc;
         public int ClassExtraBytes;
         public int WindowExtraBytes;
         public IntPtr InstanceHandle;
@@ -99,7 +95,7 @@ namespace WinApi.User32
 
         public static void Initialize(ref WindowClassEx obj)
         {
-            obj.Size = (uint)Marshal.SizeOf<WindowClassEx>();
+            obj.Size = (uint) Marshal.SizeOf<WindowClassEx>();
         }
     }
 
@@ -119,7 +115,7 @@ namespace WinApi.User32
 
         public static void Initialize(ref WindowInfo obj)
         {
-            obj.Size = (uint)Marshal.SizeOf<WindowInfo>();
+            obj.Size = (uint) Marshal.SizeOf<WindowInfo>();
         }
     }
 

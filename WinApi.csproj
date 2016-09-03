@@ -43,16 +43,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Experimental\Constants.cs" />
-    <Compile Include="Helpers.cs" />
-    <Compile Include="Interop.cs" />
-    <Compile Include="Experimental\Interop.cs" />
-    <Compile Include="Experimental\Helpers.cs" />
+    <Compile Include="Core\Types.cs" />
+    <Compile Include="DwmApi\Methods.cs" />
+    <Compile Include="DwmApi\Types.cs" />
+    <Compile Include="Gdi32\Types.cs" />
+    <Compile Include="Gdi32\Methods.cs" />
+    <Compile Include="Gdi32\Helpers.cs" />
+    <Compile Include="User32\Constants.cs" />
+    <Compile Include="User32\Experimental\Methods.cs" />
+    <Compile Include="User32\Types.cs" />
+    <Compile Include="User32\Helpers.cs" />
+    <Compile Include="User32\Experimental\Types.cs" />
+    <Compile Include="User32\Experimental\Helpers.cs" />
+    <Compile Include="Kernel32\Methods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Staging\Constants.cs" />
-    <Compile Include="Staging\Helpers.cs" />
-    <Compile Include="Staging\Interop.cs" />
+    <Compile Include="User32\Methods.cs" />
+    <Compile Include="UxTheme\Types.cs" />
+    <Compile Include="UxTheme\Methods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -61,6 +68,7 @@
   <ItemGroup>
     <Content Include="LICENSE.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

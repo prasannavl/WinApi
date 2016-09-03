@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Security;
-using WinApi.User32;
+
 // ReSharper disable InconsistentNaming
 
 namespace WinApi.User32.Experimental
 {
+
     #region Constants
 
     public enum WindowCompositionAttributeType
