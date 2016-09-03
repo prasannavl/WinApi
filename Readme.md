@@ -118,16 +118,15 @@ namespace MySuperLowLevelProgram {
         [STAThread]
         static int Main(string[] args)
         {
-            var process = System.Diagnostics.Process.GetCurrentProcess();
-            var instanceHandle = process.Handle;
+            var instanceHandle = NativeMethods.GetModuleHandle(IntPtr.Zero);
 
             var wc = new WindowClassEx()
             {
-                Size = Marshal.SizeOf<WindowClassEx>(),
+                Size = (uint)Marshal.SizeOf<WindowClassEx>(),
                 ClassName = "MainWindow",
                 CursorHandle  = Helpers.LoadCursor(IntPtr.Zero, SystemCursor.IDC_ARROW),
                 IconHandle = Helpers.LoadIcon(IntPtr.Zero, SystemIcon.IDI_APPLICATION),
-                Style = WindowClassStyle.CS_HREDRAW | WindowClassStyle.CS_VREDRAW,
+                Style = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
                 BackgroundBrushHandle = new IntPtr((int)StockObject.WHITE_BRUSH),
                 WindowProc = WindowProc,
                 InstanceHandle = instanceHandle,
@@ -140,10 +139,10 @@ namespace MySuperLowLevelProgram {
                 return -1;
             }
 
-            var hwnd = NativeMethods.CreateWindowEx(WindowExStyle.WS_EX_APPWINDOW, 
-				wc.ClassName, "Hello", WindowStyle.WS_OVERLAPPEDWINDOW,
-                (int) CreateWindowFlag.CW_USEDEFAULT, (int) CreateWindowFlag.CW_USEDEFAULT,
-                (int) CreateWindowFlag.CW_USEDEFAULT, (int) CreateWindowFlag.CW_USEDEFAULT,
+            var hwnd = NativeMethods.CreateWindowEx(WindowExStyles.WS_EX_APPWINDOW, 
+				wc.ClassName, "Hello", WindowStyles.WS_OVERLAPPEDWINDOW,
+                (int) CreateWindowFlags.CW_USEDEFAULT, (int) CreateWindowFlags.CW_USEDEFAULT,
+                (int) CreateWindowFlags.CW_USEDEFAULT, (int) CreateWindowFlags.CW_USEDEFAULT,
                 IntPtr.Zero, IntPtr.Zero, instanceHandle, IntPtr.Zero);
 
             if (hwnd == IntPtr.Zero)
@@ -152,7 +151,7 @@ namespace MySuperLowLevelProgram {
                 return -1;
             }
 
-            NativeMethods.ShowWindow(hwnd, ShowWindowCommand.SW_SHOWNORMAL);
+            NativeMethods.ShowWindow(hwnd, ShowWindowCommands.SW_SHOWNORMAL);
             NativeMethods.UpdateWindow(hwnd);
 
             Message msg;
@@ -166,11 +165,11 @@ namespace MySuperLowLevelProgram {
             return res;
         }
 
-        private static IntPtr WindowProc(IntPtr hwnd, uint msg, 
+        private static IntPtr WindowProc(IntPtr hwnd, uint umsg, 
 			IntPtr wParam, IntPtr lParam)
         {
-            var wmsg = (WM) msg;
-            switch (wmsg)
+            var msg = (WM) umsg;
+            switch (msg)
             {
                 case WM.ERASEBKGND:
                     return IntPtr.Zero;
@@ -189,7 +188,7 @@ namespace MySuperLowLevelProgram {
                     break;
                 }
             }
-            return NativeMethods.DefWindowProc(hwnd, msg, wParam, lParam);
+            return NativeMethods.DefWindowProc(hwnd, umsg, wParam, lParam);
         }
     }
 ```
