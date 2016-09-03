@@ -35,7 +35,7 @@ namespace WinApi
             return NativeMethods.DrawText(hdc, lpString, nCount, ref lpRect, (uint) uFormat);
         }
 
-        public static bool SetWindowPos(IntPtr hwnd, HwndZOrder order, int x, int y, int cx, int cy,
+        public static int SetWindowPos(IntPtr hwnd, HwndZOrder order, int x, int y, int cx, int cy,
             SetWindowPosFlags flags)
         {
             return NativeMethods.SetWindowPos(hwnd, new IntPtr((int) order), x, y, cx, cy, flags);
