@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using WinApi.User32;
 
-namespace WinApi.Experimental
+namespace WinApi.User32.Experimental
 {
-    public static class Helpers
+    public static class User32ExperimentalHelpers
     {
         public static void EnableBlurBehind(IntPtr hwnd)
         {
@@ -20,7 +21,7 @@ namespace WinApi.Experimental
                     DataSize = accentStructSize,
                     Data = accentPtr
                 };
-                NativeMethods.SetWindowCompositionAttribute(hwnd, ref data);
+                User32ExperimentalMethods.SetWindowCompositionAttribute(hwnd, ref data);
             }
             finally
             {

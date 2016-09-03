@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-
+using System.Security;
+using WinApi.User32;
 // ReSharper disable InconsistentNaming
 
-namespace WinApi.Experimental
+namespace WinApi.User32.Experimental
 {
+    #region Constants
+
     public enum WindowCompositionAttributeType
     {
         WCA_ACCENT_POLICY = 19
@@ -27,5 +30,24 @@ namespace WinApi.Experimental
         AF_RIGHTBORDER = 0x80,
         AF_BOTTOMBORDER = 0x100,
         AF_ALLBORDERS = AF_LEFTBORDER | AF_TOPBORDER | AF_RIGHTBORDER | AF_BOTTOMBORDER
+    }
+
+    #endregion
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct WindowCompositionAttributeData
+    {
+        public WindowCompositionAttributeType Attribute;
+        public IntPtr Data;
+        public int DataSize;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct AccentPolicy
+    {
+        public AccentState AccentState;
+        public AccentFlags AccentFlags;
+        public int GradientColor;
+        public int AnimationId;
     }
 }
