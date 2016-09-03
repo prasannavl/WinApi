@@ -29,12 +29,13 @@ A direct, highly opinionated CLR library for the native Win32 API.
 While aren't many well many reliable wrappers, there are a few, my favorite being Pinvoke (https://github.com/AArnott/pinvoke). So, do all this work again? See `Goals` above. It should be pretty clear why - It's a mostly a matter for coding style, and a little bit of the matter of the ability to micro-optimizate when you really need to.
 
 **Filesystem structure:**
+```
 --- LibraryName
     --  Types.cs (Structs, enums and other constants)
     --  Methods.cs (All direct native methods)
     --  Helpers.cs (All the helper methods with type safety wrappers)
-    ##  Constants.cs (If there are too many types, split constants (enums) from pure structs) 
-
+    ##  Constants.cs (Optionally, if there are too many types, split constants (enums) from pure structs)
+```
 
 **Example:**
 
