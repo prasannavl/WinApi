@@ -1030,6 +1030,215 @@ namespace WinApi.User32
         ASYNCWINDOWPLACEMENT = 0x0004
     }
 
+    [Flags]
+    public enum RedrawWindowFlags
+    {
+        /// <summary>
+        ///     Invalidates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the entire window is
+        ///     invalidated.
+        /// </summary>
+        RDW_INVALIDATE = 0x1,
+
+        /// <summary>
+        ///     Causes a WM_PAINT message to be posted to the window regardless of whether any portion of the window is invalid.
+        /// </summary>
+        RDW_INTERNALPAINT = 0x2,
+
+        /// <summary>
+        ///     Causes the window to receive a WM_ERASEBKGND message when the window is repainted. The RDW_INVALIDATE flag must
+        ///     also be specified; otherwise, RDW_ERASE has no effect.
+        /// </summary>
+        RDW_ERASE = 0x4,
+
+        /// <summary>
+        ///     Validates lprcUpdate or hrgnUpdate (only one may be non-NULL). If both are NULL, the entire window is validated.
+        ///     This flag does not affect internal WM_PAINT messages.
+        /// </summary>
+        RDW_VALIDATE = 0x8,
+
+        /// <summary>
+        ///     Suppresses any pending internal WM_PAINT messages. This flag does not affect WM_PAINT messages resulting from a
+        ///     non-NULL update area.
+        /// </summary>
+        RDW_NOINTERNALPAINT = 0x10,
+
+        /// <summary>
+        ///     Suppresses any pending WM_ERASEBKGND messages.
+        /// </summary>
+        RDW_NOERASE = 0x20,
+
+        /// <summary>
+        ///     Excludes child windows, if any, from the repainting operation.
+        /// </summary>
+        RDW_NOCHILDREN = 0x40,
+
+        /// <summary>
+        ///     Includes child windows, if any, in the repainting operation.
+        /// </summary>
+        RDW_ALLCHILDREN = 0x80,
+
+        /// <summary>
+        ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to receive WM_NCPAINT,
+        ///     WM_ERASEBKGND, and WM_PAINT messages, if necessary, before the function returns.
+        /// </summary>
+        RDW_UPDATENOW = 0x100,
+
+        /// <summary>
+        ///     Causes the affected windows (as specified by the RDW_ALLCHILDREN and RDW_NOCHILDREN flags) to receive WM_NCPAINT
+        ///     and WM_ERASEBKGND messages, if necessary, before the function returns. WM_PAINT messages are received at the
+        ///     ordinary time.
+        /// </summary>
+        RDW_ERASENOW = 0x200,
+
+        /// <summary>
+        ///     Causes any part of the nonclient area of the window that intersects the update region to receive a WM_NCPAINT
+        ///     message. The RDW_INVALIDATE flag must also be specified; otherwise, RDW_FRAME has no effect. The WM_NCPAINT message
+        ///     is typically not sent during the execution of RedrawWindow unless either RDW_UPDATENOW or RDW_ERASENOW is
+        ///     specified.
+        /// </summary>
+        RDW_FRAME = 0x400,
+
+        /// <summary>
+        ///     Suppresses any pending WM_NCPAINT messages. This flag must be used with RDW_VALIDATE and is typically used with
+        ///     RDW_NOCHILDREN. RDW_NOFRAME should be used with care, as it could cause parts of a window to be painted improperly.
+        /// </summary>
+        RDW_NOFRAME = 0x800
+    }
+
+    [Flags]
+    public enum ClassLongFlags
+    {
+        /// <summary>
+        ///     Sets the size, in bytes, of the extra memory associated with the class. Setting this value does not change the
+        ///     number of extra bytes already allocated.
+        /// </summary>
+        GCL_CBCLSEXTRA = -20,
+
+        /// <summary>
+        ///     Sets the size, in bytes, of the extra window memory associated with each window in the class. Setting this value
+        ///     does not change the number of extra bytes already allocated. For information on how to access this memory, see
+        ///     SetWindowLong.
+        /// </summary>
+        GCL_CBWNDEXTRA = -18,
+
+        /// <summary>
+        ///     Replaces a handle to the background brush associated with the class.
+        /// </summary>
+        GCL_HBRBACKGROUND = -10,
+
+        /// <summary>
+        ///     Replaces a handle to the cursor associated with the class.
+        /// </summary>
+        GCL_HCURSOR = -12,
+
+        /// <summary>
+        ///     Replaces a handle to the icon associated with the class.
+        /// </summary>
+        GCL_HICON = -14,
+
+        /// <summary>
+        ///     Replace a handle to the small icon associated with the class.
+        /// </summary>
+        GCL_HICONSM = -34,
+
+        /// <summary>
+        ///     Replaces a handle to the module that registered the class.
+        /// </summary>
+        GCL_HMODULE = -16,
+
+        /// <summary>
+        ///     Replaces the address of the menu name string. The string identifies the menu resource associated with the class.
+        /// </summary>
+        GCL_MENUNAME = -8,
+
+        /// <summary>
+        ///     Replaces the window-class style bits.
+        /// </summary>
+        GCL_STYLE = -26,
+
+        /// <summary>
+        ///     Replaces the address of the window procedure associated with the class.
+        /// </summary>
+        GCL_WNDPROC = -24
+    }
+
+    [Flags]
+    public enum QueueStatusFlags
+    {
+        /// <summary>
+        ///     An input, WM_TIMER, WM_PAINT, WM_HOTKEY, or posted message is in the queue.
+        /// </summary>
+        QS_ALLEVENTS = QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY,
+
+        /// <summary>
+        ///     Any message is in the queue.
+        /// </summary>
+        QS_ALLINPUT = QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY | QS_SENDMESSAGE,
+
+        /// <summary>
+        ///     A posted message (other than those listed here) is in the queue.
+        /// </summary>
+        QS_ALLPOSTMESSAGE = 0x0100,
+
+        /// <summary>
+        ///     A WM_HOTKEY message is in the queue.
+        /// </summary>
+        QS_HOTKEY = 0x0080,
+
+        /// <summary>
+        ///     An input message is in the queue.
+        /// </summary>
+        QS_INPUT = QS_MOUSE | QS_KEY | QS_RAWINPUT,
+
+        /// <summary>
+        ///     A WM_KEYUP, WM_KEYDOWN, WM_SYSKEYUP, or WM_SYSKEYDOWN message is in the queue.
+        /// </summary>
+        QS_KEY = 0x0001,
+
+        /// <summary>
+        ///     A WM_MOUSEMOVE message or mouse-button message (WM_LBUTTONUP, WM_RBUTTONDOWN, and so on).
+        /// </summary>
+        QS_MOUSE = QS_MOUSEMOVE | QS_MOUSEBUTTON,
+
+        /// <summary>
+        ///     A mouse-button message (WM_LBUTTONUP, WM_RBUTTONDOWN, and so on).
+        /// </summary>
+        QS_MOUSEBUTTON = 0x0004,
+
+        /// <summary>
+        ///     A WM_MOUSEMOVE message is in the queue.
+        /// </summary>
+        QS_MOUSEMOVE = 0x0002,
+
+        /// <summary>
+        ///     A WM_PAINT message is in the queue.
+        /// </summary>
+        QS_PAINT = 0x0020,
+
+        /// <summary>
+        ///     A posted message (other than those listed here) is in the queue.
+        /// </summary>
+        QS_POSTMESSAGE = 0x0008,
+
+        /// <summary>
+        ///     A raw input message is in the queue. For more information, see Raw Input.
+        ///     Windows 2000:  This flag is not supported.
+        /// </summary>
+        QS_RAWINPUT = 0x0400,
+
+        /// <summary>
+        ///     A message sent by another thread or application is in the queue.
+        /// </summary>
+        QS_SENDMESSAGE = 0x0040,
+
+        /// <summary>
+        ///     A WM_TIMER message is in the queue.
+        /// </summary>
+        QS_TIMER = 0x0010,
+
+        QS_REFRESH = QS_HOTKEY | QS_KEY | QS_MOUSEBUTTON | QS_PAINT
+    }
+
     #endregion
 
     #region Singular constants

@@ -14,6 +14,16 @@ namespace WinApi.User32
             return User32Methods.SetWindowLongPtr(hwnd, (int) nIndex, dwNewLong);
         }
 
+        public static IntPtr GetClassLongPtr(IntPtr hwnd, ClassLongFlags nIndex)
+        {
+            return User32Methods.GetClassLongPtr(hwnd, (int)nIndex);
+        }
+
+        public static IntPtr SetClassLongPtr(IntPtr hwnd, ClassLongFlags nIndex, IntPtr dwNewLong)
+        {
+            return User32Methods.SetClassLongPtr(hwnd, (int)nIndex, dwNewLong);
+        }
+
         public static IntPtr LoadIcon(IntPtr hInstance, SystemIcon icon)
         {
             return User32Methods.LoadIcon(hInstance, new IntPtr((int) icon));

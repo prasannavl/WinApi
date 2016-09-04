@@ -248,8 +248,11 @@ namespace WinApi.User32
         [DllImport(LibraryName, CharSet = CharSet.Auto)]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
-        [DllImport(LibraryName, CharSet = CharSet.Auto)]
+        [DllImport(LibraryName)]
         public static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport(LibraryName, CharSet = CharSet.Auto)]
+        public static extern int SetWindowText(IntPtr hwnd, string lpString);
 
         [DllImport(LibraryName)]
         public static extern int GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
@@ -266,6 +269,9 @@ namespace WinApi.User32
 
         [DllImport(LibraryName)]
         public static extern int GetWindowPlacement(IntPtr hWnd, out WindowPlacement lpwndpl);
+
+        [DllImport(LibraryName)]
+        public static extern int RedrawWindow(IntPtr hWnd, [In] ref Rectangle lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
 
         [DllImport(LibraryName)]
         public static extern int DestroyWindow(IntPtr hwnd);
@@ -287,7 +293,7 @@ namespace WinApi.User32
         // GetWindowLongPtr directly
         public static IntPtr GetWindowLongPtr(IntPtr hwnd, int nIndex)
         {
-            return IntPtr.Size == 8 ? GetWindowLongPtr_x64(hwnd, nIndex) : GetWindowLong(hwnd, nIndex);
+            return IntPtr.Size > 4 ? GetWindowLongPtr_x64(hwnd, nIndex) : GetWindowLong(hwnd, nIndex);
         }
 
         [DllImport(LibraryName)]
@@ -300,7 +306,7 @@ namespace WinApi.User32
         // GetWindowLongPtr directly
         public static IntPtr SetWindowLongPtr(IntPtr hwnd, int nIndex, IntPtr dwNewLong)
         {
-            return IntPtr.Size == 8
+            return IntPtr.Size > 4
                 ? SetWindowLongPtr_x64(hwnd, nIndex, dwNewLong)
                 : new IntPtr(SetWindowLong(hwnd, nIndex, dwNewLong.ToInt32()));
         }
@@ -310,6 +316,38 @@ namespace WinApi.User32
 
         [DllImport(LibraryName, EntryPoint = "SetWindowLongPtr")]
         private static extern IntPtr SetWindowLongPtr_x64(IntPtr hwnd, int nIndex, IntPtr dwNewLong);
+
+        [DllImport(LibraryName, CharSet = CharSet.Auto)]
+        public static extern int GetClassInfoEx(IntPtr hInstance, string lpClassName, out WindowClassEx lpWndClass);
+
+        [DllImport(LibraryName, CharSet = CharSet.Auto)]
+        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        public static IntPtr GetClassLongPtr(IntPtr hwnd, int nIndex)
+        {
+            return IntPtr.Size > 4 ? GetClassLongPtr_x64(hwnd, nIndex) : new IntPtr(GetClassLong(hwnd, nIndex));
+        }
+
+        [DllImport(LibraryName)]
+        private static extern uint GetClassLong(IntPtr hWnd, int nIndex);
+
+        [DllImport(LibraryName, EntryPoint = "GetClassLongPtr")]
+        private static extern IntPtr GetClassLongPtr_x64(IntPtr hWnd, int nIndex);
+
+
+        public static IntPtr SetClassLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong)
+        {
+            return IntPtr.Size > 4
+                ? SetClassLongPtr_x64(hWnd, nIndex, dwNewLong)
+                : new IntPtr(SetClassLong(hWnd, nIndex, dwNewLong.ToInt32()));
+        }
+
+        [DllImport(LibraryName)]
+        private static extern uint SetClassLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport(LibraryName, EntryPoint = "SetClassLongPtr")]
+        private static extern IntPtr SetClassLongPtr_x64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
 
         #endregion
 
@@ -490,6 +528,12 @@ namespace WinApi.User32
 
         [DllImport(LibraryName)]
         public static extern uint GetMessageTime();
+
+        [DllImport(LibraryName)]
+        public static extern int InSendMessage();
+
+        [DllImport(LibraryName)]
+        public static extern uint GetQueueStatus(QueueStatusFlags flags);
 
         [DllImport(LibraryName)]
         public static extern int PostThreadMessage(uint threadId, uint msg, IntPtr wParam, IntPtr lParam);
