@@ -11,7 +11,6 @@ namespace WinApi.User32
     {
         public const string LibraryName = "user32";
 
-
         [DllImport(LibraryName, CharSet = CharSet.Auto)]
         public static extern IntPtr LoadIcon(IntPtr hInstance, string lpIconName);
 
