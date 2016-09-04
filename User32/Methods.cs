@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -271,7 +271,8 @@ namespace WinApi.User32
         public static extern int GetWindowPlacement(IntPtr hWnd, out WindowPlacement lpwndpl);
 
         [DllImport(LibraryName)]
-        public static extern int RedrawWindow(IntPtr hWnd, [In] ref Rectangle lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
+        public static extern int RedrawWindow(IntPtr hWnd, [In] ref Rectangle lprcUpdate, IntPtr hrgnUpdate,
+            RedrawWindowFlags flags);
 
         [DllImport(LibraryName)]
         public static extern int DestroyWindow(IntPtr hwnd);
@@ -347,7 +348,6 @@ namespace WinApi.User32
 
         [DllImport(LibraryName, EntryPoint = "SetClassLongPtr")]
         private static extern IntPtr SetClassLongPtr_x64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
-
 
         #endregion
 
