@@ -8,7 +8,7 @@ namespace WinApi.User32
     #region Multi-flag constants
 
     [Flags]
-    public enum WindowStyles : uint
+    public enum WindowStyles
     {
         /// <summary>
         ///     The window has a thin-line border.
@@ -113,7 +113,7 @@ namespace WinApi.User32
         /// <summary>
         ///     The windows is a pop-up window. This style cannot be used with the WS_CHILD style.
         /// </summary>
-        WS_POPUP = 0x80000000,
+        WS_POPUP = unchecked ((int) 0x80000000),
 
         /// <summary>
         ///     The window is a pop-up window. The WS_CAPTION and WS_POPUPWINDOW styles must be combined to make the window menu
@@ -169,7 +169,7 @@ namespace WinApi.User32
     }
 
     [Flags]
-    public enum WindowExStyles : uint
+    public enum WindowExStyles
     {
         /// <summary>
         ///     The window accepts drag-drop files.
@@ -341,7 +341,7 @@ namespace WinApi.User32
     }
 
     [Flags]
-    public enum WindowClassStyles : uint
+    public enum WindowClassStyles
     {
         /// <summary>
         ///     Aligns the window's client area on a byte boundary (in the x direction). This style affects the width of the window
@@ -423,7 +423,7 @@ namespace WinApi.User32
     }
 
     [Flags]
-    public enum AnimateWindowFlags : uint
+    public enum AnimateWindowFlags
     {
         /// <summary>
         ///     Activates the window. Do not use this value with AW_HIDE.
@@ -477,7 +477,7 @@ namespace WinApi.User32
     }
 
     [Flags]
-    public enum DrawTextFormatFlags : uint
+    public enum DrawTextFormatFlags
     {
         /// <summary>
         ///     Justifies the text to the bottom of the rectangle. This value is used only with the DT_SINGLELINE value.
@@ -1239,6 +1239,47 @@ namespace WinApi.User32
         QS_REFRESH = QS_HOTKEY | QS_KEY | QS_MOUSEBUTTON | QS_PAINT
     }
 
+    [Flags]
+    public enum PeekMessageFlags
+    {
+        /// <summary>
+        ///     Messages are not removed from the queue after processing by PeekMessage.
+        /// </summary>
+        PM_NOREMOVE = 0x0000,
+
+        /// <summary>
+        ///     Messages are removed from the queue after processing by PeekMessage.
+        /// </summary>
+        PM_REMOVE = 0x0001,
+
+        /// <summary>
+        ///     Prevents the system from releasing any thread that is waiting for the caller to go idle (see WaitForInputIdle).
+        ///     Combine this value with either PM_NOREMOVE or PM_REMOVE.
+        /// </summary>
+        PM_NOYIELD = 0x0002,
+
+        /// <summary>
+        ///     Process mouse and keyboard messages.
+        /// </summary>
+        PM_QS_INPUT = QueueStatusFlags.QS_INPUT << 16,
+
+        /// <summary>
+        ///     Process paint messages.
+        /// </summary>
+        PM_QS_PAINT = QueueStatusFlags.QS_PAINT << 16,
+
+        /// <summary>
+        ///     Process all posted messages, including timers and hotkeys.
+        /// </summary>
+        PM_QS_POSTMESSAGE =
+            (QueueStatusFlags.QS_POSTMESSAGE | QueueStatusFlags.QS_HOTKEY | QueueStatusFlags.QS_TIMER) << 16,
+
+        /// <summary>
+        ///     Process all sent messages.
+        /// </summary>
+        PM_QS_SENDMESSAGE = QueueStatusFlags.QS_SENDMESSAGE << 16
+    }
+
     #endregion
 
     #region Singular constants
@@ -1388,7 +1429,7 @@ namespace WinApi.User32
         COMPLEXREGION
     }
 
-    public enum WM : uint
+    public enum WM
     {
         NULL = 0x0000,
         CREATE = 0x0001,

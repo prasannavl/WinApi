@@ -45,5 +45,11 @@ namespace WinApi.User32
         {
             return User32Methods.SetWindowPos(hwnd, new IntPtr((int) order), x, y, cx, cy, flags);
         }
+
+        public static int PeekMessage(out Message lpMsg, IntPtr hWnd, uint wMsgFilterMin,
+            uint wMsgFilterMax, PeekMessageFlags wRemoveMsg)
+        {
+            return User32Methods.PeekMessage(out lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, (uint) wRemoveMsg);
+        }
     }
 }

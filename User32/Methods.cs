@@ -257,7 +257,7 @@ namespace WinApi.User32
         public static extern int GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
 
         [DllImport(LibraryName)]
-        internal static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
+        public static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
         [DllImport(LibraryName)]
         public static extern int GetWindowInfo(IntPtr hwnd, [In] [Out] ref WindowInfo pwi);
