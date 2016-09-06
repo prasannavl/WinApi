@@ -106,6 +106,9 @@ namespace WinApi.User32
         public static extern int InvalidateRgn(IntPtr hWnd, IntPtr hRgn, bool bErase);
 
         [DllImport(LibraryName)]
+        public static extern int GetUpdateRect(IntPtr hwnd, out Rectangle rect, int bErase);
+
+        [DllImport(LibraryName)]
         public static extern int ValidateRgn(IntPtr hWnd, IntPtr hRgn);
 
         [DllImport(LibraryName)]
@@ -114,10 +117,32 @@ namespace WinApi.User32
         [DllImport(LibraryName)]
         public static extern void DisableProcessWindowsGhosting();
 
+        [DllImport(LibraryName)]
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Rectangle rect, int cPoints = 2);
+
+        [DllImport(LibraryName)]
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Point rect, int cPoints = 1);
+
+        [DllImport(LibraryName)]
+        public static extern int ScreenToClient(IntPtr hWnd, ref Point lpPoint);
+
+
         #region Keyboard, Mouse & Input Method Functions
 
         [DllImport(LibraryName)]
         public static extern int IsWindowEnabled(IntPtr hWnd);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetFocus();
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr SetFocus(IntPtr hWnd);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetActiveWindow();
 
         #endregion
 
@@ -235,7 +260,25 @@ namespace WinApi.User32
             string lpszWindow);
 
         [DllImport(LibraryName)]
+        public static extern IntPtr GetForegroundWindow();
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetTopWindow();
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetNextWindow(IntPtr hwnd, uint wCmd);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetWindow(IntPtr hwnd, uint wCmd);
+
+        [DllImport(LibraryName)]
+        public static extern int AllowSetForegroundWindow(int dwProcessId);
+
+        [DllImport(LibraryName)]
         public static extern int SetForegroundWindow(IntPtr hwnd);
+
+        [DllImport(LibraryName)]
+        public static extern int BringWindowToTop(IntPtr hwnd);
 
         [DllImport(LibraryName)]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);

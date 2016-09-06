@@ -51,5 +51,15 @@ namespace WinApi.User32
         {
             return User32Methods.PeekMessage(out lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, (uint) wRemoveMsg);
         }
+
+        public static IntPtr GetNextWindow(IntPtr hwnd, GetWindowFlag cmd)
+        {
+            return User32Methods.GetNextWindow(hwnd, (uint) cmd);
+        }
+
+        public static IntPtr GetWindow(IntPtr hwnd, GetWindowFlag cmd)
+        {
+            return User32Methods.GetWindow(hwnd, (uint) cmd);
+        }
     }
 }
