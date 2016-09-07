@@ -10,13 +10,23 @@ A direct, highly opinionated CLR library for the native Win32 API.
 - Provide a single DLL that can over time, be a direct equivalent of C/C++ `windows.h` header file for the CLR. Other Windows SDK wrappers may, or may not be in fragmented into separate packages.
 - Sufficient base to be able to write custom toolkits over Win32 based on Direct2D, Direct3D or even an external graphics library like Skia, without depending on WPF or WinForms.
 - Always retain parity with the native API when it comes to constants (Eg: `WS_OVERLAPPEDWINDOW`, will never be changed to `OverlappedWindow` to look more like C#. There is one exception to this, and that's `WM` - the message id constants for simpler usability).
+- `WinApi.XWin` - See below.
 - All structs, flags, should always have the names in the idiomatic C# style. (Eg: `public enum WindowStyles { .. WS_OVERLAPPEDWINDOW = 0x00.  }`). Never WINDOWSTYLE, or MARGINS or RECT. Always `Margin`, `Rectangle`, etc. (It actually is surprisingly clean once drop the usual depencendies like WinForms, or WPF which always provide alternative forms).
 - Use variants such as `int` for Windows types like `BOOL` - to ensure minimum Marashalling impact. Using `bool` requires another copy, since bool in CLR is 1 byte, but the unmanaged variant could be 1, 2 or 4 bytes, depending on the context. A `bool` wrapped function can be manually provided as a helper, but not in the direct translation layer (`*Methods` class).
-- `int` vs `uint` (and all similar primitives): Prefer the signed `int` and siblings unless there's its well defined for the value to be never negative. In short, use what makes the most semantic sense.  
+- `int` vs `uint` (and all similar primitives): Prefer the signed `int` and siblings unless there's its well defined for the value to be never negative. In short, use what makes the most semantic sense.
 
 **Secondary goals:**
 
 - Provide fully documented API (both from headers and MSDN, where-ever applicable) in the releases. Everything should be `IntelliSense capable`. No MSDN round-trips, while doing low level programming with CLR.
+
+**WinApi.XWin**
+
+- Ultra-light weight and extremely simple wrappers that can be used to create, manipulate or use windows.
+- NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
+- A GUI wrapper for Win32 that can work with CoreCLR.
+- Can be wrapped over any existing windows, just by using the handle.
+- Strict pay-only-for-what-you-use model.
+- Several different event loops depending on the need (For example, `RealtimeEventLoop` for games while the simple `EventLoop` is ideal for normal applications).
 
 **Notes**:
 
@@ -112,7 +122,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_ERASEBKGND:
-		break;
+        return 1;
 	case WM_DESTROY:
 		return HandleDestroy(hwnd);
 	case WM_PAINT:
@@ -122,7 +132,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 ```
 
-And now the direct C# equivalent using WinApi: 
+Now the direct C# equivalent using WinApi: 
 
 ```c#
 
@@ -193,7 +203,7 @@ namespace MySuperLowLevelProgram {
             switch (msg)
             {
                 case WM.ERASEBKGND:
-                    return IntPtr.Zero;
+                    return new IntPtr(1);
                 case WM.CLOSE:
                 {
                     User32Methods.PostQuitMessage(0);
@@ -213,3 +223,48 @@ namespace MySuperLowLevelProgram {
         }
     }
 ```
+
+And now further using WinApi.WinX:
+
+```
+using System;
+using WinApi.XWin;
+
+namespace MySuperLowLevelProgram {
+    internal class Program
+    {
+        [STAThread]
+        static int Main(string[] args)
+        {
+            var factory = WindowFactory.Create("MainWindow");
+            var win = factory.CreateWindow<AppWindow>(text: "Hello");
+            win.Show();
+            return new EventLoop().Run();
+        }
+    }
+
+    public class AppWindow : MainWindow
+    {
+        protected override void OnPaint(IntPtr hdc, Rectangle paintRectangle,
+            bool shouldErase)
+        {
+            User32Methods.FillRect(hdc, ref paintRectangle, 
+                Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
+            base.OnPaint(hdc, paintRectangle, shouldErase);
+        }
+
+        protected override bool OnMessage(ref WindowMessage msg)
+        {
+            switch (msg.Id)
+            {
+                case WM.ERASEBKGND:
+                {
+                    msg.Result = new IntPtr(1);
+                    return false;
+                }
+            }
+            return base.OnMessage(ref msg);
+        }
+    }
+}
+``` 
