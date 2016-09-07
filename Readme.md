@@ -4,6 +4,16 @@ A direct, highly opinionated CLR library for the native Win32 API.
 
 `Work-In-Progress`
 
+```c#
+    static int Main(string[] args)
+    {
+        var factory = WindowFactory.Create("MainWindow");
+        var win = factory.CreateWindow<MainWindow>(text: "Hello");
+        win.Show();
+        return new EventLoop().Run();
+    }
+```
+
 **Goals:**
 
 - Provide both safe (through helpers, and safety wrappers like HandleRefs, SafeHandles), and unsafe wrappers (pure with minimal performance impact), in a clean way supplemented with inline documentation.
