@@ -126,7 +126,6 @@ namespace WinApi.User32
         [DllImport(LibraryName)]
         public static extern int ScreenToClient(IntPtr hWnd, ref Point lpPoint);
 
-
         #region Keyboard, Mouse & Input Method Functions
 
         [DllImport(LibraryName)]
@@ -398,8 +397,12 @@ namespace WinApi.User32
         [DllImport(LibraryName)]
         public static extern IntPtr DefWindowProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport("user32.dll")]
+        [DllImport(LibraryName)]
         public static extern IntPtr CallWindowProc(WindowProc lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam,
+            IntPtr lParam);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam,
             IntPtr lParam);
 
         #endregion

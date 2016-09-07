@@ -20,5 +20,8 @@ namespace WinApi.Kernel32
 
         [DllImport(LibraryName, CharSet = CharSet.Auto)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetCurrentProcess();
     }
 }

@@ -120,6 +120,23 @@ namespace WinApi.User32
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct CreateStruct
+    {
+        public IntPtr lpCreateParams;
+        public IntPtr hInstance;
+        public IntPtr hMenu;
+        public IntPtr hwndParent;
+        public int cy;
+        public int cx;
+        public int y;
+        public int x;
+        public WindowStyles style;
+        public IntPtr lpszName;
+        public IntPtr lpszClass;
+        public int dwExStyle;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct WindowPlacement
     {
         public int Length;
