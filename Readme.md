@@ -19,10 +19,11 @@ A direct, highly opinionated CLR library for the native Win32 API.
 
 - Provide fully documented API (both from headers and MSDN, where-ever applicable) in the releases. Everything should be `IntelliSense capable`. No MSDN round-trips, while doing low level programming with CLR.
 
-**WinApi.XWin**
+**WinApi.XWin:**
 
-- Ultra-light weight and extremely simple wrappers that can be used to create, manipulate or use windows.
+- Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
 - NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
+- NativeWindow can also be extended to work with any subclasses like Button, ComboBox, etc, with the same principles.
 - A GUI wrapper for Win32 that can work with CoreCLR.
 - Can be wrapped over any existing windows, just by using the handle.
 - Strict pay-only-for-what-you-use model.
@@ -226,7 +227,7 @@ namespace MySuperLowLevelProgram {
 
 And now further using WinApi.WinX:
 
-```
+```c#
 using System;
 using WinApi.XWin;
 
