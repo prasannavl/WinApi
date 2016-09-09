@@ -113,7 +113,7 @@ namespace WinApi.User32
         public static extern int InvalidateRgn(IntPtr hWnd, IntPtr hRgn, bool bErase);
 
         [DllImport(LibraryName)]
-        public static extern int GetUpdateRect(IntPtr hwnd, out Rectangle rect, int bErase);
+        public static extern int GetUpdateRect(IntPtr hwnd, out Rectangle rect, bool bErase);
 
         [DllImport(LibraryName)]
         public static extern int ValidateRgn(IntPtr hWnd, IntPtr hRgn);
@@ -183,6 +183,12 @@ namespace WinApi.User32
 
         [DllImport(LibraryName)]
         public static extern IntPtr GetActiveWindow();
+
+        [DllImport(LibraryName)]
+        public static extern int BlockInput(bool fBlockIt);
+
+        [DllImport(LibraryName)]
+        public static extern int AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
 
         #endregion
 
