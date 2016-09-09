@@ -5,11 +5,18 @@ namespace WinApi.XWin
 {
     public interface IEventLoop
     {
-        int Run();
+        int Run(object state = null);
     }
 
     public class EventLoop : IEventLoop
     {
+        private object m_state;
+
+        public EventLoop() {}
+        public EventLoop(object state) {
+            m_state = state;
+        }
+
         public int Run()
         {
             Message msg;
@@ -25,6 +32,13 @@ namespace WinApi.XWin
 
     public class RealtimeEventLoop : IEventLoop
     {
+        private object m_state;
+
+        public RealtimeEventLoop() {}
+        public RealtimeEventLoop(object state) {
+            m_state = state;
+        }
+
         public int Run()
         {
             Message msg;
@@ -43,6 +57,13 @@ namespace WinApi.XWin
 
     public class InterceptableEventLoop : IEventLoop
     {
+        private object m_state;
+
+        public InterceptableEventLoop() {}
+        public InterceptableEventLoop(object state) {
+            m_state = state;
+        }
+
         public virtual int Run()
         {
             Message msg;
@@ -65,6 +86,13 @@ namespace WinApi.XWin
 
     public class InterceptableRealtimeEventLoop : IEventLoop
     {
+        private object m_state;
+
+        public InterceptableRealtimeEventLoop() {}
+        public InterceptableRealtimeEventLoop(object state) {
+            m_state = state;
+        }
+
         public virtual int Run()
         {
             Message msg;

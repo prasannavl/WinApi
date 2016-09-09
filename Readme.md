@@ -10,7 +10,7 @@ A direct, highly opinionated CLR library for the native Win32 API.
         var factory = WindowFactory.Create("MainWindow");
         var win = factory.CreateWindow<MainWindow>(text: "Hello");
         win.Show();
-        return new EventLoop().Run();
+        return new EventLoop(win).Run();
     }
 ```
 
@@ -250,7 +250,7 @@ namespace MySuperLowLevelProgram {
             var factory = WindowFactory.Create("MainWindow");
             var win = factory.CreateWindow<AppWindow>(text: "Hello");
             win.Show();
-            return new EventLoop().Run();
+            return new EventLoop(win).Run();
         }
     }
 
