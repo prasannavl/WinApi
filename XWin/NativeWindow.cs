@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using WinApi.User32;
 
@@ -13,6 +14,8 @@ namespace WinApi.XWin
     {
         private IntPtr m_baseWindowProcPtr;
         private bool m_disposed;
+        private WindowProc m_instanceWindowProc;
+        public WindowFactory Factory { get; set; }
 
         public IntPtr Handle { get; private set; }
 
@@ -25,10 +28,12 @@ namespace WinApi.XWin
         void IWindowInitializable.Initialize(IntPtr windowHandle, IntPtr baseWindowProcPtr)
         {
             Handle = windowHandle;
-            var isFactoryInitialized = baseWindowProcPtr != IntPtr.Zero;
-            m_baseWindowProcPtr = isFactoryInitialized ? baseWindowProcPtr : Get(WindowLongFlags.GWLP_WNDPROC);
-            Set(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate((WindowProc)WindowProc));
-            OnSourceInitialized(isFactoryInitialized);
+            m_baseWindowProcPtr = baseWindowProcPtr == IntPtr.Zero
+                ? Get(WindowLongFlags.GWLP_WNDPROC)
+                : baseWindowProcPtr;
+            m_instanceWindowProc = WindowProc;
+            Set(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(m_instanceWindowProc));
+            OnSourceInitialized();
         }
 
         ~NativeWindow()
@@ -74,6 +79,16 @@ namespace WinApi.XWin
             User32Methods.SetWindowPos(Handle, hWndInsertAfter, x, y, width, height, flags);
         }
 
+        public void GetPosition(out Rectangle rectangle)
+        {
+            User32Methods.GetWindowRect(Handle, out rectangle);
+        }
+
+        public void GetClientRectangle(out Rectangle rectangle)
+        {
+            User32Methods.GetClientRect(Handle, out rectangle);
+        }
+
         public IntPtr Set(WindowLongFlags index, IntPtr value)
         {
             return User32Methods.SetWindowLongPtr(Handle, (int) index, value);
@@ -99,7 +114,7 @@ namespace WinApi.XWin
             User32Methods.ShowWindow(Handle, flags);
         }
 
-        protected virtual void OnSourceInitialized(bool isFactoryInitialized) {}
+        protected virtual void OnSourceInitialized() {}
 
         protected virtual void Dispose(bool disposing)
         {

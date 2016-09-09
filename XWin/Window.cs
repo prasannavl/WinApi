@@ -16,10 +16,10 @@ namespace WinApi.XWin
 
     public class Window : NativeWindow
     {
-        protected override void OnSourceInitialized(bool isFactoryInitialized)
+        protected override void OnSourceInitialized()
         {
-            base.OnSourceInitialized(isFactoryInitialized);
-            if (!isFactoryInitialized)
+            base.OnSourceInitialized();
+            if (Factory == null)
             {
                 OnCreate();
             }
@@ -33,7 +33,7 @@ namespace WinApi.XWin
 
         protected virtual void OnDestroy() {}
 
-        protected virtual void OnPaint(IntPtr hdc, Rectangle paintRectangle, bool shouldErase) {}
+        protected virtual void OnPaint() {}
 
         protected virtual bool OnMessageProcessDefault(ref WindowMessage msg)
         {
@@ -68,7 +68,7 @@ namespace WinApi.XWin
                 {
                     PaintStruct ps;
                     var hdc = User32Methods.BeginPaint(Handle, out ps);
-                    OnPaint(hdc, ps.PaintRectangle, ps.ShouldEraseBackground);
+                    OnPaint();
                     User32Methods.EndPaint(Handle, ref ps);
                     return true;
                 }

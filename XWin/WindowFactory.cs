@@ -10,6 +10,8 @@ namespace WinApi.XWin
 {
     public class WindowFactory
     {
+        private readonly WindowProc m_windowProc;
+
         public WindowFactory(string name, WindowClassStyles styles, IntPtr hInstance, IntPtr hIcon, IntPtr hCursor,
             IntPtr hBgBrush, WindowProc wndProc)
         {
@@ -28,7 +30,7 @@ namespace WinApi.XWin
                 IconHandle = hIcon,
                 Styles = styles,
                 BackgroundBrushHandle = hBgBrush,
-                WindowProc = this.ClassInitializerProc,
+                WindowProc = ClassInitializerProc,
                 InstanceHandle = hInstance
             };
 
@@ -44,7 +46,7 @@ namespace WinApi.XWin
 
             // Leave the reference untouched. So, use a copy for the modified registration.
             var classExClone = classEx;
-            classExClone.WindowProc = this.ClassInitializerProc;
+            classExClone.WindowProc = ClassInitializerProc;
 
             if (User32Methods.RegisterClassEx(ref classExClone) == 0)
                 throw new Exception("Failed to register window");
@@ -54,12 +56,10 @@ namespace WinApi.XWin
 
         public IntPtr ProcessHandle { get; }
 
-        private readonly WindowProc m_windowProc;
-
         private IntPtr ClassInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             WindowProc winInstanceInitializerProc = null;
-            if (msg == (int)WM.NCCREATE)
+            if (msg == (int) WM.NCCREATE)
             {
                 wParam = Marshal.GetFunctionPointerForDelegate(m_windowProc);
                 var createStruct = Marshal.PtrToStructure<CreateStruct>(lParam);
@@ -77,7 +77,7 @@ namespace WinApi.XWin
             var cache = FactoryCache.Instance;
             return new WindowFactory(className, WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
                 cache.ProcessHandle, cache.AppIconHandle, cache.ArrowCursorHandle,
-                IntPtr.Zero, 
+                IntPtr.Zero,
                 wndProc);
         }
 
@@ -108,7 +108,8 @@ namespace WinApi.XWin
             int width, int height, IntPtr hParent, IntPtr hMenu)
             where TWindow : NativeWindow, new()
         {
-            var win = new TWindow();
+            var win = new TWindow {Factory = this};
+
             var extraParam = Marshal.GetFunctionPointerForDelegate((WindowProc) win.WindowInstanceInitializerProc);
             var hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
                 styles, x, y, width, height, hParent, hMenu, ProcessHandle, extraParam);
