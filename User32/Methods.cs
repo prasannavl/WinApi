@@ -62,6 +62,13 @@ namespace WinApi.User32
         public static extern int SetRectEmpty(out Rectangle lprc);
 
         [DllImport(LibraryName)]
+        public static extern int AdjustWindowRect(ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu);
+
+        [DllImport(LibraryName)]
+        public static extern int AdjustWindowRectEx(ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
+            WindowExStyles dwExStyle);
+
+        [DllImport(LibraryName)]
         public static extern int CopyRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc);
 
         [DllImport(LibraryName)]
@@ -125,6 +132,40 @@ namespace WinApi.User32
 
         [DllImport(LibraryName)]
         public static extern int ScreenToClient(IntPtr hWnd, ref Point lpPoint);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr WindowFromPhysicalPoint(Point point);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr WindowFromPoint(Point point);
+
+        [DllImport(LibraryName)]
+        public static extern int IsWindowVisible(IntPtr hwnd);
+
+        [DllImport(LibraryName)]
+        public static extern int OpenIcon(IntPtr hwnd);
+
+        [DllImport(LibraryName)]
+        public static extern int IsWindow(IntPtr hwnd);
+
+        [DllImport(LibraryName)]
+        public static extern int IsHungAppWindow(IntPtr hwnd);
+
+        [DllImport(LibraryName)]
+        public static extern int IsZoomed(IntPtr hwnd);
+
+        [DllImport(LibraryName)]
+        public static extern int IsIconic(IntPtr hwnd);
+
+        [DllImport(LibraryName)]
+        public static extern int LogicalToPhysicalPoint(IntPtr hwnd, ref Point point);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr ChildWindowFromPoint(IntPtr hwndParent, Point point);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr ChildWindowFromPointEx(IntPtr hwndParent, Point point,
+            ChildWindowFromPointFlags flags);
 
         #region Keyboard, Mouse & Input Method Functions
 

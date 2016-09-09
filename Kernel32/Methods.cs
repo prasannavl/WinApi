@@ -23,5 +23,8 @@ namespace WinApi.Kernel32
 
         [DllImport(LibraryName)]
         public static extern IntPtr GetCurrentProcess();
+
+        [DllImport(LibraryName, EntryPoint = "RtlZeroMemory")]
+        public static extern void ZeroMemory(IntPtr dest, IntPtr size);
     }
 }

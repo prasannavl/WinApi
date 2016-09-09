@@ -1280,6 +1280,30 @@ namespace WinApi.User32
         PM_QS_SENDMESSAGE = QueueStatusFlags.QS_SENDMESSAGE << 16
     }
 
+    [Flags]
+    public enum ChildWindowFromPointFlags
+    {
+        /// <summary>
+        ///     Does not skip any child windows
+        /// </summary>
+        CWP_ALL = 0x0000,
+
+        /// <summary>
+        ///     Skips disabled child windows
+        /// </summary>
+        CWP_SKIPDISABLED = 0x0002,
+
+        /// <summary>
+        ///     Skips invisible child windows
+        /// </summary>
+        CWP_SKIPINVISIBLE = 0x0001,
+
+        /// <summary>
+        ///     Skips transparent child windows
+        /// </summary>
+        CWP_SKIPTRANSPARENT = 0x0004
+    }
+
     #endregion
 
     #region Singular constants
