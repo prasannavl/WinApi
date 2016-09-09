@@ -314,6 +314,6 @@ namespace WinApi.Gdi32
         /// <summary>
         ///     Prevents the bitmap from being mirrored.
         /// </summary>
-        NOMIRRORBITMAP = 0x80000000
+        NOMIRRORBITMAP = unchecked((int)0x80000000)
     }
 }
