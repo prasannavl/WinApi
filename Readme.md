@@ -256,11 +256,12 @@ namespace MySuperLowLevelProgram {
 
     public class AppWindow : MainWindow
     {
-        protected override void OnPaint(IntPtr hdc, Rectangle paintRectangle,
-            bool shouldErase)
+        protected override void OnPaint()
         {
+            var hdc = User32Methods.GetDC(Handle);
             User32Methods.FillRect(hdc, ref paintRectangle, 
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
+            User32Methods.ReleaseDC(Handle, hdc);
             base.OnPaint(hdc, paintRectangle, shouldErase);
         }
 
