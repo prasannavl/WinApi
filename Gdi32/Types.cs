@@ -42,22 +42,35 @@ namespace WinApi.Gdi32
         public unsafe NativeBitmapInfo(ref BitmapInfo bitmapInfo) : base(new IntPtr(0))
         {
             var quads = bitmapInfo.Colors;
+            var quadsLength = quads.Length;
+            if (quadsLength == 0)
+            {
+                quadsLength = 1;
+            }
             var ptr =
-                Marshal.AllocHGlobal(Marshal.SizeOf<BitmapInfoHeader>() + Marshal.SizeOf<RgbQuad>()*quads.Length);
+                Marshal.AllocHGlobal(Marshal.SizeOf<BitmapInfoHeader>() + Marshal.SizeOf<RgbQuad>()*quadsLength);
             try
             {
                 var headerPtr = (BitmapInfoHeader*) ptr.ToPointer();
                 *headerPtr = bitmapInfo.Header;
                 var quadPtr = (RgbQuad*) (headerPtr + 1);
-                for (var i = 0; i < quads.Length; i++)
+                int i = 0; 
+                for (;i < quads.Length; i++)
                 {
                     *(quadPtr + i) = quads[i];
                 }
+                if (i == 0)
+                {
+                    *quadPtr = new RgbQuad();
+                }
                 SetHandle(ptr);
             }
-            catch
+            finally
             {
-                Marshal.FreeHGlobal(ptr);
+                if (this.handle == IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(ptr);
+                }
             }
         }
 
