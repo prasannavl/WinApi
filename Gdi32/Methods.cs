@@ -51,6 +51,11 @@ namespace WinApi.Gdi32
             uint fuUsage);
 
         [DllImport(LibraryName)]
+        public static extern int SetDIBitsToDevice(IntPtr hdc, int xDest, int yDest, uint
+                dwWidth, uint dwHeight, int xSrc, int ySrc, uint uStartScan, uint cScanLines,
+            byte[] lpvBits, IntPtr lpbmi, uint fuColorUse);
+
+        [DllImport(LibraryName)]
         public static extern int DeleteDC(IntPtr hdc);
 
         [DllImport(LibraryName)]

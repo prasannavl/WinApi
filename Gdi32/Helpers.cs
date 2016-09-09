@@ -33,5 +33,17 @@ namespace WinApi.Gdi32
                     fuUsage);
             }
         }
+
+        public static int SetDIBitsToDevice(IntPtr hdc, int xDest, int yDest, uint
+                dwWidth, uint dwHeight, int xSrc, int ySrc, uint uStartScan, uint cScanLines,
+            byte[] lpvBits, ref BitmapInfo bitmapInfo, uint fuColorUse)
+        {
+            using (var pbmi = BitmapInfo.CreateNativeHandle(ref bitmapInfo))
+            {
+                return Gdi32Methods.SetDIBitsToDevice(hdc, xDest, yDest,
+                    dwWidth, dwHeight, xSrc, ySrc, uStartScan, cScanLines, lpvBits, pbmi.GetDangerousHandle(),
+                    fuColorUse);
+            }
+        }
     }
 }
