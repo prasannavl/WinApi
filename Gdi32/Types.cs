@@ -1,9 +1,137 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
 namespace WinApi.Gdi32
 {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct BitmapInfoHeader
+    {
+        public uint Size;
+        public int Width;
+        public int Height;
+        public ushort Planes;
+        public ushort BitCount;
+        public BitmapCompressionMode CompressionMode;
+        public uint SizeImage;
+        public int XPxPerMeter;
+        public int YPxPerMeter;
+        public uint ClrUsed;
+        public uint ClrImportant;
+
+        public static void Initialize(ref BitmapInfoHeader obj)
+        {
+            obj.Size = (uint) Marshal.SizeOf<BitmapInfoHeader>();
+        }
+    }
+
+    public struct BitmapInfo
+    {
+        public BitmapInfoHeader Header;
+        public RgbQuad[] Colors;
+
+        public static NativeBitmapInfo CreateNativeHandle(ref BitmapInfo bitmapInfo)
+        {
+            return new NativeBitmapInfo(ref bitmapInfo);
+        }
+    }
+
+    public class NativeBitmapInfo : CriticalHandle
+    {
+        public unsafe NativeBitmapInfo(ref BitmapInfo bitmapInfo) : base(new IntPtr(0))
+        {
+            var quads = bitmapInfo.Colors;
+            var ptr =
+                Marshal.AllocHGlobal(Marshal.SizeOf<BitmapInfoHeader>() + Marshal.SizeOf<RgbQuad>()*quads.Length);
+            try
+            {
+                var headerPtr = (BitmapInfoHeader*) ptr.ToPointer();
+                *headerPtr = bitmapInfo.Header;
+                var quadPtr = (RgbQuad*) (headerPtr + 1);
+                for (var i = 0; i < quads.Length; i++)
+                {
+                    *(quadPtr + i) = quads[i];
+                }
+                SetHandle(ptr);
+            }
+            catch
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+
+        public override bool IsInvalid => handle == IntPtr.Zero;
+
+        protected override bool ReleaseHandle()
+        {
+            Marshal.FreeHGlobal(handle);
+            return true;
+        }
+
+        public IntPtr GetDangerousHandle() => handle;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RgbQuad
+    {
+        public byte rgbBlue;
+        public byte rgbGreen;
+        public byte rgbRed;
+        public byte rgbReserved;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Bitmap
+    {
+        /// <summary>
+        ///     The bitmap type. This member must be zero.
+        /// </summary>
+        public int Type;
+
+        /// <summary>
+        ///     The width, in pixels, of the bitmap. The width must be greater than zero.
+        /// </summary>
+        public int Width;
+
+        /// <summary>
+        ///     The height, in pixels, of the bitmap. The height must be greater than zero.
+        /// </summary>
+        public int Height;
+
+        /// <summary>
+        ///     The number of bytes in each scan line. This value must be divisible by 2, because the system assumes that the bit
+        ///     values of a bitmap form an array that is word aligned.
+        /// </summary>
+        public int WidthBytes;
+
+        /// <summary>
+        ///     The count of color planes.
+        /// </summary>
+        public int Planes;
+
+        /// <summary>
+        ///     The number of bits required to indicate the color of a pixel.
+        /// </summary>
+        public int BitsPerPixel;
+
+        /// <summary>
+        ///     A pointer to the location of the bit values for the bitmap. The bmBits member must be a pointer to an array of
+        ///     character (1-byte) values.
+        /// </summary>
+        public IntPtr Bits;
+    }
+
+    public enum BitmapCompressionMode
+    {
+        BI_RGB = 0,
+        BI_RLE8 = 1,
+        BI_RLE4 = 2,
+        BI_BITFIELDS = 3,
+        BI_JPEG = 4,
+        BI_PNG = 5
+    }
+
     public enum StockObject
     {
         /// <summary>
@@ -117,7 +245,7 @@ namespace WinApi.Gdi32
     }
 
     [Flags]
-    public enum BitBltFlags : uint
+    public enum BitBltFlags
     {
         /// <summary>dest = source</summary>
         SRCCOPY = 0x00CC0020,

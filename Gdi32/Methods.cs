@@ -24,6 +24,33 @@ namespace WinApi.Gdi32
         public static extern int DeleteObject(IntPtr hObject);
 
         [DllImport(LibraryName)]
+        public static extern uint SetPixel(IntPtr hdc, int x, int y, uint crColor);
+
+        [DllImport(LibraryName)]
+        public static extern int GetPixelFormat(IntPtr hdc);
+
+        [DllImport(LibraryName)]
+        public static extern int SetBkMode(IntPtr hdc, int iBkMode);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr CreateDIBSection(IntPtr hdc, IntPtr pbmi,
+            uint pila, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr CreateBitmap(int nWidth, int nHeight, uint cPlanes, uint cBitsPerPel, IntPtr lpvBits);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr CreateBitmapIndirect([In] ref Bitmap lpbm);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr CreateDIBitmap(IntPtr hdc, [In] ref BitmapInfoHeader
+                lpbmih, uint fdwInit, byte[] lpbInit, IntPtr lpbmi,
+            uint fuUsage);
+
+        [DllImport(LibraryName)]
         public static extern int DeleteDC(IntPtr hdc);
 
         [DllImport(LibraryName)]
@@ -104,6 +131,12 @@ namespace WinApi.Gdi32
             BitBltFlags dwRop);
 
         [DllImport(LibraryName)]
+        public static extern int SaveDC(IntPtr hdc);
+
+        [DllImport(LibraryName)]
+        public static extern int RestoreDC(IntPtr hdc, int nSavedDc);
+
+        [DllImport(LibraryName)]
         public static extern IntPtr PathToRegion(IntPtr hdc);
 
         [DllImport(LibraryName)]
@@ -116,5 +149,8 @@ namespace WinApi.Gdi32
         public static extern IntPtr CreatePolyPolygonRgn(Point[] lppt,
             int[] lpPolyCounts,
             int nCount, int fnPolyFillMode);
+
+        [DllImport(LibraryName)]
+        public static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
     }
 }

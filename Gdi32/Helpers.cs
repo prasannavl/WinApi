@@ -1,4 +1,8 @@
 ﻿using System;
+using System.IO.IsolatedStorage;
+using System.Runtime.InteropServices;
+
+// ReSharper disable InconsistentNaming
 
 namespace WinApi.Gdi32
 {
@@ -7,6 +11,27 @@ namespace WinApi.Gdi32
         public static IntPtr GetStockObject(StockObject fnObject)
         {
             return Gdi32Methods.GetStockObject((int) fnObject);
+        }
+
+        public static IntPtr CreateDIBSection(IntPtr hdc, ref BitmapInfo bitmapInfo,
+            uint pila, out IntPtr ppvBits, IntPtr hSection, uint dwOffset)
+        {
+            using (var pbmi = BitmapInfo.CreateNativeHandle(ref bitmapInfo))
+            {
+                return Gdi32Methods.CreateDIBSection(hdc, pbmi.GetDangerousHandle(), pila, out ppvBits, hSection,
+                    dwOffset);
+            }
+        }
+
+        public static IntPtr CreateDIBitmap(IntPtr hdc, ref BitmapInfoHeader
+                lpbmih, uint fdwInit, byte[] lpbInit, ref BitmapInfo bitmapInfo,
+            uint fuUsage)
+        {
+            using (var pbmi = BitmapInfo.CreateNativeHandle(ref bitmapInfo))
+            {
+                return Gdi32Methods.CreateDIBitmap(hdc, ref lpbmih, fdwInit, lpbInit, pbmi.GetDangerousHandle(),
+                    fuUsage);
+            }
         }
     }
 }
