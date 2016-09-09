@@ -5,7 +5,7 @@ namespace WinApi.XWin
 {
     public interface IEventLoop
     {
-        int Run(object state = null);
+        int Run();
     }
 
     public class EventLoop : IEventLoop
