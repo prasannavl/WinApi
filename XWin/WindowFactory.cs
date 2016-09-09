@@ -193,7 +193,11 @@ namespace WinApi.XWin
 
         public class FactoryCache
         {
-            private static FactoryCache s_instance;
+            [ThreadStatic]
+            private static FactoryCache t_instance;
+
+            [ThreadStatic]
+            private static WeakReference<FactoryCache> t_weakRefInstance;
 
             private FactoryCache()
             {
@@ -208,11 +212,31 @@ namespace WinApi.XWin
             public uint WindowClassExSize { get; set; }
             public IntPtr ProcessHandle { get; set; }
 
-            public static FactoryCache Instance => s_instance ?? (s_instance = new FactoryCache());
-
-            public static void TryCleanup()
+            public static FactoryCache Instance
             {
-                s_instance = null;
+                get
+                {
+                    if (t_instance == null)
+                    {
+                        if (t_weakRefInstance == null || !t_weakRefInstance.TryGetTarget(out t_instance))
+                        {
+                            t_instance = new FactoryCache();
+                        }
+                    }
+                    return t_instance;
+                }
+            }
+
+            public static void TransitionCacheToWeakReference()
+            {
+                if (t_instance != null)
+                {
+                    if (t_weakRefInstance == null)
+                        t_weakRefInstance = new WeakReference<FactoryCache>(t_instance);
+                    else
+                        t_weakRefInstance.SetTarget(t_instance);
+                    t_instance = null;
+                }
             }
         }
     }
