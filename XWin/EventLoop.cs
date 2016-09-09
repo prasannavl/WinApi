@@ -13,7 +13,9 @@ namespace WinApi.XWin
         private object m_state;
 
         public EventLoop() {}
-        public EventLoop(object state) {
+
+        public EventLoop(object state)
+        {
             m_state = state;
         }
 
@@ -35,7 +37,9 @@ namespace WinApi.XWin
         private object m_state;
 
         public RealtimeEventLoop() {}
-        public RealtimeEventLoop(object state) {
+
+        public RealtimeEventLoop(object state)
+        {
             m_state = state;
         }
 
@@ -60,7 +64,9 @@ namespace WinApi.XWin
         private object m_state;
 
         public InterceptableEventLoop() {}
-        public InterceptableEventLoop(object state) {
+
+        public InterceptableEventLoop(object state)
+        {
             m_state = state;
         }
 
@@ -89,7 +95,9 @@ namespace WinApi.XWin
         private object m_state;
 
         public InterceptableRealtimeEventLoop() {}
-        public InterceptableRealtimeEventLoop(object state) {
+
+        public InterceptableRealtimeEventLoop(object state)
+        {
             m_state = state;
         }
 

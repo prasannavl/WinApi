@@ -193,11 +193,9 @@ namespace WinApi.XWin
 
         public class FactoryCache
         {
-            [ThreadStatic]
-            private static FactoryCache t_instance;
+            [ThreadStatic] private static FactoryCache t_instance;
 
-            [ThreadStatic]
-            private static WeakReference<FactoryCache> t_weakRefInstance;
+            [ThreadStatic] private static WeakReference<FactoryCache> t_weakRefInstance;
 
             private FactoryCache()
             {
@@ -218,7 +216,7 @@ namespace WinApi.XWin
                 {
                     if (t_instance == null)
                     {
-                        if (t_weakRefInstance == null || !t_weakRefInstance.TryGetTarget(out t_instance))
+                        if ((t_weakRefInstance == null) || !t_weakRefInstance.TryGetTarget(out t_instance))
                         {
                             t_instance = new FactoryCache();
                         }
