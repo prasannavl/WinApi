@@ -151,4 +151,13 @@ namespace WinApi.User32
             obj.Length = Marshal.SizeOf<WindowPlacement>();
         }
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct BlendFunction
+    {
+        public byte BlendOp;
+        public byte BlendFlags;
+        public byte SourceConstantAlpha;
+        public AlphaFormat AlphaFormat;
+    }
 }
