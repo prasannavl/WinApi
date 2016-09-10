@@ -1508,6 +1508,12 @@ namespace WinApi.User32
         GW_OWNER = 4
     }
 
+    public enum AlphaFormat : byte
+    {
+        AC_SRC_OVER = 0x00,
+        AC_SRC_ALPHA = 0x01
+    }
+
     public enum WM
     {
         NULL = 0x0000,
