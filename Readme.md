@@ -47,7 +47,7 @@ A direct, highly opinionated CLR library for the native Win32 API.
 
 **Why re-invent the wheel?**
 
-While aren't many well many reliable wrappers, there are a few, my favorite being Pinvoke (https://github.com/AArnott/pinvoke). So, do all this work again? See `Goals` above. It should be pretty clear why - It's a mostly a matter for coding style, and a little bit of the matter of the ability to micro-optimizate when you really need to.
+While there aren't many well defined reliable wrappers, there are a few - my favorite being Pinvoke (https://github.com/AArnott/pinvoke). While `Goals` above, should explain the reasons for re-inventing the wheel, it's also mostly a matter for coding style, and a little bit of the matter of the ability to micro-optimizate when you really need to.
 
 **Filesystem structure:**
 ```
@@ -258,11 +258,11 @@ namespace MySuperLowLevelProgram {
     {
         protected override void OnPaint()
         {
-            var hdc = User32Methods.GetDC(Handle);
-            User32Methods.FillRect(hdc, ref paintRectangle, 
+            PaintStruct ps;
+            var hdc = User32Methods.BeginPaint(hwnd, out ps);
+            User32Methods.FillRect(hdc, ref ps.PaintRectangle, 
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
-            User32Methods.ReleaseDC(Handle, hdc);
-            base.OnPaint(hdc, paintRectangle, shouldErase);
+            User32Methods.EndPaint(hwnd, ref ps);
         }
 
         protected override bool OnMessage(ref WindowMessage msg)
@@ -272,6 +272,11 @@ namespace MySuperLowLevelProgram {
                 case WM.ERASEBKGND:
                 {
                     msg.Result = new IntPtr(1);
+                    return false;
+                }
+                case WM.PAINT:
+                {
+                    OnPaint();
                     return false;
                 }
             }
