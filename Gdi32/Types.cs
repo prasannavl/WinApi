@@ -54,8 +54,8 @@ namespace WinApi.Gdi32
                 var headerPtr = (BitmapInfoHeader*) ptr.ToPointer();
                 *headerPtr = bitmapInfo.Header;
                 var quadPtr = (RgbQuad*) (headerPtr + 1);
-                int i = 0; 
-                for (;i < quads.Length; i++)
+                var i = 0;
+                for (; i < quads.Length; i++)
                 {
                     *(quadPtr + i) = quads[i];
                 }
@@ -67,7 +67,7 @@ namespace WinApi.Gdi32
             }
             finally
             {
-                if (this.handle == IntPtr.Zero)
+                if (handle == IntPtr.Zero)
                 {
                     Marshal.FreeHGlobal(ptr);
                 }
@@ -92,6 +92,12 @@ namespace WinApi.Gdi32
         public byte rgbGreen;
         public byte rgbRed;
         public byte rgbReserved;
+    }
+
+    public enum BitmapInfoColorFormat
+    {
+        DIB_RGB_COLORS = 0 /* color table in RGBs */,
+        DIB_PAL_COLORS = 1 /* color table in palette indices */
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -314,6 +320,6 @@ namespace WinApi.Gdi32
         /// <summary>
         ///     Prevents the bitmap from being mirrored.
         /// </summary>
-        NOMIRRORBITMAP = unchecked((int)0x80000000)
+        NOMIRRORBITMAP = unchecked((int) 0x80000000)
     }
 }

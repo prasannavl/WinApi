@@ -109,7 +109,7 @@ namespace WinApi.XWin
             where TWindow : NativeWindow, new()
         {
             var win = new TWindow();
-            ((IWindowInitializable)win).SetFactory(this);
+            ((IWindowInitializable) win).SetFactory(this);
 
             var extraParam = Marshal.GetFunctionPointerForDelegate((WindowProc) win.WindowInstanceInitializerProc);
             var hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
