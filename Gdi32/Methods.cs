@@ -59,6 +59,18 @@ namespace WinApi.Gdi32
         public static extern int DeleteDC(IntPtr hdc);
 
         [DllImport(LibraryName)]
+        public static extern int SetBitmapBits(IntPtr hbmp, uint cBytes, [In] byte[] lpBits);
+
+        [DllImport(LibraryName)]
+        public static extern int GetBitmapBits(IntPtr hbmp, int cbBuffer, [Out] byte[] lpvBits);
+
+        [DllImport(LibraryName)]
+        public static extern int SetBitmapBits(IntPtr hbmp, uint cBytes, IntPtr lpBits);
+
+        [DllImport(LibraryName)]
+        public static extern int GetBitmapBits(IntPtr hbmp, int cbBuffer, IntPtr lpvBits);
+
+        [DllImport(LibraryName)]
         public static extern IntPtr CreateRectRgnIndirect([In] ref Rectangle lprc);
 
         [DllImport(LibraryName)]
@@ -157,5 +169,11 @@ namespace WinApi.Gdi32
 
         [DllImport(LibraryName)]
         public static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+
+        [DllImport(LibraryName, EntryPoint = "GdiAlphaBlend")]
+        public static extern int AlphaBlend(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
+            int nWidthDest, int nHeightDest,
+            IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc,
+            BlendFunction blendFunction);
     }
 }

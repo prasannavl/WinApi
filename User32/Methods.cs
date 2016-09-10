@@ -125,6 +125,11 @@ namespace WinApi.User32
         public static extern void DisableProcessWindowsGhosting();
 
         [DllImport(LibraryName)]
+        public static extern int UpdateLayeredWindow(IntPtr hwnd, IntPtr hdcDst,
+            ref Point pptDst, ref Size psize, IntPtr hdcSrc, ref Point pptSrc, uint crKey,
+            [In] ref BlendFunction pblend, uint dwFlags);
+
+        [DllImport(LibraryName)]
         public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Rectangle rect, int cPoints = 2);
 
         [DllImport(LibraryName)]
