@@ -63,7 +63,11 @@ While there aren't many well defined reliable wrappers, there are a few - my fav
 A simple Win32 C++ Program (Mostly just C really):
 
 ```c
-#include "stdafx.h"
+#define UNICODE
+#define _UNICODE
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
 #include <iostream>
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
