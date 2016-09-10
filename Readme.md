@@ -240,6 +240,7 @@ And now further using WinApi.WinX:
 ```c#
 using System;
 using WinApi.XWin;
+using WinApi.User32;
 
 namespace MySuperLowLevelProgram {
     internal class Program
