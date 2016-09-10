@@ -9,4 +9,11 @@ namespace WinApi.Core
     {
         public int X, Y;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Size
+    {
+        public int Width;
+        public int Height;
+    }
 }
