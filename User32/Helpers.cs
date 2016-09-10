@@ -61,5 +61,65 @@ namespace WinApi.User32
         {
             return User32Methods.GetWindow(hwnd, (uint) cmd);
         }
+
+        public static int SystemParametersInfo(SystemParametersAccessibilityInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersDesktopInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersIconInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersInputInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersMenuInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersPowerInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersScreenSaverInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersTimeoutInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersUiEffectsInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
+
+        public static int SystemParametersInfo(SystemParametersWindowInfo uiAction, uint uiParam, IntPtr pvParam,
+            SystemParamtersInfoFlags fWinIni)
+        {
+            return User32Methods.SystemParametersInfo((int) uiAction, uiParam, pvParam, fWinIni);
+        }
     }
 }

@@ -47,6 +47,12 @@ namespace WinApi.User32
         public static extern IntPtr GetDC(IntPtr hwnd);
 
         [DllImport(LibraryName)]
+        public static extern int GetSystemMetrics(SystemMetrics nIndex);
+
+        [DllImport(LibraryName)]
+        public static extern int SystemParametersInfo(int uiAction, uint uiParam, IntPtr pvParam, SystemParamtersInfoFlags fWinIni);
+
+        [DllImport(LibraryName)]
         public static extern IntPtr GetWindowDC(IntPtr hwnd);
 
         [DllImport(LibraryName)]
