@@ -26,5 +26,20 @@ namespace WinApi.Kernel32
 
         [DllImport(LibraryName, EntryPoint = "RtlZeroMemory")]
         public static extern void ZeroMemory(IntPtr dest, IntPtr size);
+
+        [DllImport(LibraryName)]
+        public static extern int GetTickCount();
+
+        [DllImport(LibraryName)]
+        public static extern ulong GetTickCount64();
+
+        [DllImport(LibraryName)]
+        public static extern int QueryPerformanceCounter(out long value);
+
+        [DllImport(LibraryName)]
+        public static extern int QueryPerformanceFrequency(out long value);
+
+        [DllImport(LibraryName)]
+        public static extern int QueryUnbiasedInterruptTime(out ulong unbiasedTime);
     }
 }
