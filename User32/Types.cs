@@ -165,23 +165,38 @@ namespace WinApi.User32
     public struct AnimationInfo
     {
         /// <summary>
-        /// Creates an AMINMATIONINFO structure.
+        ///     Creates an AMINMATIONINFO structure.
         /// </summary>
         /// <param name="iMinAnimate">If non-zero and SPI_SETANIMATION is specified, enables minimize/restore animation.</param>
         public AnimationInfo(int iMinAnimate)
         {
-            this.Size = (uint) Marshal.SizeOf<AnimationInfo>();
-            this.MinAnimate = iMinAnimate;
+            Size = (uint) Marshal.SizeOf<AnimationInfo>();
+            MinAnimate = iMinAnimate;
         }
 
         /// <summary>
-        /// Always must be set to (System.UInt32)Marshal.SizeOf(typeof(ANIMATIONINFO)).
+        ///     Always must be set to (System.UInt32)Marshal.SizeOf(typeof(ANIMATIONINFO)).
         /// </summary>
         public uint Size;
 
         /// <summary>
-        /// If non-zero, minimize/restore animation is enabled, otherwise disabled.
+        ///     If non-zero, minimize/restore animation is enabled, otherwise disabled.
         /// </summary>
         public int MinAnimate;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MinimizedMetrics
+    {
+        public uint Size;
+        public int Width;
+        public int HorizontalGap;
+        public int VerticalGap;
+        public ArrangeFlags Arrange;
+
+        public static void Initialize(ref MinimizedMetrics obj)
+        {
+            obj.Size = (uint) Marshal.SizeOf<MinimizedMetrics>();
+        }
     }
 }
