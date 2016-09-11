@@ -8,18 +8,16 @@ namespace WinApi.XWin
         int Run();
     }
 
-    public class EventLoop : IEventLoop
+    public abstract class EventLoopBase : IEventLoop
     {
         private object m_state;
 
-        public EventLoop() {}
-
-        public EventLoop(object state)
+        protected EventLoopBase(object state)
         {
             m_state = state;
         }
 
-        public int Run()
+        public virtual int Run()
         {
             Message msg;
             int res;
@@ -32,18 +30,21 @@ namespace WinApi.XWin
         }
     }
 
-    public class RealtimeEventLoop : IEventLoop
+    public sealed class EventLoop : EventLoopBase
+    {
+        public EventLoop(object state = null) : base(state) {}
+    }
+
+    public abstract class RealtimeEventLoopBase : IEventLoop
     {
         private object m_state;
 
-        public RealtimeEventLoop() {}
-
-        public RealtimeEventLoop(object state)
+        protected RealtimeEventLoopBase(object state)
         {
             m_state = state;
         }
 
-        public int Run()
+        public virtual int Run()
         {
             Message msg;
             var quitMsg = (uint) WM.QUIT;
@@ -59,13 +60,16 @@ namespace WinApi.XWin
         }
     }
 
-    public class InterceptableEventLoop : IEventLoop
+    public sealed class RealtimeEventLoop : RealtimeEventLoopBase
+    {
+        public RealtimeEventLoop(object state = null) : base(state) {}
+    }
+
+    public abstract class InterceptableEventLoopBase : IEventLoop
     {
         private object m_state;
 
-        public InterceptableEventLoop() {}
-
-        public InterceptableEventLoop(object state)
+        protected InterceptableEventLoopBase(object state)
         {
             m_state = state;
         }
@@ -90,13 +94,16 @@ namespace WinApi.XWin
         protected void PostProcess(ref Message msg) {}
     }
 
-    public class InterceptableRealtimeEventLoop : IEventLoop
+    public sealed class InterceptableEventLoop : InterceptableEventLoopBase
+    {
+        public InterceptableEventLoop(object state = null) : base(state) {}
+    }
+
+    public abstract class InterceptableRealtimeEventLoopBase : IEventLoop
     {
         private object m_state;
 
-        public InterceptableRealtimeEventLoop() {}
-
-        public InterceptableRealtimeEventLoop(object state)
+        protected InterceptableRealtimeEventLoopBase(object state)
         {
             m_state = state;
         }
@@ -122,5 +129,10 @@ namespace WinApi.XWin
         protected bool Preprocess(ref Message msg) => true;
         protected bool PostTranslate(ref Message msg) => true;
         protected void PostProcess(ref Message msg) {}
+    }
+
+    public sealed class InterceptableRealtimeEventLoop : InterceptableRealtimeEventLoopBase
+    {
+        public InterceptableRealtimeEventLoop(object state = null) : base(state) {}
     }
 }
