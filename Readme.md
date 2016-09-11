@@ -259,7 +259,7 @@ namespace MySuperLowLevelProgram {
         }
     }
 
-    public class AppWindow : MainWindow
+    public class AppWindow : MainWindowBase
     {
         protected override void OnPaint()
         {
