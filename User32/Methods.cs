@@ -38,10 +38,25 @@ namespace WinApi.User32
             uint uFormat);
 
         [DllImport(LibraryName)]
+        public static extern int RegisterHotKey(IntPtr hWnd, int id, KeyModifierFlags fsModifiers, VirtualKey vk);
+
+        [DllImport(LibraryName)]
+        public static extern int UnregisterHotKey(IntPtr hWnd, int id);
+
+        [DllImport(LibraryName)]
+        public static extern uint SendInput(uint nInputs, IntPtr pInputs, int cbSize);
+
+        [DllImport(LibraryName)]
         public static extern int ValidateRect(IntPtr hWnd, [In] ref Rectangle lpRect);
 
         [DllImport(LibraryName)]
         public static extern int InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
+
+        [DllImport(LibraryName)]
+        public static extern int ClipCursor(ref Rectangle rect);
+
+        [DllImport(LibraryName)]
+        public static extern int ClipCursor(IntPtr ptr);
 
         [DllImport(LibraryName)]
         public static extern IntPtr GetDC(IntPtr hwnd);
