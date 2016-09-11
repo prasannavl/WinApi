@@ -56,13 +56,13 @@ namespace WinApi.XWin
 
         public IntPtr ProcessHandle { get; }
 
-        private IntPtr ClassInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
+        private unsafe IntPtr ClassInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             WindowProc winInstanceInitializerProc = null;
             if (msg == (int) WM.NCCREATE)
             {
                 wParam = Marshal.GetFunctionPointerForDelegate(m_windowProc);
-                var createStruct = Marshal.PtrToStructure<CreateStruct>(lParam);
+                var createStruct = *(CreateStruct*) lParam.ToPointer();
                 var winInstanceInitalizerProcPtr = createStruct.lpCreateParams;
                 if (winInstanceInitalizerProcPtr != IntPtr.Zero)
                     winInstanceInitializerProc =

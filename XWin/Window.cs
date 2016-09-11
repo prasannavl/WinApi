@@ -14,7 +14,7 @@ namespace WinApi.XWin
         public IntPtr Result;
     }
 
-    public class Window : NativeWindow
+    public abstract class WindowBase : NativeWindow
     {
         protected override void OnSourceInitialized()
         {
@@ -93,7 +93,7 @@ namespace WinApi.XWin
         }
     }
 
-    public class MainWindow : Window
+    public abstract class MainWindowBase : WindowBase
     {
         protected override bool OnMessageProcessDefault(ref WindowMessage msg)
         {
@@ -112,4 +112,8 @@ namespace WinApi.XWin
             base.OnDestroy();
         }
     }
+
+    public sealed class MainWindow : MainWindowBase {}
+
+    public sealed class Window : WindowBase {}
 }
