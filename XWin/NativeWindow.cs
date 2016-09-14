@@ -1,26 +1,25 @@
 using System;
-using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using WinApi.User32;
 
 namespace WinApi.XWin
 {
-    public interface IWindowInitializable
+    public interface IWindowConnector
     {
-        void Initialize(IntPtr windowHandle, IntPtr baseWindowProcPtr);
+        void Connect(IntPtr handle, bool takeOwnership);
+        void AttachWindowProc(IntPtr baseWindowProcPtr);
+        void AttachWindowProc();
         void SetFactory(WindowFactory factory);
     }
 
-    public class NativeWindow : IDisposable, IWindowInitializable
+    public class NativeWindowBase : IDisposable, IWindowConnector
     {
         private IntPtr m_baseWindowProcPtr;
-        private bool m_disposed;
         private WindowProc m_instanceWindowProc;
+        public bool IsSourceOwner { get; set; }
+        public IntPtr Handle { get; protected set; }
+        public bool IsDisposed { get; protected set; }
         public WindowFactory Factory { get; protected set; }
-
-        public IntPtr Handle { get; private set; }
-
-        protected bool IsDisposed => m_disposed;
 
         public void Dispose()
         {
@@ -28,25 +27,52 @@ namespace WinApi.XWin
             GC.SuppressFinalize(this);
         }
 
-        void IWindowInitializable.Initialize(IntPtr windowHandle, IntPtr baseWindowProcPtr)
+
+        void IWindowConnector.Connect(IntPtr handle, bool takeOwnership)
         {
-            Handle = windowHandle;
+            Handle = handle;
+            IsSourceOwner = takeOwnership;
+        }
+
+        void IWindowConnector.AttachWindowProc(IntPtr baseWindowProcPtr)
+        {
             m_baseWindowProcPtr = baseWindowProcPtr == IntPtr.Zero
                 ? Get(WindowLongFlags.GWLP_WNDPROC)
                 : baseWindowProcPtr;
             m_instanceWindowProc = WindowProc;
             Set(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(m_instanceWindowProc));
-            OnSourceInitialized();
+            OnSourceAttached();
         }
 
-        void IWindowInitializable.SetFactory(WindowFactory factory)
+        void IWindowConnector.AttachWindowProc()
+        {
+            ((IWindowConnector) this).AttachWindowProc(IntPtr.Zero);
+        }
+
+        void IWindowConnector.SetFactory(WindowFactory factory)
         {
             Factory = factory;
         }
 
-        ~NativeWindow()
+        ~NativeWindowBase()
         {
             Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (IsDisposed) return;
+            if (IsSourceOwner)
+            {
+                User32Methods.DestroyWindow(Handle);
+            }
+            IsDisposed = true;
+        }
+
+        protected void CheckDisposed()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().Name);
         }
 
         public void SetText(string text)
@@ -136,26 +162,15 @@ namespace WinApi.XWin
             User32Methods.ShowWindow(Handle, flags);
         }
 
-        protected virtual void OnSourceInitialized() {}
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (m_disposed) return;
-            User32Methods.DestroyWindow(Handle);
-            m_disposed = true;
-        }
-
-        protected void CheckDisposed()
-        {
-            if (m_disposed)
-                throw new ObjectDisposedException(GetType().Name);
-        }
+        protected virtual void OnSourceAttached() {}
 
         internal IntPtr WindowInstanceInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             if (msg == (int) WM.NCCREATE)
             {
-                ((IWindowInitializable) this).Initialize(hwnd, wParam);
+                var windowConnector = (IWindowConnector) this;
+                windowConnector.Connect(hwnd, true);
+                windowConnector.AttachWindowProc(wParam);
             }
             return WindowProc(hwnd, msg, wParam, lParam);
         }
@@ -165,4 +180,6 @@ namespace WinApi.XWin
             return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
         }
     }
+
+    public sealed class NativeWindow : NativeWindowBase {}
 }

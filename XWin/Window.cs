@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Runtime.Remoting.Messaging;
 using WinApi.DwmApi;
-using WinApi.Gdi32;
 using WinApi.User32;
 
 namespace WinApi.XWin
@@ -14,11 +12,11 @@ namespace WinApi.XWin
         public IntPtr Result;
     }
 
-    public abstract class WindowBase : NativeWindow
+    public abstract class WindowBase : NativeWindowBase
     {
-        protected override void OnSourceInitialized()
+        protected override void OnSourceAttached()
         {
-            base.OnSourceInitialized();
+            base.OnSourceAttached();
             if (Factory == null)
             {
                 OnCreate();
