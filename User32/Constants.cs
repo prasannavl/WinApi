@@ -1371,36 +1371,31 @@ namespace WinApi.User32
     [Flags]
     public enum KeyModifierFlags
     {
-
         /// <summary>
-        /// Either ALT key must be held down.
+        ///     Either ALT key must be held down.
         /// </summary>
-
         MOD_ALT = 0x0001,
 
         /// <summary>
-        /// Either CTRL key must be held down.
+        ///     Either CTRL key must be held down.
         /// </summary>
-
         MOD_CONTROL = 0x0002,
 
         /// <summary>
-        ///  Changes the hotkey behavior so that the keyboard auto-repeat does not yield multiple hotkey notifications. 
-        /// Windows Vista:  This flag is not supported.
+        ///     Changes the hotkey behavior so that the keyboard auto-repeat does not yield multiple hotkey notifications.
+        ///     Windows Vista:  This flag is not supported.
         /// </summary>
-
         MOD_NOREPEAT = 0x4000,
 
         /// <summary>
-        /// Either SHIFT key must be held down.
+        ///     Either SHIFT key must be held down.
         /// </summary>
-
         MOD_SHIFT = 0x0004,
 
         /// <summary>
-        /// Either WINDOWS key was held down. These keys are labeled with the Windows logo. Keyboard shortcuts that involve the WINDOWS key are reserved for use by the operating system.
+        ///     Either WINDOWS key was held down. These keys are labeled with the Windows logo. Keyboard shortcuts that involve the
+        ///     WINDOWS key are reserved for use by the operating system.
         /// </summary>
-
         MOD_WIN = 0x0008
     }
 
@@ -1617,17 +1612,19 @@ namespace WinApi.User32
     public enum WindowMonitorFlag
     {
         /// <summary>
-        /// Returns NULL.
+        ///     Returns NULL.
         /// </summary>
         MONITOR_DEFAULTTONULL = 0,
+
         /// <summary>
-        /// Returns a handle to the primary display monitor.
+        ///     Returns a handle to the primary display monitor.
         /// </summary>
         MONITOR_DEFAULTTOPRIMARY = 1,
+
         /// <summary>
-        /// Returns a handle to the display monitor that is nearest to the window.
+        ///     Returns a handle to the display monitor that is nearest to the window.
         /// </summary>
-        MONITOR_DEFAULTTONEAREST = 2,
+        MONITOR_DEFAULTTONEAREST = 2
     }
 
     public enum SystemMetrics
@@ -4302,6 +4299,4 @@ namespace WinApi.User32
     }
 
     #endregion
-
-
 }

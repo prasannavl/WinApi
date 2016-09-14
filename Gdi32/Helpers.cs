@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO.IsolatedStorage;
-using System.Runtime.InteropServices;
 
 // ReSharper disable InconsistentNaming
 
