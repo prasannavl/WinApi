@@ -33,6 +33,9 @@ namespace WinApi.User32
         [DllImport(LibraryName)]
         public static extern void EndPaint(IntPtr hwnd, [In] ref PaintStruct lpPaint);
 
+        [DllImport(LibraryName)]
+        public static extern IntPtr MonitorFromWindow(IntPtr hwnd, WindowMonitorFlag dwFlags);
+
         [DllImport(LibraryName, CharSet = CharSet.Auto)]
         public static extern int DrawText(IntPtr hdc, string lpString, int nCount, [In] ref Rectangle lpRect,
             uint uFormat);

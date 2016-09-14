@@ -90,6 +90,8 @@
     <Compile Include="Gdi32\Types.cs" />
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Helpers.cs" />
+    <Compile Include="ShCore\Methods.cs" />
+    <Compile Include="ShCore\Types.cs" />
     <Compile Include="User32\Constants.cs" />
     <Compile Include="User32\Experimental\Methods.cs" />
     <Compile Include="User32\Types.cs" />
