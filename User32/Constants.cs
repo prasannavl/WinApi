@@ -1627,6 +1627,60 @@ namespace WinApi.User32
         MONITOR_DEFAULTTONEAREST = 2
     }
 
+    public enum WindowSizeFlag
+    {
+        /// <summary>
+        /// Message is sent to all pop-up windows when some other window is maximized.
+        /// </summary>
+
+        SIZE_MAXHIDE = 4,
+
+        /// <summary>
+        /// The window has been maximized.
+        /// </summary>
+
+        SIZE_MAXIMIZED = 2,
+
+        /// <summary>
+        /// Message is sent to all pop-up windows when some other window has been restored to its former size.
+        /// </summary>
+
+        SIZE_MAXSHOW = 3,
+
+        /// <summary>
+        /// The window has been minimized.
+        /// </summary>
+
+        SIZE_MINIMIZED = 1,
+
+        /// <summary>
+        /// The window has been resized, but neither the SIZE_MINIMIZED nor SIZE_MAXIMIZED value applies.
+        /// </summary>
+
+        SIZE_RESTORED = 0
+    }
+
+    public enum WindowActivateFlag
+    {
+        /// <summary>
+        /// Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
+        /// </summary>
+
+        WA_ACTIVE = 1,
+
+        /// <summary>
+        /// Activated by a mouse click.
+        /// </summary>
+
+        WA_CLICKACTIVE = 2,
+
+        /// <summary>
+        /// Deactivated.
+        /// </summary>
+
+        WA_INACTIVE = 0
+    }
+
     public enum SystemMetrics
     {
         /// <summary>
