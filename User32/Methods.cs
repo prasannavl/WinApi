@@ -68,7 +68,7 @@ namespace WinApi.User32
         public static extern int GetSystemMetrics(SystemMetrics nIndex);
 
         [DllImport(LibraryName)]
-        public static extern int SystemParametersInfo(int uiAction, uint uiParam, IntPtr pvParam,
+        public static extern int SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam,
             SystemParamtersInfoFlags fWinIni);
 
         [DllImport(LibraryName)]
@@ -218,7 +218,7 @@ namespace WinApi.User32
         public static extern int BlockInput(bool fBlockIt);
 
         [DllImport(LibraryName)]
-        public static extern int AttachThreadInput(int idAttach, int idAttachTo, bool fAttach);
+        public static extern int AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 
         #endregion
 
