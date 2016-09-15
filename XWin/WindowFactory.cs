@@ -115,8 +115,22 @@ namespace WinApi.XWin
             return win;
         }
 
-        public TWindow CreateWindow<TWindow>(WindowStyles styles = WindowStyles.WS_OVERLAPPEDWINDOW,
-            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW, string text = "Window",
+        public TWindow CreateWindow<TWindow>(WindowStyles styles = 0,
+            WindowExStyles exStyles = 0, string text = "Window",
+            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
+            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
+            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr))
+            where TWindow : WindowCoreBase, new()
+        {
+            return CreateWindow<TWindow>(text, styles, exStyles, x, y, width, height, hParent,
+                hMenu);
+        }
+
+        public TWindow CreateFrameWindow<TWindow>(
+            WindowStyles styles =
+                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_CLIPCHILDREN | WindowStyles.WS_CLIPSIBLINGS,
+            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE,
+            string text = "Window",
             int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
             int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
             IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr))
@@ -137,13 +151,29 @@ namespace WinApi.XWin
         }
 
         public static TWindow CreateWindow<TWindow>(string className,
-            WindowStyles styles = WindowStyles.WS_OVERLAPPEDWINDOW,
-            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW, string text = "Window",
+            WindowStyles styles = 0,
+            WindowExStyles exStyles = 0, string text = "Window",
             int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
             int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
             IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
             IntPtr lpParam = default(IntPtr))
             where TWindow : WindowCoreBase, new()
+        {
+            return CreateWindow<TWindow>(className, text, styles, exStyles, x, y, width, height, hParent,
+                hMenu, hInstance, lpParam);
+        }
+
+        public static TWindow CreateFrameWindow<TWindow>(string className,
+            WindowStyles styles =
+                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_CLIPCHILDREN | WindowStyles.WS_CLIPSIBLINGS,
+            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE,
+            string text = "Window",
+            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
+            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
+            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
+            IntPtr lpParam = default(IntPtr))
+            where TWindow : WindowCoreBase, new()
+
         {
             return CreateWindow<TWindow>(className, text, styles, exStyles, x, y, width, height, hParent,
                 hMenu, hInstance, lpParam);
@@ -158,9 +188,23 @@ namespace WinApi.XWin
             return CreateWindowFromHandle(hwnd);
         }
 
+        public static NativeWindow CreateFrameWindow(string className,
+            WindowStyles styles =
+                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_CLIPCHILDREN | WindowStyles.WS_CLIPSIBLINGS,
+            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE,
+            string text = "Window",
+            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
+            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
+            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
+            IntPtr lpParam = default(IntPtr))
+        {
+            return CreateWindow(className, text, styles, exStyles, x, y, width, height, hParent,
+                hMenu, hInstance, lpParam);
+        }
+
         public static NativeWindow CreateWindow(string className,
-            WindowStyles styles = WindowStyles.WS_OVERLAPPEDWINDOW,
-            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW, string text = "Window",
+            WindowStyles styles = 0,
+            WindowExStyles exStyles = 0, string text = "Window",
             int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
             int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
             IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),

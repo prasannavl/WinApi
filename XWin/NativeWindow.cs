@@ -122,26 +122,8 @@ namespace WinApi.XWin
         }
 
         public IntPtr Create(string className,
-            IntPtr hParent,
-            int x,
-            int y,
-            int width,
-            int height,
-            string text,
-            WindowStyles styles,
-            WindowExStyles exStyles,
-            IntPtr hMenu,
-            IntPtr createParams)
-        {
-            return User32Methods.CreateWindowEx(exStyles, className, text,
-                styles, x, y, width, height, hParent, hMenu,
-                WindowFactory.FactoryCache.Instance.ProcessHandle,
-                createParams);
-        }
-
-        public IntPtr Create(string className,
-            WindowStyles styles = WindowStyles.WS_OVERLAPPEDWINDOW,
-            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW, string text = "Window",
+            WindowStyles styles = 0,
+            WindowExStyles exStyles = 0, string text = "Window",
             int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
             int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
             IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
