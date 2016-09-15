@@ -240,9 +240,9 @@ namespace MySuperLowLevelProgram {
     }
 ```
 
-Well, that's quite verbose - For the sake of example, even though we never usually end up using it this way. But if you'd like, you can and also quite transparently. Now, to be more in line with practical uses.
+Well, that's quite verbose - for the sake of example, even though we never usually end up using it this way. But if you'd like, you can use it, all while being very transparent in terms of the low level API. Now, to be more in line with practical uses.
 
-Here's a comparison to ATL/WTL.
+Here's a comparison to ATL/WTL, using the XWin namespace.
 
 Using C++ with ATL/WTL, here's a complete compilable program:
 
