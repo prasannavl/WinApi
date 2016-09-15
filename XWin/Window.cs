@@ -10,6 +10,12 @@ namespace WinApi.XWin
         public IntPtr WParam;
         public IntPtr LParam;
         public IntPtr Result;
+        public bool Handled;
+
+        public void SetHandled(bool handled = true)
+        {
+            Handled = handled;
+        }
     }
 
     public abstract class WindowBase : WindowCoreBase
@@ -33,34 +39,31 @@ namespace WinApi.XWin
 
         protected virtual void OnPaint() {}
 
-        protected virtual bool OnMessageProcessDefault(ref WindowMessage msg)
-        {
-            return true;
-        }
+        protected virtual void OnMessageProcessDefault(ref WindowMessage msg) { }
 
-        protected virtual bool OnMessage(ref WindowMessage msg)
+        protected virtual void OnMessage(ref WindowMessage msg)
         {
             switch (msg.Id)
             {
                 case WM.ACTIVATE:
                 {
                     OnActivate();
-                    return true;
+                    return;
                 }
                 case WM.CREATE:
                 {
                     OnCreate();
-                    return true;
+                    return;
                 }
                 case WM.DESTROY:
                 {
                     OnDestroy();
-                    return true;
+                    return;
                 }
                 case WM.CLOSE:
                 {
                     OnClose();
-                    return true;
+                    return;
                 }
                 case WM.PAINT:
                 {
@@ -68,11 +71,15 @@ namespace WinApi.XWin
                     var hdc = User32Methods.BeginPaint(Handle, out ps);
                     OnPaint();
                     User32Methods.EndPaint(Handle, ref ps);
-                    return true;
+                    return;
                 }
                 default:
                 {
-                    return OnMessageProcessDefault(ref msg);
+                    if (!msg.Handled)
+                    {
+                        OnMessageProcessDefault(ref msg);
+                    }
+                    return;
                 }
             }
         }
@@ -84,24 +91,26 @@ namespace WinApi.XWin
                 Id = (WM) msg,
                 WParam = wParam,
                 LParam = lParam,
-                Result = IntPtr.Zero
+                Result = IntPtr.Zero,
+                Handled = false
             };
 
-            return OnMessage(ref wmsg) ? base.WindowProc(hwnd, msg, wParam, lParam) : wmsg.Result;
+            OnMessage(ref wmsg);
+            return wmsg.Handled ? wmsg.Result : base.WindowProc(hwnd, msg, wParam, lParam);
         }
     }
 
     public abstract class MainWindowBase : WindowBase
     {
-        protected override bool OnMessageProcessDefault(ref WindowMessage msg)
+        protected override void OnMessageProcessDefault(ref WindowMessage msg)
         {
             IntPtr res;
             if (DwmApiMethods.DwmDefWindowProc(Handle, (uint) msg.Id, msg.WParam, msg.LParam, out res) > 0)
             {
                 msg.Result = res;
-                return false;
+                msg.SetHandled();
             }
-            return base.OnMessageProcessDefault(ref msg);
+            base.OnMessageProcessDefault(ref msg);
         }
 
         protected override void OnDestroy()
