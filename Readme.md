@@ -250,22 +250,26 @@ using WinApi.User32;
 namespace MySuperLowLevelProgram {
     internal class Program
     {
+        // STA not strictly required for simple applications,
+        // that doesn't use COM, but just keeping up with convention here.
         [STAThread]
         static int Main(string[] args)
         {
             var factory = WindowFactory.Create("MainWindow");
-            var win = factory.CreateFrameWindow<AppWindow>(text: "Hello");
-            win.Show();
-            return new EventLoop(win).Run();
+            using (var win = factory.CreateFrameWindow<AppWindow>(text: "Hello"))
+            {
+                win.Show();
+                return new EventLoop(win).Run();
+            }
         }
     }
 
     public class AppWindow : MainWindowBase
     {
-        protected override void OnPaint()
+        protected override void OnPaint(IntPtr hdc)
         {
             PaintStruct ps;
-            var hdc = User32Methods.BeginPaint(hwnd, out ps);
+            User32Methods.BeginPaint(hwnd, out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRectangle, 
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             User32Methods.EndPaint(hwnd, ref ps);
@@ -275,17 +279,23 @@ namespace MySuperLowLevelProgram {
         {
             switch (msg.Id)
             {
+                // Note: OnEraseBkgnd method is already available in 
+                // WindowBase, but just for the sake of overriding the
+                // message loop.
+                // Also, note that it's short-cicuited here.
+
                 case WM.ERASEBKGND:
                 {
+                    // I can even build the loop only on pay-per-use
+                    // basis, when I need it since all the default methods
+                    // are publicly, exposed with the MessageHandlers class.
+                    //
+                    // MessageHandlers.OnEraseBkgnd(this, ref msg);
+                    // return;
+
                     msg.Result = new IntPtr(1);
                     msg.SetHandled();
-                    break;
-                }
-                case WM.PAINT:
-                {
-                    OnPaint();
-                    msg.SetHandled();
-                    break;
+                    return;
                 }
             }
             base.OnMessage(ref msg);
