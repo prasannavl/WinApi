@@ -13,6 +13,20 @@ namespace WinApi.XWin
         void SetFactory(WindowFactory factory);
     }
 
+    public struct WindowMessage
+    {
+        public WM Id;
+        public IntPtr WParam;
+        public IntPtr LParam;
+        public IntPtr Result;
+        public bool Handled;
+
+        public void SetHandled(bool handled = true)
+        {
+            Handled = handled;
+        }
+    }
+
     public class WindowCoreBase : NativeWindowBase, IWindowCoreConnector, IDisposable
     {
         private IntPtr m_baseWindowProcPtr;
@@ -116,9 +130,29 @@ namespace WinApi.XWin
             return WindowProc(hwnd, msg, wParam, lParam);
         }
 
-        protected internal virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
+        protected virtual void OnMessageProcessDefault(ref WindowMessage msg) { }
+
+        protected virtual void OnMessage(ref WindowMessage msg)
         {
-            return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
+            if (!msg.Handled)
+            {
+                OnMessageProcessDefault(ref msg);
+            }
+        }
+
+        protected internal IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
+        {
+            var wmsg = new WindowMessage
+            {
+                Id = (WM)msg,
+                WParam = wParam,
+                LParam = lParam,
+                Result = IntPtr.Zero,
+                Handled = false
+            };
+
+            OnMessage(ref wmsg);
+            return wmsg.Handled ? wmsg.Result : User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
         }
     }
 
