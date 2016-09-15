@@ -1,183 +1,166 @@
 using System;
-using System.Runtime.InteropServices;
+using System.Text;
 using WinApi.User32;
 
 namespace WinApi.XWin
 {
-    public interface IWindowConnector
+    public interface INativeWindowConnector
     {
-        void Connect(IntPtr handle, bool takeOwnership);
-        void AttachWindowProc(IntPtr baseWindowProcPtr);
-        void AttachWindowProc();
-        void SetFactory(WindowFactory factory);
+        void Attach(IntPtr handle);
+        IntPtr Detach();
     }
 
-    public class NativeWindowBase : IDisposable, IWindowConnector
+    public class NativeWindowBase : INativeWindowConnector
     {
-        private IntPtr m_baseWindowProcPtr;
-        private WindowProc m_instanceWindowProc;
-        public bool IsSourceOwner { get; set; }
         public IntPtr Handle { get; protected set; }
-        public bool IsDisposed { get; protected set; }
-        public WindowFactory Factory { get; protected set; }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-
-        void IWindowConnector.Connect(IntPtr handle, bool takeOwnership)
+        void INativeWindowConnector.Attach(IntPtr handle)
         {
             Handle = handle;
-            IsSourceOwner = takeOwnership;
         }
 
-        void IWindowConnector.AttachWindowProc(IntPtr baseWindowProcPtr)
+        IntPtr INativeWindowConnector.Detach()
         {
-            m_baseWindowProcPtr = baseWindowProcPtr == IntPtr.Zero
-                ? Get(WindowLongFlags.GWLP_WNDPROC)
-                : baseWindowProcPtr;
-            m_instanceWindowProc = WindowProc;
-            Set(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(m_instanceWindowProc));
-            OnSourceAttached();
+            var h = Handle;
+            Handle = IntPtr.Zero;
+            return h;
         }
 
-        void IWindowConnector.AttachWindowProc()
+        public bool SetText(string text)
         {
-            ((IWindowConnector) this).AttachWindowProc(IntPtr.Zero);
+            return User32Methods.SetWindowText(Handle, text) != 0;
         }
 
-        void IWindowConnector.SetFactory(WindowFactory factory)
+        public string GetText()
         {
-            Factory = factory;
-        }
-
-        ~NativeWindowBase()
-        {
-            Dispose(false);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (IsDisposed) return;
-            if (IsSourceOwner)
+            var size = User32Methods.GetWindowTextLength(Handle);
+            if (size > 0)
             {
-                User32Methods.DestroyWindow(Handle);
+                var sb = new StringBuilder(size);
+                return User32Methods.GetWindowText(Handle, sb, size) > 0 ? sb.ToString() : string.Empty;
             }
-            IsDisposed = true;
+            return string.Empty;
         }
 
-        protected void CheckDisposed()
+        public bool SetSize(int width, int height)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(GetType().Name);
+            return User32Methods.SetWindowPos(Handle, IntPtr.Zero, -1, -1, width, height,
+                       SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOMOVE | SetWindowPosFlags.SWP_NOZORDER) !=
+                   0;
         }
 
-        public void SetText(string text)
+        public bool SetPosition(int x, int y)
         {
-            CheckDisposed();
-            User32Methods.SetWindowText(Handle, text);
+            return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, -1, -1,
+                       SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOSIZE | SetWindowPosFlags.SWP_NOZORDER) !=
+                   0;
         }
 
-        public void SetSize(int width, int height)
+        public bool SetPosition(int x, int y, int width, int height)
         {
-            CheckDisposed();
-            User32Methods.SetWindowPos(Handle, IntPtr.Zero, -1, -1, width, height,
-                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOMOVE | SetWindowPosFlags.SWP_NOZORDER);
+            return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height,
+                       SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOZORDER) !=
+                   0;
         }
 
-        public void SetPosition(int x, int y)
+        public bool SetPosition(int x, int y, int width, int height, SetWindowPosFlags flags)
         {
-            CheckDisposed();
-            User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, -1, -1,
-                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOSIZE | SetWindowPosFlags.SWP_NOZORDER);
+            return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height, flags) !=
+                   0;
         }
 
-        public void SetPosition(int x, int y, int width, int height)
+        public bool SetPosition(HwndZOrder order, int x, int y, int width, int height, SetWindowPosFlags flags)
         {
-            CheckDisposed();
-            User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height,
-                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOZORDER);
+            return User32Helpers.SetWindowPos(Handle, order, x, y, width, height, flags) !=
+                   0;
         }
 
-        public void SetPosition(int x, int y, int width, int height, SetWindowPosFlags flags)
+        public bool SetPosition(IntPtr hWndInsertAfter, int x, int y, int width, int height, SetWindowPosFlags flags)
         {
-            CheckDisposed();
-            User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height, flags);
+            return User32Methods.SetWindowPos(Handle, hWndInsertAfter, x, y, width, height, flags) !=
+                   0;
         }
 
-        public void SetPosition(HwndZOrder order, int x, int y, int width, int height, SetWindowPosFlags flags)
+        public bool GetPosition(out Rectangle rectangle)
         {
-            CheckDisposed();
-            User32Helpers.SetWindowPos(Handle, order, x, y, width, height, flags);
+            return User32Methods.GetWindowRect(Handle, out rectangle) !=
+                   0;
         }
 
-        public void SetPosition(IntPtr hWndInsertAfter, int x, int y, int width, int height, SetWindowPosFlags flags)
+        public bool GetClientRectangle(out Rectangle rectangle)
         {
-            CheckDisposed();
-            User32Methods.SetWindowPos(Handle, hWndInsertAfter, x, y, width, height, flags);
+            return User32Methods.GetClientRect(Handle, out rectangle) !=
+                   0;
         }
 
-        public void GetPosition(out Rectangle rectangle)
+        public IntPtr SetItem(WindowLongFlags index, IntPtr value)
         {
-            CheckDisposed();
-            User32Methods.GetWindowRect(Handle, out rectangle);
-        }
-
-        public void GetClientRectangle(out Rectangle rectangle)
-        {
-            CheckDisposed();
-            User32Methods.GetClientRect(Handle, out rectangle);
-        }
-
-        public IntPtr Set(WindowLongFlags index, IntPtr value)
-        {
-            CheckDisposed();
             return User32Methods.SetWindowLongPtr(Handle, (int) index, value);
         }
 
-        public IntPtr Get(WindowLongFlags index)
+        public IntPtr GetItem(WindowLongFlags index)
         {
-            CheckDisposed();
             return User32Methods.GetWindowLongPtr(Handle, (int) index);
         }
 
-        public void Show()
+        public bool Show()
         {
-            CheckDisposed();
-            User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_SHOW);
+            return User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_SHOW) !=
+                   0;
         }
 
-        public void Hide()
+        public bool Hide()
         {
-            CheckDisposed();
-            User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_HIDE);
+            return User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_HIDE) !=
+                   0;
         }
 
-        public void SetState(ShowWindowCommands flags)
+        public bool SetState(ShowWindowCommands flags)
         {
-            CheckDisposed();
-            User32Methods.ShowWindow(Handle, flags);
+            return User32Methods.ShowWindow(Handle, flags) !=
+                   0;
         }
 
-        protected virtual void OnSourceAttached() {}
-
-        internal IntPtr WindowInstanceInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
+        public IntPtr Create(string className,
+            IntPtr hParent,
+            int x,
+            int y,
+            int width,
+            int height,
+            string text,
+            WindowStyles styles,
+            WindowExStyles exStyles,
+            IntPtr hMenu,
+            IntPtr createParams)
         {
-            if (msg == (int) WM.NCCREATE)
+            return User32Methods.CreateWindowEx(exStyles, className, text,
+                styles, x, y, width, height, hParent, hMenu,
+                WindowFactory.FactoryCache.Instance.ProcessHandle,
+                createParams);
+        }
+
+        public IntPtr Create(string className,
+            WindowStyles styles = WindowStyles.WS_OVERLAPPEDWINDOW,
+            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW, string text = "Window",
+            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
+            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
+            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
+            IntPtr createParams = default(IntPtr))
+        {
+            return User32Methods.CreateWindowEx(exStyles, className, text,
+                styles, x, y, width, height, hParent, hMenu,
+                hInstance == IntPtr.Zero ? WindowFactory.FactoryCache.Instance.ProcessHandle : hInstance,
+                createParams);
+        }
+
+        public bool Destroy()
+        {
+            if (User32Methods.DestroyWindow(Handle) != 0)
             {
-                var windowConnector = (IWindowConnector) this;
-                windowConnector.Connect(hwnd, true);
-                windowConnector.AttachWindowProc(wParam);
+                Handle = IntPtr.Zero;
+                return true;
             }
-            return WindowProc(hwnd, msg, wParam, lParam);
-        }
-
-        protected internal virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
-        {
-            return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
+            return false;
         }
     }
 

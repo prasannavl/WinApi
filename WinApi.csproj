@@ -104,6 +104,7 @@
     <Compile Include="XWin\EventLoop.cs" />
     <Compile Include="XWin\NativeWindow.cs" />
     <Compile Include="XWin\Window.cs" />
+    <Compile Include="XWin\WindowCore.cs" />
     <Compile Include="XWin\WindowFactory.cs" />
     <Compile Include="UxTheme\Types.cs" />
     <Compile Include="UxTheme\Methods.cs" />

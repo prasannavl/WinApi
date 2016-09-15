@@ -12,11 +12,11 @@ namespace WinApi.XWin
         public IntPtr Result;
     }
 
-    public abstract class WindowBase : NativeWindowBase
+    public abstract class WindowBase : WindowCoreBase
     {
-        protected override void OnSourceAttached()
+        protected override void OnSourceConnected()
         {
-            base.OnSourceAttached();
+            base.OnSourceConnected();
             if (Factory == null)
             {
                 OnCreate();
