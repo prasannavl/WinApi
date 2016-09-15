@@ -270,22 +270,24 @@ namespace MySuperLowLevelProgram {
             User32Methods.EndPaint(hwnd, ref ps);
         }
 
-        protected override bool OnMessage(ref WindowMessage msg)
+        protected override void OnMessage(ref WindowMessage msg)
         {
             switch (msg.Id)
             {
                 case WM.ERASEBKGND:
                 {
                     msg.Result = new IntPtr(1);
-                    return false;
+                    msg.SetHandled();
+                    break;
                 }
                 case WM.PAINT:
                 {
                     OnPaint();
-                    return false;
+                    msg.SetHandled();
+                    break;
                 }
             }
-            return base.OnMessage(ref msg);
+            base.OnMessage(ref msg);
         }
     }
 }
