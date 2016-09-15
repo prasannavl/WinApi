@@ -84,6 +84,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\BinaryExtensions.cs" />
     <Compile Include="Core\Types.cs" />
     <Compile Include="DwmApi\Methods.cs" />
     <Compile Include="DwmApi\Types.cs" />
