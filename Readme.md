@@ -42,7 +42,7 @@ A direct, highly opinionated CLR library for the native Win32 API.
 
 **Notes**:
 
-- All methods in its minimal interop form (no SafeHandles, HandleRefs, etc) for maximum micro-optimization of interop scenarios in the class with `Methods` suffix. (`User32Methods`, `Kernel32Methods`, `DwmApiMethods`, etc). Prefered to use `int`, `uint` etc inside the `*Methods` class to ensure parity with native APIs. Enums can be used for flags only if the value is a strictly well defined constant set. Otherwise prefer int, uint, etc. Type safe wrappers are in the `Helpers`. 
+- All methods in its minimal interop form (no SafeHandles, HandleRefs, etc) unless absolutely required, for maximum micro-optimization of interop scenarios in the class with `Methods` suffix. (`User32Methods`, `Kernel32Methods`, `DwmApiMethods`, etc). Prefered to use `int`, `uint` etc inside the `*Methods` class to ensure parity with native APIs. Enums can be used for flags only if the value is a strictly well defined constant set. Otherwise prefer int, uint, etc. Type safe wrappers are in the `Helpers`. 
 - All methods with handles, enums and other supplemented types go into `Helpers` (`User32Helpers`, `Kernel32Helpers`, etc).
 - Everything that uses undocumented APIs is maintained in a separate `Experimental` namespace similarly.
 
@@ -240,7 +240,89 @@ namespace MySuperLowLevelProgram {
     }
 ```
 
-And now further using WinApi.WinX:
+Well, that's quite verbose - For the sake of example, even though we never usually end up using it this way. But if you'd like, you can and also quite transparently. Now, to be more in line with practical uses.
+
+Here's a comparison to ATL/WTL.
+
+Using C++ with ATL/WTL, here's a complete compilable program:
+
+```c++
+#define UNICODE
+#define _UNICODE
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
+#include <wrl.h>
+#include <atlbase.h>
+#include <atlapp.h>
+#include <atlwin.h>
+#include <atlmisc.h>
+#include <atlcrack.h>
+
+class CAppWindow : public CWindowImpl<CAppWindow, CWindow, CFrameWinTraits>
+{
+private:
+	BEGIN_MSG_MAP(CAppWindow)
+		MSG_WM_DESTROY(OnDestroy)
+		MSG_WM_PAINT(OnPaint)
+		MSG_WM_ERASEBKGND(OnEraseBkgnd)
+	END_MSG_MAP()
+
+public:
+	DECLARE_WND_CLASS_EX(nullptr, 0, -1)
+	int Run();
+
+protected:
+	void OnDestroy();
+	LRESULT OnEraseBkgnd(HDC hdc);
+	void OnPaint(HDC hdc);
+};
+
+int CAppWindow::Run()
+{
+	auto hwnd = Create(0, 0, L"Hello");
+	ShowWindow(SW_SHOWNORMAL);
+	MSG msg;
+	BOOL result;
+	while (result = GetMessage(&msg, 0, 0, 0))
+	{
+        if (result == -1)
+            return GetLastError();
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+	}
+	return 0;
+}
+
+void CAppWindow::OnDestroy()
+{
+	PostQuitMessage(0);
+}
+
+LRESULT CAppWindow::OnEraseBkgnd(HDC hdc)
+{
+	SetMsgHandled(true);
+	return 1;
+}
+
+void CAppWindow::OnPaint(HDC hdc)
+{
+	PAINTSTRUCT ps;
+	BeginPaint(&ps);
+    FillRect(hdc, &ps.rcPaint, GetStockObject(WHITE_BRUSH));
+	EndPaint(&ps);
+	SetMsgHandled(true);
+}
+
+int wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int)
+{
+	CAppWindow win;
+	return win.Run();
+}
+
+``` 
+
+And now the same using WinApi.WinX:
 
 ```c#
 using System;
