@@ -48,22 +48,22 @@ namespace WinApi.XWin
                 case WM.ACTIVATE:
                 {
                     OnActivate();
-                    return;
+                    break;
                 }
                 case WM.CREATE:
                 {
                     OnCreate();
-                    return;
+                    break;
                 }
                 case WM.DESTROY:
                 {
                     OnDestroy();
-                    return;
+                    break;
                 }
                 case WM.CLOSE:
                 {
                     OnClose();
-                    return;
+                    break;
                 }
                 case WM.PAINT:
                 {
@@ -71,7 +71,7 @@ namespace WinApi.XWin
                     var hdc = User32Methods.BeginPaint(Handle, out ps);
                     OnPaint();
                     User32Methods.EndPaint(Handle, ref ps);
-                    return;
+                    break;
                 }
                 default:
                 {
@@ -79,7 +79,7 @@ namespace WinApi.XWin
                     {
                         OnMessageProcessDefault(ref msg);
                     }
-                    return;
+                    break;
                 }
             }
         }
