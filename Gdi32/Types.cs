@@ -127,12 +127,12 @@ namespace WinApi.Gdi32
         /// <summary>
         ///     The count of color planes.
         /// </summary>
-        public int Planes;
+        public ushort Planes;
 
         /// <summary>
         ///     The number of bits required to indicate the color of a pixel.
         /// </summary>
-        public int BitsPerPixel;
+        public ushort BitsPerPixel;
 
         /// <summary>
         ///     A pointer to the location of the bit values for the bitmap. The bmBits member must be a pointer to an array of
