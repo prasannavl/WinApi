@@ -8,12 +8,12 @@ namespace WinApi.Extensions
 {
     public static class IntPtrExtensions
     {
-        public static int ToLowInt32(this IntPtr ptr)
+        public static int ToSafeInt32(this IntPtr ptr)
         {
             return unchecked(IntPtr.Size > 4 ? (int)ptr.ToInt64() : ptr.ToInt32());
         }
 
-        public static uint ToLowUInt32(this IntPtr ptr)
+        public static uint ToSafeUInt32(this IntPtr ptr)
         {
             return IntPtr.Size > 4 ? (uint)ptr.ToInt64() : (uint)ptr.ToInt32();
         }
@@ -46,16 +46,16 @@ namespace WinApi.Extensions
             high16 = param.High();
         }
 
-        public static void BreakLowInt32To16(this IntPtr ptr, out short high16, out short low16)
+        public static void BreakSafeInt32To16(this IntPtr ptr, out short high16, out short low16)
         {
-            var param = ptr.ToLowInt32();
+            var param = ptr.ToSafeInt32();
             low16 = param.Low();
             high16 = param.High();
         }
 
-        public static void BreakLowInt32To16(this IntPtr ptr, out int high16, out int low16)
+        public static void BreakSafeInt32To16(this IntPtr ptr, out int high16, out int low16)
         {
-            var param = ptr.ToLowInt32();
+            var param = ptr.ToSafeInt32();
             low16 = param.LowAsInt();
             high16 = param.HighAsInt();
         }

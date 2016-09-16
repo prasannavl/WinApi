@@ -103,15 +103,15 @@ namespace WinApi.XWin
             public static void OnSize(WindowBase windowBase, ref WindowMessage msg)
             {
                 Size size;
-                var flag = (WindowSizeFlag) msg.WParam.ToLowInt32();
-                msg.LParam.BreakLowInt32To16(out size.Height, out size.Width);
+                var flag = (WindowSizeFlag) msg.WParam.ToSafeInt32();
+                msg.LParam.BreakSafeInt32To16(out size.Height, out size.Width);
                 windowBase.OnSize(ref msg, flag, ref size);
             }
 
             public static void OnMove(WindowBase windowBase, ref WindowMessage msg)
             {
                 Point point;
-                msg.LParam.BreakLowInt32To16(out point.Y, out point.X);
+                msg.LParam.BreakSafeInt32To16(out point.Y, out point.X);
                 windowBase.OnMove(ref msg, ref point);
             }
 
@@ -123,7 +123,7 @@ namespace WinApi.XWin
             public static void OnActivate(WindowBase windowBase, ref WindowMessage msg)
             {
                 int high, low;
-                msg.WParam.BreakLowInt32To16(out high, out low);
+                msg.WParam.BreakSafeInt32To16(out high, out low);
                 var flag = (WindowActivateFlag) low;
                 // Note: wParam is unsigned
                 var isMinimized = high != 0;
@@ -133,8 +133,8 @@ namespace WinApi.XWin
 
             public static void OnActivateApp(WindowBase windowBase, ref WindowMessage msg)
             {
-                var isActive = msg.WParam.ToLowInt32() != 0;
-                var oppositeThreadId = msg.LParam.ToLowInt32();
+                var isActive = msg.WParam.ToSafeInt32() != 0;
+                var oppositeThreadId = msg.LParam.ToSafeInt32();
                 windowBase.OnActivateApp(ref msg, isActive, oppositeThreadId);
             }
 
@@ -142,7 +142,7 @@ namespace WinApi.XWin
             {
                 var imageDepthBitsPerPixel = (uint) msg.WParam.ToPointer();
                 Size size;
-                msg.LParam.BreakLowInt32To16(out size.Height, out size.Width);
+                msg.LParam.BreakSafeInt32To16(out size.Height, out size.Width);
                 windowBase.OnDisplayChange(ref msg, imageDepthBitsPerPixel, ref size);
             }
         }
