@@ -348,13 +348,18 @@ namespace MySuperLowLevelProgram {
 
     public class AppWindow : MainWindowBase
     {
-        protected override void OnPaint(IntPtr hdc)
+        protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
             PaintStruct ps;
             User32Methods.BeginPaint(hwnd, out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRectangle, 
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             User32Methods.EndPaint(hwnd, ref ps);
+
+            // Prevent default processing. Not actually
+            // required here. This is one of the reasons msg ref is 
+            // always passed along to all message loop events.
+            msg.SetHandled();
         }
 
         protected override void OnMessage(ref WindowMessage msg)
