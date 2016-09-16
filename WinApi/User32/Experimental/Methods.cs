@@ -4,7 +4,6 @@ using System.Security;
 
 namespace WinApi.User32.Experimental
 {
-    [SuppressUnmanagedCodeSecurity]
     public static class User32ExperimentalMethods
     {
         public const string LibraryName = "user32";

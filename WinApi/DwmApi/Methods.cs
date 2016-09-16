@@ -5,7 +5,6 @@ using WinApi.UxTheme;
 
 namespace WinApi.DwmApi
 {
-    [SuppressUnmanagedCodeSecurity]
     public static class DwmApiMethods
     {
         public const string LibraryName = "dwmapi";

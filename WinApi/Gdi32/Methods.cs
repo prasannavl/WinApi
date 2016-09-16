@@ -6,7 +6,6 @@ using WinApi.User32;
 
 namespace WinApi.Gdi32
 {
-    [SuppressUnmanagedCodeSecurity]
     public static class Gdi32Methods
     {
         public const string LibraryName = "gdi32";
@@ -132,7 +131,7 @@ namespace WinApi.Gdi32
         [DllImport(LibraryName)]
         public static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
 
-        [DllImport(LibraryName, CharSet = CharSet.Auto)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int TextOut(IntPtr hdc, int nXStart, int nYStart,
             string lpString, int cbString);
 

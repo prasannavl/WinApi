@@ -4,7 +4,6 @@ using System.Security;
 
 namespace WinApi.ShCore
 {
-    [SuppressUnmanagedCodeSecurity]
     public static class ShCoreMethods
     {
         public const string LibraryName = "shcore";

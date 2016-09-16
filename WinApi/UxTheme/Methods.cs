@@ -4,7 +4,6 @@ using System.Security;
 
 namespace WinApi.UxTheme
 {
-    [SuppressUnmanagedCodeSecurity]
     public static class UxThemeMethods
     {
         public const string LibraryName = "uxtheme";

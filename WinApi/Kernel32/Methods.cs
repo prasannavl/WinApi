@@ -4,7 +4,6 @@ using System.Security;
 
 namespace WinApi.Kernel32
 {
-    [SuppressUnmanagedCodeSecurity]
     public static class Kernel32Methods
     {
         public const string LibraryName = "kernel32";
@@ -18,7 +17,7 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName)]
         public static extern IntPtr GetModuleHandle(IntPtr modulePtr);
 
-        [DllImport(LibraryName, CharSet = CharSet.Auto)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [DllImport(LibraryName)]
