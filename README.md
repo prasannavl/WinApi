@@ -2,8 +2,6 @@
 
 A direct, highly opinionated CLR library for the native Win32 API.
 
-`Work-In-Progress`
-
 ```c#
     static int Main(string[] args)
     {
@@ -13,6 +11,8 @@ A direct, highly opinionated CLR library for the native Win32 API.
         return new EventLoop(win).Run();
     }
 ```
+
+Platform: `netstandard 1.2`
 
 **Goals:**
 
