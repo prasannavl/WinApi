@@ -142,9 +142,7 @@ namespace WinApi.XWin
 
         public bool Validate()
         {
-            Rectangle rect;
-            GetClientRectangle(out rect);
-            return Validate(ref rect);
+            return User32Methods.ValidateRect(Handle, IntPtr.Zero) != 0;
         }
 
         public bool Invalidate(ref Rectangle rect, bool shouldErase = false)
@@ -154,9 +152,7 @@ namespace WinApi.XWin
 
         public bool Invalidate(bool shouldErase = false)
         {
-            Rectangle rect;
-            GetClientRectangle(out rect);
-            return Invalidate(ref rect);
+            return User32Methods.InvalidateRect(Handle, IntPtr.Zero, shouldErase) != 0;
         }
 
         public bool Destroy()

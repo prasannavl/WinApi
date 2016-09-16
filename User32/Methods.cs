@@ -53,7 +53,13 @@ namespace WinApi.User32
         public static extern int ValidateRect(IntPtr hWnd, [In] ref Rectangle lpRect);
 
         [DllImport(LibraryName)]
+        public static extern int ValidateRect(IntPtr hWnd, IntPtr lpRect);
+
+        [DllImport(LibraryName)]
         public static extern int InvalidateRect(IntPtr hWnd, [In] ref Rectangle lpRect, bool bErase);
+
+        [DllImport(LibraryName)]
+        public static extern int InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
 
         [DllImport(LibraryName)]
         public static extern int ClipCursor(ref Rectangle rect);
