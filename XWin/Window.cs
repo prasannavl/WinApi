@@ -1,6 +1,5 @@
 ﻿using System;
 using WinApi.Core;
-using WinApi.DwmApi;
 using WinApi.User32;
 using WinApi.Extensions;
 
@@ -29,42 +28,42 @@ namespace WinApi.XWin
                 }
                 case WM.CREATE:
                 {
-                    MessageHandlers.OnCreate(this, ref msg);
+                    MessageHandlers.ProcessCreate(this, ref msg);
                     break;
                 }
                 case WM.SIZE:
                 {
-                    MessageHandlers.OnSize(this, ref msg);
+                    MessageHandlers.ProcessSize(this, ref msg);
                     break;
                 }
                 case WM.MOVE:
                 {
-                    MessageHandlers.OnMove(this, ref msg);
+                    MessageHandlers.ProcessMove(this, ref msg);
                     break;
                 }
                 case WM.ACTIVATE:
                 {
-                    MessageHandlers.OnActivate(this, ref msg);
+                    MessageHandlers.ProcessActivate(this, ref msg);
                     break;
                 }
                 case WM.ERASEBKGND:
                 {
-                    MessageHandlers.OnEraseBkgnd(this, ref msg);
+                    MessageHandlers.ProcessEraseBkgnd(this, ref msg);
                     break;
                 }
                 case WM.PAINT:
                 {
-                    MessageHandlers.OnPaint(this, ref msg);
+                    MessageHandlers.ProcessPaint(this, ref msg);
                     break;
                 }
                 case WM.ACTIVATEAPP:
                 {
-                    MessageHandlers.OnActivateApp(this, ref msg);
+                    MessageHandlers.ProcessActivateApp(this, ref msg);
                     break;
                 }
                 case WM.DISPLAYCHANGE:
                 {
-                    MessageHandlers.OnDisplayChange(this, ref msg);
+                    MessageHandlers.ProcessDisplayChange(this, ref msg);
                     break;
                 }
             }
@@ -90,17 +89,17 @@ namespace WinApi.XWin
 
         public static class MessageHandlers
         {
-            public static void OnPaint(WindowBase windowBase, ref WindowMessage msg)
+            public static void ProcessPaint(WindowBase windowBase, ref WindowMessage msg)
             {
                 windowBase.OnPaint(ref msg, msg.WParam);
             }
 
-            public static void OnEraseBkgnd(WindowBase windowBase, ref WindowMessage msg)
+            public static void ProcessEraseBkgnd(WindowBase windowBase, ref WindowMessage msg)
             {
                 msg.Result = new IntPtr(windowBase.OnEraseBkgnd(ref msg, msg.WParam));
             }
 
-            public static void OnSize(WindowBase windowBase, ref WindowMessage msg)
+            public static void ProcessSize(WindowBase windowBase, ref WindowMessage msg)
             {
                 Size size;
                 var flag = (WindowSizeFlag) msg.WParam.ToSafeInt32();
@@ -108,19 +107,19 @@ namespace WinApi.XWin
                 windowBase.OnSize(ref msg, flag, ref size);
             }
 
-            public static void OnMove(WindowBase windowBase, ref WindowMessage msg)
+            public static void ProcessMove(WindowBase windowBase, ref WindowMessage msg)
             {
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 windowBase.OnMove(ref msg, ref point);
             }
 
-            public static unsafe void OnCreate(WindowBase windowBase, ref WindowMessage msg)
+            public static unsafe void ProcessCreate(WindowBase windowBase, ref WindowMessage msg)
             {
                 windowBase.OnCreate(ref msg, ref *(CreateStruct*) msg.LParam);
             }
 
-            public static void OnActivate(WindowBase windowBase, ref WindowMessage msg)
+            public static void ProcessActivate(WindowBase windowBase, ref WindowMessage msg)
             {
                 int high, low;
                 msg.WParam.BreakSafeInt32To16Signed(out high, out low);
@@ -130,14 +129,14 @@ namespace WinApi.XWin
                 windowBase.OnActivate(ref msg, flag, isMinimized, oppositeWindowHandle);
             }
 
-            public static void OnActivateApp(WindowBase windowBase, ref WindowMessage msg)
+            public static void ProcessActivateApp(WindowBase windowBase, ref WindowMessage msg)
             {
                 var isActive = msg.WParam.ToSafeInt32() != 0;
                 var oppositeThreadId = msg.LParam.ToSafeInt32();
                 windowBase.OnActivateApp(ref msg, isActive, oppositeThreadId);
             }
 
-            public static unsafe void OnDisplayChange(WindowBase windowBase, ref WindowMessage msg)
+            public static unsafe void ProcessDisplayChange(WindowBase windowBase, ref WindowMessage msg)
             {
                 var imageDepthBitsPerPixel = (uint) msg.WParam.ToPointer();
                 Size size;
@@ -149,21 +148,19 @@ namespace WinApi.XWin
 
     public abstract class MainWindowBase : WindowBase
     {
-        protected override void OnMessageProcessDefault(ref WindowMessage msg)
-        {
-            IntPtr res;
-            if (DwmApiMethods.DwmDefWindowProc(Handle, (uint) msg.Id, msg.WParam, msg.LParam, out res) > 0)
-            {
-                msg.Result = res;
-                msg.SetHandled();
-            }
-            base.OnMessageProcessDefault(ref msg);
-        }
-
         protected override void OnDestroy(ref WindowMessage msg)
         {
-            User32Methods.PostQuitMessage(0);
+            MessageHelpers.PostQuitMessage();
             base.OnDestroy(ref msg);
+        }
+    }
+
+    public abstract class DwmWindowBase : WindowBase
+    {
+        protected override void OnMessageProcessDefault(ref WindowMessage msg)
+        {
+            MessageHelpers.RunDwmDefWindowProc(ref msg, Handle);
+            base.OnMessageProcessDefault(ref msg);
         }
     }
 
