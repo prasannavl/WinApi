@@ -32,11 +32,25 @@ namespace WinApi.Extensions
             high32 = param.HighAsLong();
         }
 
+        public static void BreakInt64Into32Signed(this IntPtr ptr, out long high32, out long low32)
+        {
+            var param = ptr.ToInt64();
+            low32 = param.Low();
+            high32 = param.High();
+        }
+
         public static void BreakInt32Into16(this IntPtr ptr, out int high16, out int low16)
         {
             var param = ptr.ToInt32();
             low16 = param.LowAsInt();
             high16 = param.HighAsInt();
+        }
+
+        public static void BreakInt32Into16Signed(this IntPtr ptr, out int high16, out int low16)
+        {
+            var param = ptr.ToInt32();
+            low16 = param.Low();
+            high16 = param.High();
         }
 
         public static void BreakInt32Into16(this IntPtr ptr, out short high16, out short low16)
@@ -58,6 +72,13 @@ namespace WinApi.Extensions
             var param = ptr.ToSafeInt32();
             low16 = param.LowAsInt();
             high16 = param.HighAsInt();
+        }
+
+        public static void BreakSafeInt32To16Signed(this IntPtr ptr, out int high16, out int low16)
+        {
+            var param = ptr.ToSafeInt32();
+            low16 = param.Low();
+            high16 = param.High();
         }
     }
 
