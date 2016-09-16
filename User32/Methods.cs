@@ -224,6 +224,9 @@ namespace WinApi.User32
         public static extern int BlockInput(bool fBlockIt);
 
         [DllImport(LibraryName)]
+        public static extern int WaitForInputIdle(IntPtr hProcess, uint dwMilliseconds);
+
+        [DllImport(LibraryName)]
         public static extern int AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 
         #endregion
