@@ -104,14 +104,14 @@ namespace WinApi.XWin
             {
                 Size size;
                 var flag = (WindowSizeFlag) msg.WParam.ToSafeInt32();
-                msg.LParam.BreakSafeInt32To16(out size.Height, out size.Width);
+                msg.LParam.BreakSafeInt32To16Signed(out size.Height, out size.Width);
                 windowBase.OnSize(ref msg, flag, ref size);
             }
 
             public static void OnMove(WindowBase windowBase, ref WindowMessage msg)
             {
                 Point point;
-                msg.LParam.BreakSafeInt32To16(out point.Y, out point.X);
+                msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 windowBase.OnMove(ref msg, ref point);
             }
 
@@ -123,9 +123,8 @@ namespace WinApi.XWin
             public static void OnActivate(WindowBase windowBase, ref WindowMessage msg)
             {
                 int high, low;
-                msg.WParam.BreakSafeInt32To16(out high, out low);
+                msg.WParam.BreakSafeInt32To16Signed(out high, out low);
                 var flag = (WindowActivateFlag) low;
-                // Note: wParam is unsigned
                 var isMinimized = high != 0;
                 var oppositeWindowHandle = msg.LParam;
                 windowBase.OnActivate(ref msg, flag, isMinimized, oppositeWindowHandle);
