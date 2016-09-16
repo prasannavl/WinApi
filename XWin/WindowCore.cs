@@ -127,7 +127,7 @@ namespace WinApi.XWin
                 windowConnector.Attach(hwnd, true);
                 windowConnector.AttachWindowProc(wParam);
             }
-            return WindowProc(hwnd, msg, wParam, lParam);
+            return this.WindowProc(hwnd, msg, wParam, lParam);
         }
 
         protected virtual void OnMessageProcessDefault(ref WindowMessage msg) { }
@@ -140,11 +140,11 @@ namespace WinApi.XWin
             }
         }
 
-        protected internal IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
+        protected virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             var wmsg = new WindowMessage
             {
-                Id = (WM)msg,
+                Id = (WM) msg,
                 WParam = wParam,
                 LParam = lParam,
                 Result = IntPtr.Zero,
@@ -152,7 +152,12 @@ namespace WinApi.XWin
             };
 
             OnMessage(ref wmsg);
-            return wmsg.Handled ? wmsg.Result : User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
+            return wmsg.Handled ? wmsg.Result : WindowClassProc(hwnd, msg, wParam, lParam);
+        }
+
+        protected virtual IntPtr WindowClassProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
+        {
+            return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
         }
     }
 
