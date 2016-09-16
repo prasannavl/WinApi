@@ -8,54 +8,56 @@ namespace WinApi.Extensions
 {
     public static class IntPtrExtensions
     {
-        public static int ToSafeInt(this IntPtr ptr)
+        public static int ToLowInt32(this IntPtr ptr)
         {
             return unchecked(IntPtr.Size > 4 ? (int)ptr.ToInt64() : ptr.ToInt32());
         }
 
-        public static uint ToSafeUInt(this IntPtr ptr)
+        public static uint ToLowUInt32(this IntPtr ptr)
         {
             return IntPtr.Size > 4 ? (uint)ptr.ToInt64() : (uint)ptr.ToInt32();
         }
 
-        public static void BreakAsPtr64(this IntPtr ptr, out int high, out int low)
+        public static void BreakInt64Into32(this IntPtr ptr, out int high32, out int low32)
         {
             var param = ptr.ToInt64();
-            low = param.Low();
-            high = param.High();
+            low32 = param.Low();
+            high32 = param.High();
         }
 
-        public static void BreakAsPtr64(this IntPtr ptr, out long high, out long low)
+        public static void BreakInt64Into32(this IntPtr ptr, out long high32, out long low32)
         {
             var param = ptr.ToInt64();
-            low = param.LowAsLong();
-            high = param.HighAsLong();
+            low32 = param.LowAsLong();
+            high32 = param.HighAsLong();
         }
 
-        public static void BreakAsPtr32(this IntPtr ptr, out int high, out int low)
+        public static void BreakInt32Into16(this IntPtr ptr, out int high16, out int low16)
         {
             var param = ptr.ToInt32();
-            low = param.LowAsInt();
-            high = param.HighAsInt();
+            low16 = param.LowAsInt();
+            high16 = param.HighAsInt();
         }
 
-        public static void BreakAsPtr32(this IntPtr ptr, out short high, out short low)
+        public static void BreakInt32Into16(this IntPtr ptr, out short high16, out short low16)
         {
             var param = ptr.ToInt32();
-            low = param.Low();
-            high = param.High();
+            low16 = param.Low();
+            high16 = param.High();
         }
 
-        public static void BreakIntoSafeInt(this IntPtr ptr, out int high, out int low)
+        public static void BreakLowInt32To16(this IntPtr ptr, out short high16, out short low16)
         {
-            if (IntPtr.Size > 4)
-            {
-                BreakAsPtr64(ptr, out high, out low);
-            }
-            else
-            {
-                BreakAsPtr32(ptr, out high, out low);
-            }
+            var param = ptr.ToLowInt32();
+            low16 = param.Low();
+            high16 = param.High();
+        }
+
+        public static void BreakLowInt32To16(this IntPtr ptr, out int high16, out int low16)
+        {
+            var param = ptr.ToLowInt32();
+            low16 = param.LowAsInt();
+            high16 = param.HighAsInt();
         }
     }
 

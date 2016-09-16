@@ -135,6 +135,30 @@ namespace WinApi.XWin
                 createParams);
         }
 
+        public bool Validate(ref Rectangle rect)
+        {
+            return User32Methods.ValidateRect(Handle, ref rect) != 0;
+        }
+
+        public bool Validate()
+        {
+            Rectangle rect;
+            GetClientRectangle(out rect);
+            return Validate(ref rect);
+        }
+
+        public bool Invalidate(ref Rectangle rect, bool shouldErase = false)
+        {
+            return User32Methods.InvalidateRect(Handle, ref rect, shouldErase) != 0;
+        }
+
+        public bool Invalidate(bool shouldErase = false)
+        {
+            Rectangle rect;
+            GetClientRectangle(out rect);
+            return Invalidate(ref rect);
+        }
+
         public bool Destroy()
         {
             if (User32Methods.DestroyWindow(Handle) != 0)
