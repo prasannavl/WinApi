@@ -94,12 +94,6 @@ namespace WinApi.Gdi32
         public byte rgbReserved;
     }
 
-    public enum BitmapInfoColorFormat
-    {
-        DIB_RGB_COLORS = 0 /* color table in RGBs */,
-        DIB_PAL_COLORS = 1 /* color table in palette indices */
-    }
-
     [StructLayout(LayoutKind.Sequential)]
     public struct Bitmap
     {
@@ -139,6 +133,12 @@ namespace WinApi.Gdi32
         ///     character (1-byte) values.
         /// </summary>
         public IntPtr Bits;
+    }
+
+    public enum BitmapInfoColorFormat
+    {
+        DIB_RGB_COLORS = 0 /* color table in RGBs */,
+        DIB_PAL_COLORS = 1 /* color table in palette indices */
     }
 
     public enum BitmapCompressionMode

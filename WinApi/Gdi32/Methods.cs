@@ -36,6 +36,12 @@ namespace WinApi.Gdi32
             uint pila, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
 
         [DllImport(LibraryName)]
+        public static extern IntPtr CreateCompatibleDC(IntPtr hdc);
+
+        [DllImport(LibraryName)]
+        public static extern int GetObject(IntPtr hgdiobj, int cbBuffer, IntPtr lpvObject);
+
+        [DllImport(LibraryName)]
         public static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
 
         [DllImport(LibraryName)]
