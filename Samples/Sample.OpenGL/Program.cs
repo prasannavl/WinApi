@@ -10,6 +10,15 @@ using WinApi.XWin;
 
 namespace Sample.OpenGL
 {
+    /// <summary>
+    /// NOTE: This references a modified version of OpenGL.Net, with GitHub PR #13 applied. 
+    /// If it isn't applied, inside the `CreateDeviceContext` method of MainWindow
+    /// the `DeviceContextFactory.Create` should be passed a throw-away `Control` class
+    /// from Windows.Forms that wraps the Handle IntPtr. Or else, this code will not compile. 
+    /// 
+    /// A patched version of OpenGL.Net with PR #13 applied can be found at 
+    /// https://github.com/prasannavl/OpenGL.Net meanwhile.
+    /// </summary>
     class Program
     {
         static int Main(string[] args)

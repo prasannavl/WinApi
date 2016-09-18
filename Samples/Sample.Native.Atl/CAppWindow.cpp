@@ -37,6 +37,7 @@ void CAppWindow::OnPaint(HDC hdc)
 {
 	PAINTSTRUCT ps;
 	BeginPaint(&ps);
+	FillRect(hdc, &ps.rcPaint, (HBRUSH)COLOR_WINDOW);
 	EndPaint(&ps);
 	SetMsgHandled(true);
 }
