@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using WinApi.Core;
 using WinApi.User32;
 
 namespace WinApi.XWin
@@ -87,10 +88,24 @@ namespace WinApi.XWin
                    0;
         }
 
-        public bool GetClientRectangle(out Rectangle rectangle)
+        public bool GetClientRect(out Rectangle rectangle)
         {
             return User32Methods.GetClientRect(Handle, out rectangle) !=
                    0;
+        }
+
+        public Size GetClientSize()
+        {
+            Rectangle rect;
+            GetClientRect(out rect);
+            return new Size() { Width = rect.Width, Height = rect.Height };
+        }
+
+        public Size GetWindowSize()
+        {
+            Rectangle rect;
+            GetPosition(out rect);
+            return new Size() { Width = rect.Width, Height = rect.Height };
         }
 
         public IntPtr SetItem(WindowLongFlags index, IntPtr value)
