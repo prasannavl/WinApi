@@ -10,8 +10,8 @@ namespace Sample.Win32
     {
         static int Main(string[] args)
         {
-            var factory = WindowFactory.Create(className: "MainWindow");
-            using (var win = factory.CreateFrameWindow<WinApi.XWin.MainWindow>(text: "Hello"))
+            var factory = WindowFactory.Create("MainWindow");
+            using (var win = factory.CreateFrameWindow<MainWindow>(text: "Hello"))
             {
                 win.Show();
                 return new EventLoop(win).Run();

@@ -12,7 +12,7 @@ using WinApi.User32;
 
 namespace Sample.Win32
 {
-    class GraphicsContext
+    class D3DGraphicsContext : IGraphicsContext
     {
         private DxResources m_dxResources;
         private IntPtr m_hwnd;

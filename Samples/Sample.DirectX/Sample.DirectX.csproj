@@ -112,8 +112,9 @@
   <ItemGroup>
     <Compile Include="DxResources.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="GraphicsContextD2D1.cs" />
-    <Compile Include="GraphicsContext.cs" />
+    <Compile Include="D2D1GraphicsContext.cs" />
+    <Compile Include="D3DGraphicsContext.cs" />
+    <Compile Include="IGraphicsContext.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

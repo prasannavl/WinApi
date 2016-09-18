@@ -21,6 +21,13 @@ namespace Sample.Win32
         public Adapter Adapter { get; private set; }
         public SwapChain SwapChain { get; private set; }
 
+        public void Initalize(IntPtr hwnd, Size size)
+        {
+            Hwnd = hwnd;
+            Size = size;
+            ConnectD3DRenderTargetView();
+        }
+
         private void CreateDxgiFactory()
         {
             var flag = false;
@@ -121,13 +128,6 @@ namespace Sample.Win32
         {
             if (D3DRenderTargetView == null)
                 CreateD3DRenderTargetView();
-        }
-
-        public void Initalize(IntPtr hwnd, Size size)
-        {
-            Hwnd = hwnd;
-            Size = size;
-            ConnectD3DRenderTargetView();
         }
 
         private void ConnectD3DRenderTargetView()

@@ -6,17 +6,18 @@ using WinApi.Core;
 
 namespace Sample.Win32
 {
-    public class GraphicsContextD2D1
+    public class D2D1GraphicsContext : IGraphicsContext
     {
         private Factory m_2DFactory;
         private IntPtr m_hwnd;
         private WindowRenderTarget m_renderTarget;
         private Size2 m_size;
 
-        public void Init(IntPtr hwnd, ref Size size)
+        public void Init(IntPtr hwnd, ref Size size, bool deferInitUntilFirstDraw = true)
         {
             m_hwnd = hwnd;
             m_size = new Size2(size.Width, size.Height);
+            if (!deferInitUntilFirstDraw) CreateResources();
         }
 
         private void CreateResources()
@@ -46,7 +47,7 @@ namespace Sample.Win32
         public void Resize(ref Size size)
         {
             m_size = new Size2(size.Width, size.Height);
-            Destroy();
+            ResizeRenderTarget();
         }
 
         private void ResizeRenderTarget()
