@@ -13,10 +13,8 @@ namespace Sample.Win32
         protected override void OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
             base.OnCreate(ref msg, ref createStruct);
-            Rectangle rect;
-            this.GetClientRectangle(out rect);
-            var s = new Size() {Height = rect.Height, Width = rect.Width};
-            m_graphicsContext.Init(Handle, ref s);
+            var size = GetClientSize();
+            m_graphicsContext.Init(Handle, ref size);
         }
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)

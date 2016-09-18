@@ -75,10 +75,9 @@ namespace Sample.OpenGL
                 Init();
             }
 
-            Rectangle rect;
-            GetClientRectangle(out rect);
+            var size = GetClientSize();
 
-            Gl.Viewport(0, 0, rect.Width, rect.Height);
+            Gl.Viewport(0, 0, size.Width, size.Height);
             Gl.Clear(ClearBufferMask.ColorBufferBit);
 
             Gl.Begin(PrimitiveType.Triangles);
