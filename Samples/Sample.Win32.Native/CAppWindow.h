@@ -10,9 +10,7 @@ private:
 		MSG_WM_CREATE(OnCreate)
 		MSG_WM_DESTROY(OnDestroy)
 		MSG_WM_PAINT(OnPaint)
-		MSG_WM_SIZE(OnSize)
 		MSG_WM_ERASEBKGND(OnEraseBkgnd)
-		MSG_WM_DISPLAYCHANGE(OnDisplayChange)
 	END_MSG_MAP()
 
 public:
@@ -24,9 +22,4 @@ protected:
 	void OnDestroy();
 	LRESULT OnEraseBkgnd(HDC hdc);
 	void OnPaint(HDC hdc);
-	void OnSize(UINT wParam, const CSize& size);
-	void OnDisplayChange(UINT wParam, const CSize& size);
-
-private:
-	bool m_shouldResize = false;
 };

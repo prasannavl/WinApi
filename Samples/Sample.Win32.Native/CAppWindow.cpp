@@ -40,13 +40,3 @@ void CAppWindow::OnPaint(HDC hdc)
 	EndPaint(&ps);
 	SetMsgHandled(true);
 }
-
-void CAppWindow::OnSize(UINT wParam, const CSize& size)
-{
-	m_shouldResize = true;
-}
-
-void CAppWindow::OnDisplayChange(UINT wParam, const CSize& size)
-{
-	
-}
