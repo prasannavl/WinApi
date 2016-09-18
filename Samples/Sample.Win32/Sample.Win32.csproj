@@ -110,12 +110,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DxVersions.cs" />
-    <Compile Include="D3DResources.cs" />
+    <Compile Include="DxResources.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="GraphicsContextD2D1.cs" />
     <Compile Include="GraphicsContext.cs" />
-    <Compile Include="GraphicsContext3.cs" />
     <Compile Include="MainWindow.cs" />
-    <Compile Include="GraphicsContext2.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -129,6 +128,9 @@
       <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
       <Name>WinApi</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DxVersionInfo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -16,7 +16,7 @@ namespace Sample.Win32
             Rectangle rect;
             this.GetClientRectangle(out rect);
             var s = new Size() {Height = rect.Height, Width = rect.Width};
-            m_graphicsContext.Init(Handle);
+            m_graphicsContext.Init(Handle, ref s);
         }
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)

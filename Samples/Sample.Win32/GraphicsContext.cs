@@ -14,13 +14,15 @@ namespace Sample.Win32
 {
     class GraphicsContext
     {
-        private D3DResources m_dxResources;
+        private DxResources m_dxResources;
         private IntPtr m_hwnd;
-        private Size2 m_size;
+        private Size m_size;
 
-        public void Init(IntPtr hwnd)
+        public void Init(IntPtr hwnd, ref Size size, bool deferInitUntilFirstDraw = true)
         {
             this.m_hwnd = hwnd;
+            this.m_size = size;
+            if (!deferInitUntilFirstDraw) EnsureDxResources();
         }
 
         public void Draw()
@@ -44,8 +46,8 @@ namespace Sample.Win32
             if (m_dxResources == null)
             {
                 PaintDefault();
-                m_dxResources = new D3DResources(m_hwnd);
-                m_dxResources.Initalize();
+                m_dxResources = new DxResources();
+                m_dxResources.Initalize(m_hwnd, m_size);
             }
         }
 
