@@ -128,7 +128,7 @@ LRESULT HandlePaint(HWND hwnd)
 {
 	PAINTSTRUCT ps;
 	auto hdc = BeginPaint(hwnd, &ps);
-	FillRect(hdc, &ps.rcPaint, (HBRUSH)(GetStockObject(WHITE_BRUSH));
+	FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW));
 	EndPaint(hwnd, &ps);
 	return 0;
 }
@@ -154,29 +154,29 @@ Now the direct C# equivalent using WinApi:
 
 using System;
 using System.Runtime.InteropServices;
-using WinApi.Core;
-using WinApi.User32;
 using WinApi.Gdi32;
+using WinApi.Kernel32;
+using WinApi.User32;
 
-namespace MySuperLowLevelProgram {
-
- internal class Program
+namespace Sample.Win32
+{
+    internal class Program
     {
         [STAThread]
         static int Main(string[] args)
         {
             var instanceHandle = Kernel32Methods.GetModuleHandle(IntPtr.Zero);
 
-            var wc = new WindowClassEx()
+            var wc = new WindowClassEx
             {
-                Size = (uint)Marshal.SizeOf<WindowClassEx>(),
+                Size = (uint) Marshal.SizeOf<WindowClassEx>(),
                 ClassName = "MainWindow",
-                CursorHandle  = User32Helpers.LoadCursor(IntPtr.Zero, SystemCursor.IDC_ARROW),
+                CursorHandle = User32Helpers.LoadCursor(IntPtr.Zero, SystemCursor.IDC_ARROW),
                 IconHandle = User32Helpers.LoadIcon(IntPtr.Zero, SystemIcon.IDI_APPLICATION),
-                Style = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-                BackgroundBrushHandle = new IntPtr((int)StockObject.WHITE_BRUSH),
+                Styles = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
+                BackgroundBrushHandle = new IntPtr((int) StockObject.WHITE_BRUSH),
                 WindowProc = WindowProc,
-                InstanceHandle = instanceHandle,
+                InstanceHandle = instanceHandle
             };
 
             var resReg = User32Methods.RegisterClassEx(ref wc);
@@ -186,8 +186,8 @@ namespace MySuperLowLevelProgram {
                 return -1;
             }
 
-            var hwnd = User32Methods.CreateWindowEx(WindowExStyles.WS_EX_APPWINDOW, 
-				wc.ClassName, "Hello", WindowStyles.WS_OVERLAPPEDWINDOW,
+            var hwnd = User32Methods.CreateWindowEx(WindowExStyles.WS_EX_APPWINDOW,
+                wc.ClassName, "Hello", WindowStyles.WS_OVERLAPPEDWINDOW,
                 (int) CreateWindowFlags.CW_USEDEFAULT, (int) CreateWindowFlags.CW_USEDEFAULT,
                 (int) CreateWindowFlags.CW_USEDEFAULT, (int) CreateWindowFlags.CW_USEDEFAULT,
                 IntPtr.Zero, IntPtr.Zero, instanceHandle, IntPtr.Zero);
@@ -212,8 +212,8 @@ namespace MySuperLowLevelProgram {
             return res;
         }
 
-        private static IntPtr WindowProc(IntPtr hwnd, uint umsg, 
-			IntPtr wParam, IntPtr lParam)
+        private static IntPtr WindowProc(IntPtr hwnd, uint umsg,
+            IntPtr wParam, IntPtr lParam)
         {
             var msg = (WM) umsg;
             switch (msg)
@@ -229,8 +229,8 @@ namespace MySuperLowLevelProgram {
                 {
                     PaintStruct ps;
                     var hdc = User32Methods.BeginPaint(hwnd, out ps);
-                    User32Methods.FillRect(hdc, ref ps.PaintRectangle, 
-						Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
+                    User32Methods.FillRect(hdc, ref ps.PaintRectangle,
+                        Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
                     User32Methods.EndPaint(hwnd, ref ps);
                     break;
                 }
@@ -238,6 +238,7 @@ namespace MySuperLowLevelProgram {
             return User32Methods.DefWindowProc(hwnd, umsg, wParam, lParam);
         }
     }
+}
 ```
 
 Well, that's quite verbose - for the sake of example, even though we never usually end up using it this way. But if you'd like, you can use it, all while being very transparent in terms of the low level API. Now, to be more in line with practical uses.
@@ -309,7 +310,7 @@ void CAppWindow::OnPaint(HDC hdc)
 {
 	PAINTSTRUCT ps;
 	BeginPaint(&ps);
-    FillRect(hdc, &ps.rcPaint, GetStockObject(WHITE_BRUSH));
+	FillRect(hdc, &ps.rcPaint, (HBRUSH)COLOR_WINDOW);
 	EndPaint(&ps);
 	SetMsgHandled(true);
 }
@@ -351,10 +352,10 @@ namespace MySuperLowLevelProgram {
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
             PaintStruct ps;
-            User32Methods.BeginPaint(hwnd, out ps);
+            User32Methods.BeginPaint(Handle, out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRectangle, 
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
-            User32Methods.EndPaint(hwnd, ref ps);
+            User32Methods.EndPaint(Handle, ref ps);
 
             // Prevent default processing. Not actually
             // required here. This is one of the reasons msg ref is 
