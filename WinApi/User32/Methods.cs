@@ -23,8 +23,18 @@ namespace WinApi.User32
         public static extern IntPtr LoadCursor(IntPtr hInstance, IntPtr lpCursorResource);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern IntPtr LoadImage(IntPtr hInstance, string lpszName, uint uType,
-            int cxDesired, int cyDesired, uint fuLoad);
+        public static extern IntPtr LoadImage(IntPtr hInstance, string lpszName, ResourceImageType uType,
+            int cxDesired, int cyDesired, LoadResourceFlags fuLoad);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr LoadImage(IntPtr hInstance, IntPtr resourceId, ResourceImageType uType,
+            int cxDesired, int cyDesired, LoadResourceFlags fuLoad);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern IntPtr LoadBitmap(IntPtr hInstance, string lpBitmapName);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr LoadBitmap(IntPtr hInstance, IntPtr resourceId);
 
         [DllImport(LibraryName)]
         public static extern IntPtr BeginPaint(IntPtr hwnd, out PaintStruct lpPaint);
@@ -202,7 +212,7 @@ namespace WinApi.User32
         public static extern IntPtr ChildWindowFromPointEx(IntPtr hwndParent, Point point,
             ChildWindowFromPointFlags flags);
 
-#region Keyboard, Mouse & Input Method Functions
+        #region Keyboard, Mouse & Input Method Functions
 
         [DllImport(LibraryName)]
         public static extern int IsWindowEnabled(IntPtr hWnd);
@@ -228,9 +238,9 @@ namespace WinApi.User32
         [DllImport(LibraryName)]
         public static extern int AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 
-#endregion
+        #endregion
 
-#region Window Functions
+        #region Window Functions
 
         /// <summary>
         ///     Enables you to produce special effects when showing or hiding windows. There are four types of animation: roll,
@@ -406,9 +416,9 @@ namespace WinApi.User32
         [DllImport(LibraryName)]
         public static extern int CloseWindow(IntPtr hwnd);
 
-#endregion
+        #endregion
 
-#region Window Class Functions
+        #region Window Class Functions
 
         [DllImport(LibraryName)]
         public static extern ushort RegisterClassEx([In] ref WindowClassEx lpwcx);
@@ -475,9 +485,9 @@ namespace WinApi.User32
         [DllImport(LibraryName, EntryPoint = "SetClassLongPtr")]
         private static extern IntPtr SetClassLongPtr_x64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
-#endregion
+        #endregion
 
-#region Window Procedure Functions
+        #region Window Procedure Functions
 
         [DllImport(LibraryName)]
         public static extern IntPtr DefWindowProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam);
@@ -490,9 +500,9 @@ namespace WinApi.User32
         public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam,
             IntPtr lParam);
 
-#endregion
+        #endregion
 
-#region Message Functions
+        #region Message Functions
 
         [DllImport(LibraryName)]
         public static extern int PeekMessage(out Message lpMsg, IntPtr hWnd, uint wMsgFilterMin,
@@ -668,6 +678,6 @@ namespace WinApi.User32
         [DllImport(LibraryName)]
         public static extern int PostThreadMessage(uint threadId, uint msg, IntPtr wParam, IntPtr lParam);
 
-#endregion
+        #endregion
     }
 }
