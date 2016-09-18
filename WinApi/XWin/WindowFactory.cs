@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using WinApi.Gdi32;
@@ -61,8 +62,15 @@ namespace WinApi.XWin
 
         public IntPtr ProcessHandle { get; }
 
+
+        // This is the initializer WindowProc for the class. It is only called until the NCCREATE message
+        // is arrived, at which point the WindowInstanceInitializerProc is called, which again is only
+        // executed once. It performs nifty trick to replace the WindowProc of the instance, by chaining
+        // WndProc and swapping out base classes to be able to do it without any extra overhead of the 
+        // traditional Win32 WndProc methods.
         private unsafe IntPtr ClassInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
+            Debug.WriteLine("[ClassInitializerProc]: " + hwnd);
             WindowProc winInstanceInitializerProc = null;
             if (msg == (int) WM.NCCREATE)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WinApi.User32;
 
@@ -119,8 +120,12 @@ namespace WinApi.XWin
 
         protected virtual void OnSourceConnected() {}
 
+        // The WindowInstanceInitializerProc is only executed once, where it initializes the instance
+        // with the appropriate values, and WndProc chain, after which the WindowProc method is 
+        // directly called by Windows.
         internal IntPtr WindowInstanceInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
+            Debug.WriteLine("[WindowInstanceInitializerProc]: " + hwnd);
             var windowConnector = (IWindowCoreConnector) this;
             windowConnector.Attach(hwnd, true);
             windowConnector.AttachWindowProc(wParam);
