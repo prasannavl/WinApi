@@ -1,5 +1,7 @@
-﻿using System.Runtime.ExceptionServices;
+﻿using System;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using WinApi.Gdi32;
 using WinApi.XWin;
 
 namespace Sample.Win32
