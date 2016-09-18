@@ -121,13 +121,10 @@ namespace WinApi.XWin
 
         internal IntPtr WindowInstanceInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
-            if (msg == (int) WM.NCCREATE)
-            {
-                var windowConnector = (IWindowCoreConnector) this;
-                windowConnector.Attach(hwnd, true);
-                windowConnector.AttachWindowProc(wParam);
-            }
-            return this.WindowProc(hwnd, msg, wParam, lParam);
+            var windowConnector = (IWindowCoreConnector) this;
+            windowConnector.Attach(hwnd, true);
+            windowConnector.AttachWindowProc(wParam);
+            return this.WindowProc(hwnd, msg, IntPtr.Zero, lParam);
         }
 
         protected virtual void OnMessageProcessDefault(ref WindowMessage msg) { }

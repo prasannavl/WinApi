@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using WinApi.Gdi32;
 using WinApi.Kernel32;
 using WinApi.User32;
 
@@ -8,6 +9,9 @@ namespace WinApi.XWin
 {
     public class WindowFactory
     {
+        public static WindowProc DefWindowProc = User32Methods.DefWindowProc;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+        private readonly WindowProc m_classInitializerProcRef;
         private readonly WindowProc m_windowProc;
 
         public WindowFactory(string name, WindowClassStyles styles, IntPtr hInstance, IntPtr hIcon, IntPtr hCursor,
@@ -18,7 +22,9 @@ namespace WinApi.XWin
 
             ClassName = className;
             ProcessHandle = hInstance;
-            m_windowProc = wndProc ?? User32Methods.DefWindowProc;
+            m_windowProc = wndProc ?? DefWindowProc;
+
+            m_classInitializerProcRef = ClassInitializerProc;
 
             var classInfo = new WindowClassEx
             {
@@ -28,7 +34,7 @@ namespace WinApi.XWin
                 IconHandle = hIcon,
                 Styles = styles,
                 BackgroundBrushHandle = hBgBrush,
-                WindowProc = ClassInitializerProc,
+                WindowProc = m_classInitializerProcRef,
                 InstanceHandle = hInstance
             };
 
@@ -40,11 +46,12 @@ namespace WinApi.XWin
         {
             ClassName = classEx.ClassName;
             ProcessHandle = classEx.InstanceHandle;
-            m_windowProc = classEx.WindowProc ?? User32Methods.DefWindowProc;
+            m_windowProc = classEx.WindowProc ?? DefWindowProc;
 
+            m_classInitializerProcRef = ClassInitializerProc;
             // Leave the reference untouched. So, use a copy for the modified registration.
             var classExClone = classEx;
-            classExClone.WindowProc = ClassInitializerProc;
+            classExClone.WindowProc = m_classInitializerProcRef;
 
             if (User32Methods.RegisterClassEx(ref classExClone) == 0)
                 throw new Exception("Failed to register window");
@@ -61,10 +68,13 @@ namespace WinApi.XWin
             {
                 wParam = Marshal.GetFunctionPointerForDelegate(m_windowProc);
                 var createStruct = *(CreateStruct*) lParam.ToPointer();
-                var winInstanceInitalizerProcPtr = createStruct.lpCreateParams;
-                if (winInstanceInitalizerProcPtr != IntPtr.Zero)
-                    winInstanceInitializerProc =
-                        Marshal.GetDelegateForFunctionPointer<WindowProc>(winInstanceInitalizerProcPtr);
+                var instancePtr = createStruct.lpCreateParams;
+                if (instancePtr != IntPtr.Zero)
+                {
+                    var winInstance = (WindowBase) GCHandle.FromIntPtr(instancePtr).Target;
+                    if (winInstance != null)
+                        winInstanceInitializerProc = winInstance.WindowInstanceInitializerProc;
+                }
             }
             return winInstanceInitializerProc?.Invoke(hwnd, msg, wParam, lParam) ??
                    User32Methods.DefWindowProc(hwnd, msg, wParam, lParam);
@@ -104,15 +114,25 @@ namespace WinApi.XWin
             var win = new TWindow();
             ((IWindowCoreConnector) win).SetFactory(this);
 
-            var extraParam = Marshal.GetFunctionPointerForDelegate((WindowProc) win.WindowInstanceInitializerProc);
-            var hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
-                styles, x, y, width, height, hParent, hMenu, ProcessHandle, extraParam);
+            var winGcHandle = GCHandle.Alloc(win);
+            var extraParam = GCHandle.ToIntPtr(winGcHandle);
 
-            if (hwnd == IntPtr.Zero)
+            var hwnd = IntPtr.Zero;
+            try
             {
-                win.Dispose();
-                ThrowWindowCreationFailed();
+                hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
+                    styles, x, y, width, height, hParent, hMenu, ProcessHandle, extraParam);
             }
+            finally
+            {
+                winGcHandle.Free();
+                if (hwnd == IntPtr.Zero)
+                {
+                    win.Dispose();
+                    ThrowWindowCreationFailed();
+                }
+            }
+
             return win;
         }
 
