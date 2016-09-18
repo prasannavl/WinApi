@@ -1,57 +1,81 @@
 ﻿
-    /**
-     * DX Common Interface Versions:
-     * 
-     *  DXGI:
-     *  ==== 
-     *  Platforms: 
-     *  ----
-     *  v1.0 - 1.1 : Win 7+
-     *  v1.2: Win 7 (Platform Update)+, Win 8+
-     *  v1.3: Win 8.1+
-     *  v1.4: Win 10+
-     *  v1.5: Win 10 (2016 Anniversary Update)+
-     *  ----
-     *  
-     *  v1.0: Factory, Adapter, Device, SwapChain, Output, Resource, Surface
-     *  v1.1: Factory1, Adapter1, Device1, Surface1
-     *  v1.2: Factory2, Adapter2, SwapChain1, Device2, Debug, Output1, Resource1, Surface2
-     *  v1.3: Factory3, Adapter3, SwapChain2, Device3, Debug1, Output2, Output3
-     *  v1.4: Factory4, SwapChain3, Output4
-     *  v1.5: Factory5, Device4, SwapChain4, Output5
-     *  
-     *  D3D11:
-     *  ====
-     *  Platforms:
-     *  ----
-     *  v11 - Windows 7+
-     *  v11.1 - Win 7 (Platform Update)+, Win 8+ 
-     *  v11.2 - Win 8.1+
-     *  v12 - Win 10+
-     *  ----
-     *  
-     *  v11 - Device, DeviceContext
-     *  v11.1 - Device1, DeviceContext1
-     *  v11.2 - Device2, DeviceContext2
-     *  v11.3 - Device3, DeviceContext3
-     *  v11.4 - Device4
-     */
+/**
+ * DX Common Interface Versions:
+ * 
+ *  DXGI:
+ *  ==== 
+ *  Platforms: 
+ *  ----
+ *  v1.0 - 1.1 : Win 7+
+ *  v1.2: Win 7 (Platform Update)+, Win 8+
+ *  v1.3: Win 8.1+
+ *  v1.4: Win 10+
+ *  v1.5: Win 10 (2016 Anniversary Update)+
+ *  ----
+ *  
+ *  v1.0: Factory, Adapter, Device, SwapChain, Output, Resource, Surface
+ *  v1.1: Factory1, Adapter1, Device1, Surface1
+ *  v1.2: Factory2, Adapter2, SwapChain1, Device2, Debug, Output1, Resource1, Surface2
+ *  v1.3: Factory3, Adapter3, SwapChain2, Device3, Debug1, Output2, Output3
+ *  v1.4: Factory4, SwapChain3, Output4
+ *  v1.5: Factory5, Device4, SwapChain4, Output5
+ *  
+ *  D3D11:
+ *  ====
+ *  Platforms:
+ *  ----
+ *  v11 - Windows 7+
+ *  v11.1 - Win 7 (Platform Update)+, Win 8+ 
+ *  v11.2 - Win 8.1+
+ *  v12 - Win 10+
+ *  ----
+ *  
+ *  v11 - Device, DeviceContext
+ *  v11.1 - Device1, DeviceContext1
+ *  v11.2 - Device2, DeviceContext2
+ *  v11.3 - Device3, DeviceContext3
+ *  v11.4 - Device4
+ */
 
 
-    /**
-     * D2D Common Interfaces:
-     * ====
-     * Platforms:
-     * ----
-     * v1.0 - Win 7+
-     * v1.1 - Win 7 (Platform Update)+, Win 8+
-     * v1.2 - Win 8.1+
-     * v1.3 - Win 10+
-     * ----
-     * 
-     * v1.0 - Factory, Bitmap, BitmapBrush
-     * v1.1 - Factory1, Device, DeviceContext, Bitmap1, BitmapBrush1
-     * v1.2 - Factory2, Device1, DeviceContext1
-     * v1.3 - Factory3, Factory4, Factory5, Device2, Device3, Device4, DeviceContext2, DeviceContext3, DeviceContext4
-     * 
-     */
+/**
+ * D2D Common Interfaces:
+ * ====
+ * Platforms:
+ * ----
+ * v1.0 - Win 7+
+ * v1.1 - Win 7 (Platform Update)+, Win 8+
+ * v1.2 - Win 8.1+
+ * v1.3 - Win 10+
+ * ----
+ * 
+ * v1.0 - Factory, Bitmap, BitmapBrush
+ * v1.1 - Factory1, Device, DeviceContext, Bitmap1, BitmapBrush1
+ * v1.2 - Factory2, Device1, DeviceContext1
+ * v1.3 - Factory3, Factory4, Factory5, Device2, Device3, Device4, DeviceContext2, DeviceContext3, DeviceContext4
+ * 
+ */
+
+
+/**
+ * DirectWrite Interfaces:
+ * ====
+ * Platforms:
+ * ----
+ * v1.0 - Win 7+
+ * v1.1 - Win 8+
+ * v1.2 - Win 8.1+
+ * v1.3 - Win 10+
+ * ----
+ */
+
+
+ /**
+  * DirectComposition Interfaces:
+  * ====
+  * Platforms:
+  * ----
+  * v1.0 - Win 8+
+  * v1.1 - Win 8.1+
+  * ----
+  */
