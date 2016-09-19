@@ -212,6 +212,12 @@ namespace WinApi.User32
         public static extern IntPtr ChildWindowFromPointEx(IntPtr hwndParent, Point point,
             ChildWindowFromPointFlags flags);
 
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern int MessageBox(IntPtr hWnd, string lpText, string lpCaption, uint type);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern int MessageBoxEx(IntPtr hWnd, string lpText, string lpCaption, uint type, ushort wLanguageId);
+
         #region Keyboard, Mouse & Input Method Functions
 
         [DllImport(LibraryName)]

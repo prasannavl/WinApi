@@ -1402,74 +1402,247 @@ namespace WinApi.User32
     [Flags]
     public enum LoadResourceFlags
     {
-
         /// <summary>
-        /// When the uType parameter specifies IMAGE_BITMAP, causes the function to return a DIB section bitmap rather than a compatible bitmap. This flag is useful for loading a bitmap without mapping it to the colors of the display device.
+        ///     When the uType parameter specifies IMAGE_BITMAP, causes the function to return a DIB section bitmap rather than a
+        ///     compatible bitmap. This flag is useful for loading a bitmap without mapping it to the colors of the display device.
         /// </summary>
-
         LR_CREATEDIBSECTION = 0x00002000,
 
         /// <summary>
-        /// The default flag; it does nothing. All it means is "not LR_MONOCHROME".
+        ///     The default flag; it does nothing. All it means is "not LR_MONOCHROME".
         /// </summary>
-
         LR_DEFAULTCOLOR = 0x00000000,
 
         /// <summary>
-        /// Uses the width or height specified by the system metric values for cursors or icons, if the cxDesired or cyDesired values are set to zero. If this flag is not specified and cxDesired and cyDesired are set to zero, the function uses the actual resource size. If the resource contains multiple images, the function uses the size of the first image.
+        ///     Uses the width or height specified by the system metric values for cursors or icons, if the cxDesired or cyDesired
+        ///     values are set to zero. If this flag is not specified and cxDesired and cyDesired are set to zero, the function
+        ///     uses the actual resource size. If the resource contains multiple images, the function uses the size of the first
+        ///     image.
         /// </summary>
-
         LR_DEFAULTSIZE = 0x00000040,
 
         /// <summary>
-        /// Loads the stand-alone image from the file specified by  lpszName (icon, cursor, or bitmap file).
+        ///     Loads the stand-alone image from the file specified by  lpszName (icon, cursor, or bitmap file).
         /// </summary>
-
         LR_LOADFROMFILE = 0x00000010,
 
         /// <summary>
-        /// Searches the color table for the image and replaces the following shades of gray with the corresponding 3-D color.
-        /// 						
-        ///                         
-        /// Dk Gray, RGB(128,128,128) with COLOR_3DSHADOW
-        /// Gray, RGB(192,192,192) with COLOR_3DFACE
-        /// Lt Gray, RGB(223,223,223) with COLOR_3DLIGHT
-        /// Do not use this option if you are loading a bitmap with a color depth greater than 8bpp.
+        ///     Searches the color table for the image and replaces the following shades of gray with the corresponding 3-D color.
+        ///     Dk Gray, RGB(128,128,128) with COLOR_3DSHADOW
+        ///     Gray, RGB(192,192,192) with COLOR_3DFACE
+        ///     Lt Gray, RGB(223,223,223) with COLOR_3DLIGHT
+        ///     Do not use this option if you are loading a bitmap with a color depth greater than 8bpp.
         /// </summary>
-
         LR_LOADMAP3DCOLORS = 0x00001000,
 
         /// <summary>
-        /// Retrieves the color value of the first pixel in the image and replaces the corresponding entry in the color table with the default window color (COLOR_WINDOW). All pixels in the image that use that entry become the default window color. This value applies only to images that have corresponding color tables.
-        /// Do not use this option if you are loading a bitmap with a color depth greater than 8bpp.
-        /// If fuLoad includes both the LR_LOADTRANSPARENT and LR_LOADMAP3DCOLORS values, LR_LOADTRANSPARENT takes precedence. However, the color table entry is replaced with COLOR_3DFACE rather than COLOR_WINDOW.
+        ///     Retrieves the color value of the first pixel in the image and replaces the corresponding entry in the color table
+        ///     with the default window color (COLOR_WINDOW). All pixels in the image that use that entry become the default window
+        ///     color. This value applies only to images that have corresponding color tables.
+        ///     Do not use this option if you are loading a bitmap with a color depth greater than 8bpp.
+        ///     If fuLoad includes both the LR_LOADTRANSPARENT and LR_LOADMAP3DCOLORS values, LR_LOADTRANSPARENT takes precedence.
+        ///     However, the color table entry is replaced with COLOR_3DFACE rather than COLOR_WINDOW.
         /// </summary>
-
         LR_LOADTRANSPARENT = 0x00000020,
 
         /// <summary>
-        /// Loads the image in black and white.
+        ///     Loads the image in black and white.
         /// </summary>
-
         LR_MONOCHROME = 0x00000001,
 
         /// <summary>
-        /// Shares the image handle if the image is loaded multiple times. If LR_SHARED is not set, a second call to LoadImage for the same resource will load the image again and return a different handle. 
-        /// When you use this flag, the system will destroy the resource when it is no longer needed.
-        /// Do not use LR_SHARED for images that have non-standard sizes, that may change after loading, or that are loaded from a file.
-        /// When loading a system icon or cursor, you must use LR_SHARED or the function will fail to load the resource.
-        /// This function finds the first image in the cache with the requested resource name, regardless of the size requested.
+        ///     Shares the image handle if the image is loaded multiple times. If LR_SHARED is not set, a second call to LoadImage
+        ///     for the same resource will load the image again and return a different handle.
+        ///     When you use this flag, the system will destroy the resource when it is no longer needed.
+        ///     Do not use LR_SHARED for images that have non-standard sizes, that may change after loading, or that are loaded
+        ///     from a file.
+        ///     When loading a system icon or cursor, you must use LR_SHARED or the function will fail to load the resource.
+        ///     This function finds the first image in the cache with the requested resource name, regardless of the size
+        ///     requested.
         /// </summary>
-
         LR_SHARED = 0x00008000,
 
         /// <summary>
-        /// Uses true VGA colors.
+        ///     Uses true VGA colors.
         /// </summary>
-
         LR_VGACOLOR = 0x00000080
     }
 
+    [Flags]
+    public enum MessageBoxFlags
+    {
+        /// <summary>
+        ///     The message box contains three push buttons: Abort, Retry, and Ignore.
+        /// </summary>
+        MB_ABORTRETRYIGNORE = 0x00000002,
+
+        /// <summary>
+        ///     The message box contains three push buttons: Cancel, Try Again, Continue. Use this message box type instead of
+        ///     MB_ABORTRETRYIGNORE.
+        /// </summary>
+        MB_CANCELTRYCONTINUE = 0x00000006,
+
+        /// <summary>
+        ///     Adds a Help button to the message box. When the user clicks the Help button or presses F1, the system sends a
+        ///     WM_HELP message to the owner.
+        /// </summary>
+        MB_HELP = 0x00004000,
+
+        /// <summary>
+        ///     The message box contains one push button: OK. This is the default.
+        /// </summary>
+        MB_OK = 0x00000000,
+
+        /// <summary>
+        ///     The message box contains two push buttons: OK and Cancel.
+        /// </summary>
+        MB_OKCANCEL = 0x00000001,
+
+        /// <summary>
+        ///     The message box contains two push buttons: Retry and Cancel.
+        /// </summary>
+        MB_RETRYCANCEL = 0x00000005,
+
+        /// <summary>
+        ///     The message box contains two push buttons: Yes and No.
+        /// </summary>
+        MB_YESNO = 0x00000004,
+
+        /// <summary>
+        ///     The message box contains three push buttons: Yes, No, and Cancel.
+        /// </summary>
+        MB_YESNOCANCEL = 0x00000003,
+
+        /// <summary>
+        ///     An exclamation-point icon appears in the message box.
+        /// </summary>
+        MB_ICONEXCLAMATION = 0x00000030,
+
+        /// <summary>
+        ///     An exclamation-point icon appears in the message box.
+        /// </summary>
+        MB_ICONWARNING = 0x00000030,
+
+        /// <summary>
+        ///     An icon consisting of a lowercase letter i in a circle appears in the message box.
+        /// </summary>
+        MB_ICONINFORMATION = 0x00000040,
+
+        /// <summary>
+        ///     An icon consisting of a lowercase letter i in a circle appears in the message box.
+        /// </summary>
+        MB_ICONASTERISK = 0x00000040,
+
+        /// <summary>
+        ///     A question-mark icon appears in the message box. The question-mark message icon is no longer recommended because it
+        ///     does not clearly represent a specific type of message and because the phrasing of a message as a question could
+        ///     apply to any message type. In addition, users can confuse the message symbol question mark with Help information.
+        ///     Therefore, do not use this question mark message symbol in your message boxes. The system continues to support its
+        ///     inclusion only for backward compatibility.
+        /// </summary>
+        MB_ICONQUESTION = 0x00000020,
+
+        /// <summary>
+        ///     A stop-sign icon appears in the message box.
+        /// </summary>
+        MB_ICONSTOP = 0x00000010,
+
+        /// <summary>
+        ///     A stop-sign icon appears in the message box.
+        /// </summary>
+        MB_ICONERROR = 0x00000010,
+
+        /// <summary>
+        ///     A stop-sign icon appears in the message box.
+        /// </summary>
+        MB_ICONHAND = 0x00000010,
+
+        /// <summary>
+        ///     The first button is the default button.
+        ///     MB_DEFBUTTON1 is the default unless MB_DEFBUTTON2, MB_DEFBUTTON3, or MB_DEFBUTTON4 is specified.
+        /// </summary>
+        MB_DEFBUTTON1 = 0x00000000,
+
+        /// <summary>
+        ///     The second button is the default button.
+        /// </summary>
+        MB_DEFBUTTON2 = 0x00000100,
+
+        /// <summary>
+        ///     The third button is the default button.
+        /// </summary>
+        MB_DEFBUTTON3 = 0x00000200,
+
+        /// <summary>
+        ///     The fourth button is the default button.
+        /// </summary>
+        MB_DEFBUTTON4 = 0x00000300,
+
+        /// <summary>
+        ///     The user must respond to the message box before continuing work in the window identified by the hWnd parameter.
+        ///     However, the user can move to the windows of other threads and work in those windows.
+        ///     Depending on the hierarchy of windows in the application, the user may be able to move to other windows within the
+        ///     thread. All child windows of the parent of the message box are automatically disabled, but pop-up windows are not.
+        ///     MB_APPLMODAL is the default if neither MB_SYSTEMMODAL nor MB_TASKMODAL is specified.
+        /// </summary>
+        MB_APPLMODAL = 0x00000000,
+
+        /// <summary>
+        ///     Same as MB_APPLMODAL except that the message box has the WS_EX_TOPMOST style. Use system-modal message boxes to
+        ///     notify the user of serious, potentially damaging errors that require immediate attention (for example, running out
+        ///     of memory). This flag has no effect on the user's ability to interact with windows other than those associated with
+        ///     hWnd.
+        /// </summary>
+        MB_SYSTEMMODAL = 0x00001000,
+
+        /// <summary>
+        ///     Same as MB_APPLMODAL except that all the top-level windows belonging to the current thread are disabled if the hWnd
+        ///     parameter is NULL. Use this flag when the calling application or library does not have a window handle available
+        ///     but still needs to prevent input to other windows in the calling thread without suspending other threads.
+        /// </summary>
+        MB_TASKMODAL = 0x00002000,
+
+        /// <summary>
+        ///     Same as desktop of the interactive window station. For more information, see Window Stations.
+        ///     If the current input desktop is not the default desktop, MessageBox does not return until the user switches to the
+        ///     default desktop.
+        /// </summary>
+        MB_DEFAULT_DESKTOP_ONLY = 0x00020000,
+
+        /// <summary>
+        ///     The text is right-justified.
+        /// </summary>
+        MB_RIGHT = 0x00080000,
+
+        /// <summary>
+        ///     Displays message and caption text using right-to-left reading order on Hebrew and Arabic systems.
+        /// </summary>
+        MB_RTLREADING = 0x00100000,
+
+        /// <summary>
+        ///     The message box becomes the foreground window. Internally, the system calls the SetForegroundWindow function for
+        ///     the message box.
+        /// </summary>
+        MB_SETFOREGROUND = 0x00010000,
+
+        /// <summary>
+        ///     The message box is created with the WS_EX_TOPMOST window style.
+        /// </summary>
+        MB_TOPMOST = 0x00040000,
+
+        /// <summary>
+        ///     The caller is a service notifying the user of an event. The function displays a message box on the current active
+        ///     desktop, even if there is no user logged on to the computer.
+        ///     Terminal Services: If the calling thread has an impersonation token, the function directs the message box to the
+        ///     session specified in the impersonation token.
+        ///     If this flag is set, the hWnd parameter must be NULL. This is so that the message box can appear on a desktop other
+        ///     than the desktop corresponding to the hWnd.
+        ///     For information on security considerations in regard to using this flag, see Interactive Services. In particular,
+        ///     be aware that this flag can produce interactive content on a locked desktop and should therefore be used for only a
+        ///     very limited set of scenarios, such as resource exhaustion.
+        /// </summary>
+        MB_SERVICE_NOTIFICATION = 0x00200000
+    }
 
     #endregion
 
@@ -1702,237 +1875,252 @@ namespace WinApi.User32
     public enum WindowSizeFlag
     {
         /// <summary>
-        /// Message is sent to all pop-up windows when some other window is maximized.
+        ///     Message is sent to all pop-up windows when some other window is maximized.
         /// </summary>
-
         SIZE_MAXHIDE = 4,
 
         /// <summary>
-        /// The window has been maximized.
+        ///     The window has been maximized.
         /// </summary>
-
         SIZE_MAXIMIZED = 2,
 
         /// <summary>
-        /// Message is sent to all pop-up windows when some other window has been restored to its former size.
+        ///     Message is sent to all pop-up windows when some other window has been restored to its former size.
         /// </summary>
-
         SIZE_MAXSHOW = 3,
 
         /// <summary>
-        /// The window has been minimized.
+        ///     The window has been minimized.
         /// </summary>
-
         SIZE_MINIMIZED = 1,
 
         /// <summary>
-        /// The window has been resized, but neither the SIZE_MINIMIZED nor SIZE_MAXIMIZED value applies.
+        ///     The window has been resized, but neither the SIZE_MINIMIZED nor SIZE_MAXIMIZED value applies.
         /// </summary>
-
         SIZE_RESTORED = 0
     }
 
     public enum WindowActivateFlag
     {
         /// <summary>
-        /// Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use of the keyboard interface to select the window).
+        ///     Activated by some method other than a mouse click (for example, by a call to the SetActiveWindow function or by use
+        ///     of the keyboard interface to select the window).
         /// </summary>
-
         WA_ACTIVE = 1,
 
         /// <summary>
-        /// Activated by a mouse click.
+        ///     Activated by a mouse click.
         /// </summary>
-
         WA_CLICKACTIVE = 2,
 
         /// <summary>
-        /// Deactivated.
+        ///     Deactivated.
         /// </summary>
-
         WA_INACTIVE = 0
     }
 
     public enum HitTestFlag
     {
-
         /// <summary>
-        /// In the border of a window that does not have a sizing border.
+        ///     In the border of a window that does not have a sizing border.
         /// </summary>
-
         HTBORDER = 18,
 
         /// <summary>
-        /// In the lower-horizontal border of a resizable window (the user can click the mouse to resize the window vertically).
+        ///     In the lower-horizontal border of a resizable window (the user can click the mouse to resize the window
+        ///     vertically).
         /// </summary>
-
         HTBOTTOM = 15,
 
         /// <summary>
-        /// In the lower-left corner of a border of a resizable window (the user can click the mouse to resize the window diagonally).
+        ///     In the lower-left corner of a border of a resizable window (the user can click the mouse to resize the window
+        ///     diagonally).
         /// </summary>
-
         HTBOTTOMLEFT = 16,
 
         /// <summary>
-        /// In the lower-right corner of a border of a resizable window (the user can click the mouse to resize the window diagonally).
+        ///     In the lower-right corner of a border of a resizable window (the user can click the mouse to resize the window
+        ///     diagonally).
         /// </summary>
-
         HTBOTTOMRIGHT = 17,
 
         /// <summary>
-        /// In a title bar.
+        ///     In a title bar.
         /// </summary>
-
         HTCAPTION = 2,
 
         /// <summary>
-        /// In a client area.
+        ///     In a client area.
         /// </summary>
-
         HTCLIENT = 1,
 
         /// <summary>
-        /// In a Close button.
+        ///     In a Close button.
         /// </summary>
-
         HTCLOSE = 20,
 
         /// <summary>
-        /// On the screen background or on a dividing line between windows (same as HTNOWHERE, except that the DefWindowProc function produces a system beep to indicate an error).
+        ///     On the screen background or on a dividing line between windows (same as HTNOWHERE, except that the DefWindowProc
+        ///     function produces a system beep to indicate an error).
         /// </summary>
-
         HTERROR = -2,
 
         /// <summary>
-        /// In a size box (same as HTSIZE).
+        ///     In a size box (same as HTSIZE).
         /// </summary>
-
         HTGROWBOX = 4,
 
         /// <summary>
-        /// In a Help button.
+        ///     In a Help button.
         /// </summary>
-
         HTHELP = 21,
 
         /// <summary>
-        /// In a horizontal scroll bar.
+        ///     In a horizontal scroll bar.
         /// </summary>
-
         HTHSCROLL = 6,
 
         /// <summary>
-        /// In the left border of a resizable window (the user can click the mouse to resize the window horizontally).
+        ///     In the left border of a resizable window (the user can click the mouse to resize the window horizontally).
         /// </summary>
-
         HTLEFT = 10,
 
         /// <summary>
-        /// In a menu.
+        ///     In a menu.
         /// </summary>
-
         HTMENU = 5,
 
         /// <summary>
-        /// In a Maximize button.
+        ///     In a Maximize button.
         /// </summary>
-
         HTMAXBUTTON = 9,
 
         /// <summary>
-        /// In a Minimize button.
+        ///     In a Minimize button.
         /// </summary>
-
         HTMINBUTTON = 8,
 
         /// <summary>
-        /// On the screen background or on a dividing line between windows.
+        ///     On the screen background or on a dividing line between windows.
         /// </summary>
-
         HTNOWHERE = 0,
 
         /// <summary>
-        /// In a Minimize button.
+        ///     In a Minimize button.
         /// </summary>
-
         HTREDUCE = 8,
 
         /// <summary>
-        /// In the right border of a resizable window (the user can click the mouse to resize the window horizontally).
+        ///     In the right border of a resizable window (the user can click the mouse to resize the window horizontally).
         /// </summary>
-
         HTRIGHT = 11,
 
         /// <summary>
-        /// In a size box (same as HTGROWBOX).
+        ///     In a size box (same as HTGROWBOX).
         /// </summary>
-
         HTSIZE = 4,
 
         /// <summary>
-        /// In a window menu or in a Close button in a child window.
+        ///     In a window menu or in a Close button in a child window.
         /// </summary>
-
         HTSYSMENU = 3,
 
         /// <summary>
-        /// In the upper-horizontal border of a window.
+        ///     In the upper-horizontal border of a window.
         /// </summary>
-
         HTTOP = 12,
 
         /// <summary>
-        /// In the upper-left corner of a window border.
+        ///     In the upper-left corner of a window border.
         /// </summary>
-
         HTTOPLEFT = 13,
 
         /// <summary>
-        /// In the upper-right corner of a window border.
+        ///     In the upper-right corner of a window border.
         /// </summary>
-
         HTTOPRIGHT = 14,
 
         /// <summary>
-        /// In a window currently covered by another window in the same thread (the message will be sent to underlying windows in the same thread until one of them returns a code that is not HTTRANSPARENT).
+        ///     In a window currently covered by another window in the same thread (the message will be sent to underlying windows
+        ///     in the same thread until one of them returns a code that is not HTTRANSPARENT).
         /// </summary>
-
         HTTRANSPARENT = -1,
 
         /// <summary>
-        /// In the vertical scroll bar.
+        ///     In the vertical scroll bar.
         /// </summary>
-
         HTVSCROLL = 7,
 
         /// <summary>
-        /// In a Maximize button.
+        ///     In a Maximize button.
         /// </summary>
-
         HTZOOM = 9
     }
 
     public enum ResourceImageType
     {
-
         /// <summary>
-        /// Loads a bitmap.
+        ///     Loads a bitmap.
         /// </summary>
-
         IMAGE_BITMAP = 0,
 
         /// <summary>
-        /// Loads a cursor.
+        ///     Loads a cursor.
         /// </summary>
-
         IMAGE_CURSOR = 2,
 
         /// <summary>
-        /// Loads an icon.
+        ///     Loads an icon.
         /// </summary>
-
         IMAGE_ICON = 1
+    }
+
+    public enum MessageBoxResult
+    {
+        /// <summary>
+        ///     The Abort button was selected.
+        /// </summary>
+        IDABORT = 3,
+
+        /// <summary>
+        ///     The Cancel button was selected.
+        /// </summary>
+        IDCANCEL = 2,
+
+        /// <summary>
+        ///     The Continue button was selected.
+        /// </summary>
+        IDCONTINUE = 11,
+
+        /// <summary>
+        ///     The Ignore button was selected.
+        /// </summary>
+        IDIGNORE = 5,
+
+        /// <summary>
+        ///     The No button was selected.
+        /// </summary>
+        IDNO = 7,
+
+        /// <summary>
+        ///     The OK button was selected.
+        /// </summary>
+        IDOK = 1,
+
+        /// <summary>
+        ///     The Retry button was selected.
+        /// </summary>
+        IDRETRY = 4,
+
+        /// <summary>
+        ///     The Try Again button was selected.
+        /// </summary>
+        IDTRYAGAIN = 10,
+
+        /// <summary>
+        ///     The Yes button was selected.
+        /// </summary>
+        IDYES = 6
     }
 
     public enum SystemColor
@@ -1972,7 +2160,7 @@ namespace WinApi.User32
         COLOR_3DSHADOW = COLOR_BTNSHADOW,
         COLOR_3DHIGHLIGHT = COLOR_BTNHIGHLIGHT,
         COLOR_3DHILIGHT = COLOR_BTNHIGHLIGHT,
-        COLOR_BTNHILIGHT = COLOR_BTNHIGHLIGHT,
+        COLOR_BTNHILIGHT = COLOR_BTNHIGHLIGHT
     }
 
     public enum SystemMetrics

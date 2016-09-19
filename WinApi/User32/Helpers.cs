@@ -121,5 +121,10 @@ namespace WinApi.User32
         {
             return User32Methods.SystemParametersInfo((uint) uiAction, uiParam, pvParam, fWinIni);
         }
+
+        public static MessageBoxResult MessageBox(IntPtr hWnd, string lpText, string lpCaption, MessageBoxFlags type)
+        {
+            return (MessageBoxResult)User32Methods.MessageBox(hWnd, lpText, lpCaption, (uint)type);
+        }
     }
 }
