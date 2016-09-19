@@ -77,7 +77,7 @@ namespace Sample.DirectX
             Disconnect3DRenderTargetView();
             DisposableHelpers.DisposeAndSetNull(ref m_d3DRenderTargetView);
             // Resize retaining other properties.
-            SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.R8G8B8A8_UNorm, SwapChainFlags.None);
+            SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
             ConnectD3DRenderTargetView();
         }
 
@@ -158,7 +158,7 @@ namespace Sample.DirectX
             {
                 ModeDescription =
                     new ModeDescription(Size.Width, Size.Height, new Rational(60, 1),
-                        Format.R8G8B8A8_UNorm),
+                        Format.B8G8R8A8_UNorm),
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 2,
@@ -166,6 +166,7 @@ namespace Sample.DirectX
                 IsWindowed = true,
                 SwapEffect = SwapEffect.FlipDiscard
             };
+
             SwapChain = new SwapChain(
                 DxgiFactory,
                 D3DDevice,

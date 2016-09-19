@@ -20,42 +20,10 @@ namespace Sample.DirectX
             if (!deferInitUntilFirstDraw) CreateResources();
         }
 
-        private void CreateResources()
-        {
-            if (m_2DFactory == null)
-            {
-                m_2DFactory = new Factory2(FactoryType.SingleThreaded);
-            }
-            CreateRenderTargetIfRequired();
-        }
-
-        private void CreateRenderTargetIfRequired()
-        {
-            if (m_renderTarget != null) return;
-
-            m_renderTarget = new WindowRenderTarget(m_2DFactory,
-                new RenderTargetProperties(new PixelFormat(SharpDX.DXGI.Format.R8G8B8A8_UNorm,
-                    AlphaMode.Premultiplied)),
-                new HwndRenderTargetProperties
-                {
-                    Hwnd = m_hwnd,
-                    PixelSize = m_size,
-                    PresentOptions = PresentOptions.None
-                });
-        }
-
         public void Resize(ref Size size)
         {
             m_size = new Size2(size.Width, size.Height);
             ResizeRenderTarget();
-        }
-
-        private void ResizeRenderTarget()
-        {
-            if (m_renderTarget != null)
-            {
-                m_renderTarget.Resize(m_size);
-            }
         }
 
         public void Draw()
@@ -84,17 +52,46 @@ namespace Sample.DirectX
             b.Dispose();
         }
 
+        public void Dispose()
+        {
+            Destroy();
+        }
+
+        private void CreateResources()
+        {
+            if (m_2DFactory == null)
+            {
+                m_2DFactory = new Factory(FactoryType.SingleThreaded);
+            }
+            CreateRenderTargetIfRequired();
+        }
+
+        private void CreateRenderTargetIfRequired()
+        {
+            if (m_renderTarget != null) return;
+
+            m_renderTarget = new WindowRenderTarget(m_2DFactory,
+                new RenderTargetProperties(new PixelFormat(SharpDX.DXGI.Format.B8G8R8A8_UNorm,
+                    AlphaMode.Premultiplied)),
+                new HwndRenderTargetProperties
+                {
+                    Hwnd = m_hwnd,
+                    PixelSize = m_size,
+                    PresentOptions = PresentOptions.None
+                });
+        }
+
+        private void ResizeRenderTarget()
+        {
+            m_renderTarget?.Resize(m_size);
+        }
+
         private void Destroy()
         {
             m_renderTarget?.Dispose();
             m_renderTarget = null;
             m_2DFactory?.Dispose();
             m_2DFactory = null;
-        }
-
-        public void Dispose()
-        {
-            this.Destroy();
         }
     }
 }

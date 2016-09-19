@@ -44,7 +44,6 @@ namespace Sample.DirectX
             private set { m_dWriteFactory = value; }
         }
 
-
         public override void Initalize(IntPtr hwnd, Size size)
         {
             base.Initalize(hwnd, size);

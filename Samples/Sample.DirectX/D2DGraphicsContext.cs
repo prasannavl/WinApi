@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Gdi32;
@@ -29,7 +30,7 @@ namespace Sample.DirectX
         {
             EnsureDxResources();
             Draw2D();
-            m_dxResources.SwapChain.Present(1, 0);
+            m_dxResources.SwapChain.Present(1, PresentFlags.None);
         }
 
         private void Draw2D()
@@ -39,14 +40,12 @@ namespace Sample.DirectX
             var w = m_size.Width;
             var h = m_size.Height;
 
-            var b = new SolidColorBrush(context, new RawColor4(0, 0, 0, 0));
-
+            var b = new SolidColorBrush(context, new RawColor4(0.5f, 0.7f, 0.8f, 1f));
             context.BeginDraw();
-            context.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.5f));
-
+            context.Clear(new RawColor4(1, 1, 1, 1f));
             for (var i = 0; i < 10; i++)
             {
-                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 1);
+                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.2f);
                 context.FillEllipse(
                     new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
                         rand.Next(0, h)), b);
@@ -60,6 +59,7 @@ namespace Sample.DirectX
 
         public void Resize(ref Size size)
         {
+            m_size = size;
             m_dxResources?.Resize(ref size);
         }
 
