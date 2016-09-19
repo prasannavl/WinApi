@@ -14,7 +14,7 @@ namespace Sample.Win32
 {
     class D3DGraphicsContext : IGraphicsContext
     {
-        private DxResources m_dxResources;
+        private D3DResources m_dxResources;
         private IntPtr m_hwnd;
         private Size m_size;
 
@@ -46,7 +46,7 @@ namespace Sample.Win32
             if (m_dxResources == null)
             {
                 PaintDefault();
-                m_dxResources = new DxResources();
+                m_dxResources = new D3DResources();
                 m_dxResources.Initalize(m_hwnd, m_size);
             }
         }

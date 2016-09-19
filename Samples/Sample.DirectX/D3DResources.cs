@@ -8,15 +8,16 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace Sample.Win32
 {
-    class DxResources
+    class D3DResources
     {
         public IntPtr Hwnd { get; private set; }
         public Size Size { get; private set; }
 
-        public Device Device { get; private set; }
+        public Device D3DDevice { get; private set; }
         public DeviceContext D3DContext { get; private set; }
         public RenderTargetView D3DRenderTargetView { get; private set; }
 
+        public SharpDX.DXGI.Device DxgiDevice { get; private set; }
         public Factory DxgiFactory { get; private set; }
         public Adapter Adapter { get; private set; }
         public SwapChain SwapChain { get; private set; }
@@ -28,26 +29,44 @@ namespace Sample.Win32
             ConnectD3DRenderTargetView();
         }
 
-        private void CreateDxgiFactory()
+        private void CreateD3DDevice()
         {
-            var flag = false;
+            var creationFlags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded;
 #if DEBUG
-            flag = true;
+            creationFlags |= DeviceCreationFlags.Debug;
 #endif
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            DxgiFactory = new Factory2(flag);
+            try
+            {
+                D3DDevice = new Device(DriverType.Hardware, creationFlags);
+            }
+            catch
+            {
+                D3DDevice = new Device(DriverType.Warp, creationFlags);
+            }
         }
 
-        private void EnsureDxgiFactory()
+        private void EnsureD3DDevice()
         {
-            if (DxgiFactory == null)
-                CreateDxgiFactory();
+            if (D3DDevice == null)
+                CreateD3DDevice();
+        }
+
+        private void CreateDxgiDevice()
+        {
+            EnsureD3DDevice();
+            DxgiDevice = D3DDevice.QueryInterface<SharpDX.DXGI.Device>();
+        }
+
+        private void EnsureDxgiDevice()
+        {
+            if (DxgiDevice == null)
+                CreateDxgiDevice();
         }
 
         private void CreateAdapter()
         {
-            EnsureDxgiFactory();
-            Adapter = DxgiFactory.GetAdapter(0);
+            EnsureDxgiDevice();
+            Adapter = DxgiDevice.GetParent<Adapter>();
         }
 
         private void EnsureAdapter()
@@ -56,26 +75,22 @@ namespace Sample.Win32
                 CreateAdapter();
         }
 
-        private void CreateDevice()
+        private void CreateDxgiFactory()
         {
             EnsureAdapter();
-            var creationFlags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded;
-#if DEBUG
-            creationFlags |= DeviceCreationFlags.Debug;
-#endif
-            Device = new Device(Adapter, creationFlags);
+            DxgiFactory = Adapter.GetParent<SharpDX.DXGI.Factory>();
         }
 
-        private void EnsureDevice()
+        private void EnsureDxgiFactory()
         {
-            if (Device == null)
-                CreateDevice();
+            if (DxgiFactory == null)
+                CreateDxgiFactory();
         }
 
         private void CreateSwapChain()
         {
+            EnsureD3DDevice();
             EnsureDxgiFactory();
-            EnsureDevice();
             var swapChainDesc = new SwapChainDescription
             {
                 ModeDescription =
@@ -90,7 +105,7 @@ namespace Sample.Win32
             };
             SwapChain = new SwapChain(
                 DxgiFactory,
-                Device,
+                D3DDevice,
                 swapChainDesc);
 
             DxgiFactory.MakeWindowAssociation(Hwnd, WindowAssociationFlags.IgnoreAltEnter);
@@ -104,8 +119,8 @@ namespace Sample.Win32
 
         private void CreateD3DContext()
         {
-            EnsureDevice();
-            D3DContext = Device.ImmediateContext;
+            EnsureD3DDevice();
+            D3DContext = D3DDevice.ImmediateContext;
         }
 
         private void EnsureD3DContext()
@@ -116,11 +131,11 @@ namespace Sample.Win32
 
         private void CreateD3DRenderTargetView()
         {
-            EnsureDevice();
+            EnsureD3DDevice();
             EnsureSwapChain();
             using (var backBuffer = SwapChain.GetBackBuffer<Texture2D>(0))
             {
-                D3DRenderTargetView = new RenderTargetView(Device, backBuffer);
+                D3DRenderTargetView = new RenderTargetView(D3DDevice, backBuffer);
             }
         }
 
@@ -161,9 +176,10 @@ namespace Sample.Win32
             DestroyD3DRenderTargetView();
             DestroySwapChain();
             DestroyD3DContext();
-            DestroyDevice();
             DestroyAdapter();
-            DestroyFactory();
+            DestroyDxgiFactory();
+            DestroyDxgiDevice();
+            DestroyD3DDevice();
         }
 
         private void DestroyAdapter()
@@ -175,7 +191,7 @@ namespace Sample.Win32
             }
         }
 
-        private void DestroyFactory()
+        private void DestroyDxgiFactory()
         {
             if (DxgiFactory != null)
             {
@@ -184,12 +200,21 @@ namespace Sample.Win32
             }
         }
 
-        private void DestroyDevice()
+        private void DestroyDxgiDevice()
         {
-            if (Device != null)
+            if (DxgiDevice != null)
             {
-                Device.Dispose();
-                Device = null;
+                DxgiDevice.Dispose();
+                DxgiDevice = null;
+            }
+        }
+
+        private void DestroyD3DDevice()
+        {
+            if (D3DDevice != null)
+            {
+                D3DDevice.Dispose();
+                D3DDevice = null;
             }
         }
 
