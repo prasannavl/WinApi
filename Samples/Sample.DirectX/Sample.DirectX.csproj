@@ -7,8 +7,8 @@
     <ProjectGuid>{D829FA54-0380-43EF-9E49-73ADDB653019}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sample.Win32</RootNamespace>
-    <AssemblyName>Sample.Win32</AssemblyName>
+    <RootNamespace>Sample.DirectX</RootNamespace>
+    <AssemblyName>Sample.DirectX</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -110,7 +110,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DxResources.cs" />
+    <Compile Include="D3DResources.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="D2D1GraphicsContext.cs" />
     <Compile Include="D3DGraphicsContext.cs" />
