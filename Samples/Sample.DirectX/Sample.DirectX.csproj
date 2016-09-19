@@ -110,6 +110,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="D2DResources.cs" />
     <Compile Include="D3DResources.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="D2D1GraphicsContext.cs" />
