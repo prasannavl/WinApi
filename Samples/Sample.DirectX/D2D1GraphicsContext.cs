@@ -1,5 +1,4 @@
 ﻿using System;
-using Sample.Win32;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;

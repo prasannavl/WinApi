@@ -1,5 +1,4 @@
 ﻿using System;
-using Sample.Win32;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Gdi32;
