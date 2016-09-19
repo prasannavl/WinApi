@@ -30,7 +30,7 @@ namespace Sample.SimpleWindow
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
             PaintStruct ps;
-            User32Methods.BeginPaint(Handle, out ps);
+            hdc = User32Methods.BeginPaint(Handle, out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRectangle,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             User32Methods.EndPaint(Handle, ref ps);
