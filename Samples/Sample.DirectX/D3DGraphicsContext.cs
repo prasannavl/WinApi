@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SharpDX;
-using SharpDX.DXGI;
+using Sample.Win32;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Gdi32;
 using WinApi.User32;
 
-namespace Sample.Win32
+namespace Sample.DirectX
 {
     class D3DGraphicsContext : IGraphicsContext
     {

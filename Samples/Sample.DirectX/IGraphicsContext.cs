@@ -1,7 +1,7 @@
 ﻿using System;
 using WinApi.Core;
 
-namespace Sample.Win32
+namespace Sample.DirectX
 {
     internal interface IGraphicsContext {
         void Init(IntPtr hwnd, ref Size size, bool deferInitUntilFirstDraw = true);

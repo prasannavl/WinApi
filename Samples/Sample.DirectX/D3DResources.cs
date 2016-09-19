@@ -6,7 +6,7 @@ using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace Sample.Win32
+namespace Sample.DirectX
 {
     class D3DResources
     {
@@ -22,11 +22,33 @@ namespace Sample.Win32
         public Adapter Adapter { get; private set; }
         public SwapChain SwapChain { get; private set; }
 
-        public void Initalize(IntPtr hwnd, Size size)
+        public virtual void Initalize(IntPtr hwnd, Size size)
         {
             Hwnd = hwnd;
             Size = size;
             ConnectD3DRenderTargetView();
+        }
+
+        public virtual void Resize(ref Size size)
+        {
+            Size = size;
+            Disconnect3DRenderTargetView();
+            DestroyD3DRenderTargetView();
+            SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
+            CreateD3DRenderTargetView();
+            ConnectD3DRenderTargetView();
+        }
+
+        public virtual void Destroy()
+        {
+            Disconnect3DRenderTargetView();
+            DestroyD3DRenderTargetView();
+            DestroySwapChain();
+            DestroyD3DContext();
+            DestroyAdapter();
+            DestroyDxgiFactory();
+            DestroyDxgiDevice();
+            DestroyD3DDevice();
         }
 
         private void CreateD3DDevice()
@@ -78,7 +100,7 @@ namespace Sample.Win32
         private void CreateDxgiFactory()
         {
             EnsureAdapter();
-            DxgiFactory = Adapter.GetParent<SharpDX.DXGI.Factory>();
+            DxgiFactory = Adapter.GetParent<Factory>();
         }
 
         private void EnsureDxgiFactory()
@@ -158,28 +180,6 @@ namespace Sample.Win32
             if (D3DRenderTargetView == null) return;
             D3DContext.ClearRenderTargetView(D3DRenderTargetView, new RawColor4(0, 0, 0, 1));
             D3DContext.OutputMerger.SetRenderTargets((RenderTargetView) null);
-        }
-
-        public void Resize(ref Size size)
-        {
-            Size = size;
-            Disconnect3DRenderTargetView();
-            DestroyD3DRenderTargetView();
-            SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
-            CreateD3DRenderTargetView();
-            ConnectD3DRenderTargetView();
-        }
-
-        public void Destroy()
-        {
-            Disconnect3DRenderTargetView();
-            DestroyD3DRenderTargetView();
-            DestroySwapChain();
-            DestroyD3DContext();
-            DestroyAdapter();
-            DestroyDxgiFactory();
-            DestroyDxgiDevice();
-            DestroyD3DDevice();
         }
 
         private void DestroyAdapter()

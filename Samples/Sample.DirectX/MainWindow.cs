@@ -1,10 +1,9 @@
 ﻿using System;
 using WinApi.Core;
 using WinApi.User32;
-using WinApi.User32.Experimental;
 using WinApi.XWin;
 
-namespace Sample.Win32
+namespace Sample.DirectX
 {
     public class MainWindow : MainWindowBase
     {

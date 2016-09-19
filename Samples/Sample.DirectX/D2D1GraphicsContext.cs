@@ -1,10 +1,11 @@
 ﻿using System;
+using Sample.Win32;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 
-namespace Sample.Win32
+namespace Sample.DirectX
 {
     public class D2D1GraphicsContext : IGraphicsContext
     {
