@@ -28,7 +28,7 @@ namespace Sample.OpenGL
         }
     }
 
-    public class OpenGlAppWindow : OpenGlWindowBase
+    public class OpenGlAppWindow : OpenGlMainWindowBase
     {
         protected override void OnGlContextCreated()
         {
