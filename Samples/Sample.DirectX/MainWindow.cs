@@ -8,7 +8,7 @@ namespace Sample.Win32
 {
     public class MainWindow : MainWindowBase
     {
-        private readonly IGraphicsContext m_graphicsContext = new D2D1GraphicsContext();
+        private readonly IGraphicsContext m_graphicsContext = new D3DGraphicsContext();
 
         protected override void OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
