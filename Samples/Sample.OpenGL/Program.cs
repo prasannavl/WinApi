@@ -20,7 +20,7 @@ namespace Sample.OpenGL
         {
             Gl.Initialize();
             var factory = WindowFactory.Create("MainWindow");
-            using (var win = factory.CreateFrameWindow<OpenGlWindow>(text: "Hello"))
+            using (var win = factory.CreateFrameWindow<OpenGlAppWindow>(text: "Hello"))
             {
                 win.Show();
                 return new EventLoop(win).Run();
