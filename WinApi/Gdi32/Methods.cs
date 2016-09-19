@@ -56,9 +56,19 @@ namespace WinApi.Gdi32
             DibBmiColorUsageFlag fuUsage);
 
         [DllImport(LibraryName)]
+        public static extern IntPtr CreateDIBitmap(IntPtr hdc, [In] ref BitmapInfoHeader
+                lpbmih, uint fdwInit, IntPtr lpbInit, IntPtr lpbmi,
+            DibBmiColorUsageFlag fuUsage);
+
+        [DllImport(LibraryName)]
         public static extern int SetDIBitsToDevice(IntPtr hdc, int xDest, int yDest, uint
                 dwWidth, uint dwHeight, int xSrc, int ySrc, uint uStartScan, uint cScanLines,
             byte[] lpvBits, IntPtr lpbmi, DibBmiColorUsageFlag fuColorUse);
+
+        [DllImport(LibraryName)]
+        public static extern int SetDIBitsToDevice(IntPtr hdc, int xDest, int yDest, uint
+                dwWidth, uint dwHeight, int xSrc, int ySrc, uint uStartScan, uint cScanLines,
+            IntPtr lpvBits, IntPtr lpbmi, DibBmiColorUsageFlag fuColorUse);
 
         [DllImport(LibraryName)]
         public static extern int DeleteDC(IntPtr hdc);
