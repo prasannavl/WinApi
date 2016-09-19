@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpDX.Direct2D1;
+using SharpDX.DirectWrite;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Gdi32;
@@ -26,12 +28,34 @@ namespace Sample.DirectX
         public void Draw()
         {
             EnsureDxResources();
-            var target = m_dxResources.D3DRenderTargetView;
-            var context = m_dxResources.D3DContext;
-            var swapChain = m_dxResources.SwapChain;
+            Draw2D();
+            m_dxResources.SwapChain.Present(1, 0);
+        }
 
-            context.ClearRenderTargetView(target, new RawColor4(0.5f, 0.6f, 0.7f, 0.7f));
-            swapChain.Present(1, 0);
+        private void Draw2D()
+        {
+            var context = m_dxResources.D2DContext;
+            var rand = new Random();
+            var w = m_size.Width;
+            var h = m_size.Height;
+
+            var b = new SolidColorBrush(context, new RawColor4(0, 0, 0, 0));
+
+            context.BeginDraw();
+            context.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.5f));
+
+            for (var i = 0; i < 10; i++)
+            {
+                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 1);
+                context.FillEllipse(
+                    new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
+                        rand.Next(0, h)), b);
+                context.FillRectangle(
+                    new RawRectangleF(rand.NextFloat(0, w), rand.NextFloat(0, h), rand.NextFloat(0, w),
+                        rand.NextFloat(0, h)), b);
+            }
+            context.EndDraw();
+            b.Dispose();
         }
 
         public void Resize(ref Size size)
