@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Gdi32;
@@ -6,9 +10,9 @@ using WinApi.User32;
 
 namespace Sample.DirectX
 {
-    class D3DGraphicsContext : IGraphicsContext
+    class D2DGraphicsContext : IGraphicsContext
     {
-        private D3DResources m_dxResources;
+        private D2DResources m_dxResources;
         private IntPtr m_hwnd;
         private Size m_size;
 
@@ -40,7 +44,7 @@ namespace Sample.DirectX
             if (m_dxResources == null)
             {
                 PaintDefault();
-                m_dxResources = new D3DResources();
+                m_dxResources = new D2DResources();
                 m_dxResources.Initalize(m_hwnd, m_size);
             }
         }
@@ -57,7 +61,7 @@ namespace Sample.DirectX
 
         public void Dispose()
         {
-            m_dxResources.Dispose();
+            m_dxResources.Destroy();
         }
     }
 }

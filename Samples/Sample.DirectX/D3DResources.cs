@@ -1,4 +1,5 @@
 ﻿using System;
+using Sample.DirectX.Helpers;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -8,19 +9,60 @@ using Device = SharpDX.Direct3D11.Device;
 
 namespace Sample.DirectX
 {
-    class D3DResources
+    class D3DResources : IDisposable
     {
+        private Device m_d3DDevice;
+        private DeviceContext m_d3DContext;
+        private RenderTargetView m_d3DRenderTargetView;
+        private SharpDX.DXGI.Device m_dxgiDevice;
+        private Factory m_dxgiFactory;
+        private Adapter m_adapter;
+        private SwapChain m_swapChain;
+
         public IntPtr Hwnd { get; private set; }
         public Size Size { get; private set; }
 
-        public Device D3DDevice { get; private set; }
-        public DeviceContext D3DContext { get; private set; }
-        public RenderTargetView D3DRenderTargetView { get; private set; }
+        public Device D3DDevice
+        {
+            get { return m_d3DDevice; }
+            private set { m_d3DDevice = value; }
+        }
 
-        public SharpDX.DXGI.Device DxgiDevice { get; private set; }
-        public Factory DxgiFactory { get; private set; }
-        public Adapter Adapter { get; private set; }
-        public SwapChain SwapChain { get; private set; }
+        public DeviceContext D3DContext
+        {
+            get { return m_d3DContext; }
+            private set { m_d3DContext = value; }
+        }
+
+        public RenderTargetView D3DRenderTargetView
+        {
+            get { return m_d3DRenderTargetView; }
+            private set { m_d3DRenderTargetView = value; }
+        }
+
+        public SharpDX.DXGI.Device DxgiDevice
+        {
+            get { return m_dxgiDevice; }
+            private set { m_dxgiDevice = value; }
+        }
+
+        public Factory DxgiFactory
+        {
+            get { return m_dxgiFactory; }
+            private set { m_dxgiFactory = value; }
+        }
+
+        public Adapter Adapter
+        {
+            get { return m_adapter; }
+            private set { m_adapter = value; }
+        }
+
+        public SwapChain SwapChain
+        {
+            get { return m_swapChain; }
+            private set { m_swapChain = value; }
+        }
 
         public virtual void Initalize(IntPtr hwnd, Size size)
         {
@@ -33,22 +75,21 @@ namespace Sample.DirectX
         {
             Size = size;
             Disconnect3DRenderTargetView();
-            DestroyD3DRenderTargetView();
-            SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
-            CreateD3DRenderTargetView();
+            DisposableHelpers.DisposeAndSetNull(ref m_d3DRenderTargetView);
+            // Resize retaining other properties.
+            SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.R8G8B8A8_UNorm, SwapChainFlags.None);
             ConnectD3DRenderTargetView();
         }
 
         public virtual void Destroy()
         {
-            Disconnect3DRenderTargetView();
-            DestroyD3DRenderTargetView();
-            DestroySwapChain();
-            DestroyD3DContext();
-            DestroyAdapter();
-            DestroyDxgiFactory();
-            DestroyDxgiDevice();
-            DestroyD3DDevice();
+            DisposableHelpers.DisposeAndSetNull(ref m_d3DRenderTargetView);
+            DisposableHelpers.DisposeAndSetNull(ref m_swapChain);
+            DisposableHelpers.DisposeAndSetNull(ref m_d3DContext);
+            DisposableHelpers.DisposeAndSetNull(ref m_dxgiFactory);
+            DisposableHelpers.DisposeAndSetNull(ref m_adapter);
+            DisposableHelpers.DisposeAndSetNull(ref m_dxgiDevice);
+            DisposableHelpers.DisposeAndSetNull(ref m_d3DDevice);
         }
 
         private void CreateD3DDevice()
@@ -67,7 +108,7 @@ namespace Sample.DirectX
             }
         }
 
-        private void EnsureD3DDevice()
+        protected void EnsureD3DDevice()
         {
             if (D3DDevice == null)
                 CreateD3DDevice();
@@ -79,7 +120,7 @@ namespace Sample.DirectX
             DxgiDevice = D3DDevice.QueryInterface<SharpDX.DXGI.Device>();
         }
 
-        private void EnsureDxgiDevice()
+        protected void EnsureDxgiDevice()
         {
             if (DxgiDevice == null)
                 CreateDxgiDevice();
@@ -91,7 +132,7 @@ namespace Sample.DirectX
             Adapter = DxgiDevice.GetParent<Adapter>();
         }
 
-        private void EnsureAdapter()
+        protected void EnsureAdapter()
         {
             if (Adapter == null)
                 CreateAdapter();
@@ -103,7 +144,7 @@ namespace Sample.DirectX
             DxgiFactory = Adapter.GetParent<Factory>();
         }
 
-        private void EnsureDxgiFactory()
+        protected void EnsureDxgiFactory()
         {
             if (DxgiFactory == null)
                 CreateDxgiFactory();
@@ -133,7 +174,7 @@ namespace Sample.DirectX
             DxgiFactory.MakeWindowAssociation(Hwnd, WindowAssociationFlags.IgnoreAltEnter);
         }
 
-        private void EnsureSwapChain()
+        protected void EnsureSwapChain()
         {
             if (SwapChain == null)
                 CreateSwapChain();
@@ -145,7 +186,7 @@ namespace Sample.DirectX
             D3DContext = D3DDevice.ImmediateContext;
         }
 
-        private void EnsureD3DContext()
+        protected void EnsureD3DContext()
         {
             if (D3DContext == null)
                 CreateD3DContext();
@@ -161,7 +202,7 @@ namespace Sample.DirectX
             }
         }
 
-        private void EnsureD3DRenderTargetView()
+        protected void EnsureD3DRenderTargetView()
         {
             if (D3DRenderTargetView == null)
                 CreateD3DRenderTargetView();
@@ -182,67 +223,9 @@ namespace Sample.DirectX
             D3DContext.OutputMerger.SetRenderTargets((RenderTargetView) null);
         }
 
-        private void DestroyAdapter()
+        public virtual void Dispose()
         {
-            if (Adapter != null)
-            {
-                Adapter.Dispose();
-                Adapter = null;
-            }
-        }
-
-        private void DestroyDxgiFactory()
-        {
-            if (DxgiFactory != null)
-            {
-                DxgiFactory.Dispose();
-                DxgiFactory = null;
-            }
-        }
-
-        private void DestroyDxgiDevice()
-        {
-            if (DxgiDevice != null)
-            {
-                DxgiDevice.Dispose();
-                DxgiDevice = null;
-            }
-        }
-
-        private void DestroyD3DDevice()
-        {
-            if (D3DDevice != null)
-            {
-                D3DDevice.Dispose();
-                D3DDevice = null;
-            }
-        }
-
-        private void DestroySwapChain()
-        {
-            if (SwapChain != null)
-            {
-                SwapChain.Dispose();
-                SwapChain = null;
-            }
-        }
-
-        private void DestroyD3DContext()
-        {
-            if (D3DContext != null)
-            {
-                D3DContext.Dispose();
-                D3DContext = null;
-            }
-        }
-
-        private void DestroyD3DRenderTargetView()
-        {
-            if (D3DRenderTargetView != null)
-            {
-                D3DRenderTargetView.Dispose();
-                D3DRenderTargetView = null;
-            }
+            this.Destroy();
         }
     }
 }

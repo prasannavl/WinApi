@@ -6,7 +6,7 @@ using WinApi.Core;
 
 namespace Sample.DirectX
 {
-    public class D2D1GraphicsContext : IGraphicsContext
+    public class D2DRenderTargetGraphicsContext : IGraphicsContext
     {
         private Factory m_2DFactory;
         private IntPtr m_hwnd;
@@ -90,6 +90,11 @@ namespace Sample.DirectX
             m_renderTarget = null;
             m_2DFactory?.Dispose();
             m_2DFactory = null;
+        }
+
+        public void Dispose()
+        {
+            this.Destroy();
         }
     }
 }

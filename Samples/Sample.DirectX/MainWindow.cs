@@ -7,7 +7,7 @@ namespace Sample.DirectX
 {
     public class MainWindow : MainWindowBase
     {
-        private readonly IGraphicsContext m_graphicsContext = new D3DGraphicsContext();
+        private readonly IGraphicsContext m_graphicsContext = new D2DGraphicsContext();
 
         protected override void OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
@@ -28,6 +28,7 @@ namespace Sample.DirectX
 
         protected override void Dispose(bool disposing)
         {
+            m_graphicsContext.Dispose();
             base.Dispose(disposing);
         }
     }

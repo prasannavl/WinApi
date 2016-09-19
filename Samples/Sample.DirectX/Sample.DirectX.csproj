@@ -110,11 +110,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="D2DGraphicsContext.cs" />
     <Compile Include="D2DResources.cs" />
     <Compile Include="D3DResources.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="D2D1GraphicsContext.cs" />
+    <Compile Include="D2DRenderTargetGraphicsContext.cs" />
     <Compile Include="D3DGraphicsContext.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="IGraphicsContext.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="Program.cs" />
