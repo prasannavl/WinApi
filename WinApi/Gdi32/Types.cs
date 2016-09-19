@@ -263,6 +263,12 @@ namespace WinApi.Gdi32
         DEFAULT_PALETTE = 15
     }
 
+    public enum DibBmiColorUsageFlag
+    {
+        DIB_RGB_COLORS = 0 /* color table in RGBs */,
+        DIB_PAL_COLORS = 1 /* color table in palette indices */
+    }
+
     [Flags]
     public enum BitBltFlags
     {
