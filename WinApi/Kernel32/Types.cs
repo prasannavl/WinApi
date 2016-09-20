@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,40 @@ using System.Threading.Tasks;
 
 namespace WinApi.Kernel32
 {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SystemInfo
+    {
+        public ushort ProcessorArchitecture;
+        ushort Reserved;
+        public uint PageSize;
+        public IntPtr MinimumApplicationAddress;
+        public IntPtr MaximumApplicationAddress;
+        public IntPtr ActiveProcessorMask;
+        public uint NumberOfProcessors;
+        public uint ProcessorType;
+        public uint AllocationGranularity;
+        public ushort ProcessorLevel;
+        public ushort ProcessorRevision;
+        public uint OemId => ((uint)ProcessorArchitecture << 8) | Reserved;
+    }
+
+    public enum ProcessArchitecture
+    {
+        PROCESSOR_ARCHITECTURE_INTEL = 0,
+        PROCESSOR_ARCHITECTURE_MIPS = 1,
+        PROCESSOR_ARCHITECTURE_ALPHA = 2,
+        PROCESSOR_ARCHITECTURE_PPC = 3,
+        PROCESSOR_ARCHITECTURE_SHX = 4,
+        PROCESSOR_ARCHITECTURE_ARM = 5,
+        PROCESSOR_ARCHITECTURE_IA64 = 6,
+        PROCESSOR_ARCHITECTURE_ALPHA64 = 7,
+        PROCESSOR_ARCHITECTURE_MSIL = 8,
+        PROCESSOR_ARCHITECTURE_AMD64 = 9,
+        PROCESSOR_ARCHITECTURE_IA32_ON_WIN64 = 10,
+        PROCESSOR_ARCHITECTURE_NEUTRAL = 11,
+        PROCESSOR_ARCHITECTURE_UNKNOWN = 0xFFFF
+    }
+
     [Flags]
     public enum LoadLibraryFlags
     {

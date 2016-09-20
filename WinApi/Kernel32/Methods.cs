@@ -12,6 +12,18 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName)]
         public static extern uint GetLastError();
 
+        [DllImport(LibraryName)]
+        public static extern uint GetVersion();
+
+        [DllImport(LibraryName)]
+        public static extern int IsWow64Process(IntPtr hProcess, out int isWow64Process);
+
+        [DllImport(LibraryName)]
+        public static extern void GetNativeSystemInfo(out SystemInfo lpSystemInfo);
+
+        [DllImport(LibraryName)]
+        public static extern void GetSystemInfo(out SystemInfo lpSystemInfo);
+
         #region Memory Methods
 
         [DllImport(LibraryName, EntryPoint = "RtlZeroMemory")]
@@ -108,18 +120,5 @@ namespace WinApi.Kernel32
         public static extern uint GetWindowsDirectory(StringBuilder lpBuffer, uint uSize);
 
         #endregion
-    }
-
-    /// <summary>
-    ///     These methods are either for internal purposes only, or is exposed only with the helpers
-    ///     since it may be very dangerous to use them directly.
-    /// </summary>
-    internal static class Kernel32InternalMethods
-    {
-        [DllImport(Kernel32Methods.LibraryName)]
-        public static extern int SetProcessUserModeExceptionPolicy(uint dwFlags);
-
-        [DllImport(Kernel32Methods.LibraryName)]
-        public static extern int GetProcessUserModeExceptionPolicy(out uint dwFlags);
     }
 }
