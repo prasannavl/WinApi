@@ -70,22 +70,30 @@ namespace WinApi.XWin
         // traditional Win32 WndProc methods.
         private unsafe IntPtr ClassInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
-            Debug.WriteLine("[ClassInitializerProc]: " + hwnd);
-            WindowProc winInstanceInitializerProc = null;
-            if (msg == (int) WM.NCCREATE)
+            try
             {
-                wParam = Marshal.GetFunctionPointerForDelegate(m_windowProc);
-                var createStruct = *(CreateStruct*) lParam.ToPointer();
-                var instancePtr = createStruct.lpCreateParams;
-                if (instancePtr != IntPtr.Zero)
+                Debug.WriteLine("[ClassInitializerProc]: " + hwnd);
+                WindowProc winInstanceInitializerProc = null;
+                if (msg == (int) WM.NCCREATE)
                 {
-                    var winInstance = (WindowBase) GCHandle.FromIntPtr(instancePtr).Target;
-                    if (winInstance != null)
-                        winInstanceInitializerProc = winInstance.WindowInstanceInitializerProc;
+                    wParam = Marshal.GetFunctionPointerForDelegate(m_windowProc);
+                    var createStruct = *(CreateStruct*) lParam.ToPointer();
+                    var instancePtr = createStruct.lpCreateParams;
+                    if (instancePtr != IntPtr.Zero)
+                    {
+                        var winInstance = (WindowBase) GCHandle.FromIntPtr(instancePtr).Target;
+                        if (winInstance != null)
+                            winInstanceInitializerProc = winInstance.WindowInstanceInitializerProc;
+                    }
                 }
+                return winInstanceInitializerProc?.Invoke(hwnd, msg, wParam, lParam) ??
+                       User32Methods.DefWindowProc(hwnd, msg, wParam, lParam);
             }
-            return winInstanceInitializerProc?.Invoke(hwnd, msg, wParam, lParam) ??
-                   User32Methods.DefWindowProc(hwnd, msg, wParam, lParam);
+            catch (Exception ex)
+            {
+                WindowCoreBase.HandleWindowProcException(hwnd, ex);
+                return IntPtr.Zero;
+            }
         }
 
         public static WindowFactory Create(string className, WindowProc wndProc)

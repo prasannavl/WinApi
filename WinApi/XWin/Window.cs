@@ -11,11 +11,6 @@ namespace WinApi.XWin
         {
             switch (msg.Id)
             {
-                case WM.DESTROY:
-                {
-                    OnDestroy(ref msg);
-                    break;
-                }
                 case WM.CLOSE:
                 {
                     OnClose(ref msg);
@@ -24,6 +19,11 @@ namespace WinApi.XWin
                 case WM.TIMECHANGE:
                 {
                     OnSystemTimeChange(ref msg);
+                    break;
+                }
+                case WM.DESTROY:
+                {
+                    MessageHandlers.ProcessDestroy(this, ref msg);
                     break;
                 }
                 case WM.CREATE:
@@ -82,16 +82,48 @@ namespace WinApi.XWin
         protected virtual void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size) {}
         protected virtual void OnMove(ref WindowMessage msg, ref Point size) {}
         protected virtual void OnCreate(ref WindowMessage msg, ref CreateStruct createStruct) {}
-        protected virtual void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized, IntPtr oppositeWindowHandle) {}
+
+        protected virtual void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
+            IntPtr oppositeWindowHandle) {}
+
         protected virtual void OnPaint(ref WindowMessage msg, IntPtr hdc) {}
         protected virtual void OnDisplayChange(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size) {}
         protected virtual void OnActivateApp(ref WindowMessage msg, bool isActive, long oppositeThreadId) {}
 
         public static class MessageHandlers
         {
+            public static void ProcessDestroy(WindowBase windowBase, ref WindowMessage msg)
+            {
+                try
+                {
+                    windowBase.OnDestroy(ref msg);
+                }
+                finally
+                {
+                    // This is done to notify a owned window that it shouldn't try to 
+                    // destroy the window when the finalizer is called again.
+                    windowBase.IsSourceOwner = false;
+                }
+            }
+
             public static void ProcessPaint(WindowBase windowBase, ref WindowMessage msg)
             {
-                windowBase.OnPaint(ref msg, msg.WParam);
+                var flag = false;
+                try
+                {
+                    windowBase.OnPaint(ref msg, msg.WParam);
+                    flag = true;
+                }
+                finally
+                {
+                    // Validate window if an OnPaint handler throws. This is done to prevent a flood of WM_PAINT
+                    // messages if the OnPaint errors are uncaught. For example, if a messagebox is shown with an 
+                    // error that's unhandled from OnPaint, the flood of WM_PAINT to the thread's message loop 
+                    // will prevent the MessageBox from being displayed, and the application ends up with 
+                    // inconsistent state. This prevents that from happening.
+                    if (!flag)
+                        windowBase.Validate();
+                }
             }
 
             public static void ProcessEraseBkgnd(WindowBase windowBase, ref WindowMessage msg)

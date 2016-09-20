@@ -30,6 +30,8 @@ namespace WinApi.XWin
 
     public class WindowCoreBase : NativeWindowBase, IWindowCoreConnector, IDisposable
     {
+        public delegate void WindowProcExceptionHandler(IntPtr windowHandle, Exception ex);
+
         private IntPtr m_baseWindowProcPtr;
         private WindowProc m_instanceWindowProc;
         public WindowFactory Factory { get; protected set; }
@@ -62,6 +64,7 @@ namespace WinApi.XWin
             ((IWindowCoreConnector) this).DetachWindowProc();
             var h = Handle;
             Handle = IntPtr.Zero;
+            IsSourceOwner = false;
             return h;
         }
 
@@ -129,10 +132,10 @@ namespace WinApi.XWin
             var windowConnector = (IWindowCoreConnector) this;
             windowConnector.Attach(hwnd, true);
             windowConnector.AttachWindowProc(wParam);
-            return this.WindowProc(hwnd, msg, IntPtr.Zero, lParam);
+            return WindowProc(hwnd, msg, IntPtr.Zero, lParam);
         }
 
-        protected virtual void OnMessageProcessDefault(ref WindowMessage msg) { }
+        protected virtual void OnMessageProcessDefault(ref WindowMessage msg) {}
 
         protected virtual void OnMessage(ref WindowMessage msg)
         {
@@ -144,17 +147,33 @@ namespace WinApi.XWin
 
         protected virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
-            var wmsg = new WindowMessage
+            try
             {
-                Id = (WM) msg,
-                WParam = wParam,
-                LParam = lParam,
-                Result = IntPtr.Zero,
-                Handled = false
-            };
+                var wmsg = new WindowMessage
+                {
+                    Id = (WM) msg,
+                    WParam = wParam,
+                    LParam = lParam,
+                    Result = IntPtr.Zero,
+                    Handled = false
+                };
 
-            OnMessage(ref wmsg);
-            return wmsg.Handled ? wmsg.Result : WindowClassProc(hwnd, msg, wParam, lParam);
+                OnMessage(ref wmsg);
+
+                return wmsg.Handled ? wmsg.Result : WindowClassProc(hwnd, msg, wParam, lParam);
+            }
+            catch (Exception ex)
+            {
+                HandleWindowProcException(hwnd, ex);
+                return IntPtr.Zero;
+            }
+        }
+
+        public static event WindowProcExceptionHandler WindowProcException;
+
+        public static void HandleWindowProcException(IntPtr windowHandle, Exception ex)
+        {
+            WindowProcException?.Invoke(windowHandle, ex);
         }
 
         protected virtual IntPtr WindowClassProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
