@@ -27,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
@@ -67,6 +69,7 @@
     <Compile Include="UxTheme\Methods.cs" />
     <Compile Include="UxTheme\Types.cs" />
     <Compile Include="XWin\EventLoop.cs" />
+    <Compile Include="XWin\XWinHelpers.cs" />
     <Compile Include="XWin\MessageHelpers.cs" />
     <Compile Include="XWin\NativeWindow.cs" />
     <Compile Include="XWin\Window.cs" />
