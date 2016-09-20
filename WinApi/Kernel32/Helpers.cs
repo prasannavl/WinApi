@@ -75,7 +75,7 @@ namespace WinApi.Kernel32
                 if (GetIsProcessorAMD64())
                 {
                     var ver = GetVersion();
-                    return ver.Major == 6 && ver.Minor == 1 && ver.Build > 7601;
+                    return ver.Major == 6 && ver.Minor == 1 && ver.Build >= 7601;
                 }
                 return false;
             }

@@ -124,7 +124,7 @@ namespace WinApi.User32
 
         public static MessageBoxResult MessageBox(IntPtr hWnd, string lpText, string lpCaption, MessageBoxFlags type)
         {
-            return (MessageBoxResult)User32Methods.MessageBox(hWnd, lpText, lpCaption, (uint)type);
+            return (MessageBoxResult) User32Methods.MessageBox(hWnd, lpText, lpCaption, (uint) type);
         }
     }
 }
