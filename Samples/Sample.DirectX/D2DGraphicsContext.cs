@@ -40,12 +40,14 @@ namespace Sample.DirectX
             var w = m_size.Width;
             var h = m_size.Height;
 
-            var b = new SolidColorBrush(context, new RawColor4(0.5f, 0.7f, 0.8f, 1f));
+            var b = new SolidColorBrush(context, new RawColor4(0, 0, 0, 0));
+
             context.BeginDraw();
-            context.Clear(new RawColor4(1, 1, 1, 1f));
+            context.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.3f));
+
             for (var i = 0; i < 10; i++)
             {
-                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.2f);
+                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
                 context.FillEllipse(
                     new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
                         rand.Next(0, h)), b);
@@ -85,7 +87,8 @@ namespace Sample.DirectX
 
         public void Dispose()
         {
-            m_dxResources.Destroy();
+            m_dxResources?.Destroy();
+            m_dxResources = null;
         }
     }
 }

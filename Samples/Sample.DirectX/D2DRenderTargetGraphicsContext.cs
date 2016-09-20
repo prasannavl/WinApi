@@ -36,11 +36,11 @@ namespace Sample.DirectX
             var b = new SolidColorBrush(m_renderTarget, new RawColor4(0, 0, 0, 0));
 
             m_renderTarget.BeginDraw();
-            m_renderTarget.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.5f));
+            m_renderTarget.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.3f));
 
             for (var i = 0; i < 10; i++)
             {
-                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 1);
+                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
                 m_renderTarget.FillEllipse(
                     new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
                         rand.Next(0, h)), b);
