@@ -82,7 +82,7 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName)]
         public static extern int FreeLibrary(IntPtr hModule);
 
-        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        [DllImport(LibraryName, CharSet = CharSet.Ansi)]
         public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
@@ -101,10 +101,10 @@ namespace WinApi.Kernel32
 
         #region System Information Functions
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern uint GetSystemDirectory(StringBuilder lpBuffer, uint uSize);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern uint GetWindowsDirectory(StringBuilder lpBuffer, uint uSize);
 
         #endregion
