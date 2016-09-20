@@ -5,12 +5,22 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
+using WinApi.Kernel32;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace Sample.DirectX
 {
-    class D3DResources : IDisposable
+    public class D3DResources : IDisposable
     {
+        public static SwapEffect GetDefaultSwapEffectForPlatform(Version version = null)
+        {
+            if (version == null)
+                version = Environment.OSVersion.Version;
+            if (version.Major > 6) return SwapEffect.FlipDiscard; // Win 10+
+            if (version.Major > 5 && version.Minor > 1) return SwapEffect.FlipSequential; // 6.2+ - Win 8+
+            return SwapEffect.Discard;
+        }
+
         private Device m_d3DDevice;
         private DeviceContext m_d3DContext;
         private RenderTargetView m_d3DRenderTargetView;
@@ -164,7 +174,7 @@ namespace Sample.DirectX
                 BufferCount = 2,
                 OutputHandle = Hwnd,
                 IsWindowed = true,
-                SwapEffect = SwapEffect.FlipDiscard
+                SwapEffect = GetDefaultSwapEffectForPlatform()
             };
 
             SwapChain = new SwapChain(

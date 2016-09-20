@@ -13,7 +13,7 @@ using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace Sample.DirectX
 {
-    class D2DResources : D3DResources
+    public class D2DResources : D3DResources
     {
         private Device m_d2DDevice;
         private DeviceContext m_d2DContext;

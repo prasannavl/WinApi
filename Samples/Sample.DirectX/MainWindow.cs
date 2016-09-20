@@ -10,15 +10,18 @@ namespace Sample.DirectX
 {
     public class MainWindow : MainWindowBase
     {
-        private readonly IGraphicsContext m_graphicsContext = new D2DGraphicsContext();
+        private readonly IGraphicsContext m_graphicsContext = Kernel32Helpers.IsWin8OrGreater()
+            ? (IGraphicsContext)new D2DGraphicsContext()
+            : new D2DRenderTargetGraphicsContext();
 
         protected override void OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
             base.OnCreate(ref msg, ref createStruct);
             var size = GetClientSize();
 
-            if ((Environment.OSVersion.Platform == PlatformID.Win32NT) && Environment.OSVersion.Version.Major > 6)
+            if (Environment.OSVersion.Version.Major > 6)
                 User32ExperimentalHelpers.EnableBlurBehind(Handle);
+
             m_graphicsContext.Init(Handle, ref size);
         }
 
