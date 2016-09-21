@@ -132,34 +132,5 @@ namespace WinApi.User32
         {
             return MessageBox(parent, message, title, flags);
         }
-
-        public static MessageBoxResult MessageBoxForError(object errorObject, string infoMessage = null,
-            IntPtr parentHwnd = default(IntPtr),
-            MessageBoxFlags flags = MessageBoxFlags.MB_OK | MessageBoxFlags.MB_ICONERROR | MessageBoxFlags.MB_TASKMODAL)
-        {
-            var ex = errorObject as Exception;
-            const string defaultInfoMessage = "Oh snap! Something went wrong.";
-            if (ex == null)
-            {
-                return MessageBox(parentHwnd,
-                    infoMessage ?? defaultInfoMessage +
-                    $"\n\n{errorObject?.ToString() ?? "No additional information available."}",
-                    "Error", flags);
-            }
-            var exMessage = (ex.Message ?? "No information message available.");
-            string msg;
-            if (infoMessage != null)
-            {
-                msg = infoMessage + "\n\n" + exMessage;
-            }
-            else
-            {
-                msg = defaultInfoMessage + "\n\n" + exMessage;
-            }
-            return MessageBox(parentHwnd,
-                $"{msg}" +
-                $"\n\nStackTrace:\n\n{ex.StackTrace}",
-                "Error", flags);
-        }
     }
 }
