@@ -24,6 +24,14 @@ namespace WinApi.User32
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle
     {
+        public Rectangle(int left = 0, int top = 0, int right = 0, int bottom = 0)
+        {
+            this.Left = left;
+            this.Top = top;
+            this.Right = right;
+            this.Bottom = bottom;
+        }
+
         public int Left, Top, Right, Bottom;
 
         public int Width
@@ -36,6 +44,11 @@ namespace WinApi.User32
         {
             get { return Bottom - Top; }
             set { Bottom = Top + value; }
+        }
+
+        public Size GetSize()
+        {
+            return new Size(Width, Height);
         }
     }
 
