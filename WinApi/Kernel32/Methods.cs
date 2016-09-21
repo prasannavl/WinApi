@@ -13,16 +13,35 @@ namespace WinApi.Kernel32
         public static extern uint GetLastError();
 
         [DllImport(LibraryName)]
-        public static extern uint GetVersion();
+        public static extern int DisableThreadLibraryCalls(IntPtr hModule);
+
+        #region Console Functions
 
         [DllImport(LibraryName)]
-        public static extern int IsWow64Process(IntPtr hProcess, out int isWow64Process);
+        public static extern int AllocConsole();
 
         [DllImport(LibraryName)]
-        public static extern void GetNativeSystemInfo(out SystemInfo lpSystemInfo);
+        public static extern int FreeConsole();
 
         [DllImport(LibraryName)]
-        public static extern void GetSystemInfo(out SystemInfo lpSystemInfo);
+        public static extern int AttachConsole(uint dwProcessId);
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetStdHandle(uint nStdHandle);
+
+        [DllImport(LibraryName)]
+        public static extern int SetStdHandle(uint nStdHandle, IntPtr hHandle);
+
+        [DllImport(LibraryName)]
+        public static extern int SetConsoleTitle(string lpConsoleTitle);
+
+        [DllImport(LibraryName)]
+        public static extern uint GetConsoleTitle(StringBuilder lpConsoleTitle, uint nSize);
+
+        [DllImport(LibraryName)]
+        public static extern int SetConsoleWindowInfo(IntPtr hConsoleOutput, int bAbsolute, ref ShortRectangle lpConsoleWindow);
+
+        #endregion
 
         #region Memory Methods
 
@@ -118,6 +137,18 @@ namespace WinApi.Kernel32
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern uint GetWindowsDirectory(StringBuilder lpBuffer, uint uSize);
+
+        [DllImport(LibraryName)]
+        public static extern uint GetVersion();
+
+        [DllImport(LibraryName)]
+        public static extern int IsWow64Process(IntPtr hProcess, out int isWow64Process);
+
+        [DllImport(LibraryName)]
+        public static extern void GetNativeSystemInfo(out SystemInfo lpSystemInfo);
+
+        [DllImport(LibraryName)]
+        public static extern void GetSystemInfo(out SystemInfo lpSystemInfo);
 
         #endregion
     }

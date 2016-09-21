@@ -10,10 +10,48 @@ using System.Threading.Tasks;
 namespace WinApi.Kernel32
 {
     [StructLayout(LayoutKind.Sequential)]
+    public struct ShortPoint
+    {
+        public ShortPoint(short x, short y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
+
+        public short X, Y;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ShortRectangle
+    {
+        public ShortRectangle(short left = 0, short top = 0, short right = 0, short bottom = 0)
+        {
+            this.Left = left;
+            this.Top = top;
+            this.Right = right;
+            this.Bottom = bottom;
+        }
+
+        public short Left, Top, Right, Bottom;
+
+        public short Width
+        {
+            get { return (short)(Right - Left); }
+            set { Right = (short)(Left + value); }
+        }
+
+        public short Height
+        {
+            get { return (short)(Bottom - Top); }
+            set { Bottom = (short)(Top + value); }
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct SystemInfo
     {
         public ushort ProcessorArchitecture;
-        ushort Reserved;
+        readonly ushort Reserved;
         public uint PageSize;
         public IntPtr MinimumApplicationAddress;
         public IntPtr MaximumApplicationAddress;
@@ -23,7 +61,7 @@ namespace WinApi.Kernel32
         public uint AllocationGranularity;
         public ushort ProcessorLevel;
         public ushort ProcessorRevision;
-        public uint OemId => ((uint)ProcessorArchitecture << 8) | Reserved;
+        public uint OemId => ((uint) ProcessorArchitecture << 8) | Reserved;
     }
 
     public enum ProcessArchitecture
@@ -41,6 +79,24 @@ namespace WinApi.Kernel32
         PROCESSOR_ARCHITECTURE_IA32_ON_WIN64 = 10,
         PROCESSOR_ARCHITECTURE_NEUTRAL = 11,
         PROCESSOR_ARCHITECTURE_UNKNOWN = 0xFFFF
+    }
+
+    public enum StdHandle
+    {
+        /// <summary>
+        ///     The standard input device. Initially, this is the console input buffer, CONIN$.
+        /// </summary>
+        STD_INPUT_HANDLE = unchecked((int)(uint)-10),
+
+        /// <summary>
+        ///     The standard output device. Initially, this is the active console screen buffer, CONOUT$.
+        /// </summary>
+        STD_OUTPUT_HANDLE = unchecked((int)(uint)-11),
+
+        /// <summary>
+        ///     The standard error device. Initially, this is the active console screen buffer, CONOUT$.
+        /// </summary>
+        STD_ERROR_HANDLE = unchecked((int)(uint)-12)
     }
 
     [Flags]
@@ -257,16 +313,21 @@ namespace WinApi.Kernel32
     public enum GetModuleHandleFlags
     {
         /// <summary>
-        /// The lpModuleName parameter is an address in the module.
+        ///     The lpModuleName parameter is an address in the module.
         /// </summary>
         GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS = 0x00000004,
+
         /// <summary>
-        /// The module stays loaded until the process is terminated, no matter how many times FreeLibrary is called. 
-        /// This option cannot be used with GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT.
+        ///     The module stays loaded until the process is terminated, no matter how many times FreeLibrary is called.
+        ///     This option cannot be used with GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT.
         /// </summary>
         GET_MODULE_HANDLE_EX_FLAG_PIN = 0x00000001,
+
         /// <summary>
-        /// The reference count for the module is not incremented. This option is equivalent to the behavior of GetModuleHandle. Do not pass the retrieved module handle to the FreeLibrary function; doing so can cause the DLL to be unmapped prematurely. For more information, see Remarks. This option cannot be used with GET_MODULE_HANDLE_EX_FLAG_PIN.
+        ///     The reference count for the module is not incremented. This option is equivalent to the behavior of
+        ///     GetModuleHandle. Do not pass the retrieved module handle to the FreeLibrary function; doing so can cause the DLL to
+        ///     be unmapped prematurely. For more information, see Remarks. This option cannot be used with
+        ///     GET_MODULE_HANDLE_EX_FLAG_PIN.
         /// </summary>
         GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT = 0x00000002
     }
