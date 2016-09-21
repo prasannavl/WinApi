@@ -32,10 +32,10 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName)]
         public static extern int SetStdHandle(uint nStdHandle, IntPtr hHandle);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int SetConsoleTitle(string lpConsoleTitle);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern uint GetConsoleTitle(StringBuilder lpConsoleTitle, uint nSize);
 
         [DllImport(LibraryName)]
@@ -49,9 +49,6 @@ namespace WinApi.Kernel32
         public static extern void ZeroMemory(IntPtr dest, IntPtr size);
 
         #endregion
-
-        [DllImport(LibraryName)]
-        public static extern IntPtr GetCurrentProcess();
 
         [DllImport(LibraryName)]
         public static extern int GetTickCount();
@@ -149,6 +146,16 @@ namespace WinApi.Kernel32
 
         [DllImport(LibraryName)]
         public static extern void GetSystemInfo(out SystemInfo lpSystemInfo);
+
+        #endregion
+
+        #region Process and Thread Functions
+
+        [DllImport(LibraryName)]
+        public static extern uint GetCurrentProcessId();
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetCurrentProcess();
 
         #endregion
     }
