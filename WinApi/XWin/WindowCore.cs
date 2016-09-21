@@ -28,10 +28,31 @@ namespace WinApi.XWin
         }
     }
 
+    public struct WindowException
+    {
+        public bool IsHandled { get; set; }
+        public IntPtr AssociatedHandle { get; set; }
+        public Exception DispatchedException { get; set; }
+
+        public WindowException(Exception ex) : this(ex, IntPtr.Zero) {}
+
+        public WindowException(Exception ex, IntPtr handle)
+        {
+            DispatchedException = ex;
+            AssociatedHandle = handle;
+            IsHandled = false;
+        }
+
+        public void SetHandled(bool value = true)
+        {
+            IsHandled = value;
+        }
+    }
+
+    public delegate void WindowExceptionHandler(ref WindowException windowException);
+
     public class WindowCoreBase : NativeWindowBase, IWindowCoreConnector, IDisposable
     {
-        public delegate void WindowProcExceptionHandler(IntPtr windowHandle, Exception ex);
-
         private IntPtr m_baseWindowProcPtr;
         private WindowProc m_instanceWindowProc;
         public WindowFactory Factory { get; protected set; }
@@ -147,33 +168,36 @@ namespace WinApi.XWin
 
         protected virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
+            var wmsg = new WindowMessage
+            {
+                Id = (WM) msg,
+                WParam = wParam,
+                LParam = lParam,
+                Result = IntPtr.Zero,
+                Handled = false
+            };
             try
             {
-                var wmsg = new WindowMessage
-                {
-                    Id = (WM) msg,
-                    WParam = wParam,
-                    LParam = lParam,
-                    Result = IntPtr.Zero,
-                    Handled = false
-                };
-
                 OnMessage(ref wmsg);
-
                 return wmsg.Handled ? wmsg.Result : WindowClassProc(hwnd, msg, wParam, lParam);
             }
             catch (Exception ex)
             {
-                HandleWindowProcException(hwnd, ex);
+                var windowException = new WindowException(ex, hwnd);
+                Exception?.Invoke(ref windowException);
+                if (!windowException.IsHandled)
+                    HandleException(ref windowException);
                 return IntPtr.Zero;
             }
         }
 
-        public static event WindowProcExceptionHandler WindowProcException;
+        public event WindowExceptionHandler Exception;
 
-        public static void HandleWindowProcException(IntPtr windowHandle, Exception ex)
+        public static event WindowExceptionHandler UnhandledException;
+
+        public static void HandleException(ref WindowException windowEx)
         {
-            WindowProcException?.Invoke(windowHandle, ex);
+            UnhandledException?.Invoke(ref windowEx);
         }
 
         protected virtual IntPtr WindowClassProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)

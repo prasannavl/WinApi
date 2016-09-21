@@ -91,7 +91,8 @@ namespace WinApi.XWin
             }
             catch (Exception ex)
             {
-                WindowCoreBase.HandleWindowProcException(hwnd, ex);
+                var windowException = new WindowException(ex, hwnd);
+                WindowCoreBase.HandleException(ref windowException);
                 return IntPtr.Zero;
             }
         }
