@@ -43,6 +43,16 @@ namespace WinApi.XWin
             return string.Empty;
         }
 
+        public bool SetSize(Size size)
+        {
+            return SetSize(ref size);
+        }
+
+        public bool SetSize(ref Size size)
+        {
+            return SetSize(size.Width, size.Height);
+        }
+
         public bool SetSize(int width, int height)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, -1, -1, width, height,
@@ -82,10 +92,38 @@ namespace WinApi.XWin
                    0;
         }
 
-        public bool GetPosition(out Rectangle rectangle)
+        public bool SetPosition(Rectangle rect)
+        {
+            return SetPosition(ref rect);
+        }
+
+        public bool SetPosition(Rectangle rect, SetWindowPosFlags flags)
+        {
+            return SetPosition(ref rect, flags);
+        }
+
+        public bool SetPosition(ref Rectangle rect)
+        {
+            return SetPosition(rect.Left, rect.Top, rect.Width, rect.Height,
+                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOZORDER);
+        }
+
+        public bool SetPosition(ref Rectangle rect, SetWindowPosFlags flags)
+        {
+            return SetPosition(rect.Left, rect.Top, rect.Width, rect.Height, flags);
+        }
+
+        public bool GetWindowRect(out Rectangle rectangle)
         {
             return User32Methods.GetWindowRect(Handle, out rectangle) !=
                    0;
+        }
+
+        public Rectangle GetWindowRect()
+        {
+            Rectangle rectangle;
+            User32Methods.GetWindowRect(Handle, out rectangle);
+            return rectangle;
         }
 
         public bool GetClientRect(out Rectangle rectangle)
@@ -94,18 +132,25 @@ namespace WinApi.XWin
                    0;
         }
 
+        public Rectangle GetClientRect()
+        {
+            Rectangle rectangle;
+            User32Methods.GetClientRect(Handle, out rectangle);
+            return rectangle;
+        }
+
         public Size GetClientSize()
         {
             Rectangle rect;
             GetClientRect(out rect);
-            return new Size() { Width = rect.Width, Height = rect.Height };
+            return new Size {Width = rect.Width, Height = rect.Height};
         }
 
         public Size GetWindowSize()
         {
             Rectangle rect;
-            GetPosition(out rect);
-            return new Size() { Width = rect.Width, Height = rect.Height };
+            GetWindowRect(out rect);
+            return new Size {Width = rect.Width, Height = rect.Height};
         }
 
         public IntPtr SetItem(WindowLongFlags index, IntPtr value)
@@ -168,6 +213,11 @@ namespace WinApi.XWin
         public bool Invalidate(bool shouldErase = false)
         {
             return User32Methods.InvalidateRect(Handle, IntPtr.Zero, shouldErase) != 0;
+        }
+
+        public void SetFocus()
+        {
+            User32Methods.SetFocus(Handle);
         }
 
         public bool Destroy()
