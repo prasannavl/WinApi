@@ -10,9 +10,9 @@ namespace Sample.Skia
 {
     public class SkiaWindowBase : WindowBase
     {
+        private Size m_currentClientSize;
         private IntPtr m_pixelBufferPtr;
         private int m_pixelBufferSize;
-        private Size m_currentClientSize;
         private int m_pixelBufferStride;
 
         private void ResizePixelBuffersIfRequired()
@@ -47,10 +47,7 @@ namespace Sample.Skia
             base.Dispose(disposing);
         }
 
-        protected virtual void OnSkiaPaint(SKSurface surface)
-        {
-            
-        }
+        protected virtual void OnSkiaPaint(SKSurface surface) {}
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
@@ -59,12 +56,12 @@ namespace Sample.Skia
             ResizePixelBuffersIfRequired();
             var size = m_currentClientSize;
             using (var surface = SKSurface.Create(
-                width: size.Width,
-                height: size.Height,
-                colorType: SKColorType.Bgra8888,
-                alphaType: SKAlphaType.Premul,
-                pixels: m_pixelBufferPtr,
-                rowBytes: m_pixelBufferStride))
+                size.Width,
+                size.Height,
+                SKColorType.Bgra8888,
+                SKAlphaType.Premul,
+                m_pixelBufferPtr,
+                m_pixelBufferStride))
             {
                 OnSkiaPaint(surface);
             }
@@ -74,7 +71,7 @@ namespace Sample.Skia
         }
     }
 
-    public sealed class SkiaWindow : SkiaWindowBase { }
+    public sealed class SkiaWindow : SkiaWindowBase {}
 
     public class SkiaMainWindowBase : SkiaWindowBase
     {
@@ -85,5 +82,5 @@ namespace Sample.Skia
         }
     }
 
-    public sealed class SkiaMainWindow : SkiaMainWindowBase { }
+    public sealed class SkiaMainWindow : SkiaMainWindowBase {}
 }

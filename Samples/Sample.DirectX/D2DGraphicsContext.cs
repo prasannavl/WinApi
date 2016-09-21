@@ -40,7 +40,7 @@ namespace Sample.DirectX
             var w = m_size.Width;
             var h = m_size.Height;
 
-            var b = new SolidColorBrush(context, new RawColor4(0, 0, 0, 0));
+            var b = new SolidColorBrush(context, new RawColor4(0.5f, 0.6f, 0.4f, 0.6f));
 
             context.BeginDraw();
             context.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.3f));
