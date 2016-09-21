@@ -52,6 +52,7 @@
     <Compile Include="Gdi32\Helpers.cs" />
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Types.cs" />
+    <Compile Include="Helpers\MessageBoxHelpers.cs" />
     <Compile Include="Kernel32\Helpers.cs" />
     <Compile Include="Kernel32\Methods.cs" />
     <Compile Include="Kernel32\Types.cs" />
@@ -65,11 +66,11 @@
     <Compile Include="User32\Experimental\Types.cs" />
     <Compile Include="User32\Helpers.cs" />
     <Compile Include="User32\Methods.cs" />
+    <Compile Include="Helpers\RectangleHelpers.cs" />
     <Compile Include="User32\Types.cs" />
     <Compile Include="UxTheme\Methods.cs" />
     <Compile Include="UxTheme\Types.cs" />
     <Compile Include="XWin\EventLoop.cs" />
-    <Compile Include="XWin\XWinHelpers.cs" />
     <Compile Include="XWin\MessageHelpers.cs" />
     <Compile Include="XWin\NativeWindow.cs" />
     <Compile Include="XWin\Window.cs" />
