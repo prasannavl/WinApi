@@ -31,15 +31,15 @@ namespace WinApi.Gdi32
         public BitmapInfoHeader Header;
         public RgbQuad[] Colors;
 
-        public static NativeBitmapInfo CreateNativeHandle(ref BitmapInfo bitmapInfo)
+        public static NativeBitmapInfoHandle NativeAlloc(ref BitmapInfo bitmapInfo)
         {
-            return new NativeBitmapInfo(ref bitmapInfo);
+            return new NativeBitmapInfoHandle(ref bitmapInfo);
         }
     }
 
-    public class NativeBitmapInfo : CriticalHandle
+    public class NativeBitmapInfoHandle : CriticalHandle
     {
-        public unsafe NativeBitmapInfo(ref BitmapInfo bitmapInfo) : base(new IntPtr(0))
+        public unsafe NativeBitmapInfoHandle(ref BitmapInfo bitmapInfo) : base(new IntPtr(0))
         {
             var quads = bitmapInfo.Colors;
             var quadsLength = quads.Length;
@@ -47,10 +47,12 @@ namespace WinApi.Gdi32
             {
                 quadsLength = 1;
             }
-            var ptr =
-                Marshal.AllocHGlobal(Marshal.SizeOf<BitmapInfoHeader>() + Marshal.SizeOf<RgbQuad>()*quadsLength);
+            var success = false;
+            var ptr = IntPtr.Zero;
             try
             {
+                ptr =
+                    Marshal.AllocHGlobal(Marshal.SizeOf<BitmapInfoHeader>() + Marshal.SizeOf<RgbQuad>()*quadsLength);
                 var headerPtr = (BitmapInfoHeader*) ptr.ToPointer();
                 *headerPtr = bitmapInfo.Header;
                 var quadPtr = (RgbQuad*) (headerPtr + 1);
@@ -64,11 +66,13 @@ namespace WinApi.Gdi32
                     *quadPtr = new RgbQuad();
                 }
                 SetHandle(ptr);
+                success = true;
             }
             finally
             {
-                if (handle == IntPtr.Zero)
+                if (!success)
                 {
+                    SetHandleAsInvalid();
                     Marshal.FreeHGlobal(ptr);
                 }
             }

@@ -16,7 +16,7 @@ namespace WinApi.Gdi32
         public static IntPtr CreateDIBSection(IntPtr hdc, ref BitmapInfo bitmapInfo,
             DibBmiColorUsageFlag iUsage, out IntPtr ppvBits, IntPtr hSection, uint dwOffset)
         {
-            using (var pbmi = BitmapInfo.CreateNativeHandle(ref bitmapInfo))
+            using (var pbmi = BitmapInfo.NativeAlloc(ref bitmapInfo))
             {
                 return Gdi32Methods.CreateDIBSection(hdc, pbmi.GetDangerousHandle(), iUsage, out ppvBits, hSection,
                     dwOffset);
@@ -37,7 +37,7 @@ namespace WinApi.Gdi32
                 lpbmih, uint fdwInit, byte[] lpbInit, ref BitmapInfo bitmapInfo,
             DibBmiColorUsageFlag fuUsage)
         {
-            using (var pbmi = BitmapInfo.CreateNativeHandle(ref bitmapInfo))
+            using (var pbmi = BitmapInfo.NativeAlloc(ref bitmapInfo))
             {
                 return Gdi32Methods.CreateDIBitmap(hdc, ref lpbmih, fdwInit, lpbInit, pbmi.GetDangerousHandle(),
                     fuUsage);
@@ -48,7 +48,7 @@ namespace WinApi.Gdi32
                 dwWidth, uint dwHeight, int xSrc, int ySrc, uint uStartScan, uint cScanLines,
             byte[] lpvBits, ref BitmapInfo bitmapInfo, DibBmiColorUsageFlag fuColorUse)
         {
-            using (var pbmi = BitmapInfo.CreateNativeHandle(ref bitmapInfo))
+            using (var pbmi = BitmapInfo.NativeAlloc(ref bitmapInfo))
             {
                 return Gdi32Methods.SetDIBitsToDevice(hdc, xDest, yDest,
                     dwWidth, dwHeight, xSrc, ySrc, uStartScan, cScanLines, lpvBits, pbmi.GetDangerousHandle(),
