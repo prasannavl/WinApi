@@ -71,12 +71,6 @@ namespace WinApi.User32
         public static extern int InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
 
         [DllImport(LibraryName)]
-        public static extern int ClipCursor(ref Rectangle rect);
-
-        [DllImport(LibraryName)]
-        public static extern int ClipCursor(IntPtr ptr);
-
-        [DllImport(LibraryName)]
         public static extern IntPtr GetDC(IntPtr hwnd);
 
         [DllImport(LibraryName)]
@@ -102,10 +96,10 @@ namespace WinApi.User32
         public static extern int SetRectEmpty(out Rectangle lprc);
 
         [DllImport(LibraryName)]
-        public static extern int AdjustWindowRect(ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu);
+        public static extern int AdjustWindowRect([In, Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu);
 
         [DllImport(LibraryName)]
-        public static extern int AdjustWindowRectEx(ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
+        public static extern int AdjustWindowRectEx([In, Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
             WindowExStyles dwExStyle);
 
         [DllImport(LibraryName)]
@@ -166,17 +160,17 @@ namespace WinApi.User32
 
         [DllImport(LibraryName)]
         public static extern int UpdateLayeredWindow(IntPtr hwnd, IntPtr hdcDst,
-            ref Point pptDst, ref Size psize, IntPtr hdcSrc, ref Point pptSrc, uint crKey,
+            [In] ref Point pptDst, [In] ref Size psize, IntPtr hdcSrc, [In] ref Point pptSrc, uint crKey,
             [In] ref BlendFunction pblend, uint dwFlags);
 
         [DllImport(LibraryName)]
-        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Rectangle rect, int cPoints = 2);
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rectangle rect, int cPoints = 2);
 
         [DllImport(LibraryName)]
-        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Point rect, int cPoints = 1);
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Point rect, int cPoints = 1);
 
         [DllImport(LibraryName)]
-        public static extern int ScreenToClient(IntPtr hWnd, ref Point lpPoint);
+        public static extern int ScreenToClient(IntPtr hWnd, [In, Out] ref Point lpPoint);
 
         [DllImport(LibraryName)]
         public static extern IntPtr WindowFromPhysicalPoint(Point point);
@@ -203,7 +197,7 @@ namespace WinApi.User32
         public static extern int IsIconic(IntPtr hwnd);
 
         [DllImport(LibraryName)]
-        public static extern int LogicalToPhysicalPoint(IntPtr hwnd, ref Point point);
+        public static extern int LogicalToPhysicalPoint(IntPtr hwnd, [In, Out] ref Point point);
 
         [DllImport(LibraryName)]
         public static extern IntPtr ChildWindowFromPoint(IntPtr hwndParent, Point point);
@@ -222,6 +216,12 @@ namespace WinApi.User32
 
         [DllImport(LibraryName)]
         public static extern int IsWindowEnabled(IntPtr hWnd);
+
+        [DllImport(LibraryName)]
+        public static extern int ReleaseCapture();
+
+        [DllImport(LibraryName)]
+        public static extern IntPtr SetCapture(IntPtr hWnd);
 
         [DllImport(LibraryName)]
         public static extern IntPtr GetFocus();
@@ -243,6 +243,18 @@ namespace WinApi.User32
 
         [DllImport(LibraryName)]
         public static extern int AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+
+        [DllImport(LibraryName)]
+        public static extern int DragDetect(IntPtr hwnd, Point point);
+
+        [DllImport(LibraryName)]
+        public static extern int ClientToScreen(IntPtr hwnd, [In, Out] ref Point point);
+
+        [DllImport(LibraryName)]
+        public static extern int ClipCursor([In] ref Rectangle rect);
+
+        [DllImport(LibraryName)]
+        public static extern int ClipCursor(IntPtr ptr);
 
         #endregion
 
@@ -403,7 +415,7 @@ namespace WinApi.User32
         public static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
         [DllImport(LibraryName)]
-        public static extern int GetWindowInfo(IntPtr hwnd, [In] [Out] ref WindowInfo pwi);
+        public static extern int GetWindowInfo(IntPtr hwnd, [In, Out] ref WindowInfo pwi);
 
         [DllImport(LibraryName)]
         public static extern int SetWindowPlacement(IntPtr hWnd,
