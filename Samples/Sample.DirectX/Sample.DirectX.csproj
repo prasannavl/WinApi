@@ -128,7 +128,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WinApi.Win32\WinApi.Desktop.csproj">
+    <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
       <Project>{0fba6bbc-2700-4a49-81d1-ea4587390eca}</Project>
       <Name>WinApi.Desktop</Name>
     </ProjectReference>

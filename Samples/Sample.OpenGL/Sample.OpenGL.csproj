@@ -99,7 +99,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WinApi.Win32\WinApi.Desktop.csproj">
+    <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
       <Project>{0FBA6BBC-2700-4A49-81D1-EA4587390ECA}</Project>
       <Name>WinApi.Desktop</Name>
     </ProjectReference>
