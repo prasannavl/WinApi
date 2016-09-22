@@ -1,4 +1,5 @@
 ﻿using System;
+using WinApi.Desktop;
 using WinApi.Helpers;
 using WinApi.Kernel32;
 using WinApi.User32;
@@ -12,7 +13,7 @@ namespace Sample.DirectX
         {
             try
             {
-                WinApi.Desktop.ApplicationHelpers.InitializeCriticalErrorDisplay();
+                ApplicationHelpers.SetupDefaultExceptionHandlers();
                 var cache = WindowFactory.FactoryCache.Instance;
                 var factory = new WindowFactory("MainWindow",
                     WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,

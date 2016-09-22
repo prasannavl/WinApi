@@ -1,23 +1,38 @@
 ﻿using System;
+using WinApi.Kernel32;
 using WinApi.XWin;
 
 namespace WinApi.Desktop
 {
     public static class ApplicationHelpers
     {
-        public static void InitializeCriticalErrorDisplay()
+        public static WindowExceptionHandler DefaultWindowExceptionHandler { get; private set; }
+        public static UnhandledExceptionEventHandler DefaultUnhandledExceptionHandler { get; private set; }
+
+        static ApplicationHelpers()
         {
-            AppDomain.CurrentDomain.UnhandledException +=
+            DefaultUnhandledExceptionHandler =
                 (sender, eventArgs) =>
                 {
                     ShowCriticalError(eventArgs.ExceptionObject);
+                    if (eventArgs.IsTerminating)
+                    {
+                        ShowCriticalInfo(
+                            $"{Environment.NewLine}The application will now terminate. Press any key to do so.");
+                        Console.ReadKey();
+                    }
                 };
 
-            WindowCoreBase.UnhandledException +=
-                (ref WindowException ex) =>
-                {
-                    ShowCriticalError(ex.DispatchedException);
-                };
+            DefaultWindowExceptionHandler = (ref WindowException ex) =>
+            {
+                ShowCriticalError(ex.DispatchedException);
+            };
+        }
+
+        public static void SetupDefaultExceptionHandlers()
+        {
+            AppDomain.CurrentDomain.UnhandledException += DefaultUnhandledExceptionHandler;
+            WindowCoreBase.UnhandledException += DefaultWindowExceptionHandler;
         }
 
         public static void ShowCriticalError(object exceptionObj, string message = null, string title = null)

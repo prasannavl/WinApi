@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SkiaSharp;
 using WinApi;
+using WinApi.Desktop;
 using WinApi.Helpers;
 using WinApi.Kernel32;
 using WinApi.User32;
@@ -23,7 +24,8 @@ namespace Sample.Skia
         {
             try
             {
-                WinApi.Desktop.ApplicationHelpers.InitializeCriticalErrorDisplay();
+                ApplicationHelpers.SetupDefaultExceptionHandlers();
+
                 var factory = WindowFactory.Create("MainWindow");
                 using (var win = factory.CreateFrameWindow<SkiaAppWindow>(text: "Hello"))
                 {

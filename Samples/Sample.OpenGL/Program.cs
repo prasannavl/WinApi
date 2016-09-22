@@ -23,7 +23,7 @@ namespace Sample.OpenGL
         {
             try
             {
-                ApplicationHelpers.InitializeCriticalErrorDisplay();
+                ApplicationHelpers.SetupDefaultExceptionHandlers();
                 Gl.Initialize();
                 var factory = WindowFactory.Create("MainWindow");
                 using (var win = factory.CreateFrameWindow<OpenGlAppWindow>(text: "Hello"))
