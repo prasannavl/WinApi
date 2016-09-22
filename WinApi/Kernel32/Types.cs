@@ -14,8 +14,8 @@ namespace WinApi.Kernel32
     {
         public ShortPoint(short x, short y)
         {
-            this.X = x;
-            this.Y = y;
+            X = x;
+            Y = y;
         }
 
         public short X, Y;
@@ -26,24 +26,24 @@ namespace WinApi.Kernel32
     {
         public ShortRectangle(short left = 0, short top = 0, short right = 0, short bottom = 0)
         {
-            this.Left = left;
-            this.Top = top;
-            this.Right = right;
-            this.Bottom = bottom;
+            Left = left;
+            Top = top;
+            Right = right;
+            Bottom = bottom;
         }
 
         public short Left, Top, Right, Bottom;
 
         public short Width
         {
-            get { return (short)(Right - Left); }
-            set { Right = (short)(Left + value); }
+            get { return (short) (Right - Left); }
+            set { Right = (short) (Left + value); }
         }
 
         public short Height
         {
-            get { return (short)(Bottom - Top); }
-            set { Bottom = (short)(Top + value); }
+            get { return (short) (Bottom - Top); }
+            set { Bottom = (short) (Top + value); }
         }
     }
 
@@ -86,17 +86,17 @@ namespace WinApi.Kernel32
         /// <summary>
         ///     The standard input device. Initially, this is the console input buffer, CONIN$.
         /// </summary>
-        STD_INPUT_HANDLE = unchecked((int)(uint)-10),
+        STD_INPUT_HANDLE = unchecked((int) (uint) -10),
 
         /// <summary>
         ///     The standard output device. Initially, this is the active console screen buffer, CONOUT$.
         /// </summary>
-        STD_OUTPUT_HANDLE = unchecked((int)(uint)-11),
+        STD_OUTPUT_HANDLE = unchecked((int) (uint) -11),
 
         /// <summary>
         ///     The standard error device. Initially, this is the active console screen buffer, CONOUT$.
         /// </summary>
-        STD_ERROR_HANDLE = unchecked((int)(uint)-12)
+        STD_ERROR_HANDLE = unchecked((int) (uint) -12)
     }
 
     [Flags]
@@ -331,5 +331,4 @@ namespace WinApi.Kernel32
         /// </summary>
         GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT = 0x00000002
     }
-
 }

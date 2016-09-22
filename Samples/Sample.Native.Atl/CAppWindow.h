@@ -2,7 +2,6 @@
 
 #include "pch.h"
 
-
 class CAppWindow : public CWindowImpl<CAppWindow, CWindow, CFrameWinTraits>
 {
 private:
