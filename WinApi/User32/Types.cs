@@ -223,9 +223,50 @@ namespace WinApi.User32
 
         public static void Initialize(ref TrackMouseEventOptions obj)
         {
-            obj.Size = (uint)Marshal.SizeOf<TrackMouseEventOptions>();
+            obj.Size = (uint) Marshal.SizeOf<TrackMouseEventOptions>();
         }
 
         public const uint DefaultHoverTime = 0xFFFFFFFF;
+    }
+
+    public struct KeyboardInputState
+    {
+        public uint Value;
+
+        public KeyboardInputState(uint value)
+        {
+            this.Value = value;
+        }
+
+        /// <summary>
+        ///     The repeat count for the current message. The value is the number of times the keystroke is autorepeated as a
+        ///     result of the user holding down the key. If the keystroke is held long enough, multiple messages are sent. However,
+        ///     the repeat count is not cumulative.
+        /// </summary>
+        public int RepeatCount => unchecked((int) Value & 0x000000ff);
+
+        public int ScanCode => unchecked (((int) Value >> 16) & 0x0000000f);
+
+        /// <summary>
+        ///     Indicates whether the key is an extended key, such as the right-hand ALT and CTRL keys that appear on an enhanced
+        ///     101- or 102-key keyboard. The value is 1 if it is an extended key; otherwise, it is 0.
+        /// </summary>
+        public bool IsExtendedKey => unchecked(((int) Value >> 24) & 0x1) == 1;
+
+        /// <summary>
+        ///     The value is 1 if the ALT key is down while the key is pressed; it is 0 if the WM_SYSKEYDOWN message is posted to
+        ///     the active window because no window has the keyboard focus.
+        /// </summary>
+        public bool IsContextual => unchecked(((int) Value >> 29) & 0x1) == 1;
+
+        /// <summary>
+        ///     The value is 1 if the key is down before the message is sent, or it is 0 if the key is up.
+        /// </summary>
+        public bool IsPreviousKeyStatePressed => unchecked(((int) Value >> 30) & 0x1) == 1;
+
+        /// <summary>
+        ///     The value is 1 if the key is being released, or it is 0 if the key is being pressed.
+        /// </summary>
+        public bool IsKeyUpTransition => unchecked(((int) Value >> 31) & 0x1) == 1;
     }
 }
