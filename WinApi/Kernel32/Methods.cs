@@ -27,6 +27,9 @@ namespace WinApi.Kernel32
         public static extern int AttachConsole(uint dwProcessId);
 
         [DllImport(LibraryName)]
+        public static extern IntPtr GetConsoleWindow();
+
+        [DllImport(LibraryName)]
         public static extern IntPtr GetStdHandle(uint nStdHandle);
 
         [DllImport(LibraryName)]
