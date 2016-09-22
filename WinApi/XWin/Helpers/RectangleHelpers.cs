@@ -1,7 +1,7 @@
 ﻿using System;
 using WinApi.User32;
 
-namespace WinApi.Helpers
+namespace WinApi.XWin.Helpers
 {
     public static unsafe class RectangleHelpers
     {

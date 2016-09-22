@@ -4,8 +4,8 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenGL;
 using WinApi.Desktop;
-using WinApi.Helpers;
 using WinApi.XWin;
+using WinApi.XWin.Helpers;
 
 namespace Sample.OpenGL
 {

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 using SkiaSharp;
 using WinApi;
 using WinApi.Desktop;
-using WinApi.Helpers;
 using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
+using WinApi.XWin.Helpers;
 
 namespace Sample.Skia
 {
