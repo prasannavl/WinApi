@@ -66,6 +66,11 @@ namespace WinApi.XWin
                     MessageHandlers.ProcessDisplayChange(this, ref msg);
                     break;
                 }
+                case WM.MOUSEMOVE:
+                {
+                    MessageHandlers.ProcessMouseMove(this, ref msg);
+                    break;
+                }
             }
             base.OnMessage(ref msg);
         }
@@ -175,6 +180,18 @@ namespace WinApi.XWin
                 msg.LParam.BreakSafeInt32To16(out size.Height, out size.Width);
                 windowBase.OnDisplayChange(ref msg, imageDepthBitsPerPixel, ref size);
             }
+
+            public static void ProcessMouseMove(WindowBase windowBase, ref WindowMessage msg)
+            {
+                Point point;
+                msg.LParam.BreakInt32Into16(out point.Y, out point.X);
+                windowBase.OnMouseMove(ref msg, ref point, (MouseMoveFlags)msg.WParam.ToSafeInt32());
+            }
+        }
+
+        protected virtual void OnMouseMove(ref WindowMessage msg, ref Point point, MouseMoveFlags flags)
+        {
+            
         }
     }
 
