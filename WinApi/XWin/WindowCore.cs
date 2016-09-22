@@ -47,6 +47,11 @@ namespace WinApi.XWin
         {
             IsHandled = value;
         }
+
+        public override string ToString()
+        {
+            return DispatchedException.ToString();
+        }
     }
 
     public delegate void WindowExceptionHandler(ref WindowException windowException);
