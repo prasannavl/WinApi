@@ -215,6 +215,9 @@ namespace WinApi.User32
         public static extern int MessageBoxEx(IntPtr hWnd, string lpText, string lpCaption, uint type,
             ushort wLanguageId);
 
+        [DllImport(LibraryName)]
+        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
         #region Keyboard, Mouse & Input Method Functions
 
         [DllImport(LibraryName)]
