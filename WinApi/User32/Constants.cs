@@ -1400,49 +1400,41 @@ namespace WinApi.User32
     }
 
     [Flags]
-    public enum MouseMoveFlags
+    public enum MouseStateFlags
     {
-
         /// <summary>
-        /// The CTRL key is down.
+        ///     The CTRL key is down.
         /// </summary>
-
         MK_CONTROL = 0x0008,
 
         /// <summary>
-        /// The left mouse button is down.
+        ///     The left mouse button is down.
         /// </summary>
-
         MK_LBUTTON = 0x0001,
 
         /// <summary>
-        /// The middle mouse button is down.
+        ///     The middle mouse button is down.
         /// </summary>
-
         MK_MBUTTON = 0x0010,
 
         /// <summary>
-        /// The right mouse button is down.
+        ///     The right mouse button is down.
         /// </summary>
-
         MK_RBUTTON = 0x0002,
 
         /// <summary>
-        /// The SHIFT key is down.
+        ///     The SHIFT key is down.
         /// </summary>
-
         MK_SHIFT = 0x0004,
 
         /// <summary>
-        /// 						 The first X button is down.
+        ///     The first X button is down.
         /// </summary>
-
         MK_XBUTTON1 = 0x0020,
 
         /// <summary>
-        /// 						 The second X button is down.
+        ///     The second X button is down.
         /// </summary>
-
         MK_XBUTTON2 = 0x0040
     }
 
@@ -1966,7 +1958,7 @@ namespace WinApi.User32
         WA_INACTIVE = 0
     }
 
-    public enum HitTestFlag
+    public enum HitTestResult
     {
         /// <summary>
         ///     In the border of a window that does not have a sizing border.
@@ -4425,6 +4417,42 @@ namespace WinApi.User32
         ///     Windows Server 2008, Windows Vista, Windows Server 2003, and Windows XP/2000:  This parameter is not supported.
         /// </summary>
         SPI_SETWINARRANGING = 0x0083
+    }
+
+    public enum MouseXButtonFlag
+    {
+        /// <summary>
+        ///     The first X button was clicked.
+        /// </summary>
+        XBUTTON1 = 0x0001,
+
+        /// <summary>
+        ///     The second X button was clicked.
+        /// </summary>
+        XBUTTON2 = 0x0002
+    }
+
+    public enum MouseActivationResult
+    {
+        /// <summary>
+        ///     Activates the window, and does not discard the mouse message.
+        /// </summary>
+        MA_ACTIVATE = 1,
+
+        /// <summary>
+        ///     Activates the window, and discards the mouse message.
+        /// </summary>
+        MA_ACTIVATEANDEAT = 2,
+
+        /// <summary>
+        ///     Does not activate the window, and does not discard the mouse message.
+        /// </summary>
+        MA_NOACTIVATE = 3,
+
+        /// <summary>
+        ///     Does not activate the window, but discards the mouse message.
+        /// </summary>
+        MA_NOACTIVATEANDEAT = 4
     }
 
     public enum VirtualKey
