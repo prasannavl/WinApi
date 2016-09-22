@@ -96,10 +96,10 @@ namespace WinApi.User32
         public static extern int SetRectEmpty(out Rectangle lprc);
 
         [DllImport(LibraryName)]
-        public static extern int AdjustWindowRect([In, Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu);
+        public static extern int AdjustWindowRect([In] [Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu);
 
         [DllImport(LibraryName)]
-        public static extern int AdjustWindowRectEx([In, Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
+        public static extern int AdjustWindowRectEx([In] [Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
             WindowExStyles dwExStyle);
 
         [DllImport(LibraryName)]
@@ -164,13 +164,15 @@ namespace WinApi.User32
             [In] ref BlendFunction pblend, uint dwFlags);
 
         [DllImport(LibraryName)]
-        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rectangle rect, int cPoints = 2);
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In] [Out] ref Rectangle rect,
+            int cPoints = 2);
 
         [DllImport(LibraryName)]
-        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Point rect, int cPoints = 1);
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In] [Out] ref Point rect,
+            int cPoints = 1);
 
         [DllImport(LibraryName)]
-        public static extern int ScreenToClient(IntPtr hWnd, [In, Out] ref Point lpPoint);
+        public static extern int ScreenToClient(IntPtr hWnd, [In] [Out] ref Point lpPoint);
 
         [DllImport(LibraryName)]
         public static extern IntPtr WindowFromPhysicalPoint(Point point);
@@ -197,7 +199,7 @@ namespace WinApi.User32
         public static extern int IsIconic(IntPtr hwnd);
 
         [DllImport(LibraryName)]
-        public static extern int LogicalToPhysicalPoint(IntPtr hwnd, [In, Out] ref Point point);
+        public static extern int LogicalToPhysicalPoint(IntPtr hwnd, [In] [Out] ref Point point);
 
         [DllImport(LibraryName)]
         public static extern IntPtr ChildWindowFromPoint(IntPtr hwndParent, Point point);
@@ -210,7 +212,8 @@ namespace WinApi.User32
         public static extern int MessageBox(IntPtr hWnd, string lpText, string lpCaption, uint type);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern int MessageBoxEx(IntPtr hWnd, string lpText, string lpCaption, uint type, ushort wLanguageId);
+        public static extern int MessageBoxEx(IntPtr hWnd, string lpText, string lpCaption, uint type,
+            ushort wLanguageId);
 
         #region Keyboard, Mouse & Input Method Functions
 
@@ -248,13 +251,16 @@ namespace WinApi.User32
         public static extern int DragDetect(IntPtr hwnd, Point point);
 
         [DllImport(LibraryName)]
-        public static extern int ClientToScreen(IntPtr hwnd, [In, Out] ref Point point);
+        public static extern int ClientToScreen(IntPtr hwnd, [In] [Out] ref Point point);
 
         [DllImport(LibraryName)]
         public static extern int ClipCursor([In] ref Rectangle rect);
 
         [DllImport(LibraryName)]
         public static extern int ClipCursor(IntPtr ptr);
+
+        [DllImport(LibraryName)]
+        public static extern int TrackMouseEvent([In] [Out] ref TrackMouseEventOptions lpEventTrack);
 
         #endregion
 
@@ -415,7 +421,7 @@ namespace WinApi.User32
         public static extern int MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
         [DllImport(LibraryName)]
-        public static extern int GetWindowInfo(IntPtr hwnd, [In, Out] ref WindowInfo pwi);
+        public static extern int GetWindowInfo(IntPtr hwnd, [In] [Out] ref WindowInfo pwi);
 
         [DllImport(LibraryName)]
         public static extern int SetWindowPlacement(IntPtr hWnd,

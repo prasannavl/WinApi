@@ -26,10 +26,10 @@ namespace WinApi.User32
     {
         public Rectangle(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
-            this.Left = left;
-            this.Top = top;
-            this.Right = right;
-            this.Bottom = bottom;
+            Left = left;
+            Top = top;
+            Right = right;
+            Bottom = bottom;
         }
 
         public int Left, Top, Right, Bottom;
@@ -211,5 +211,21 @@ namespace WinApi.User32
         {
             obj.Size = (uint) Marshal.SizeOf<MinimizedMetrics>();
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct TrackMouseEventOptions
+    {
+        public uint Size;
+        public TrackMouseEventFlags Flags;
+        public IntPtr TrackedWindowHandle;
+        public uint HoverTime;
+
+        public static void Initialize(ref TrackMouseEventOptions obj)
+        {
+            obj.Size = (uint)Marshal.SizeOf<TrackMouseEventOptions>();
+        }
+
+        public const uint DefaultHoverTime = 0xFFFFFFFF;
     }
 }
