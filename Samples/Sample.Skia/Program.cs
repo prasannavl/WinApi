@@ -1,9 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using SkiaSharp;
+using WinApi;
+using WinApi.Helpers;
+using WinApi.Kernel32;
+using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
 
@@ -13,11 +21,20 @@ namespace Sample.Skia
     {
         static int Main(string[] args)
         {
-            var factory = WindowFactory.Create("MainWindow");
-            using (var win = factory.CreateFrameWindow<SkiaAppWindow>(text: "Hello"))
+            try
             {
-                win.Show();
-                return new EventLoop(win).Run();
+                WinApi.Desktop.ApplicationHelpers.InitializeCriticalErrorDisplay();
+                var factory = WindowFactory.Create("MainWindow");
+                using (var win = factory.CreateFrameWindow<SkiaAppWindow>(text: "Hello"))
+                {
+                    win.Show();
+                    return new EventLoop(win).Run();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBoxHelpers.ShowError(ex);
+                return 1;
             }
         }
     }

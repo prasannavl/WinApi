@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenGL;
+using WinApi.Desktop;
+using WinApi.Helpers;
 using WinApi.XWin;
 
 namespace Sample.OpenGL
@@ -18,12 +21,21 @@ namespace Sample.OpenGL
     {
         static int Main(string[] args)
         {
-            Gl.Initialize();
-            var factory = WindowFactory.Create("MainWindow");
-            using (var win = factory.CreateFrameWindow<OpenGlAppWindow>(text: "Hello"))
+            try
             {
-                win.Show();
-                return new EventLoop(win).Run();
+                ApplicationHelpers.InitializeCriticalErrorDisplay();
+                Gl.Initialize();
+                var factory = WindowFactory.Create("MainWindow");
+                using (var win = factory.CreateFrameWindow<OpenGlAppWindow>(text: "Hello"))
+                {
+                    win.Show();
+                    return new EventLoop(win).Run();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBoxHelpers.ShowError(ex);
+                return 1;
             }
         }
     }

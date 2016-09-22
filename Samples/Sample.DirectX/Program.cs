@@ -1,4 +1,8 @@
-﻿using WinApi.XWin;
+﻿using System;
+using WinApi.Helpers;
+using WinApi.Kernel32;
+using WinApi.User32;
+using WinApi.XWin;
 
 namespace Sample.DirectX
 {
@@ -6,11 +10,27 @@ namespace Sample.DirectX
     {
         static int Main(string[] args)
         {
-            var factory = WindowFactory.Create("MainWindow");
-            using (var win = factory.CreateFrameWindow<MainWindow>(text: "Hello"))
+            try
             {
-                win.Show();
-                return new EventLoop(win).Run();
+                WinApi.Desktop.ApplicationHelpers.InitializeCriticalErrorDisplay();
+                var cache = WindowFactory.FactoryCache.Instance;
+                var factory = new WindowFactory("MainWindow",
+                    WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
+                    cache.ProcessHandle, IntPtr.Zero, cache.ArrowCursorHandle, IntPtr.Zero, null);
+                using (
+                    var win = factory.CreateFrameWindow<MainWindow>(text: null,
+                        exStyles:
+                        WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE |
+                        WindowExStyles.WS_EX_DLGMODALFRAME))
+                {
+                    win.Show();
+                    return new EventLoop(win).Run();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBoxHelpers.ShowError(ex);
+                return 1;
             }
         }
     }

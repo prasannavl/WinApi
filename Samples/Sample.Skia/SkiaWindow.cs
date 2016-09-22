@@ -53,21 +53,27 @@ namespace Sample.Skia
         {
             PaintStruct ps;
             hdc = User32Methods.BeginPaint(Handle, out ps);
-            ResizePixelBuffersIfRequired();
-            var size = m_currentClientSize;
-            using (var surface = SKSurface.Create(
-                size.Width,
-                size.Height,
-                SKColorType.Bgra8888,
-                SKAlphaType.Premul,
-                m_pixelBufferPtr,
-                m_pixelBufferStride))
+            try
             {
-                OnSkiaPaint(surface);
+                ResizePixelBuffersIfRequired();
+                var size = m_currentClientSize;
+                using (var surface = SKSurface.Create(
+                    size.Width,
+                    size.Height,
+                    SKColorType.Bgra8888,
+                    SKAlphaType.Premul,
+                    m_pixelBufferPtr,
+                    m_pixelBufferStride))
+                {
+                    OnSkiaPaint(surface);
+                }
+                Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, m_pixelBufferPtr);
+                base.OnPaint(ref msg, hdc);
             }
-            Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, m_pixelBufferPtr);
-            User32Methods.EndPaint(Handle, ref ps);
-            base.OnPaint(ref msg, hdc);
+            finally
+            {
+                User32Methods.EndPaint(Handle, ref ps);
+            }
         }
     }
 
