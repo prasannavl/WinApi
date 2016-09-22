@@ -15,6 +15,9 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName)]
         public static extern int DisableThreadLibraryCalls(IntPtr hModule);
 
+        [DllImport(LibraryName)]
+        public static extern void Sleep(uint dwMilliseconds);
+
         #region Console Functions
 
         [DllImport(LibraryName)]
