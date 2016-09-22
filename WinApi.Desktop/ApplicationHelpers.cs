@@ -26,6 +26,7 @@ namespace WinApi.Desktop
             DefaultWindowExceptionHandler = (ref WindowException ex) =>
             {
                 ShowCriticalError(ex.DispatchedException);
+                ex.SetHandled();
             };
         }
 

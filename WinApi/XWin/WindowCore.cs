@@ -31,15 +31,15 @@ namespace WinApi.XWin
     public struct WindowException
     {
         public bool IsHandled { get; set; }
-        public IntPtr AssociatedHandle { get; set; }
+        public WindowCoreBase Window { get; set; }
         public Exception DispatchedException { get; set; }
 
-        public WindowException(Exception ex) : this(ex, IntPtr.Zero) {}
+        public WindowException(Exception ex) : this(ex, null) {}
 
-        public WindowException(Exception ex, IntPtr handle)
+        public WindowException(Exception ex, WindowCoreBase window)
         {
             DispatchedException = ex;
-            AssociatedHandle = handle;
+            Window = window;
             IsHandled = false;
         }
 
@@ -188,21 +188,20 @@ namespace WinApi.XWin
             }
             catch (Exception ex)
             {
-                var windowException = new WindowException(ex, hwnd);
-                Exception?.Invoke(ref windowException);
-                if (!windowException.IsHandled)
-                    HandleException(ref windowException);
+                if (!HandleException(ex, this)) throw;
                 return IntPtr.Zero;
             }
         }
 
         public event WindowExceptionHandler Exception;
-
         public static event WindowExceptionHandler UnhandledException;
 
-        public static void HandleException(ref WindowException windowEx)
+        public static bool HandleException(Exception ex, WindowCoreBase window)
         {
-            UnhandledException?.Invoke(ref windowEx);
+            var windowException = new WindowException(ex, window);
+            window?.Exception?.Invoke(ref windowException);
+            if (!windowException.IsHandled) UnhandledException?.Invoke(ref windowException);
+            return windowException.IsHandled;
         }
 
         protected virtual IntPtr WindowClassProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
