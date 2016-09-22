@@ -45,7 +45,7 @@ namespace WinApi.Kernel32
         public static extern uint GetConsoleTitle(StringBuilder lpConsoleTitle, uint nSize);
 
         [DllImport(LibraryName)]
-        public static extern int SetConsoleWindowInfo(IntPtr hConsoleOutput, int bAbsolute, ref ShortRectangle lpConsoleWindow);
+        public static extern int SetConsoleWindowInfo(IntPtr hConsoleOutput, int bAbsolute, [In] ref ShortRectangle lpConsoleWindow);
 
         #endregion
 
