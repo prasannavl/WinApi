@@ -1,33 +1,12 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 using WinApi.Core;
 using WinApi.User32;
 using WinApi.Extensions;
 
 namespace WinApi.XWin
 {
-    public enum MouseButton
-    {
-        Left = 0x1,
-        Right = 0x2,
-        Middle = 0x4,
-        XButton1 = 0x8,
-        XButton2 = 0x10,
-        Other = XButton1 | XButton2
-    }
-
-    public enum MouseButtonEvent
-    {
-        Up,
-        Down,
-        DoubleClick
-    }
-
-    public enum Orientation
-    {
-        Horizontal,
-        Vertical
-    }
-
     public abstract class WindowBase : WindowCoreBase
     {
         protected override void OnMessage(ref WindowMessage msg)
@@ -183,6 +162,61 @@ namespace WinApi.XWin
                     MessageHandlers.ProcessMouseLeave(this, ref msg);
                     break;
                 }
+                case WM.CHAR:
+                {
+                    MessageHandlers.ProcessKeyChar(this, ref msg, false, false);
+                    break;
+                }
+                case WM.SYSCHAR:
+                {
+                    MessageHandlers.ProcessKeyChar(this, ref msg, true, false);
+                    break;
+                }
+                case WM.DEADCHAR:
+                {
+                    MessageHandlers.ProcessKeyChar(this, ref msg, false, true);
+                    break;
+                }
+                case WM.SYSDEADCHAR:
+                {
+                    MessageHandlers.ProcessKeyChar(this, ref msg, true, true);
+                    break;
+                }
+                case WM.KEYUP:
+                {
+                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Up, false);
+                    break;
+                }
+                case WM.KEYDOWN:
+                {
+                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Down, false);
+                    break;
+                }
+                case WM.SYSKEYUP:
+                {
+                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Up, true);
+                    break;
+                }
+                case WM.SYSKEYDOWN:
+                {
+                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Down, true);
+                    break;
+                }
+                case WM.COMMAND:
+                {
+                    MessageHandlers.ProcessCommand(this, ref msg);
+                    break;
+                }
+                case WM.SYSCOMMAND:
+                {
+                    MessageHandlers.ProcessSysCommand(this, ref msg);
+                    break;
+                }
+                case WM.MENUCOMMAND:
+                {
+                    MessageHandlers.ProcessMenuCommand(this, ref msg);
+                    break;
+                }
             }
             base.OnMessage(ref msg);
         }
@@ -303,7 +337,7 @@ namespace WinApi.XWin
             }
 
             public static void ProcessMouseButtonEvent(WindowBase windowBase, ref WindowMessage msg, MouseButton button,
-                MouseButtonEvent eventType)
+                MouseButtonEvent mouseButtonEvent)
             {
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
@@ -311,7 +345,9 @@ namespace WinApi.XWin
                 var flags = (MouseStateFlags) wParam.Low();
                 if (button == MouseButton.Other)
                 {
-                    var xButton = (MouseXButtonFlag) wParam.High();
+                    button = (MouseXButtonFlag) wParam.High() == MouseXButtonFlag.XBUTTON1
+                        ? MouseButton.XButton1
+                        : MouseButton.XButton2;
                 }
             }
 
@@ -344,13 +380,81 @@ namespace WinApi.XWin
                 var wParam = msg.WParam.ToSafeInt32();
                 // Multiple or divisons of (WHEEL_DELTA = 120)
                 var wheelDelta = wParam.High();
-                if (wheelOrientation == Orientation.Vertical)
-                {
-                    var flags = (MouseStateFlags) wParam.Low();
-                }
+                var flags = (MouseStateFlags) wParam.Low();
+            }
+
+            public static void ProcessKeyChar(WindowBase windowBase, ref WindowMessage msg, bool isSystemContext,
+                bool isDeadChar)
+            {
+                var c = (char) msg.WParam.ToSafeInt32();
+                var lParam = msg.LParam.ToSafeUInt32();
+                var input = new KeyboardInputState(lParam);
+            }
+
+            public static void ProcessKeyEvent(WindowBase windowBase, ref WindowMessage msg, KeyEvent keyEvent,
+                bool isSystemContext)
+            {
+                var key = (VirtualKey) msg.WParam.ToSafeInt32();
+                var lParam = msg.LParam.ToSafeUInt32();
+                var input = new KeyboardInputState(lParam);
+            }
+
+            public static void ProcessCommand(WindowBase windowBase, ref WindowMessage msg)
+            {
+                var wParam = msg.WParam.ToSafeInt32();
+                var cmdSource = (CommandSource) wParam.High();
+                var id = wParam.Low();
+                var hWnd = msg.LParam;
+            }
+
+            public static void ProcessSysCommand(WindowBase windowBase, ref WindowMessage msg)
+            {
+                var cmd = (SysCommand) msg.WParam.ToSafeInt32();
+                var lParam = msg.LParam.ToSafeInt32();
+                // Cursor position if the menu is chosen with the mouse.
+                var lowXParam = lParam.Low();
+                // If chose with the keyboard, this highY is 0 if accelerator is used,
+                // or 1 if mnemonic is used.
+                var highYParam = lParam.High();
+            }
+
+            public static void ProcessMenuCommand(WindowBase windowBase, ref WindowMessage msg)
+            {
+                var menuIndex = msg.WParam.ToSafeInt32();
+                var menuHandle = msg.LParam;
             }
         }
     }
+
+    public enum MouseButton
+    {
+        Left = 0x1,
+        Right = 0x2,
+        Middle = 0x4,
+        Other = 0x8,
+        XButton1 = 0x10 | Other,
+        XButton2 = 0x20 | Other
+    }
+
+    public enum MouseButtonEvent
+    {
+        Up,
+        Down,
+        DoubleClick
+    }
+
+    public enum KeyEvent
+    {
+        Up,
+        Down
+    }
+
+    public enum Orientation
+    {
+        Horizontal,
+        Vertical
+    }
+
 
     public abstract class MainWindowBase : WindowBase
     {
