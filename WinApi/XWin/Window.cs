@@ -302,6 +302,9 @@ namespace WinApi.XWin
         protected virtual bool OnAppCommand(ref WindowMessage msg, AppCommand cmd, AppCommandDevice device,
             KeyboardInputState keyState, IntPtr windowHandle) => false;
 
+        protected virtual void OnMouseButtonEvent(ref WindowMessage msg, ref Point point, MouseButton button,
+            MouseInputKeyStateFlags mouseInputKeyState) {}
+
         public static class MessageHandlers
         {
             public static void ProcessClose(WindowBase windowBase, ref WindowMessage msg)
@@ -427,14 +430,14 @@ namespace WinApi.XWin
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 var wParam = msg.WParam.ToSafeInt32();
-                var flags = (MouseInputKeyStateFlags) wParam.Low();
+                var mouseInputKeyState = (MouseInputKeyStateFlags) wParam.Low();
                 if (button == MouseButton.Other)
                 {
                     button = (MouseXButtonFlag) wParam.High() == MouseXButtonFlag.XBUTTON1
                         ? MouseButton.XButton1
                         : MouseButton.XButton2;
                 }
-
+                windowBase.OnMouseButtonEvent(ref msg, ref point, button, mouseInputKeyState);
                 // Normal: Standard return. 0 if already processed
                 // XButton: TRUE if processed, 0 if not
             }
