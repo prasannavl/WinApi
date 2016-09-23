@@ -5,22 +5,22 @@ using WinApi.User32;
 
 namespace WinApi.XWin
 {
-    public interface INativeWindowConnector
+    public interface IWindowConnectable
     {
-        void Attach(IntPtr handle);
-        IntPtr Detach();
+        void ConnectHandle(IntPtr handle);
+        IntPtr DisconnectHandle();
     }
 
-    public class NativeWindowBase : INativeWindowConnector
+    public class NativeWindowBase : IWindowConnectable
     {
         public IntPtr Handle { get; protected set; }
 
-        void INativeWindowConnector.Attach(IntPtr handle)
+        void IWindowConnectable.ConnectHandle(IntPtr handle)
         {
             Handle = handle;
         }
 
-        IntPtr INativeWindowConnector.Detach()
+        IntPtr IWindowConnectable.DisconnectHandle()
         {
             var h = Handle;
             Handle = IntPtr.Zero;
@@ -29,7 +29,7 @@ namespace WinApi.XWin
 
         public bool SetText(string text)
         {
-            return User32Methods.SetWindowText(Handle, text) != 0;
+            return User32Methods.SetWindowText(Handle, text);
         }
 
         public string GetText()
@@ -56,40 +56,34 @@ namespace WinApi.XWin
         public bool SetSize(int width, int height)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, -1, -1, width, height,
-                       SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOMOVE | SetWindowPosFlags.SWP_NOZORDER) !=
-                   0;
+                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOMOVE | SetWindowPosFlags.SWP_NOZORDER);
         }
 
         public bool SetPosition(int x, int y)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, -1, -1,
-                       SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOSIZE | SetWindowPosFlags.SWP_NOZORDER) !=
-                   0;
+                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOSIZE | SetWindowPosFlags.SWP_NOZORDER);
         }
 
         public bool SetPosition(int x, int y, int width, int height)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height,
-                       SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOZORDER) !=
-                   0;
+                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOZORDER);
         }
 
         public bool SetPosition(int x, int y, int width, int height, SetWindowPosFlags flags)
         {
-            return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height, flags) !=
-                   0;
+            return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height, flags);
         }
 
         public bool SetPosition(HwndZOrder order, int x, int y, int width, int height, SetWindowPosFlags flags)
         {
-            return User32Helpers.SetWindowPos(Handle, order, x, y, width, height, flags) !=
-                   0;
+            return User32Helpers.SetWindowPos(Handle, order, x, y, width, height, flags);
         }
 
         public bool SetPosition(IntPtr hWndInsertAfter, int x, int y, int width, int height, SetWindowPosFlags flags)
         {
-            return User32Methods.SetWindowPos(Handle, hWndInsertAfter, x, y, width, height, flags) !=
-                   0;
+            return User32Methods.SetWindowPos(Handle, hWndInsertAfter, x, y, width, height, flags);
         }
 
         public bool SetPosition(Rectangle rect)
@@ -115,8 +109,7 @@ namespace WinApi.XWin
 
         public bool GetWindowRect(out Rectangle rectangle)
         {
-            return User32Methods.GetWindowRect(Handle, out rectangle) !=
-                   0;
+            return User32Methods.GetWindowRect(Handle, out rectangle);
         }
 
         public Rectangle GetWindowRect()
@@ -128,8 +121,7 @@ namespace WinApi.XWin
 
         public bool GetClientRect(out Rectangle rectangle)
         {
-            return User32Methods.GetClientRect(Handle, out rectangle) !=
-                   0;
+            return User32Methods.GetClientRect(Handle, out rectangle);
         }
 
         public Rectangle GetClientRect()
@@ -165,20 +157,17 @@ namespace WinApi.XWin
 
         public bool Show()
         {
-            return User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_SHOW) !=
-                   0;
+            return User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_SHOW);
         }
 
         public bool Hide()
         {
-            return User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_HIDE) !=
-                   0;
+            return User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_HIDE);
         }
 
         public bool SetState(ShowWindowCommands flags)
         {
-            return User32Methods.ShowWindow(Handle, flags) !=
-                   0;
+            return User32Methods.ShowWindow(Handle, flags);
         }
 
         public IntPtr Create(string className,
@@ -197,22 +186,22 @@ namespace WinApi.XWin
 
         public bool Validate(ref Rectangle rect)
         {
-            return User32Methods.ValidateRect(Handle, ref rect) != 0;
+            return User32Methods.ValidateRect(Handle, ref rect);
         }
 
         public bool Validate()
         {
-            return User32Methods.ValidateRect(Handle, IntPtr.Zero) != 0;
+            return User32Methods.ValidateRect(Handle, IntPtr.Zero);
         }
 
         public bool Invalidate(ref Rectangle rect, bool shouldErase = false)
         {
-            return User32Methods.InvalidateRect(Handle, ref rect, shouldErase) != 0;
+            return User32Methods.InvalidateRect(Handle, ref rect, shouldErase);
         }
 
         public bool Invalidate(bool shouldErase = false)
         {
-            return User32Methods.InvalidateRect(Handle, IntPtr.Zero, shouldErase) != 0;
+            return User32Methods.InvalidateRect(Handle, IntPtr.Zero, shouldErase);
         }
 
         public void SetFocus()
@@ -222,7 +211,7 @@ namespace WinApi.XWin
 
         public bool Destroy()
         {
-            if (User32Methods.DestroyWindow(Handle) != 0)
+            if (User32Methods.DestroyWindow(Handle))
             {
                 Handle = IntPtr.Zero;
                 return true;

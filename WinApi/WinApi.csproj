@@ -49,6 +49,7 @@
     <Compile Include="DwmApi\Methods.cs" />
     <Compile Include="DwmApi\Types.cs" />
     <Compile Include="Extensions\BinaryExtensions.cs" />
+    <Compile Include="Gdi32\CustomTypes.cs" />
     <Compile Include="Gdi32\Helpers.cs" />
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Types.cs" />

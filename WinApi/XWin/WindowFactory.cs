@@ -78,7 +78,7 @@ namespace WinApi.XWin
                 {
                     wParam = Marshal.GetFunctionPointerForDelegate(m_windowProc);
                     var createStruct = *(CreateStruct*) lParam.ToPointer();
-                    var instancePtr = createStruct.lpCreateParams;
+                    var instancePtr = createStruct.CreateParams;
                     if (instancePtr != IntPtr.Zero)
                     {
                         var winInstance = (WindowBase) GCHandle.FromIntPtr(instancePtr).Target;
@@ -128,7 +128,7 @@ namespace WinApi.XWin
             where TWindow : WindowCoreBase, new()
         {
             var win = new TWindow();
-            ((IWindowCoreConnector) win).SetFactory(this);
+            ((IWindowAttachable) win).SetFactory(this);
 
             var winGcHandle = GCHandle.Alloc(win);
             var extraParam = GCHandle.ToIntPtr(winGcHandle);
@@ -255,17 +255,17 @@ namespace WinApi.XWin
             where TWindow : WindowCoreBase, new()
         {
             var win = new TWindow();
-            var windowConnector = (IWindowCoreConnector) win;
-            windowConnector.Attach(hwnd, takeOwnership);
-            windowConnector.AttachWindowProc(IntPtr.Zero);
+            var attachableWindow = (IWindowAttachable) win;
+            attachableWindow.ConnectHandle(hwnd, takeOwnership);
+            attachableWindow.AttachWindowProc(IntPtr.Zero);
             return win;
         }
 
         public static NativeWindow CreateWindowFromHandle(IntPtr hwnd)
         {
             var win = new NativeWindow();
-            var windowConnector = (INativeWindowConnector) win;
-            windowConnector.Attach(hwnd);
+            var connectableWindow = (IWindowConnectable) win;
+            connectableWindow.ConnectHandle(hwnd);
             return win;
         }
 

@@ -20,7 +20,7 @@ namespace WinApi.Gdi32
         public static extern IntPtr CreateRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect);
 
         [DllImport(LibraryName)]
-        public static extern int DeleteObject(IntPtr hObject);
+        public static extern bool DeleteObject(IntPtr hObject);
 
         [DllImport(LibraryName)]
         public static extern uint SetPixel(IntPtr hdc, int x, int y, uint crColor);
@@ -71,7 +71,7 @@ namespace WinApi.Gdi32
             IntPtr lpvBits, IntPtr lpbmi, DibBmiColorUsageFlag fuColorUse);
 
         [DllImport(LibraryName)]
-        public static extern int DeleteDC(IntPtr hdc);
+        public static extern bool DeleteDC(IntPtr hdc);
 
         [DllImport(LibraryName)]
         public static extern int SetBitmapBits(IntPtr hbmp, uint cBytes, [In] byte[] lpBits);
@@ -101,63 +101,63 @@ namespace WinApi.Gdi32
 
         [DllImport(LibraryName)]
         public static extern int CombineRgn(IntPtr hrgnDest, IntPtr hrgnSrc1,
-            IntPtr hrgnSrc2, int fnCombineMode);
+            IntPtr hrgnSrc2, RegionCombinationFlags fnCombineMode);
 
         [DllImport(LibraryName)]
-        public static extern int OffsetViewportOrgEx(IntPtr hdc, int nXOffset, int nYOffset, out Point lpPoint);
+        public static extern bool OffsetViewportOrgEx(IntPtr hdc, int nXOffset, int nYOffset, out Point lpPoint);
 
         [DllImport(LibraryName)]
-        public static extern int SetViewportOrgEx(IntPtr hdc, int x, int y, out Point lpPoint);
+        public static extern bool SetViewportOrgEx(IntPtr hdc, int x, int y, out Point lpPoint);
 
         [DllImport(LibraryName)]
         public static extern int SetMapMode(IntPtr hdc, int fnMapMode);
 
         [DllImport(LibraryName)]
-        public static extern int SelectClipRgn(IntPtr hdc, IntPtr hrgn);
+        public static extern RegionType SelectClipRgn(IntPtr hdc, IntPtr hrgn);
 
         [DllImport(LibraryName)]
-        public static extern int ExtSelectClipRgn(IntPtr hdc, IntPtr hrgn, int fnMode);
+        public static extern RegionType ExtSelectClipRgn(IntPtr hdc, IntPtr hrgn, RegionCombinationFlags fnMode);
 
         [DllImport(LibraryName)]
-        public static extern int FillRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr);
+        public static extern bool FillRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr);
 
         [DllImport(LibraryName)]
         public static extern IntPtr CreateSolidBrush(uint crColor);
 
         [DllImport(LibraryName)]
-        public static extern int FrameRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr, int nWidth,
+        public static extern bool FrameRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr, int nWidth,
             int nHeight);
 
         [DllImport(LibraryName)]
-        public static extern int PaintRgn(IntPtr hdc, IntPtr hrgn);
+        public static extern bool PaintRgn(IntPtr hdc, IntPtr hrgn);
 
         [DllImport(LibraryName)]
-        public static extern int InvertRgn(IntPtr hdc, IntPtr hrgn);
+        public static extern bool InvertRgn(IntPtr hdc, IntPtr hrgn);
 
         [DllImport(LibraryName)]
-        public static extern int LineTo(IntPtr hdc, int nXEnd, int nYEnd);
+        public static extern bool LineTo(IntPtr hdc, int nXEnd, int nYEnd);
 
         [DllImport(LibraryName)]
-        public static extern int MoveToEx(IntPtr hdc, int x, int y, IntPtr lpPoint);
+        public static extern bool MoveToEx(IntPtr hdc, int x, int y, IntPtr lpPoint);
 
         [DllImport(LibraryName)]
-        public static extern int RoundRect(IntPtr hdc, int nLeftRect, int nTopRect,
+        public static extern bool RoundRect(IntPtr hdc, int nLeftRect, int nTopRect,
             int nRightRect, int nBottomRect, int nWidth, int nHeight);
 
         [DllImport(LibraryName)]
         public static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern int TextOut(IntPtr hdc, int nXStart, int nYStart,
+        public static extern bool TextOut(IntPtr hdc, int nXStart, int nYStart,
             string lpString, int cbString);
 
         [DllImport(LibraryName)]
-        public static extern int BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight,
+        public static extern bool BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight,
             IntPtr hdcSrc,
             int nXSrc, int nYSrc, BitBltFlags dwRop);
 
         [DllImport(LibraryName)]
-        public static extern int StretchBlt(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
+        public static extern bool StretchBlt(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
             int nWidthDest, int nHeightDest,
             IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc,
             BitBltFlags dwRop);
@@ -166,7 +166,7 @@ namespace WinApi.Gdi32
         public static extern int SaveDC(IntPtr hdc);
 
         [DllImport(LibraryName)]
-        public static extern int RestoreDC(IntPtr hdc, int nSavedDc);
+        public static extern bool RestoreDC(IntPtr hdc, int nSavedDc);
 
         [DllImport(LibraryName)]
         public static extern IntPtr PathToRegion(IntPtr hdc);
@@ -186,7 +186,7 @@ namespace WinApi.Gdi32
         public static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
 
         [DllImport(LibraryName, EntryPoint = "GdiAlphaBlend")]
-        public static extern int AlphaBlend(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
+        public static extern bool AlphaBlend(IntPtr hdcDest, int nXOriginDest, int nYOriginDest,
             int nWidthDest, int nHeightDest,
             IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc,
             BlendFunction blendFunction);

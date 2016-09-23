@@ -46,9 +46,11 @@ namespace Sample.SimpleWindow
             switch (msg.Id)
             {
                 // Note: OnEraseBkgnd method is already available in 
-                // WindowBase, but just for the sake of overriding the
+                // WindowBase, but directly interception here
+                // just for the sake of overriding the
                 // message loop.
-                // Also, note that it's short-cicuited here.
+                // Also, note that the message loop is 
+                // short-cicuited here.
 
                 case WM.ERASEBKGND:
                 {

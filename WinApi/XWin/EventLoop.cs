@@ -49,16 +49,15 @@ namespace WinApi.XWin
         {
             Message msg;
             var quitMsg = (uint) WM.QUIT;
-            int res;
             do
             {
-                if ((res = User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE)) > 0)
+                if (User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE))
                 {
                     User32Methods.TranslateMessage(ref msg);
                     User32Methods.DispatchMessage(ref msg);
                 }
             } while (msg.Value != quitMsg);
-            return res;
+            return 0;
         }
     }
 
@@ -114,10 +113,9 @@ namespace WinApi.XWin
         {
             Message msg;
             var quitMsg = (uint) WM.QUIT;
-            int res;
             do
             {
-                if ((res = User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE)) > 0)
+                if (User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE))
                     if (Preprocess(ref msg))
                     {
                         User32Methods.TranslateMessage(ref msg);
@@ -126,7 +124,7 @@ namespace WinApi.XWin
                         PostProcess(ref msg);
                     }
             } while (msg.Value != quitMsg);
-            return res;
+            return 0;
         }
 
         protected bool Preprocess(ref Message msg) => true;

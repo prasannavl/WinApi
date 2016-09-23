@@ -30,7 +30,6 @@ namespace Sample.Simple
             }
         }
 
-
         public sealed class SampleWindow : MainWindowBase
         {
             private NativeWindow m_textBox;

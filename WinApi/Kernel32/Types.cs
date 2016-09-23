@@ -51,7 +51,7 @@ namespace WinApi.Kernel32
     public struct SystemInfo
     {
         public ushort ProcessorArchitecture;
-        readonly ushort Reserved;
+        ushort Reserved;
         public uint PageSize;
         public IntPtr MinimumApplicationAddress;
         public IntPtr MaximumApplicationAddress;

@@ -5,9 +5,9 @@ using WinApi.User32;
 
 namespace WinApi.XWin
 {
-    public interface IWindowCoreConnector : INativeWindowConnector
+    public interface IWindowAttachable : IWindowConnectable
     {
-        void Attach(IntPtr handle, bool takeOwnership);
+        void ConnectHandle(IntPtr handle, bool takeOwnership);
         void AttachWindowProc();
         void AttachWindowProc(IntPtr baseWindowProcPtr);
         void DetachWindowProc();
@@ -56,7 +56,7 @@ namespace WinApi.XWin
 
     public delegate void WindowExceptionHandler(ref WindowException windowException);
 
-    public class WindowCoreBase : NativeWindowBase, IWindowCoreConnector, IDisposable
+    public class WindowCoreBase : NativeWindowBase, IWindowAttachable, IDisposable
     {
         private IntPtr m_baseWindowProcPtr;
         private WindowProc m_instanceWindowProc;
@@ -70,30 +70,30 @@ namespace WinApi.XWin
             Dispose(true);
         }
 
-        void INativeWindowConnector.Attach(IntPtr handle)
+        void IWindowConnectable.ConnectHandle(IntPtr handle)
         {
             ThrowIfDisposed();
             Handle = handle;
             IsSourceOwner = false;
         }
 
-        void IWindowCoreConnector.Attach(IntPtr handle, bool takeOwnership)
+        void IWindowAttachable.ConnectHandle(IntPtr handle, bool takeOwnership)
         {
             ThrowIfDisposed();
             Handle = handle;
             IsSourceOwner = takeOwnership;
         }
 
-        IntPtr INativeWindowConnector.Detach()
+        IntPtr IWindowConnectable.DisconnectHandle()
         {
-            ((IWindowCoreConnector) this).DetachWindowProc();
+            ((IWindowAttachable) this).DetachWindowProc();
             var h = Handle;
             Handle = IntPtr.Zero;
             IsSourceOwner = false;
             return h;
         }
 
-        void IWindowCoreConnector.AttachWindowProc(IntPtr baseWindowProcPtr)
+        void IWindowAttachable.AttachWindowProc(IntPtr baseWindowProcPtr)
         {
             m_baseWindowProcPtr = baseWindowProcPtr == IntPtr.Zero
                 ? GetItem(WindowLongFlags.GWLP_WNDPROC)
@@ -103,12 +103,12 @@ namespace WinApi.XWin
             OnSourceConnected();
         }
 
-        void IWindowCoreConnector.AttachWindowProc()
+        void IWindowAttachable.AttachWindowProc()
         {
-            ((IWindowCoreConnector) this).AttachWindowProc(IntPtr.Zero);
+            ((IWindowAttachable) this).AttachWindowProc(IntPtr.Zero);
         }
 
-        void IWindowCoreConnector.DetachWindowProc()
+        void IWindowAttachable.DetachWindowProc()
         {
             if (m_baseWindowProcPtr != IntPtr.Zero)
             {
@@ -117,7 +117,7 @@ namespace WinApi.XWin
             }
         }
 
-        void IWindowCoreConnector.SetFactory(WindowFactory factory)
+        void IWindowAttachable.SetFactory(WindowFactory factory)
         {
             Factory = factory;
         }
@@ -141,7 +141,7 @@ namespace WinApi.XWin
             }
             else
             {
-                ((IWindowCoreConnector) this).Detach();
+                ((IWindowAttachable) this).DisconnectHandle();
             }
             IsDisposed = true;
         }
@@ -154,8 +154,8 @@ namespace WinApi.XWin
         internal IntPtr WindowInstanceInitializerProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
             Debug.WriteLine("[WindowInstanceInitializerProc]: " + hwnd);
-            var windowConnector = (IWindowCoreConnector) this;
-            windowConnector.Attach(hwnd, true);
+            var windowConnector = (IWindowAttachable) this;
+            windowConnector.ConnectHandle(hwnd, true);
             windowConnector.AttachWindowProc(wParam);
             return WindowProc(hwnd, msg, IntPtr.Zero, lParam);
         }

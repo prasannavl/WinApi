@@ -16,14 +16,13 @@ Platform: `netstandard 1.2`
 
 **Goals:**
 
-- Provide both safe (through helpers, and safety wrappers like HandleRefs, SafeHandles), and unsafe wrappers (pure with minimal performance impact), in a clean way supplemented with inline documentation.
+- Provide both safe (through helpers, and safety wrappers like SafeHandles, CriticalHandles), and unsafe wrappers (pure with minimal performance impact), in a clean way supplemented with inline documentation.
 - Provide a single DLL that can over time, be a direct equivalent of C/C++ `windows.h` header file for the CLR. Other Windows SDK wrappers may, or may not be in fragmented into separate packages.
-- Sufficient base to be able to write custom toolkits over Win32 based on Direct2D, Direct3D or even an external graphics library like Skia, without depending on WPF or WinForms.
-- Always retain parity with the native API when it comes to constants (Eg: `WS_OVERLAPPEDWINDOW`, will never be changed to `OverlappedWindow` to look more like C#. There is one exception to this, and that's `WM` - the message id constants for simpler usability).
+- Sufficient base to be able to write custom toolkits over Win32 based on Direct2D, Direct3D or even an external graphics library like Skia, without depending on WPF or WinForms - `Examples of usage with Direct2D, 3D, Skia, OpenGL are all in the samples`.
+- Always retain parity with the native API when it comes to constants (Eg: `WS_OVERLAPPEDWINDOW`, will never be changed to `OverlappedWindow` to look more like C#. The only exceptions: `WM` and `VirtualKey` - the message id, and virtual key constants for simpler usability).
 - `WinApi.XWin` - See below.
 - All structs, flags, should always have the names in the idiomatic C# style. (Eg: `public enum WindowStyles { .. WS_OVERLAPPEDWINDOW = 0x00.  }`). Never WINDOWSTYLE, or MARGINS or RECT. Always `Margin`, `Rectangle`, etc. (It actually is surprisingly clean once drop the usual depencendies like WinForms, or WPF which always provide alternative forms).
-- Use variants such as `int` for Windows types like `BOOL` - to ensure minimum Marashalling impact. Using `bool` requires another copy, since bool in CLR is 1 byte, but the unmanaged variant could be 1, 2 or 4 bytes, depending on the context. A `bool` wrapped function can be manually provided as a helper, but not in the direct translation layer (`*Methods` class).
-- `int` vs `uint` (and all similar primitives): Prefer the signed `int` and siblings unless there's its well defined for the value to be never negative. In short, use what makes the most semantic sense.
+- Use variants such as `int` for Windows types like `BOOL` - to ensure minimum Marashalling impact when inside a structure. Using `bool` requires another copy, since bool in CLR is 1 byte, but the unmanaged variant could be 1, 2 or 4 bytes, depending on the context. However, when it comes to functions `bool` is used directly, since int conversion there is not only tedious but is bound to loose semantic value.
 
 **Secondary goals:**
 
@@ -42,13 +41,13 @@ Platform: `netstandard 1.2`
 
 **Notes**:
 
-- All methods in its minimal interop form (no SafeHandles, HandleRefs, etc) unless absolutely required, for maximum micro-optimization of interop scenarios in the class with `Methods` suffix. (`User32Methods`, `Kernel32Methods`, `DwmApiMethods`, etc). Prefered to use `int`, `uint` etc inside the `*Methods` class to ensure parity with native APIs. Enums can be used for flags only if the value is a strictly well defined constant set. Otherwise prefer int, uint, etc. Type safe wrappers are in the `Helpers`. 
+- All methods in its minimal interop form (no SafeHandles, CriticalHandles, etc) unless absolutely required, for maximum micro-optimization of interop scenarios in the class with `Methods` suffix. (`User32Methods`, `Kernel32Methods`, `DwmApiMethods`, etc). Prefered to use `int`, `uint` etc inside the `*Methods` class to ensure parity with native APIs. Enums can be used for flags only if the value is a strictly well defined constant set. Otherwise prefer int, uint, etc. However, type safe wrappers can be supplemented in the `Helpers`.
 - All methods with handles, enums and other supplemented types go into `Helpers` (`User32Helpers`, `Kernel32Helpers`, etc).
 - Everything that uses undocumented APIs is maintained in a separate `Experimental` namespace similarly.
 
 **Why re-invent the wheel?**
 
-While there aren't many well defined reliable wrappers, there are a few - my favorite being Pinvoke (https://github.com/AArnott/pinvoke). While `Goals` above, should explain the reasons for re-inventing the wheel, it's also mostly a matter for coding style, and a little bit of the matter of the ability to micro-optimizate when you really need to.
+While there aren't many well defined reliable wrappers, there are a few - my favorite being Pinvoke (https://github.com/AArnott/pinvoke). While `Goals` above, should explain the reasons for re-inventing the wheel, it's also mostly a matter for coding style, and about having the ability to micro-optimizate when you really need to.
 
 **Filesystem structure:**
 ```
@@ -368,9 +367,11 @@ namespace MySuperLowLevelProgram {
             switch (msg.Id)
             {
                 // Note: OnEraseBkgnd method is already available in 
-                // WindowBase, but just for the sake of overriding the
+                // WindowBase, but directly interception here
+                // just for the sake of overriding the
                 // message loop.
-                // Also, note that it's short-cicuited here.
+                // Also, note that the message loop is 
+                // short-cicuited here.
 
                 case WM.ERASEBKGND:
                 {

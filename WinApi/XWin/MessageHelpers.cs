@@ -9,7 +9,7 @@ namespace WinApi.XWin
         public static void RunDwmDefWindowProc(ref WindowMessage msg, IntPtr windowHandle)
         {
             IntPtr res;
-            if (DwmApiMethods.DwmDefWindowProc(windowHandle, (uint) msg.Id, msg.WParam, msg.LParam, out res) > 0)
+            if (DwmApiMethods.DwmDefWindowProc(windowHandle, (uint) msg.Id, msg.WParam, msg.LParam, out res))
             {
                 msg.Result = res;
                 msg.SetHandled();

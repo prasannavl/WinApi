@@ -18,7 +18,7 @@ namespace WinApi.Kernel32
             var build = dwVersion < 0x80000000 ? dwVersion.HighAsInt() : 0; // (DWORD) (HIWORD(dwVersion))
             var v = new Version(
                 (byte) dwVersion.Low(), // (DWORD)(LOBYTE(LOWORD(dwVersion)))
-                dwVersion.Low() >> 8 & 0xff,
+                (dwVersion.Low() >> 8) & 0xff,
                 (int) build // (DWORD)(HIBYTE(LOWORD(dwVersion)))
             );
             return v;
@@ -30,7 +30,7 @@ namespace WinApi.Kernel32
                 version = GetVersion();
             if (version.Major > 5)
             {
-                if (version.Major > 6 || version.Minor > 1) return true;
+                if ((version.Major > 6) || (version.Minor > 1)) return true;
             }
             return false;
         }
@@ -41,7 +41,7 @@ namespace WinApi.Kernel32
                 version = GetVersion();
             if (version.Major > 5)
             {
-                if (version.Major > 6 || version.Minor > 2) return true;
+                if ((version.Major > 6) || (version.Minor > 2)) return true;
             }
             return false;
         }
@@ -65,17 +65,17 @@ namespace WinApi.Kernel32
             const uint PROCESS_CALLBACK_FILTER_ENABLED = 0x1;
 
             [DllImport(Kernel32Methods.LibraryName)]
-            public static extern int SetProcessUserModeExceptionPolicy(uint dwFlags);
+            public static extern bool SetProcessUserModeExceptionPolicy(uint dwFlags);
 
             [DllImport(Kernel32Methods.LibraryName)]
-            public static extern int GetProcessUserModeExceptionPolicy(out uint dwFlags);
+            public static extern bool GetProcessUserModeExceptionPolicy(out uint dwFlags);
 
             private static bool IsApiAvailable()
             {
                 if (GetIsProcessorAMD64())
                 {
                     var ver = GetVersion();
-                    return ver.Major == 6 && ver.Minor == 1 && ver.Build >= 7601;
+                    return (ver.Major == 6) && (ver.Minor == 1) && (ver.Build >= 7601);
                 }
                 return false;
             }
@@ -85,11 +85,11 @@ namespace WinApi.Kernel32
                 if (IsApiAvailable())
                 {
                     uint dwFlags;
-                    if (GetProcessUserModeExceptionPolicy(out dwFlags) != 0)
+                    if (GetProcessUserModeExceptionPolicy(out dwFlags))
                     {
                         // Turn off the bit
                         dwFlags &= ~PROCESS_CALLBACK_FILTER_ENABLED;
-                        return SetProcessUserModeExceptionPolicy(dwFlags) != 0;
+                        return SetProcessUserModeExceptionPolicy(dwFlags);
                     }
                 }
                 return false;
@@ -100,11 +100,11 @@ namespace WinApi.Kernel32
                 if (IsApiAvailable())
                 {
                     uint dwFlags;
-                    if (GetProcessUserModeExceptionPolicy(out dwFlags) != 0)
+                    if (GetProcessUserModeExceptionPolicy(out dwFlags))
                     {
                         // Turn off the bit
                         dwFlags |= PROCESS_CALLBACK_FILTER_ENABLED;
-                        return SetProcessUserModeExceptionPolicy(dwFlags) != 0;
+                        return SetProcessUserModeExceptionPolicy(dwFlags);
                     }
                 }
                 return false;

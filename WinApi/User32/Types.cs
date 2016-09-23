@@ -6,7 +6,7 @@ namespace WinApi.User32
 {
     public delegate IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-    public delegate int EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+    public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
     public delegate IntPtr GetMsgProc(int code, IntPtr wParam, IntPtr lParam);
 
@@ -58,9 +58,9 @@ namespace WinApi.User32
         public IntPtr HandleDC;
         public int EraseBackgroundValue;
         public Rectangle PaintRectangle;
-        public int ReservedInternalRestore;
-        public int ReservedInternalIncUpdate;
-        public fixed byte ReservedInternalRgb [32];
+        private int ReservedInternalRestore;
+        private int ReservedInternalIncUpdate;
+        private fixed byte ReservedInternalRgb [32];
 
         public bool ShouldEraseBackground
         {
@@ -135,24 +135,24 @@ namespace WinApi.User32
     [StructLayout(LayoutKind.Sequential)]
     public struct CreateStruct
     {
-        public IntPtr lpCreateParams;
-        public IntPtr hInstance;
-        public IntPtr hMenu;
-        public IntPtr hwndParent;
-        public int cy;
-        public int cx;
-        public int y;
-        public int x;
-        public WindowStyles style;
-        public IntPtr lpszName;
-        public IntPtr lpszClass;
-        public int dwExStyle;
+        public IntPtr CreateParams;
+        public IntPtr InstanceHandle;
+        public IntPtr MenuHandle;
+        public IntPtr ParentWindowHandle;
+        public int Height;
+        public int Width;
+        public int Y;
+        public int X;
+        public WindowStyles Styles;
+        public IntPtr Name;
+        public IntPtr ClassName;
+        public WindowExStyles ExStyles;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowPlacement
     {
-        public int Length;
+        public uint Size;
         public WindowPlacementFlags Flags;
         public ShowWindowCommands ShowCmd;
         public Point MinPosition;
@@ -161,7 +161,7 @@ namespace WinApi.User32
 
         public static void Initialize(ref WindowPlacement obj)
         {
-            obj.Length = Marshal.SizeOf<WindowPlacement>();
+            obj.Size = (uint) Marshal.SizeOf<WindowPlacement>();
         }
     }
 
@@ -235,7 +235,7 @@ namespace WinApi.User32
 
         public KeyboardInputState(uint value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         /// <summary>

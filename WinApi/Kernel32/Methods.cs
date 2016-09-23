@@ -13,7 +13,7 @@ namespace WinApi.Kernel32
         public static extern uint GetLastError();
 
         [DllImport(LibraryName)]
-        public static extern int DisableThreadLibraryCalls(IntPtr hModule);
+        public static extern bool DisableThreadLibraryCalls(IntPtr hModule);
 
         [DllImport(LibraryName)]
         public static extern void Sleep(uint dwMilliseconds);
@@ -21,13 +21,13 @@ namespace WinApi.Kernel32
         #region Console Functions
 
         [DllImport(LibraryName)]
-        public static extern int AllocConsole();
+        public static extern bool AllocConsole();
 
         [DllImport(LibraryName)]
-        public static extern int FreeConsole();
+        public static extern bool FreeConsole();
 
         [DllImport(LibraryName)]
-        public static extern int AttachConsole(uint dwProcessId);
+        public static extern bool AttachConsole(uint dwProcessId);
 
         [DllImport(LibraryName)]
         public static extern IntPtr GetConsoleWindow();
@@ -36,16 +36,16 @@ namespace WinApi.Kernel32
         public static extern IntPtr GetStdHandle(uint nStdHandle);
 
         [DllImport(LibraryName)]
-        public static extern int SetStdHandle(uint nStdHandle, IntPtr hHandle);
+        public static extern bool SetStdHandle(uint nStdHandle, IntPtr hHandle);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern int SetConsoleTitle(string lpConsoleTitle);
+        public static extern bool SetConsoleTitle(string lpConsoleTitle);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern uint GetConsoleTitle(StringBuilder lpConsoleTitle, uint nSize);
 
         [DllImport(LibraryName)]
-        public static extern int SetConsoleWindowInfo(IntPtr hConsoleOutput, int bAbsolute, [In] ref ShortRectangle lpConsoleWindow);
+        public static extern bool SetConsoleWindowInfo(IntPtr hConsoleOutput, int bAbsolute, [In] ref ShortRectangle lpConsoleWindow);
 
         #endregion
 
@@ -54,33 +54,36 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName, EntryPoint = "RtlZeroMemory")]
         public static extern void ZeroMemory(IntPtr dest, IntPtr size);
 
+        [DllImport(LibraryName, EntryPoint = "RtlSecureZeroMemory")]
+        public static extern void SecureZeroMemory(IntPtr dest, IntPtr size);
+
         #endregion
 
         [DllImport(LibraryName)]
-        public static extern int GetTickCount();
+        public static extern uint GetTickCount();
 
         [DllImport(LibraryName)]
         public static extern ulong GetTickCount64();
 
         [DllImport(LibraryName)]
-        public static extern int QueryPerformanceCounter(out long value);
+        public static extern bool QueryPerformanceCounter(out long value);
 
         [DllImport(LibraryName)]
-        public static extern int QueryPerformanceFrequency(out long value);
+        public static extern bool QueryPerformanceFrequency(out long value);
 
         [DllImport(LibraryName)]
-        public static extern int QueryUnbiasedInterruptTime(out ulong unbiasedTime);
+        public static extern void QueryUnbiasedInterruptTime(out ulong unbiasedTime);
 
         #region Handle and Object Functions 
 
         [DllImport(LibraryName)]
-        public static extern int CloseHandle(IntPtr hObject);
+        public static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport(LibraryName)]
-        public static extern int CompareObjectHandles(IntPtr hFirstObjectHandle, IntPtr hSecondObjectHandle);
+        public static extern bool CompareObjectHandles(IntPtr hFirstObjectHandle, IntPtr hSecondObjectHandle);
 
         [DllImport(LibraryName)]
-        public static extern int DuplicateHandle(
+        public static extern bool DuplicateHandle(
             IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle,
             out IntPtr lpTargetHandle,
             uint dwDesiredAccess,
@@ -88,10 +91,10 @@ namespace WinApi.Kernel32
             DuplicateHandleFlags dwOptions);
 
         [DllImport(LibraryName)]
-        public static extern int GetHandleInformation(IntPtr hObject, out HandleInfoFlags lpdwFlags);
+        public static extern bool GetHandleInformation(IntPtr hObject, out HandleInfoFlags lpdwFlags);
 
         [DllImport(LibraryName)]
-        public static extern int SetHandleInformation(IntPtr hObject, HandleInfoFlags dwMask, HandleInfoFlags dwFlags);
+        public static extern bool SetHandleInformation(IntPtr hObject, HandleInfoFlags dwMask, HandleInfoFlags dwFlags);
 
         #endregion
 
@@ -101,7 +104,7 @@ namespace WinApi.Kernel32
         public static extern IntPtr GetModuleHandle(IntPtr modulePtr);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern int GetModuleHandleEx(GetModuleHandleFlags dwFlags, string lpModuleName, out IntPtr phModule);
+        public static extern bool GetModuleHandleEx(GetModuleHandleFlags dwFlags, string lpModuleName, out IntPtr phModule);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
@@ -114,22 +117,22 @@ namespace WinApi.Kernel32
             LoadLibraryFlags dwFlags);
 
         [DllImport(LibraryName)]
-        public static extern int FreeLibrary(IntPtr hModule);
+        public static extern bool FreeLibrary(IntPtr hModule);
 
         [DllImport(LibraryName, CharSet = CharSet.Ansi)]
         public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern int SetDllDirectory(string fileName);
+        public static extern bool SetDllDirectory(string fileName);
 
         [DllImport(LibraryName)]
-        public static extern int SetDefaultDllDirectories(LibrarySearchFlags directoryFlags);
+        public static extern bool SetDefaultDllDirectories(LibrarySearchFlags directoryFlags);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr AddDllDirectory(string newDirectory);
 
         [DllImport(LibraryName)]
-        public static extern int RemoveDllDirectory(IntPtr cookieFromAddDllDirectory);
+        public static extern bool RemoveDllDirectory(IntPtr cookieFromAddDllDirectory);
 
         #endregion
 
@@ -145,7 +148,7 @@ namespace WinApi.Kernel32
         public static extern uint GetVersion();
 
         [DllImport(LibraryName)]
-        public static extern int IsWow64Process(IntPtr hProcess, out int isWow64Process);
+        public static extern bool IsWow64Process(IntPtr hProcess, out int isWow64Process);
 
         [DllImport(LibraryName)]
         public static extern void GetNativeSystemInfo(out SystemInfo lpSystemInfo);

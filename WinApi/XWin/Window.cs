@@ -7,6 +7,19 @@ using WinApi.Extensions;
 
 namespace WinApi.XWin
 {
+
+    public interface IPaintable
+    {
+        bool OnEraseBkgnd(ref WindowMessage msg, IntPtr hdc);
+        void OnPaint(ref WindowMessage msg, IntPtr hdc);
+    }
+
+    public interface ISizable
+    {
+        void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size);
+        void OnMove(ref WindowMessage msg, ref Point size);
+    }
+
     public abstract class WindowBase : WindowCoreBase
     {
         protected override void OnMessage(ref WindowMessage msg)

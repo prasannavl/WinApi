@@ -655,7 +655,7 @@ namespace WinApi.User32
     }
 
     [Flags]
-    public enum CombineRgnStyles
+    public enum RegionCombinationFlags
     {
         RGN_AND = 1,
         RGN_OR = 2,
@@ -1871,7 +1871,7 @@ namespace WinApi.User32
         HWND_TOPMOST = -1
     }
 
-    public enum WindowRegionType
+    public enum RegionType
     {
         /// <summary>
         ///     The specified window does not have a region, or an error occurred while attempting to return the region.
