@@ -273,8 +273,34 @@ namespace WinApi.XWin
 
         protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta,
             MouseInputKeyStateFlags flags) {}
+
         protected virtual void OnMouseLeave(ref WindowMessage msg) {}
         protected virtual void OnMouseHover(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) {}
+
+        protected virtual void OnInputCaptureChanged(ref WindowMessage msg, IntPtr windowGettingCaptureHandle) {}
+
+        protected virtual void OnGotFocus(ref WindowMessage msg, IntPtr oppositeWindowHandle) {}
+
+        protected virtual void OnLostFocus(ref WindowMessage msg, IntPtr oppositeWindowHandle) {}
+
+        protected virtual void OnMenuCommand(ref WindowMessage msg, int menuIndex, IntPtr menuHandle) {}
+
+        protected virtual void OnSysCommand(ref WindowMessage msg, SysCommand cmd, short mouseCursorX,
+            short mouseCursorYOrKeyMnemonic) {}
+
+        protected virtual void OnCommand(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hWnd) {}
+
+        protected virtual void OnKeyEvent(ref WindowMessage msg, VirtualKey key, KeyboardInputState inputState,
+            bool isSystemContext) {}
+
+        protected virtual void OnKeyChar(ref WindowMessage msg, char inputChar, KeyboardInputState inputState,
+            bool isSystemContext, bool isDeadChar) {}
+
+        protected virtual void OnHotKey(ref WindowMessage msg, VirtualKey key, HotKeyInputState keyState,
+            ScreenshotHotKey screenshotHotKey) {}
+
+        protected virtual bool OnAppCommand(ref WindowMessage msg, AppCommand cmd, AppCommandDevice device,
+            KeyboardInputState keyState, IntPtr windowHandle) => false;
 
         public static class MessageHandlers
         {
@@ -458,10 +484,10 @@ namespace WinApi.XWin
             public static void ProcessKeyChar(WindowBase windowBase, ref WindowMessage msg, bool isSystemContext,
                 bool isDeadChar)
             {
-                var c = (char) msg.WParam.ToSafeInt32();
+                var inputChar = (char) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeUInt32();
-                var input = new KeyboardInputState(lParam);
-
+                var inputState = new KeyboardInputState(lParam);
+                windowBase.OnKeyChar(ref msg, inputChar, inputState, isSystemContext, isDeadChar);
                 // Standard return. 0 if already processed
             }
 
@@ -470,8 +496,8 @@ namespace WinApi.XWin
             {
                 var key = (VirtualKey) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeUInt32();
-                var input = new KeyboardInputState(lParam);
-
+                var inputState = new KeyboardInputState(lParam);
+                windowBase.OnKeyEvent(ref msg, key, inputState, isSystemContext);
                 // Standard return. 0 if already processed
             }
 
@@ -481,7 +507,7 @@ namespace WinApi.XWin
                 var cmdSource = (CommandSource) wParam.High();
                 var id = wParam.Low();
                 var hWnd = msg.LParam;
-
+                windowBase.OnCommand(ref msg, cmdSource, id, hWnd);
                 // Standard return. 0 if already processed
             }
 
@@ -489,12 +515,12 @@ namespace WinApi.XWin
             {
                 var cmd = (SysCommand) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeInt32();
-                // Cursor position if the menu is chosen with the mouse.
-                var lowXParam = lParam.Low();
-                // If chose with the keyboard, this highY is 0 if accelerator is used,
+                // Cursor position if the menu is chosen with the mouse, or unused.
+                var mouseCursorX = lParam.Low();
+                // If chosen with the keyboard, this highY is 0 if accelerator is used,
                 // or 1 if mnemonic is used.
-                var highYParam = lParam.High();
-
+                var mouseCursorYOrKeyMnemonic = lParam.High();
+                windowBase.OnSysCommand(ref msg, cmd, mouseCursorX, mouseCursorYOrKeyMnemonic);
                 // Standard return. 0 if already processed
             }
 
@@ -502,6 +528,7 @@ namespace WinApi.XWin
             {
                 var menuIndex = msg.WParam.ToSafeInt32();
                 var menuHandle = msg.LParam;
+                windowBase.OnMenuCommand(ref msg, menuIndex, menuHandle);
 
                 // Standard return. 0 if already processed
             }
@@ -509,18 +536,21 @@ namespace WinApi.XWin
             public static void ProcessLostFocus(WindowBase windowBase, ref WindowMessage msg)
             {
                 var oppositeWindowHandle = msg.WParam;
+                windowBase.OnLostFocus(ref msg, oppositeWindowHandle);
                 // Standard return. 0 if already processed
             }
 
             public static void ProcessGotFocus(WindowBase windowBase, ref WindowMessage msg)
             {
                 var oppositeWindowHandle = msg.WParam;
+                windowBase.OnGotFocus(ref msg, oppositeWindowHandle);
                 // Standard return. 0 if already processed
             }
 
             public static void ProcessCaptureChanged(WindowBase windowBase, ref WindowMessage msg)
             {
                 var windowGettingCaptureHandle = msg.LParam;
+                windowBase.OnInputCaptureChanged(ref msg, windowGettingCaptureHandle);
                 // Standard return. 0 if already processed
             }
 
@@ -538,18 +568,22 @@ namespace WinApi.XWin
                 //GET_DEVICE_LPARAM(lParam)     ((WORD)(HIWORD(lParam) & FAPPCOMMAND_MASK))
                 var lParam = msg.LParam.ToSafeUInt32();
                 var cmd = (AppCommand) (lParam.HighAsInt() & (uint) AppCommandDevice.FAPPCOMMAND_MASK);
-                var uDevice = (AppCommandDevice) (lParam.HighAsInt() & (uint) AppCommandDevice.FAPPCOMMAND_MASK);
-                var dwKeys = new KeyboardInputState(lParam.LowAsInt());
+                var device = (AppCommandDevice) (lParam.HighAsInt() & (uint) AppCommandDevice.FAPPCOMMAND_MASK);
+                var keyState = new KeyboardInputState(lParam.LowAsInt());
                 var windowHandle = msg.WParam;
+                var res = windowBase.OnAppCommand(ref msg, cmd, device, keyState, windowHandle);
+                msg.Result = new IntPtr(res ? 1 : 0);
                 // Return TRUE if handled.
             }
 
             public static void ProcessHotKey(WindowBase windowBase, ref WindowMessage msg)
             {
-                var wParam = (ScreenshotHotKey) msg.WParam.ToSafeInt32();
+                var screenshotHotKey = (ScreenshotHotKey) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeInt32();
                 var keyState = (HotKeyInputState) lParam.Low();
                 var key = (VirtualKey) lParam.High();
+                windowBase.OnHotKey(ref msg, key, keyState, screenshotHotKey);
+                // Standard return. 0 if already processed
             }
         }
     }
