@@ -68,7 +68,6 @@ namespace WinApi.XWin
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         void INativeWindowConnector.Attach(IntPtr handle)
