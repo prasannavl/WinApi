@@ -9,7 +9,7 @@ namespace WinApi.Desktop
         public static bool EnsureConsole()
         {
             if (Kernel32Methods.GetConsoleWindow() != IntPtr.Zero) return true;
-            if (Kernel32Methods.AllocConsole() == 0) return false;
+            if (Kernel32Methods.AllocConsole()) return false;
             Console.SetOut(new StreamWriter(Console.OpenStandardOutput()) {AutoFlush = true});
             Console.SetError(new StreamWriter(Console.OpenStandardOutput()) {AutoFlush = true});
             Console.SetIn(new StreamReader(Console.OpenStandardInput()));

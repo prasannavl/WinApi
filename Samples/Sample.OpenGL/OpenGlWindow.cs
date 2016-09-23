@@ -13,12 +13,6 @@ namespace Sample.OpenGL
         private bool m_isInit;
         protected IntPtr RenderContextHandle;
 
-        protected override void OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
-        {
-            base.OnCreate(ref msg, ref createStruct);
-            Show();
-        }
-
         private void Init()
         {
             // Create device/render context

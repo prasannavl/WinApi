@@ -14,15 +14,15 @@ namespace Sample.DirectX
             ? (IGraphicsContext)new D2DGraphicsContext()
             : new D2DRenderTargetGraphicsContext();
 
-        protected override void OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
+        protected override bool OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
-            base.OnCreate(ref msg, ref createStruct);
             var size = GetClientSize();
 
             if (Environment.OSVersion.Version.Major > 6)
                 User32ExperimentalHelpers.EnableBlurBehind(Handle);
 
             m_graphicsContext.Init(Handle, ref size);
+            return base.OnCreate(ref msg, ref createStruct);
         }
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
