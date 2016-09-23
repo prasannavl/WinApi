@@ -105,11 +105,6 @@ namespace WinApi.User32
         public string MenuName;
         public string ClassName;
         public IntPtr SmallIconHandle;
-
-        public static void Initialize(ref WindowClassEx obj)
-        {
-            obj.Size = (uint) Marshal.SizeOf<WindowClassEx>();
-        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -158,11 +153,6 @@ namespace WinApi.User32
         public Point MinPosition;
         public Point MaxPosition;
         public Rectangle NormalPosition;
-
-        public static void Initialize(ref WindowPlacement obj)
-        {
-            obj.Size = (uint) Marshal.SizeOf<WindowPlacement>();
-        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -206,11 +196,6 @@ namespace WinApi.User32
         public int HorizontalGap;
         public int VerticalGap;
         public ArrangeFlags Arrange;
-
-        public static void Initialize(ref MinimizedMetrics obj)
-        {
-            obj.Size = (uint) Marshal.SizeOf<MinimizedMetrics>();
-        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -220,11 +205,6 @@ namespace WinApi.User32
         public TrackMouseEventFlags Flags;
         public IntPtr TrackedWindowHandle;
         public uint HoverTime;
-
-        public static void Initialize(ref TrackMouseEventOptions obj)
-        {
-            obj.Size = (uint) Marshal.SizeOf<TrackMouseEventOptions>();
-        }
 
         public const uint DefaultHoverTime = 0xFFFFFFFF;
     }

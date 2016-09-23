@@ -19,11 +19,6 @@ namespace WinApi.Gdi32
         public int YPxPerMeter;
         public uint ClrUsed;
         public uint ClrImportant;
-
-        public static void Initialize(ref BitmapInfoHeader obj)
-        {
-            obj.Size = (uint) Marshal.SizeOf<BitmapInfoHeader>();
-        }
     }
 
     public struct BitmapInfo
