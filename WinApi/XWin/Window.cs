@@ -245,28 +245,19 @@ namespace WinApi.XWin
                 case WM.HOTKEY:
                 {
                     MessageHandlers.ProcessHotKey(this, ref msg);
-                        break;
+                    break;
                 }
             }
             base.OnMessage(ref msg);
         }
 
         protected virtual void OnClose(ref WindowMessage msg) {}
-
-        protected virtual bool OnEraseBkgnd(ref WindowMessage msg, IntPtr hdc)
-        {
-            return true;
-        }
-
+        protected virtual bool OnEraseBkgnd(ref WindowMessage msg, IntPtr hdc) => true;
         protected virtual void OnDestroy(ref WindowMessage msg) {}
         protected virtual void OnSystemTimeChange(ref WindowMessage msg) {}
         protected virtual void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size) {}
         protected virtual void OnMove(ref WindowMessage msg, ref Point size) {}
-
-        protected virtual bool OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
-        {
-            return true;
-        }
+        protected virtual bool OnCreate(ref WindowMessage msg, ref CreateStruct createStruct) => true;
 
         protected virtual void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
             IntPtr oppositeWindowHandle) {}
@@ -275,14 +266,30 @@ namespace WinApi.XWin
         protected virtual void OnDisplayChange(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size) {}
         protected virtual void OnActivateApp(ref WindowMessage msg, bool isActive, long oppositeThreadId) {}
         protected virtual void OnMouseMove(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) {}
+        protected virtual HitTestResult OnHitTest(ref WindowMessage msg, ref Point point) => 0;
 
-        public virtual HitTestResult OnHitTest(ref WindowMessage msg, ref Point point)
-        {
-            return 0;
-        }
+        protected virtual MouseActivationResult OnMouseActivate(ref WindowMessage msg, IntPtr activeTopLevelParentHwnd,
+            short messageId, HitTestResult hitTestResult) => 0;
+
+        protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta,
+            MouseInputKeyStateFlags flags) {}
+        protected virtual void OnMouseLeave(ref WindowMessage msg) {}
+        protected virtual void OnMouseHover(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) {}
 
         public static class MessageHandlers
         {
+            public static void ProcessClose(WindowBase windowBase, ref WindowMessage msg)
+            {
+                windowBase.OnClose(ref msg);
+                // Standard return. 0 if already processed
+            }
+
+            public static void ProcessTimeChange(WindowBase windowBase, ref WindowMessage msg)
+            {
+                windowBase.OnSystemTimeChange(ref msg);
+                // Standard return. 0 if already processed
+            }
+
             public static void ProcessDestroy(WindowBase windowBase, ref WindowMessage msg)
             {
                 try
@@ -312,7 +319,9 @@ namespace WinApi.XWin
                     // messages if the OnPaint errors are uncaught. For example, if a messagebox is shown with an 
                     // error that's unhandled from OnPaint, the flood of WM_PAINT to the thread's message loop 
                     // will prevent the MessageBox from being displayed, and the application ends up with 
-                    // inconsistent state. This prevents that from happening.
+                    // inconsistent state. This prevents that from happening. This is the ONLY non-standard
+                    // behaviour that's applied - and its also happens only if the code in OnPaint throws an 
+                    // exception. 
                     if (!flag)
                         windowBase.Validate();
                 }
@@ -322,6 +331,8 @@ namespace WinApi.XWin
             public static void ProcessEraseBkgnd(WindowBase windowBase, ref WindowMessage msg)
             {
                 msg.Result = new IntPtr(windowBase.OnEraseBkgnd(ref msg, msg.WParam) ? 0 : 1);
+                // Return 0 for default processing (DefProc does the erase).
+                // Return 1 if application takes responsibility.
             }
 
             public static void ProcessSize(WindowBase windowBase, ref WindowMessage msg)
@@ -404,12 +415,13 @@ namespace WinApi.XWin
 
             public static void ProcessMouseActivate(WindowBase windowBase, ref WindowMessage msg)
             {
-                var activeTopLevelParentWindow = msg.WParam.ToSafeInt32();
+                var activeTopLevelParentHwnd = msg.WParam;
                 var lParam = msg.LParam.ToSafeInt32();
                 var hitTestResult = (HitTestResult) lParam.Low();
                 var messageId = lParam.High();
-                MouseActivationResult result;
 
+                var res = windowBase.OnMouseActivate(ref msg, activeTopLevelParentHwnd, messageId, hitTestResult);
+                msg.Result = new IntPtr((int) res);
                 // Return activation result
             }
 
@@ -418,13 +430,14 @@ namespace WinApi.XWin
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 var flags = (MouseInputKeyStateFlags) msg.WParam.ToSafeInt32();
-
+                windowBase.OnMouseHover(ref msg, ref point, flags);
                 // Standard return. 0 if already processed
             }
 
             public static void ProcessMouseLeave(WindowBase windowBase, ref WindowMessage msg)
             {
                 // Nothing to do here
+                windowBase.OnMouseLeave(ref msg);
                 // Standard return. 0 if already processed
             }
 
@@ -438,6 +451,7 @@ namespace WinApi.XWin
                 var wheelDelta = wParam.High();
                 var flags = (MouseInputKeyStateFlags) wParam.Low();
 
+                windowBase.OnMouseWheel(ref msg, ref point, wheelDelta, flags);
                 // Standard return. 0 if already processed
             }
 
@@ -510,18 +524,6 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessClose(WindowBase windowBase, ref WindowMessage msg)
-            {
-                windowBase.OnClose(ref msg);
-                // Standard return. 0 if already processed
-            }
-
-            public static void ProcessTimeChange(WindowBase windowBase, ref WindowMessage msg)
-            {
-                windowBase.OnSystemTimeChange(ref msg);
-                // Standard return. 0 if already processed
-            }
-
             public static void ProcessHitTest(WindowBase windowBase, ref WindowMessage msg)
             {
                 Point point;
@@ -544,7 +546,7 @@ namespace WinApi.XWin
 
             public static void ProcessHotKey(WindowBase windowBase, ref WindowMessage msg)
             {
-                var wParam = (ScreenshotHotKey)msg.WParam.ToSafeInt32();
+                var wParam = (ScreenshotHotKey) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeInt32();
                 var keyState = (HotKeyInputState) lParam.Low();
                 var key = (VirtualKey) lParam.High();
