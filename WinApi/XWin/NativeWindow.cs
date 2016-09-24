@@ -5,22 +5,22 @@ using WinApi.User32;
 
 namespace WinApi.XWin
 {
-    public interface IWindowConnectable
+    public interface INativeAttachable
     {
-        void ConnectHandle(IntPtr handle);
-        IntPtr DisconnectHandle();
+        void Attach(IntPtr handle);
+        IntPtr Detach();
     }
 
-    public class NativeWindowBase : IWindowConnectable
+    public class NativeWindow : INativeAttachable
     {
         public IntPtr Handle { get; protected set; }
 
-        void IWindowConnectable.ConnectHandle(IntPtr handle)
+        void INativeAttachable.Attach(IntPtr handle)
         {
             Handle = handle;
         }
 
-        IntPtr IWindowConnectable.DisconnectHandle()
+        IntPtr INativeAttachable.Detach()
         {
             var h = Handle;
             Handle = IntPtr.Zero;
@@ -219,6 +219,4 @@ namespace WinApi.XWin
             return false;
         }
     }
-
-    public sealed class NativeWindow : NativeWindowBase {}
 }

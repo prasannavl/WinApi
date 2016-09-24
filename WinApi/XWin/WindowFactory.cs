@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using WinApi.Gdi32;
@@ -10,6 +11,8 @@ namespace WinApi.XWin
 {
     public class WindowFactory
     {
+        public delegate void ClassInfoMutator(ref WindowClassEx classInfo);
+
         public static WindowProc DefWindowProc = User32Methods.DefWindowProc;
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly WindowProc m_classInitializerProcRef;
@@ -22,7 +25,7 @@ namespace WinApi.XWin
             var className = name ?? Guid.NewGuid().ToString();
 
             ClassName = className;
-            ProcessHandle = hInstance;
+            InstanceHandle = hInstance;
             m_windowProc = wndProc ?? DefWindowProc;
 
             m_classInitializerProcRef = ClassInitializerProc;
@@ -38,15 +41,13 @@ namespace WinApi.XWin
                 WindowProc = m_classInitializerProcRef,
                 InstanceHandle = hInstance
             };
-
-            if (User32Methods.RegisterClassEx(ref classInfo) == 0)
-                throw new Exception("Failed to register window");
+            RegisterClass(ref classInfo);
         }
 
         public WindowFactory(ref WindowClassEx classEx)
         {
             ClassName = classEx.ClassName;
-            ProcessHandle = classEx.InstanceHandle;
+            InstanceHandle = classEx.InstanceHandle;
             m_windowProc = classEx.WindowProc ?? DefWindowProc;
 
             m_classInitializerProcRef = ClassInitializerProc;
@@ -54,14 +55,39 @@ namespace WinApi.XWin
             var classExClone = classEx;
             classExClone.WindowProc = m_classInitializerProcRef;
 
-            if (User32Methods.RegisterClassEx(ref classExClone) == 0)
-                throw new Exception("Failed to register window");
+            RegisterClass(ref classExClone);
+        }
+
+        public WindowFactory(string existingClassName, string targetClassName,
+            IntPtr srcInstanceHandle, IntPtr targetInstanceHandle,
+            ClassInfoMutator mutator)
+        {
+            WindowClassEx classInfo;
+            if (!User32Methods.GetClassInfoEx(srcInstanceHandle, existingClassName, out classInfo))
+                throw new Exception("Class is not registered - " + existingClassName);
+
+            classInfo.ClassName = targetClassName ?? Guid.NewGuid().ToString();
+            classInfo.InstanceHandle = targetInstanceHandle;
+
+            mutator?.Invoke(ref classInfo);
+
+            ClassName = classInfo.ClassName;
+            InstanceHandle = classInfo.InstanceHandle;
+            m_windowProc = classInfo.WindowProc;
+            classInfo.WindowProc = ClassInitializerProc;
+
+            RegisterClass(ref classInfo);
         }
 
         public string ClassName { get; }
 
-        public IntPtr ProcessHandle { get; }
+        public IntPtr InstanceHandle { get; }
 
+        private void RegisterClass(ref WindowClassEx classEx)
+        {
+            if (User32Methods.RegisterClassEx(ref classEx) == 0)
+                throw new Exception("Failed to register class");
+        }
 
         // This is the initializer WindowProc for the class. It is only called until the NCCREATE message
         // is arrived, at which point the WindowInstanceInitializerProc is called, which again is only
@@ -76,208 +102,39 @@ namespace WinApi.XWin
                 WindowProc winInstanceInitializerProc = null;
                 if (msg == (int) WM.NCCREATE)
                 {
-                    wParam = Marshal.GetFunctionPointerForDelegate(m_windowProc);
+                    var wParamForNcCreate = Marshal.GetFunctionPointerForDelegate(m_windowProc);
                     var createStruct = *(CreateStruct*) lParam.ToPointer();
                     var instancePtr = createStruct.CreateParams;
                     if (instancePtr != IntPtr.Zero)
                     {
-                        var winInstance = (WindowBase) GCHandle.FromIntPtr(instancePtr).Target;
+                        var winInstance = (WindowCore) GCHandle.FromIntPtr(instancePtr).Target;
                         if (winInstance != null)
+                        {
                             winInstanceInitializerProc = winInstance.WindowInstanceInitializerProc;
+                            wParam = wParamForNcCreate;
+                        }
                     }
                 }
                 return winInstanceInitializerProc?.Invoke(hwnd, msg, wParam, lParam) ??
-                       User32Methods.DefWindowProc(hwnd, msg, wParam, lParam);
+                       m_windowProc(hwnd, msg, wParam, lParam);
             }
             catch (Exception ex)
             {
-                if (!WindowCoreBase.HandleException(ex, null)) throw;
+                if (!WindowCore.HandleException(ex, null)) throw;
                 return IntPtr.Zero;
             }
-        }
-
-        public static WindowFactory Create(string className, WindowProc wndProc)
-        {
-            var cache = FactoryCache.Instance;
-            return new WindowFactory(className, WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-                cache.ProcessHandle, cache.AppIconHandle, cache.ArrowCursorHandle,
-                IntPtr.Zero,
-                wndProc);
-        }
-
-        public static WindowFactory Create(string className)
-        {
-            return Create(className, null);
-        }
-
-        public static WindowFactory Create(
-            WindowClassStyles styles = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-            string className = null, IntPtr hInstance = default(IntPtr), IntPtr hIcon = default(IntPtr),
-            IntPtr hCursor = default(IntPtr), IntPtr hBgBrush = default(IntPtr), WindowProc wndProc = null)
-        {
-            var cache = FactoryCache.Instance;
-            return new WindowFactory(className, styles,
-                hInstance == default(IntPtr) ? cache.ProcessHandle : hInstance,
-                hIcon == default(IntPtr) ? cache.AppIconHandle : hIcon,
-                hCursor == default(IntPtr) ? cache.ArrowCursorHandle : hCursor,
-                hBgBrush, wndProc);
-        }
-
-        public TWindow CreateWindow<TWindow>(string text, WindowStyles styles, WindowExStyles exStyles, int x, int y,
-            int width, int height, IntPtr hParent, IntPtr hMenu)
-            where TWindow : WindowCoreBase, new()
-        {
-            var win = new TWindow();
-            ((IWindowAttachable) win).SetFactory(this);
-
-            var winGcHandle = GCHandle.Alloc(win);
-            var extraParam = GCHandle.ToIntPtr(winGcHandle);
-
-            var hwnd = IntPtr.Zero;
-            try
-            {
-                hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
-                    styles, x, y, width, height, hParent, hMenu, ProcessHandle, extraParam);
-            }
-            finally
-            {
-                winGcHandle.Free();
-                if (hwnd == IntPtr.Zero)
-                {
-                    win.Dispose();
-                    ThrowWindowCreationFailed();
-                }
-            }
-
-            return win;
-        }
-
-        public TWindow CreateWindow<TWindow>(WindowStyles styles = 0,
-            WindowExStyles exStyles = 0, string text = "Window",
-            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
-            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
-            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr))
-            where TWindow : WindowCoreBase, new()
-        {
-            return CreateWindow<TWindow>(text, styles, exStyles, x, y, width, height, hParent,
-                hMenu);
-        }
-
-        public TWindow CreateFrameWindow<TWindow>(
-            WindowStyles styles =
-                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_CLIPCHILDREN | WindowStyles.WS_CLIPSIBLINGS,
-            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE,
-            string text = "Window",
-            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
-            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
-            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr))
-            where TWindow : WindowCoreBase, new()
-        {
-            return CreateWindow<TWindow>(text, styles, exStyles, x, y, width, height, hParent,
-                hMenu);
-        }
-
-        public static TWindow CreateWindow<TWindow>(string className, string text, WindowStyles styles,
-            WindowExStyles exStyles, int x, int y,
-            int width, int height, IntPtr hParent, IntPtr hMenu, IntPtr hInstance, IntPtr lpParam)
-            where TWindow : WindowCoreBase, new()
-        {
-            var hwnd = VerifyWindowCreation(User32Methods.CreateWindowEx(exStyles, className, text,
-                styles, x, y, width, height, hParent, hMenu, hInstance, lpParam));
-            return CreateWindowFromHandle<TWindow>(hwnd, true);
-        }
-
-        public static TWindow CreateWindow<TWindow>(string className,
-            WindowStyles styles = 0,
-            WindowExStyles exStyles = 0, string text = "Window",
-            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
-            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
-            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
-            IntPtr lpParam = default(IntPtr))
-            where TWindow : WindowCoreBase, new()
-        {
-            return CreateWindow<TWindow>(className, text, styles, exStyles, x, y, width, height, hParent,
-                hMenu, hInstance, lpParam);
-        }
-
-        public static TWindow CreateFrameWindow<TWindow>(string className,
-            WindowStyles styles =
-                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_CLIPCHILDREN | WindowStyles.WS_CLIPSIBLINGS,
-            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE,
-            string text = "Window",
-            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
-            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
-            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
-            IntPtr lpParam = default(IntPtr))
-            where TWindow : WindowCoreBase, new()
-
-        {
-            return CreateWindow<TWindow>(className, text, styles, exStyles, x, y, width, height, hParent,
-                hMenu, hInstance, lpParam);
-        }
-
-        public static NativeWindow CreateWindow(string className, string text, WindowStyles styles,
-            WindowExStyles exStyles, int x, int y,
-            int width, int height, IntPtr hParent, IntPtr hMenu, IntPtr hInstance, IntPtr lpParam)
-        {
-            var hwnd = VerifyWindowCreation(User32Methods.CreateWindowEx(exStyles, className, text,
-                styles, x, y, width, height, hParent, hMenu, hInstance, lpParam));
-            return CreateWindowFromHandle(hwnd);
-        }
-
-        public static NativeWindow CreateFrameWindow(string className,
-            WindowStyles styles =
-                WindowStyles.WS_OVERLAPPEDWINDOW | WindowStyles.WS_CLIPCHILDREN | WindowStyles.WS_CLIPSIBLINGS,
-            WindowExStyles exStyles = WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE,
-            string text = "Window",
-            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
-            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
-            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
-            IntPtr lpParam = default(IntPtr))
-        {
-            return CreateWindow(className, text, styles, exStyles, x, y, width, height, hParent,
-                hMenu, hInstance, lpParam);
-        }
-
-        public static NativeWindow CreateWindow(string className,
-            WindowStyles styles = 0,
-            WindowExStyles exStyles = 0, string text = "Window",
-            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
-            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
-            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
-            IntPtr lpParam = default(IntPtr))
-        {
-            return CreateWindow(className, text, styles, exStyles, x, y, width, height, hParent,
-                hMenu, hInstance, lpParam);
-        }
-
-        public static TWindow CreateWindowFromHandle<TWindow>(IntPtr hwnd, bool takeOwnership = false)
-            where TWindow : WindowCoreBase, new()
-        {
-            var win = new TWindow();
-            var attachableWindow = (IWindowAttachable) win;
-            attachableWindow.ConnectHandle(hwnd, takeOwnership);
-            attachableWindow.AttachWindowProc(IntPtr.Zero);
-            return win;
-        }
-
-        public static NativeWindow CreateWindowFromHandle(IntPtr hwnd)
-        {
-            var win = new NativeWindow();
-            var connectableWindow = (IWindowConnectable) win;
-            connectableWindow.ConnectHandle(hwnd);
-            return win;
-        }
-
-        private static IntPtr VerifyWindowCreation(IntPtr hwnd)
-        {
-            if (hwnd == IntPtr.Zero) ThrowWindowCreationFailed();
-            return hwnd;
         }
 
         private static void ThrowWindowCreationFailed()
         {
             throw new Exception("Failed to create window");
+        }
+
+        private static void VerifyWindowInstanceNotInitialized<TWindow>(TWindow windowInstance)
+            where TWindow : WindowCore
+        {
+            if (windowInstance.Factory != null)
+                throw new Exception("Window instance is already initialized");
         }
 
         public static void DestroyAllWindows(WindowFactory factory)
@@ -298,13 +155,133 @@ namespace WinApi.XWin
 
         public static void UnregisterClass(WindowFactory factory)
         {
-            User32Methods.UnregisterClass(factory.ClassName, factory.ProcessHandle);
+            User32Methods.UnregisterClass(factory.ClassName, factory.InstanceHandle);
         }
 
         public static void DestroyAndUnregister(WindowFactory factory)
         {
             DestroyAllWindows(factory);
             UnregisterClass(factory);
+        }
+
+        public static WindowFactory Create(string className = null,
+            WindowClassStyles styles = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
+            IntPtr hInstance = default(IntPtr), IntPtr hIcon = default(IntPtr),
+            IntPtr hCursor = default(IntPtr), IntPtr hBgBrush = default(IntPtr), WindowProc wndProc = null)
+        {
+            var cache = FactoryCache.Instance;
+            return new WindowFactory(className, styles,
+                hInstance == default(IntPtr) ? cache.ProcessHandle : hInstance,
+                hIcon == default(IntPtr) ? cache.AppIconHandle : hIcon,
+                hCursor == default(IntPtr) ? cache.ArrowCursorHandle : hCursor,
+                hBgBrush, wndProc);
+        }
+
+
+        public static WindowFactory CreateForExistingClass(string existingClassName, string targetClassName = null,
+            IntPtr srcInstance = default(IntPtr), IntPtr? targetInstance = null,
+            ClassInfoMutator mutator = null)
+        {
+            return new WindowFactory(existingClassName, targetClassName, srcInstance,
+                targetInstance ?? FactoryCache.Instance.ProcessHandle, mutator);
+        }
+
+
+        public static NativeWindow CreateWindowFromHandle(IntPtr hwnd)
+        {
+            var win = new NativeWindow();
+            var connectableWindow = (INativeAttachable) win;
+            connectableWindow.Attach(hwnd);
+            return win;
+        }
+
+
+        public static TWindow CreateWindowFromHandle<TWindow>(Func<TWindow> instanceCreator, IntPtr hwnd,
+            bool takeOwnership = false)
+            where TWindow : WindowCore
+        {
+            var win = instanceCreator();
+            VerifyWindowInstanceNotInitialized(win);
+            var attachableWindow = (INativeConnectable) win;
+            attachableWindow.Attach(hwnd, takeOwnership);
+            attachableWindow.ConnectWindowProc(IntPtr.Zero);
+            return win;
+        }
+
+        private TWindow CreateWindow<TWindow>(TWindow win, string text, WindowStyles styles,
+            WindowExStyles exStyles, int x, int y,
+            int width, int height, IntPtr hParent, IntPtr hMenu)
+            where TWindow : WindowCore
+        {
+            VerifyWindowInstanceNotInitialized(win);
+            ((INativeConnectable) win).SetFactory(this);
+
+            var winGcHandle = GCHandle.Alloc(win);
+            var extraParam = GCHandle.ToIntPtr(winGcHandle);
+
+            var hwnd = IntPtr.Zero;
+            try
+            {
+                hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
+                    styles, x, y, width, height, hParent, hMenu, InstanceHandle, extraParam);
+            }
+            finally
+            {
+                winGcHandle.Free();
+                if (hwnd == IntPtr.Zero)
+                {
+                    win.Dispose();
+                    ThrowWindowCreationFailed();
+                }
+            }
+            return win;
+        }
+
+        public TWindow CreateWindow<TWindow>(Func<TWindow> instanceCreator, string text, WindowStyles styles,
+            WindowExStyles exStyles, int x, int y,
+            int width, int height, IntPtr hParent, IntPtr hMenu)
+            where TWindow : WindowCore
+        {
+            return CreateWindow(instanceCreator(), text, styles, exStyles, x, y, width, height, hParent,
+                hMenu);
+        }
+
+        public TWindow CreateWindow<TWindow>(Func<TWindow> instanceCreator, string text = null, WindowStyles? styles = null,
+            WindowExStyles? exStyles = null, int? x = null, int? y = null,
+            int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null)
+            where TWindow : WindowCore, IConstructionParamsProvider
+        {
+            var win = instanceCreator();
+            var constructionParams = win.GetConstructionParams();
+            return CreateWindow(win, constructionParams, text, styles, exStyles, x, y, width, height, hParent, hMenu);
+        }
+
+        public TWindow CreateWindow<TWindow>(Func<TWindow> instanceCreator, IConstructionParams constructionParams,
+            string text = null, WindowStyles? styles = null,
+            WindowExStyles? exStyles = null, int? x = null, int? y = null,
+            int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null)
+            where TWindow : WindowCore
+        {
+            var win = instanceCreator();
+            return CreateWindow(win, constructionParams, text, styles, exStyles, x, y, width, height, hParent, hMenu);
+        }
+
+        private TWindow CreateWindow<TWindow>(TWindow instance, IConstructionParams constructionParams,
+            string text, WindowStyles? styles,
+            WindowExStyles? exStyles, int? x, int? y,
+            int? width, int? height, IntPtr? hParent, IntPtr? hMenu)
+            where TWindow : WindowCore
+        {
+            return CreateWindow(instance,
+                text,
+                styles ?? constructionParams.Styles,
+                exStyles ?? constructionParams.ExStyles,
+                x ?? constructionParams.X,
+                y ?? constructionParams.Y,
+                width ?? constructionParams.Width,
+                height ?? constructionParams.Height,
+                hParent ?? constructionParams.ParentHandle,
+                hMenu ?? constructionParams.MenuHandle);
         }
 
         public class FactoryCache
@@ -330,12 +307,10 @@ namespace WinApi.XWin
             {
                 get
                 {
-                    if (t_instance == null)
+                    if (t_instance != null) return t_instance;
+                    if ((t_weakRefInstance == null) || !t_weakRefInstance.TryGetTarget(out t_instance))
                     {
-                        if ((t_weakRefInstance == null) || !t_weakRefInstance.TryGetTarget(out t_instance))
-                        {
-                            t_instance = new FactoryCache();
-                        }
+                        t_instance = new FactoryCache();
                     }
                     return t_instance;
                 }
@@ -343,14 +318,12 @@ namespace WinApi.XWin
 
             public static void TransitionCacheToWeakReference()
             {
-                if (t_instance != null)
-                {
-                    if (t_weakRefInstance == null)
-                        t_weakRefInstance = new WeakReference<FactoryCache>(t_instance);
-                    else
-                        t_weakRefInstance.SetTarget(t_instance);
-                    t_instance = null;
-                }
+                if (t_instance == null) return;
+                if (t_weakRefInstance == null)
+                    t_weakRefInstance = new WeakReference<FactoryCache>(t_instance);
+                else
+                    t_weakRefInstance.SetTarget(t_instance);
+                t_instance = null;
             }
         }
     }

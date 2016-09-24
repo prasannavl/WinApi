@@ -10,10 +10,7 @@ namespace WinApi.XWin
         {
             IntPtr res;
             if (DwmApiMethods.DwmDefWindowProc(windowHandle, (uint) msg.Id, msg.WParam, msg.LParam, out res))
-            {
-                msg.Result = res;
-                msg.SetHandled();
-            }
+                msg.SetHandledWithResult(res);
         }
 
         public static void PostQuitMessage(int exitCode = 0)

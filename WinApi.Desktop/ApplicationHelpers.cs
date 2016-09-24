@@ -33,7 +33,7 @@ namespace WinApi.Desktop
         public static void SetupDefaultExceptionHandlers()
         {
             AppDomain.CurrentDomain.UnhandledException += DefaultUnhandledExceptionHandler;
-            WindowCoreBase.UnhandledException += DefaultWindowExceptionHandler;
+            WindowCore.UnhandledException += DefaultWindowExceptionHandler;
         }
 
         public static void ShowCriticalError(object exceptionObj, string message = null, string title = null)

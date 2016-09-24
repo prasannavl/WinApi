@@ -53,6 +53,7 @@
     <Compile Include="Gdi32\Helpers.cs" />
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Types.cs" />
+    <Compile Include="XWin\Window.cs" />
     <Compile Include="XWin\Helpers\MessageBoxHelpers.cs" />
     <Compile Include="Kernel32\Helpers.cs" />
     <Compile Include="Kernel32\Methods.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="XWin\EventLoop.cs" />
     <Compile Include="XWin\MessageHelpers.cs" />
     <Compile Include="XWin\NativeWindow.cs" />
-    <Compile Include="XWin\Window.cs" />
+    <Compile Include="XWin\EventedWindowCore.cs" />
     <Compile Include="XWin\WindowCore.cs" />
     <Compile Include="XWin\WindowFactory.cs" />
   </ItemGroup>

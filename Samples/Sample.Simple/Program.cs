@@ -23,14 +23,14 @@ namespace Sample.Simple
                 className: "MainWindow", 
                 // Use window color brush to emulate Win Forms like behaviour. 
                 hBgBrush: new IntPtr((int)SystemColor.COLOR_WINDOW));
-            using (var win = factory.CreateFrameWindow<SampleWindow>(text: "Hello"))
+            using (var win = factory.CreateWindow(() => new SampleWindow(), text: "Hello"))
             {
                 win.Show();
                 return new EventLoop(win).Run();
             }
         }
 
-        public sealed class SampleWindow : MainWindowBase
+        public sealed class SampleWindow : Window
         {
             private NativeWindow m_textBox;
             private Rectangle m_textBoxMargin;
@@ -40,12 +40,17 @@ namespace Sample.Simple
                 var containerRect = GetClientRect();
                 m_textBoxMargin = new Rectangle(10, 10,10, 10);
                 var textBoxRect = GetRectWithMargin(ref containerRect, ref m_textBoxMargin);
-                m_textBox = WindowFactory.CreateWindow("static",
-                    styles: WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD,
-                    exStyles: WindowExStyles.WS_EX_STATICEDGE,
-                    hParent: Handle,
-                    text: "Log info",
-                    x: textBoxRect.Left, y: textBoxRect.Top, width: textBoxRect.Width, height: textBoxRect.Height);
+
+                var hTextBox = User32Methods.CreateWindowEx(
+                    lpClassName: "static",
+                    dwStyle: WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD,
+                    dwExStyle: WindowExStyles.WS_EX_STATICEDGE,
+                    hwndParent: Handle,
+                    lpWindowName: "Log info",
+                    x: textBoxRect.Left, y: textBoxRect.Top, nWidth: textBoxRect.Width, nHeight: textBoxRect.Height,
+                    hMenu: IntPtr.Zero, hInstance: WindowFactory.FactoryCache.Instance.ProcessHandle, lpParam: IntPtr.Zero);
+
+                m_textBox = WindowFactory.CreateWindowFromHandle(hTextBox);
 
                 return base.OnCreate(ref msg, ref createStruct);
             }
