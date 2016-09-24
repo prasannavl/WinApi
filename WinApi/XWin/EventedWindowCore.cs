@@ -588,6 +588,8 @@ namespace WinApi.XWin
         }
     }
 
+    public sealed class SealedEventedWindowCore : EventedWindowCore { }
+
     public enum MouseButton
     {
         Left = 0x1,

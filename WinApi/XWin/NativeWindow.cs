@@ -170,20 +170,6 @@ namespace WinApi.XWin
             return User32Methods.ShowWindow(Handle, flags);
         }
 
-        public IntPtr Create(string className,
-            WindowStyles styles = 0,
-            WindowExStyles exStyles = 0, string text = "Window",
-            int x = (int) CreateWindowFlags.CW_USEDEFAULT, int y = (int) CreateWindowFlags.CW_USEDEFAULT,
-            int width = (int) CreateWindowFlags.CW_USEDEFAULT, int height = (int) CreateWindowFlags.CW_USEDEFAULT,
-            IntPtr hParent = default(IntPtr), IntPtr hMenu = default(IntPtr), IntPtr hInstance = default(IntPtr),
-            IntPtr createParams = default(IntPtr))
-        {
-            return User32Methods.CreateWindowEx(exStyles, className, text,
-                styles, x, y, width, height, hParent, hMenu,
-                hInstance == IntPtr.Zero ? WindowFactory.FactoryCache.Instance.ProcessHandle : hInstance,
-                createParams);
-        }
-
         public bool Validate(ref Rectangle rect)
         {
             return User32Methods.ValidateRect(Handle, ref rect);

@@ -6,19 +6,39 @@ namespace WinApi.XWin
 {
     public interface IEventLoop
     {
-        int Run();
+        int Run(WindowCore mainWindow = null);
     }
 
-    public abstract class EventLoopBase : IEventLoop
+    public abstract class EventLoopCore : IEventLoop
     {
-        private object m_state;
+        protected object State;
 
-        protected EventLoopBase(object state)
+        protected EventLoopCore(object state)
         {
-            m_state = state;
+            State = state;
         }
 
-        public virtual int Run()
+        public int Run(WindowCore mainWindow = null)
+        {
+            WindowEventHandler destroyHandler = window => { MessageHelpers.PostQuitMessage(); };
+            if (mainWindow != null) mainWindow.Closed += destroyHandler;
+            var res = RunCore();
+            // Technically, this can be avoided by setting the handler to auto disconnect.
+            // However, this helps keep the mainWindow alive, and use this instead of 
+            // GC.KeepAlive pattern.
+            if (mainWindow != null) mainWindow.Closed -= destroyHandler;
+            return res;
+        }
+
+        public abstract int RunCore();
+    }
+
+
+    public class EventLoop : EventLoopCore
+    {
+        public EventLoop(object state = null) : base(state) {}
+
+        public override int RunCore()
         {
             Message msg;
             int res;
@@ -31,24 +51,14 @@ namespace WinApi.XWin
         }
     }
 
-    public sealed class EventLoop : EventLoopBase
+    public class RealtimeEventLoop : EventLoopCore
     {
-        public EventLoop(object state = null) : base(state) {}
-    }
+        public RealtimeEventLoop(object state = null) : base(state) {}
 
-    public abstract class RealtimeEventLoopBase : IEventLoop
-    {
-        private object m_state;
-
-        protected RealtimeEventLoopBase(object state)
-        {
-            m_state = state;
-        }
-
-        public virtual int Run()
+        public override int RunCore()
         {
             Message msg;
-            var quitMsg = (uint) WM.QUIT;
+            var quitMsgId = (uint) WM.QUIT;
             do
             {
                 if (User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE))
@@ -56,30 +66,29 @@ namespace WinApi.XWin
                     User32Methods.TranslateMessage(ref msg);
                     User32Methods.DispatchMessage(ref msg);
                 }
-            } while (msg.Value != quitMsg);
+            } while (msg.Value != quitMsgId);
             return 0;
         }
     }
 
-    public sealed class RealtimeEventLoop : RealtimeEventLoopBase
+    public abstract class InterceptableEventLoopCore : EventLoopCore
     {
-        public RealtimeEventLoop(object state = null) : base(state) {}
+        protected InterceptableEventLoopCore(object state) : base(state) {}
+        protected virtual bool Preprocess(ref Message msg) => true;
+        protected virtual bool PostTranslate(ref Message msg) => true;
+        protected virtual void PostProcess(ref Message msg) {}
     }
 
-    public abstract class InterceptableEventLoopBase : IEventLoop
+    public abstract class InterceptableEventLoopBase : InterceptableEventLoopCore
     {
-        private object m_state;
+        protected InterceptableEventLoopBase(object state) : base(state) {}
 
-        protected InterceptableEventLoopBase(object state)
-        {
-            m_state = state;
-        }
-
-        public virtual int Run()
+        public override int RunCore()
         {
             Message msg;
             int res;
             while ((res = User32Methods.GetMessage(out msg, IntPtr.Zero, 0, 0)) > 0)
+            {
                 if (Preprocess(ref msg))
                 {
                     User32Methods.TranslateMessage(ref msg);
@@ -87,29 +96,16 @@ namespace WinApi.XWin
                         User32Methods.DispatchMessage(ref msg);
                     PostProcess(ref msg);
                 }
+            }
             return res;
         }
-
-        protected bool Preprocess(ref Message msg) => true;
-        protected bool PostTranslate(ref Message msg) => true;
-        protected void PostProcess(ref Message msg) {}
     }
 
-    public sealed class InterceptableEventLoop : InterceptableEventLoopBase
+    public abstract class InterceptableRealtimeEventLoopBase : InterceptableEventLoopCore
     {
-        public InterceptableEventLoop(object state = null) : base(state) {}
-    }
+        protected InterceptableRealtimeEventLoopBase(object state) : base(state) {}
 
-    public abstract class InterceptableRealtimeEventLoopBase : IEventLoop
-    {
-        private object m_state;
-
-        protected InterceptableRealtimeEventLoopBase(object state)
-        {
-            m_state = state;
-        }
-
-        public virtual int Run()
+        public override int RunCore()
         {
             Message msg;
             var quitMsg = (uint) WM.QUIT;
@@ -126,14 +122,5 @@ namespace WinApi.XWin
             } while (msg.Value != quitMsg);
             return 0;
         }
-
-        protected bool Preprocess(ref Message msg) => true;
-        protected bool PostTranslate(ref Message msg) => true;
-        protected void PostProcess(ref Message msg) {}
-    }
-
-    public sealed class InterceptableRealtimeEventLoop : InterceptableRealtimeEventLoopBase
-    {
-        public InterceptableRealtimeEventLoop(object state = null) : base(state) {}
     }
 }

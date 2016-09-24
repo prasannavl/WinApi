@@ -20,13 +20,13 @@ namespace Sample.Simple
         static int Main(string[] args)
         {
             var factory = WindowFactory.Create(
-                className: "MainWindow", 
+                "MainWindow",
                 // Use window color brush to emulate Win Forms like behaviour. 
-                hBgBrush: new IntPtr((int)SystemColor.COLOR_WINDOW));
-            using (var win = factory.CreateWindow(() => new SampleWindow(), text: "Hello"))
+                hBgBrush: new IntPtr((int) SystemColor.COLOR_WINDOW));
+            using (var win = factory.CreateWindow(() => new SampleWindow(), "Hello"))
             {
                 win.Show();
-                return new EventLoop(win).Run();
+                return new EventLoop().Run(win);
             }
         }
 
@@ -38,19 +38,14 @@ namespace Sample.Simple
             protected override bool OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
             {
                 var containerRect = GetClientRect();
-                m_textBoxMargin = new Rectangle(10, 10,10, 10);
+                m_textBoxMargin = new Rectangle(10, 10, 10, 10);
                 var textBoxRect = GetRectWithMargin(ref containerRect, ref m_textBoxMargin);
 
-                var hTextBox = User32Methods.CreateWindowEx(
-                    lpClassName: "static",
-                    dwStyle: WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD,
-                    dwExStyle: WindowExStyles.WS_EX_STATICEDGE,
-                    hwndParent: Handle,
-                    lpWindowName: "Log info",
-                    x: textBoxRect.Left, y: textBoxRect.Top, nWidth: textBoxRect.Width, nHeight: textBoxRect.Height,
-                    hMenu: IntPtr.Zero, hInstance: WindowFactory.FactoryCache.Instance.ProcessHandle, lpParam: IntPtr.Zero);
-
-                m_textBox = WindowFactory.CreateWindowFromHandle(hTextBox);
+                m_textBox = WindowFactory.CreateExternalWindow("static",
+                    styles: WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD,
+                    exStyles: WindowExStyles.WS_EX_STATICEDGE,
+                    hParent: Handle,
+                    width: textBoxRect.Width, height: textBoxRect.Height, x: textBoxRect.Left, y: textBoxRect.Top);
 
                 return base.OnCreate(ref msg, ref createStruct);
             }
@@ -64,7 +59,7 @@ namespace Sample.Simple
 
             protected override void OnMouseMove(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags)
             {
-                m_textBox.SetText($"{{ X: {point.X}, Y: {point.Y}, Flags: {flags.ToString()} }}");
+                m_textBox.SetText($"{{ X: {point.X}, Y: {point.Y}, Flags: {flags} }}");
                 base.OnMouseMove(ref msg, ref point, flags);
             }
 

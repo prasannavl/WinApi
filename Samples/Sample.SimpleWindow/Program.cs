@@ -16,6 +16,7 @@ namespace Sample.SimpleWindow
         [STAThread]
         static int Main(string[] args)
         {
+            var w = Window.Create();
             var factory = WindowFactory.Create("MainWindow");
             using (var win = factory.CreateFrameWindow<AppWindow>(text: "Hello"))
             {
@@ -25,7 +26,7 @@ namespace Sample.SimpleWindow
         }
     }
 
-    public class AppWindow : MainWindowBase
+    public class AppWindow : Window
     {
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {

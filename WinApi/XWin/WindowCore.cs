@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WinApi.User32;
@@ -68,6 +69,8 @@ namespace WinApi.XWin
             Factory = factory;
         }
 
+        public event WindowEventHandler Closed;
+
         protected void ThrowIfDisposed()
         {
             if (IsDisposed) throw new ObjectDisposedException(nameof(WindowCore));
@@ -130,6 +133,11 @@ namespace WinApi.XWin
                 if (!HandleException(ex, this)) throw;
                 return IntPtr.Zero;
             }
+            finally
+            {
+                if (wmsg.Id == WM.DESTROY)
+                    Closed?.Invoke(this);
+            }
         }
 
         public event WindowExceptionHandler Exception;
@@ -138,8 +146,8 @@ namespace WinApi.XWin
         public static bool HandleException(Exception ex, WindowCore window)
         {
             var windowException = new WindowException(ex, window);
-            window?.Exception?.Invoke(ref windowException);
-            if (!windowException.IsHandled) UnhandledException?.Invoke(ref windowException);
+            window?.Exception?.Invoke(windowException);
+            if (!windowException.IsHandled) UnhandledException?.Invoke(windowException);
             return windowException.IsHandled;
         }
 
@@ -148,6 +156,8 @@ namespace WinApi.XWin
             return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
         }
     }
+
+    public sealed class SealedWindowCore : WindowCore { } 
 
     public interface INativeConnectable : INativeAttachable
     {
@@ -183,31 +193,28 @@ namespace WinApi.XWin
         }
     }
 
-    public delegate void WindowExceptionHandler(ref WindowException windowException);
+    public delegate void WindowEventHandler(WindowCore windowCore);
 
-    public struct WindowException
+    public delegate void WindowExceptionHandler(WindowException windowException);
+
+    public class WindowException : Exception
     {
-        public bool IsHandled { get; set; }
-        public WindowCore Window { get; set; }
-        public Exception DispatchedException { get; set; }
-
         public WindowException(Exception ex) : this(ex, null) {}
 
-        public WindowException(Exception ex, WindowCore window)
+        public WindowException(Exception ex, WindowCore window) : this(ex, window, null) {}
+
+        public WindowException(Exception ex, WindowCore window, string message) : base(message, ex)
         {
-            DispatchedException = ex;
             Window = window;
             IsHandled = false;
         }
 
+        public bool IsHandled { get; set; }
+        public WindowCore Window { get; set; }
+
         public void SetHandled(bool value = true)
         {
             IsHandled = value;
-        }
-
-        public override string ToString()
-        {
-            return DispatchedException.ToString();
         }
     }
 }
