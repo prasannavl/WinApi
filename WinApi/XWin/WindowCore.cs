@@ -6,6 +6,15 @@ using WinApi.User32;
 
 namespace WinApi.XWin
 {
+    /// <summary>
+    /// The minimum core for all windows. It derives from the NativeWindow, 
+    /// and provides connectivity to the Window procedure. Again, 
+    /// it does nothing more than controlling the message loop
+    /// connection, destruction, and error handling across native
+    /// boundary. It provides the `OnMessage` method that's processes
+    /// the message loop. Any classes that derive from this can 
+    /// create life cycle events from handling the message loop.
+    /// </summary>
     public class WindowCore : NativeWindow, INativeConnectable, IDisposable
     {
         private IntPtr m_baseWindowProcPtr;

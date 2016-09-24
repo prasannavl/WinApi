@@ -11,6 +11,10 @@ namespace WinApi.XWin
         IntPtr Detach();
     }
 
+    /// <summary>
+    /// A simple wrapper around the Win32 window. It has nothing except
+    /// the handle of the window. All functions here are direct api calls.
+    /// </summary>
     public class NativeWindow : INativeAttachable
     {
         public IntPtr Handle { get; protected set; }

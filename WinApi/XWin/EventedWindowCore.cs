@@ -7,6 +7,16 @@ using WinApi.Extensions;
 
 namespace WinApi.XWin
 {
+    /// <summary>
+    /// Derives from the WindowCore, and provides all the life cycle, and input events.
+    /// It doesn't really handle them in any way but just provides the events with the 
+    /// correct decoded parameters. All the processing and decoding are done 
+    /// transparently inside the `MessageHandlers` class.
+    /// 
+    /// If in certain high-performance requirements, you need only a few events, this 
+    /// can be manually implemented only for the events required using the `MessageHandlers`
+    /// class. All of the parameter decoding are transparent.
+    /// </summary>
     public abstract class EventedWindowCore : WindowCore
     {
         protected virtual void OnClose(ref WindowMessage msg) {}
@@ -303,39 +313,39 @@ namespace WinApi.XWin
 
         public static class MessageHandlers
         {
-            public static void ProcessClose(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessClose(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                windowBase.OnClose(ref msg);
+                windowCore.OnClose(ref msg);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessTimeChange(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessTimeChange(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                windowBase.OnSystemTimeChange(ref msg);
+                windowCore.OnSystemTimeChange(ref msg);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessDestroy(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessDestroy(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 try
                 {
-                    windowBase.OnDestroy(ref msg);
+                    windowCore.OnDestroy(ref msg);
                 }
                 finally
                 {
                     // This is done to notify a owned window that it shouldn't try to 
                     // destroy the window when the finalizer is called again.
-                    windowBase.IsSourceOwner = false;
+                    windowCore.IsSourceOwner = false;
                 }
                 // Standard return. 0 if already processed.
             }
 
-            public static void ProcessPaint(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessPaint(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var flag = false;
                 try
                 {
-                    windowBase.OnPaint(ref msg, msg.WParam);
+                    windowCore.OnPaint(ref msg, msg.WParam);
                     flag = true;
                 }
                 finally
@@ -348,79 +358,79 @@ namespace WinApi.XWin
                     // behaviour that's applied - and its also happens only if the code in OnPaint throws an 
                     // exception. 
                     if (!flag)
-                        windowBase.Validate();
+                        windowCore.Validate();
                 }
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessEraseBkgnd(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessEraseBkgnd(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                msg.Result = new IntPtr(windowBase.OnEraseBkgnd(ref msg, msg.WParam) ? 0 : 1);
+                msg.Result = new IntPtr(windowCore.OnEraseBkgnd(ref msg, msg.WParam) ? 0 : 1);
                 // Return 0 for default processing (DefProc does the erase).
                 // Return 1 if application takes responsibility.
             }
 
-            public static void ProcessSize(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessSize(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Size size;
                 var flag = (WindowSizeFlag) msg.WParam.ToSafeInt32();
                 msg.LParam.BreakSafeInt32To16Signed(out size.Height, out size.Width);
-                windowBase.OnSize(ref msg, flag, ref size);
+                windowCore.OnSize(ref msg, flag, ref size);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMove(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessMove(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
-                windowBase.OnMove(ref msg, ref point);
+                windowCore.OnMove(ref msg, ref point);
                 // Standard return. 0 if already processed
             }
 
-            public static unsafe void ProcessCreate(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static unsafe void ProcessCreate(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                msg.Result = new IntPtr(windowBase.OnCreate(ref msg, ref *(CreateStruct*) msg.LParam) ? 0 : -1);
+                msg.Result = new IntPtr(windowCore.OnCreate(ref msg, ref *(CreateStruct*) msg.LParam) ? 0 : -1);
                 // Return 0 to continue creation. -1 to destroy and prevent
             }
 
-            public static void ProcessActivate(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessActivate(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 int high, low;
                 msg.WParam.BreakSafeInt32To16Signed(out high, out low);
                 var flag = (WindowActivateFlag) low;
                 var isMinimized = high != 0;
                 var oppositeWindowHandle = msg.LParam;
-                windowBase.OnActivate(ref msg, flag, isMinimized, oppositeWindowHandle);
+                windowCore.OnActivate(ref msg, flag, isMinimized, oppositeWindowHandle);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessActivateApp(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessActivateApp(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var isActive = msg.WParam.ToSafeInt32() != 0;
                 var oppositeThreadId = msg.LParam.ToSafeInt32();
-                windowBase.OnActivateApp(ref msg, isActive, oppositeThreadId);
+                windowCore.OnActivateApp(ref msg, isActive, oppositeThreadId);
                 // Standard return. 0 if already processed
             }
 
-            public static unsafe void ProcessDisplayChange(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static unsafe void ProcessDisplayChange(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var imageDepthBitsPerPixel = (uint) msg.WParam.ToPointer();
                 Size size;
                 msg.LParam.BreakSafeInt32To16(out size.Height, out size.Width);
-                windowBase.OnDisplayChange(ref msg, imageDepthBitsPerPixel, ref size);
+                windowCore.OnDisplayChange(ref msg, imageDepthBitsPerPixel, ref size);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMouseMove(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessMouseMove(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 var flags = (MouseInputKeyStateFlags) msg.WParam.ToSafeInt32();
-                windowBase.OnMouseMove(ref msg, ref point, flags);
+                windowCore.OnMouseMove(ref msg, ref point, flags);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMouseButtonEvent(EventedWindowCore windowBase, ref WindowMessage msg,
+            public static void ProcessMouseButtonEvent(EventedWindowCore windowCore, ref WindowMessage msg,
                 MouseButton button,
                 MouseButtonEvent mouseButtonEvent)
             {
@@ -434,40 +444,40 @@ namespace WinApi.XWin
                         ? MouseButton.XButton1
                         : MouseButton.XButton2;
                 }
-                windowBase.OnMouseButtonEvent(ref msg, ref point, button, mouseInputKeyState);
+                windowCore.OnMouseButtonEvent(ref msg, ref point, button, mouseInputKeyState);
                 // Normal: Standard return. 0 if already processed
                 // XButton: TRUE if processed, 0 if not
             }
 
-            public static void ProcessMouseActivate(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessMouseActivate(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var activeTopLevelParentHwnd = msg.WParam;
                 var lParam = msg.LParam.ToSafeInt32();
                 var hitTestResult = (HitTestResult) lParam.Low();
                 var messageId = lParam.High();
 
-                var res = windowBase.OnMouseActivate(ref msg, activeTopLevelParentHwnd, messageId, hitTestResult);
+                var res = windowCore.OnMouseActivate(ref msg, activeTopLevelParentHwnd, messageId, hitTestResult);
                 msg.Result = new IntPtr((int) res);
                 // Return activation result
             }
 
-            public static void ProcessMouseHover(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessMouseHover(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 var flags = (MouseInputKeyStateFlags) msg.WParam.ToSafeInt32();
-                windowBase.OnMouseHover(ref msg, ref point, flags);
+                windowCore.OnMouseHover(ref msg, ref point, flags);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMouseLeave(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessMouseLeave(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 // Nothing to do here
-                windowBase.OnMouseLeave(ref msg);
+                windowCore.OnMouseLeave(ref msg);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMouseWheel(EventedWindowCore windowBase, ref WindowMessage msg,
+            public static void ProcessMouseWheel(EventedWindowCore windowCore, ref WindowMessage msg,
                 Orientation wheelOrientation)
             {
                 Point point;
@@ -477,41 +487,41 @@ namespace WinApi.XWin
                 var wheelDelta = wParam.High();
                 var flags = (MouseInputKeyStateFlags) wParam.Low();
 
-                windowBase.OnMouseWheel(ref msg, ref point, wheelDelta, flags);
+                windowCore.OnMouseWheel(ref msg, ref point, wheelDelta, flags);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessKeyChar(EventedWindowCore windowBase, ref WindowMessage msg, bool isSystemContext,
+            public static void ProcessKeyChar(EventedWindowCore windowCore, ref WindowMessage msg, bool isSystemContext,
                 bool isDeadChar)
             {
                 var inputChar = (char) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeUInt32();
                 var inputState = new KeyboardInputState(lParam);
-                windowBase.OnKeyChar(ref msg, inputChar, inputState, isSystemContext, isDeadChar);
+                windowCore.OnKeyChar(ref msg, inputChar, inputState, isSystemContext, isDeadChar);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessKeyEvent(EventedWindowCore windowBase, ref WindowMessage msg, KeyEvent keyEvent,
+            public static void ProcessKeyEvent(EventedWindowCore windowCore, ref WindowMessage msg, KeyEvent keyEvent,
                 bool isSystemContext)
             {
                 var key = (VirtualKey) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeUInt32();
                 var inputState = new KeyboardInputState(lParam);
-                windowBase.OnKeyEvent(ref msg, key, inputState, isSystemContext);
+                windowCore.OnKeyEvent(ref msg, key, inputState, isSystemContext);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessCommand(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var wParam = msg.WParam.ToSafeInt32();
                 var cmdSource = (CommandSource) wParam.High();
                 var id = wParam.Low();
                 var hWnd = msg.LParam;
-                windowBase.OnCommand(ref msg, cmdSource, id, hWnd);
+                windowCore.OnCommand(ref msg, cmdSource, id, hWnd);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessSysCommand(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessSysCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var cmd = (SysCommand) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeInt32();
@@ -520,49 +530,49 @@ namespace WinApi.XWin
                 // If chosen with the keyboard, this highY is 0 if accelerator is used,
                 // or 1 if mnemonic is used.
                 var mouseCursorYOrKeyMnemonic = lParam.High();
-                windowBase.OnSysCommand(ref msg, cmd, mouseCursorX, mouseCursorYOrKeyMnemonic);
+                windowCore.OnSysCommand(ref msg, cmd, mouseCursorX, mouseCursorYOrKeyMnemonic);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMenuCommand(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessMenuCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var menuIndex = msg.WParam.ToSafeInt32();
                 var menuHandle = msg.LParam;
-                windowBase.OnMenuCommand(ref msg, menuIndex, menuHandle);
+                windowCore.OnMenuCommand(ref msg, menuIndex, menuHandle);
 
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessLostFocus(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessLostFocus(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var oppositeWindowHandle = msg.WParam;
-                windowBase.OnLostFocus(ref msg, oppositeWindowHandle);
+                windowCore.OnLostFocus(ref msg, oppositeWindowHandle);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessGotFocus(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessGotFocus(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var oppositeWindowHandle = msg.WParam;
-                windowBase.OnGotFocus(ref msg, oppositeWindowHandle);
+                windowCore.OnGotFocus(ref msg, oppositeWindowHandle);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessCaptureChanged(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessCaptureChanged(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var windowGettingCaptureHandle = msg.LParam;
-                windowBase.OnInputCaptureChanged(ref msg, windowGettingCaptureHandle);
+                windowCore.OnInputCaptureChanged(ref msg, windowGettingCaptureHandle);
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessHitTest(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessHitTest(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
-                msg.Result = new IntPtr((int) windowBase.OnHitTest(ref msg, ref point));
+                msg.Result = new IntPtr((int) windowCore.OnHitTest(ref msg, ref point));
                 // Return value is the HitTestResult
             }
 
-            public static void ProcessAppCommand(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessAppCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 //GET_APPCOMMAND_LPARAM(lParam) ((short)(HIWORD(lParam) & ~FAPPCOMMAND_MASK))
                 //GET_DEVICE_LPARAM(lParam)     ((WORD)(HIWORD(lParam) & FAPPCOMMAND_MASK))
@@ -571,24 +581,24 @@ namespace WinApi.XWin
                 var device = (AppCommandDevice) (lParam.HighAsInt() & (uint) AppCommandDevice.FAPPCOMMAND_MASK);
                 var keyState = new KeyboardInputState(lParam.LowAsInt());
                 var windowHandle = msg.WParam;
-                var res = windowBase.OnAppCommand(ref msg, cmd, device, keyState, windowHandle);
+                var res = windowCore.OnAppCommand(ref msg, cmd, device, keyState, windowHandle);
                 msg.Result = new IntPtr(res ? 1 : 0);
                 // Return TRUE if handled.
             }
 
-            public static void ProcessHotKey(EventedWindowCore windowBase, ref WindowMessage msg)
+            public static void ProcessHotKey(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var screenshotHotKey = (ScreenshotHotKey) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeInt32();
                 var keyState = (HotKeyInputState) lParam.Low();
                 var key = (VirtualKey) lParam.High();
-                windowBase.OnHotKey(ref msg, key, keyState, screenshotHotKey);
+                windowCore.OnHotKey(ref msg, key, keyState, screenshotHotKey);
                 // Standard return. 0 if already processed
             }
         }
     }
 
-    public sealed class SealedEventedWindowCore : EventedWindowCore { }
+    public sealed class EventedWindow : EventedWindowCore { }
 
     public enum MouseButton
     {
