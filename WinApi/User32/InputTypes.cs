@@ -22,31 +22,31 @@ namespace WinApi.User32
         ///     result of the user holding down the key. If the keystroke is held long enough, multiple messages are sent. However,
         ///     the repeat count is not cumulative.
         /// </summary>
-        public int RepeatCount => unchecked((int)Value & 0x000000ff);
+        public int RepeatCount => unchecked((int) Value & 0x000000ff);
 
-        public int ScanCode => unchecked(((int)Value >> 16) & 0x0000000f);
+        public int ScanCode => unchecked(((int) Value >> 16) & 0x0000000f);
 
         /// <summary>
         ///     Indicates whether the key is an extended key, such as the right-hand ALT and CTRL keys that appear on an enhanced
         ///     101- or 102-key keyboard. The value is 1 if it is an extended key; otherwise, it is 0.
         /// </summary>
-        public bool IsExtendedKey => unchecked(((int)Value >> 24) & 0x1) == 1;
+        public bool IsExtendedKey => unchecked(((int) Value >> 24) & 0x1) == 1;
 
         /// <summary>
         ///     The value is 1 if the ALT key is down while the key is pressed; it is 0 if the WM_SYSKEYDOWN message is posted to
         ///     the active window because no window has the keyboard focus.
         /// </summary>
-        public bool IsContextual => unchecked(((int)Value >> 29) & 0x1) == 1;
+        public bool IsContextual => unchecked(((int) Value >> 29) & 0x1) == 1;
 
         /// <summary>
         ///     The value is 1 if the key is down before the message is sent, or it is 0 if the key is up.
         /// </summary>
-        public bool IsPreviousKeyStatePressed => unchecked(((int)Value >> 30) & 0x1) == 1;
+        public bool IsPreviousKeyStatePressed => unchecked(((int) Value >> 30) & 0x1) == 1;
 
         /// <summary>
         ///     The value is 1 if the key is being released, or it is 0 if the key is being pressed.
         /// </summary>
-        public bool IsKeyUpTransition => unchecked(((int)Value >> 31) & 0x1) == 1;
+        public bool IsKeyUpTransition => unchecked(((int) Value >> 31) & 0x1) == 1;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -89,7 +89,7 @@ namespace WinApi.User32
 
         public VirtualKey VKey
         {
-            get { return (VirtualKey)KeyCode; }
+            get { return (VirtualKey) KeyCode; }
             set { KeyCode = (ushort) value; }
         }
     }
@@ -201,5 +201,41 @@ namespace WinApi.User32
     {
         public uint Size;
         public uint Time;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct KeyState
+    {
+        public short Value;
+
+        public KeyState(short value)
+        {
+            Value = value;
+        }
+
+        public bool IsPressed
+        {
+            // Note: The boolean check is performed on int, not short.
+            get { return (Value & 0x8000) > 0; }
+            set
+            {
+                if (value)
+                    Value = unchecked ((short) (Value | 0x8000));
+                else
+                    Value = unchecked ((short) (Value & 0x7fff));
+            }
+        }
+
+        public bool IsToggled
+        {
+            get { return (Value & 0x1) == 1; }
+            set
+            {
+                if (value)
+                    Value = unchecked ((short) (Value | 0x1));
+                else
+                    Value = unchecked ((short) (Value & 0xfffe));
+            }
+        }
     }
 }

@@ -280,6 +280,30 @@ namespace WinApi.User32
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern uint MapVirtualKeyEx(VirtualKey uCode, VirtualKeyMapType uMapType, IntPtr dwhkl);
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern KeyState GetAsyncKeyState(int vKey);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern KeyState GetAsyncKeyState(VirtualKey vKey);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern KeyState GetKeyState(int vKey);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern KeyState GetKeyState(VirtualKey vKey);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool GetKeyboardState([MarshalAs(UnmanagedType.LPArray, SizeConst = 256)] out byte[] lpKeyState);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool GetKeyboardState(IntPtr lpKeyState);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetKeyboardState([MarshalAs(UnmanagedType.LPArray, SizeConst = 256)] [In] byte[] lpKeyState);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetKeyboardState(IntPtr lpKeyState);
+
         #endregion
 
         #region Window Functions
