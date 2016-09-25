@@ -55,6 +55,7 @@
     <Compile Include="Gdi32\Types.cs" />
     <Compile Include="KernelBase\Methods.cs" />
     <Compile Include="XWin\ConstructionParams.cs" />
+    <Compile Include="XWin\Controls\Button.cs" />
     <Compile Include="XWin\Controls\EditBox.cs" />
     <Compile Include="XWin\Controls\StaticBox.cs" />
     <Compile Include="XWin\Controls\Window.cs" />
