@@ -12,7 +12,7 @@ namespace WinApi.XWin.Controls
         public static Lazy<WindowFactory> ClassFactory = new Lazy<WindowFactory>(() => WindowFactory.CreateForExistingClass("edit"));
         protected EditBox() { }
 
-        IConstructionParams IConstructionParamsProvider.GetConstructionParams() => new ConstructionParams();
+        IConstructionParams IConstructionParamsProvider.GetConstructionParams() => new VisibleChildConstructionParams();
 
         public static EditBox Create(string text = null,
             WindowStyles? styles = null,

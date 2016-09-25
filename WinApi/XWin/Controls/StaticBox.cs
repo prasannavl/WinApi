@@ -12,7 +12,7 @@ namespace WinApi.XWin.Controls
         public static Lazy<WindowFactory> ClassFactory = new Lazy<WindowFactory>(() => WindowFactory.CreateForExistingClass("static"));
         protected StaticBox() { }
 
-        IConstructionParams IConstructionParamsProvider.GetConstructionParams() => new ConstructionParams();
+        IConstructionParams IConstructionParamsProvider.GetConstructionParams() => new VisibleChildConstructionParams();
 
         public static StaticBox Create(string text = null,
             WindowStyles? styles = null,
