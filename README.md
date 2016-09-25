@@ -5,10 +5,11 @@ A direct, highly opinionated CLR library for the native Win32 API.
 ```c#
     static int Main(string[] args)
     {
-        var factory = WindowFactory.Create("MainWindow");
-        var win = factory.CreateFrameWindow<MainWindow>(text: "Hello");
-        win.Show();
-        return new EventLoop(win).Run();
+        using (var win = Window.Create(text: "Hello"))
+        {
+            win.Show();
+            return new EventLoop().Run(win);
+        }
     }
 ```
 
@@ -332,27 +333,26 @@ using WinApi.User32;
 namespace MySuperLowLevelProgram {
     internal class Program
     {
-        // STA not strictly required for simple applications,
+        // STA not strictly required for simple applications
         // that doesn't use COM, but just keeping up with convention here.
         [STAThread]
         static int Main(string[] args)
         {
-            var factory = WindowFactory.Create("MainWindow");
-            using (var win = factory.CreateFrameWindow<AppWindow>(text: "Hello"))
+            using (var win = Window.Create<AppWindow>(text: "Hello"))
             {
                 win.Show();
-                return new EventLoop(win).Run();
+                return new EventLoop().Run(win);
             }
         }
     }
 
-    public class AppWindow : MainWindowBase
+    public class AppWindow : Window
     {
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
             PaintStruct ps;
             hdc = User32Methods.BeginPaint(Handle, out ps);
-            User32Methods.FillRect(hdc, ref ps.PaintRectangle, 
+            User32Methods.FillRect(hdc, ref ps.PaintRectangle,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             User32Methods.EndPaint(Handle, ref ps);
 
