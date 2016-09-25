@@ -53,8 +53,6 @@ namespace Sample.Simple
                 var textBoxRect = GetRectWithPadding(ref containerRect, ref m_textBoxPadding);
 
                 m_textBox = StaticBox.Create(
-                    styles: WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD,
-                    exStyles: WindowExStyles.WS_EX_STATICEDGE,
                     hParent: Handle,
                     width: textBoxRect.Width, height: textBoxRect.Height, x: textBoxRect.Left, y: textBoxRect.Top);
 
