@@ -3,45 +3,56 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using WinApi.Core;
+using WinApi.Desktop;
 using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.XWin;
+using WinApi.XWin.Controls;
 using WinApi.XWin.Helpers;
 
 namespace Sample.Simple
 {
     class Program
     {
+        [HandleProcessCorruptedStateExceptions]
         static int Main(string[] args)
         {
-            var factory = WindowFactory.Create(
-                "MainWindow",
-                // Use window color brush to emulate Win Forms like behaviour. 
-                hBgBrush: new IntPtr((int) SystemColor.COLOR_WINDOW));
-            using (var win = factory.CreateWindow(() => new SampleWindow(), "Hello"))
+            ApplicationHelpers.SetupDefaultExceptionHandlers();
+            try
             {
-                win.Show();
-                return new EventLoop().Run(win);
+                // Use window color brush to emulate Win Forms like behaviour
+                var factory = WindowFactory.Create(hBgBrush: new IntPtr((int) SystemColor.COLOR_WINDOW));
+                using (var win = Window.Create<SampleWindow>(factory: factory, text: "Hello"))
+                {
+                    win.Show();
+                    return new EventLoop().Run(win);
+                }
             }
+            catch (Exception ex)
+            {
+                ApplicationHelpers.ShowCriticalError(ex);
+            }
+            return 0;
         }
 
         public sealed class SampleWindow : Window
         {
             private NativeWindow m_textBox;
-            private Rectangle m_textBoxMargin;
+            private Rectangle m_textBoxPadding;
 
             protected override bool OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
             {
                 var containerRect = GetClientRect();
-                m_textBoxMargin = new Rectangle(10, 10, 10, 10);
-                var textBoxRect = GetRectWithMargin(ref containerRect, ref m_textBoxMargin);
+                m_textBoxPadding = new Rectangle(10, 10, 10, 10);
+                var textBoxRect = GetRectWithPadding(ref containerRect, ref m_textBoxPadding);
 
-                m_textBox = WindowFactory.CreateExternalWindow("static",
+                m_textBox = StaticBox.Create(
                     styles: WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD,
                     exStyles: WindowExStyles.WS_EX_STATICEDGE,
                     hParent: Handle,
@@ -50,7 +61,7 @@ namespace Sample.Simple
                 return base.OnCreate(ref msg, ref createStruct);
             }
 
-            private static Rectangle GetRectWithMargin(ref Rectangle containerRect, ref Rectangle controlRect)
+            private static Rectangle GetRectWithPadding(ref Rectangle containerRect, ref Rectangle controlRect)
             {
                 return RectangleHelpers.CreateFrom(ref containerRect, ref controlRect,
                     (l, r) => l + r,
@@ -66,7 +77,7 @@ namespace Sample.Simple
             protected override void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size)
             {
                 var containerRect = GetClientRect();
-                var textBoxRect = GetRectWithMargin(ref containerRect, ref m_textBoxMargin);
+                var textBoxRect = GetRectWithPadding(ref containerRect, ref m_textBoxPadding);
                 var textBoxSize = textBoxRect.GetSize();
                 m_textBox.SetSize(ref textBoxSize);
                 base.OnSize(ref msg, flag, ref size);
