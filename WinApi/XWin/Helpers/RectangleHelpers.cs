@@ -20,36 +20,34 @@ namespace WinApi.XWin.Helpers
 
         public static void Add(ref Rectangle lvalue, ref Rectangle rvalue)
         {
-            fixed (Rectangle* t = &lvalue)
-            fixed (Rectangle* r = &rvalue)
-            {
-                Add(t, r);
-            }
-        }
-
-        public static void Add(Rectangle* lvalue, Rectangle* rvalue)
-        {
-            lvalue->Left += rvalue->Left;
-            lvalue->Top += rvalue->Top;
-            lvalue->Right += rvalue->Right;
-            lvalue->Bottom += rvalue->Bottom;
+            lvalue.Left += rvalue.Left;
+            lvalue.Top += rvalue.Top;
+            lvalue.Right += rvalue.Right;
+            lvalue.Bottom += rvalue.Bottom;
         }
 
         public static void Subtract(ref Rectangle lvalue, ref Rectangle rvalue)
         {
-            fixed (Rectangle* t = &lvalue)
-            fixed (Rectangle* r = &rvalue)
-            {
-                Subtract(t, r);
-            }
+            lvalue.Left -= rvalue.Left;
+            lvalue.Top -= rvalue.Top;
+            lvalue.Right -= rvalue.Right;
+            lvalue.Bottom -= rvalue.Bottom;
         }
 
-        public static void Subtract(Rectangle* lvalue, Rectangle* rvalue)
+        public static void PadInside(ref Rectangle src, ref Rectangle padding)
         {
-            lvalue->Left -= rvalue->Left;
-            lvalue->Top -= rvalue->Top;
-            lvalue->Right -= rvalue->Right;
-            lvalue->Bottom -= rvalue->Bottom;
+            src.Top += padding.Top;
+            src.Left += padding.Left;
+            src.Bottom -= padding.Bottom;
+            src.Right -= padding.Right;
+        }
+
+        public static void PadOutside(ref Rectangle src, ref Rectangle padding)
+        {
+            src.Top -= padding.Top;
+            src.Left -= padding.Left;
+            src.Bottom += padding.Bottom;
+            src.Right += padding.Right;
         }
     }
 }
