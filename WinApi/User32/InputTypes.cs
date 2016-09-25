@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using WinApi.Core;
 
 namespace WinApi.User32
 {
@@ -237,5 +238,14 @@ namespace WinApi.User32
                     Value = unchecked ((short) (Value & 0xfffe));
             }
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CursorInfo
+    {
+        public uint Size;
+        public CursorInfoFlags Flags;
+        public IntPtr CursorHandle;
+        public Point ScreenPosition;
     }
 }

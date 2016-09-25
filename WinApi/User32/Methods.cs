@@ -299,13 +299,15 @@ namespace WinApi.User32
         public static extern KeyState GetKeyState(VirtualKey vKey);
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool GetKeyboardState([MarshalAs(UnmanagedType.LPArray, SizeConst = 256)] out byte[] lpKeyState);
+        public static extern bool GetKeyboardState(
+            [MarshalAs(UnmanagedType.LPArray, SizeConst = 256)] out byte[] lpKeyState);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetKeyboardState(IntPtr lpKeyState);
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool SetKeyboardState([MarshalAs(UnmanagedType.LPArray, SizeConst = 256)] [In] byte[] lpKeyState);
+        public static extern bool SetKeyboardState(
+            [MarshalAs(UnmanagedType.LPArray, SizeConst = 256)] [In] byte[] lpKeyState);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetKeyboardState(IntPtr lpKeyState);
@@ -334,6 +336,9 @@ namespace WinApi.User32
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr CopyCursor(IntPtr hCursor);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool GetCursorInfo(ref CursorInfo info);
 
         #endregion
 
