@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using WinApi.Gdi32;
 using WinApi.Kernel32;
 using WinApi.User32;
@@ -11,7 +12,7 @@ namespace WinApi.XWin
 {
     public class WindowFactory
     {
-        public delegate void ClassInfoMutator(ref WindowClassEx classInfo);
+        public delegate void ClassInfoMutator(ref WindowClassExBlittable classInfo);
 
         public static WindowProc DefWindowProc = User32Methods.DefWindowProc;
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
@@ -62,21 +63,33 @@ namespace WinApi.XWin
             IntPtr srcInstanceHandle, IntPtr targetInstanceHandle,
             ClassInfoMutator mutator)
         {
-            WindowClassEx classInfo;
+            WindowClassExBlittable classInfo;
             if (!User32Methods.GetClassInfoEx(srcInstanceHandle, existingClassName, out classInfo))
                 throw new Exception("Class is not registered - " + existingClassName);
 
-            classInfo.ClassName = targetClassName ?? Guid.NewGuid().ToString();
+            var className = targetClassName ?? Guid.NewGuid().ToString();
+            var ciClassName = Marshal.SystemDefaultCharSize == 1
+                ? Marshal.StringToHGlobalAnsi(className)
+                : Marshal.StringToHGlobalUni(className);
+
+            classInfo.Size = (uint) Marshal.SizeOf<WindowClassExBlittable>();
+            classInfo.ClassName = ciClassName;
             classInfo.InstanceHandle = targetInstanceHandle;
 
-            mutator?.Invoke(ref classInfo);
+            try
+            {
+                mutator?.Invoke(ref classInfo);
 
-            ClassName = classInfo.ClassName;
-            InstanceHandle = classInfo.InstanceHandle;
-            m_windowProc = classInfo.WindowProc;
-            classInfo.WindowProc = ClassInitializerProc;
-
-            RegisterClass(ref classInfo);
+                ClassName = className;
+                InstanceHandle = classInfo.InstanceHandle;
+                m_windowProc = Marshal.GetDelegateForFunctionPointer<WindowProc>(classInfo.WindowProc);
+                classInfo.WindowProc = Marshal.GetFunctionPointerForDelegate<WindowProc>(ClassInitializerProc);
+                RegisterClass(ref classInfo);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ciClassName);
+            }
         }
 
         public string ClassName { get; }
@@ -86,7 +99,29 @@ namespace WinApi.XWin
         private void RegisterClass(ref WindowClassEx classEx)
         {
             if (User32Methods.RegisterClassEx(ref classEx) == 0)
-                throw new Exception("Failed to register class");
+            {
+                var errString = string.Empty;
+                var err = Kernel32Methods.GetLastError();
+                // It may not always be the correct code. Since we aren't using
+                // Marshal's last error. If the CLR runtime calls into the  
+                // system meanwhile that may be returned instead, at times.
+                if (err != 0) errString = "Possible error code: " + err;
+                throw new Exception("Failed to register class. " + errString);
+            }
+        }
+
+        private void RegisterClass(ref WindowClassExBlittable classEx)
+        {
+            if (User32Methods.RegisterClassEx(ref classEx) == 0)
+            {
+                var errString = string.Empty;
+                var err = Kernel32Methods.GetLastError();
+                // It may not always be the correct code. Since we aren't using
+                // Marshal's last error. If the CLR runtime calls into the  
+                // system meanwhile that may be returned instead, at times.
+                if (err != 0) errString = "Possible error code: " + err;
+                throw new Exception("Failed to register class. " + errString);
+            }
         }
 
         // This is the initializer WindowProc for the class. It is only called until the NCCREATE message
