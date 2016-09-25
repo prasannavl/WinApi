@@ -131,14 +131,14 @@ namespace WinApi.User32
         }
 
         public static void InitializeKeyboardInput(out Input input, ushort scanCode, KeyEvent keyEvent,
-            bool isExtendedKey = false, uint? timestampMillis = null)
+            bool isExtendedKey = false, uint timestampMillis = 0)
         {
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
                 KeyboardInput =
                 {
-                    Time = timestampMillis ?? (uint) DateTime.Now.Millisecond,
+                    Time = timestampMillis,
                     Flags = KeyboardInputFlags.KEYEVENTF_SCANCODE,
                     ScanCode = scanCode
                 }
@@ -149,14 +149,14 @@ namespace WinApi.User32
                 input.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_EXTENDEDKEY;
         }
 
-        public static void InitializeKeyboardInput(out Input input, char charCode, uint? timestampMillis = null)
+        public static void InitializeKeyboardInput(out Input input, char charCode, uint timestampMillis = 0)
         {
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
                 KeyboardInput =
                 {
-                    Time = timestampMillis ?? (uint) DateTime.Now.Millisecond,
+                    Time = timestampMillis,
                     Flags = KeyboardInputFlags.KEYEVENTF_UNICODE | KeyboardInputFlags.KEYEVENTF_KEYUP,
                     ScanCode = charCode
                 }
@@ -164,14 +164,14 @@ namespace WinApi.User32
         }
 
         public static void InitializeKeyboardInput(out Input input, VirtualKey key, KeyEvent keyEvent,
-            uint? timestampMillis = null)
+            uint timestampMillis = 0)
         {
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
                 KeyboardInput =
                 {
-                    Time = timestampMillis ?? (uint) DateTime.Now.Millisecond,
+                    Time = timestampMillis,
                     VKey = key
                 }
             };
@@ -180,14 +180,14 @@ namespace WinApi.User32
         }
 
         public static void InitializeMouseInput(out Input input, int x, int y, MouseInputFlags flags, uint data = 0,
-            uint? timestampMillis = null)
+            uint timestampMillis = 0)
         {
             input = new Input
             {
-                Type = InputType.INPUT_KEYBOARD,
+                Type = InputType.INPUT_MOUSE,
                 MouseInput =
                 {
-                    Time = timestampMillis ?? (uint) DateTime.Now.Millisecond,
+                    Time = timestampMillis,
                     X = x,
                     Y = y,
                     Data = data,
