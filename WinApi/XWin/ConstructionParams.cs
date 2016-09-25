@@ -40,4 +40,13 @@ namespace WinApi.XWin
         public override WindowExStyles ExStyles
             => WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE;
     }
+
+    public class VisibleChildConstructionParams : ConstructionParams
+    {
+        public override WindowStyles Styles
+            => WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD;
+
+        public override WindowExStyles ExStyles
+            => WindowExStyles.WS_EX_STATICEDGE;
+    }
 }
