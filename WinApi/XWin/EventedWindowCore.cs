@@ -610,7 +610,6 @@ namespace WinApi.XWin
         void ProcessMessage(ref WindowMessage message);
     }
 
-
     public enum MouseButton
     {
         Left = 0x1,
@@ -619,5 +618,18 @@ namespace WinApi.XWin
         Other = 0x8,
         XButton1 = 0x10 | Other,
         XButton2 = 0x20 | Other
+    }
+
+    public enum MouseButtonEvent
+    {
+        Up,
+        Down,
+        DoubleClick
+    }
+
+    public enum ScrollDirection
+    {
+        Horizontal,
+        Vertical
     }
 }

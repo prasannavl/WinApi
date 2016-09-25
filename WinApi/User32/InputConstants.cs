@@ -221,23 +221,10 @@ namespace WinApi.User32
         KEYEVENTF_UNICODE = 0x0004
     }
 
-    public enum MouseButtonEvent
-    {
-        Up,
-        Down,
-        DoubleClick
-    }
-
     public enum KeyEvent
     {
         Up,
         Down
-    }
-
-    public enum ScrollDirection
-    {
-        Horizontal,
-        Vertical
     }
 
     public enum InputType
@@ -294,7 +281,6 @@ namespace WinApi.User32
         /// </summary>
         MAPVK_VSC_TO_VK_EX = 3
     }
-
 
     public enum VirtualKey
     {
