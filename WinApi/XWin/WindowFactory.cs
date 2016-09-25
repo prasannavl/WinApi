@@ -244,10 +244,10 @@ namespace WinApi.XWin
 
         public static NativeWindow CreateExternalWindow(WindowExStyles exStyles, string className, string text,
             WindowStyles styles, int x, int y, int width, int height, IntPtr hParent, IntPtr hMenu, IntPtr hInstance,
-            IntPtr extraParams)
+            IntPtr extraParams, uint controlStyles)
         {
             var hwnd = User32Methods.CreateWindowEx(exStyles, className, text,
-                styles, x, y, width, height, hParent, hMenu, hInstance, extraParams);
+                styles | (WindowStyles) controlStyles, x, y, width, height, hParent, hMenu, hInstance, extraParams);
             if (hwnd == IntPtr.Zero)
                 ThrowWindowCreationFailed();
             return CreateWindowFromHandle(hwnd);
@@ -257,7 +257,7 @@ namespace WinApi.XWin
             string text = null, WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
-            IntPtr? hInstance = null, IntPtr? extraParams = null)
+            IntPtr? hInstance = null, IntPtr? extraParams = null, uint? controlStyles = null)
         {
             if (string.IsNullOrWhiteSpace(className)) throw new ArgumentException("className is not valid");
             if (constructionParams == null) constructionParams = new ConstructionParams();
@@ -273,18 +273,19 @@ namespace WinApi.XWin
                 hParent ?? constructionParams.ParentHandle,
                 hMenu ?? constructionParams.MenuHandle,
                 hInstance ?? Cache.Instance.ProcessHandle,
-                extraParams ?? IntPtr.Zero);
+                extraParams ?? IntPtr.Zero,
+                controlStyles ?? constructionParams.ControlStyles);
         }
 
         public static TWindow CreateExternalWindow<TWindow>(Func<TWindow> instanceCreator, bool takeOwnership,
             WindowExStyles exStyles,
             string className, string text,
             WindowStyles styles, int x, int y, int width, int height, IntPtr hParent, IntPtr hMenu, IntPtr hInstance,
-            IntPtr extraParams)
+            IntPtr extraParams, uint controlStyles)
             where TWindow : WindowCore
         {
             var hwnd = User32Methods.CreateWindowEx(exStyles, className, text,
-                styles, x, y, width, height, hParent, hMenu, hInstance, extraParams);
+                styles | (WindowStyles) controlStyles, x, y, width, height, hParent, hMenu, hInstance, extraParams);
             if (hwnd == IntPtr.Zero)
                 ThrowWindowCreationFailed();
             return CreateWindowFromHandle(instanceCreator, hwnd, takeOwnership);
@@ -296,7 +297,7 @@ namespace WinApi.XWin
             string text = null, WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
-            IntPtr? hInstance = null, IntPtr? extraParams = null)
+            IntPtr? hInstance = null, IntPtr? extraParams = null, uint? controlStyles = null)
             where TWindow : WindowCore
         {
             if (string.IsNullOrWhiteSpace(className)) throw new ArgumentException("className is not valid");
@@ -315,12 +316,13 @@ namespace WinApi.XWin
                 hParent ?? constructionParams.ParentHandle,
                 hMenu ?? constructionParams.MenuHandle,
                 hInstance ?? Cache.Instance.ProcessHandle,
-                extraParams ?? IntPtr.Zero);
+                extraParams ?? IntPtr.Zero,
+                controlStyles ?? constructionParams.ControlStyles);
         }
 
         private TWindow CreateWindow<TWindow>(TWindow win, string text, WindowStyles styles,
             WindowExStyles exStyles, int x, int y,
-            int width, int height, IntPtr hParent, IntPtr hMenu)
+            int width, int height, IntPtr hParent, IntPtr hMenu, uint controlStyles)
             where TWindow : WindowCore
         {
             VerifyWindowInstanceNotInitialized(win);
@@ -333,7 +335,8 @@ namespace WinApi.XWin
             try
             {
                 hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
-                    styles, x, y, width, height, hParent, hMenu, InstanceHandle, extraParam);
+                    styles | (WindowStyles) controlStyles, x, y, width, height, hParent, hMenu, InstanceHandle,
+                    extraParam);
             }
             finally
             {
@@ -349,39 +352,43 @@ namespace WinApi.XWin
 
         public TWindow CreateWindow<TWindow>(Func<TWindow> instanceCreator, string text, WindowStyles styles,
             WindowExStyles exStyles, int x, int y,
-            int width, int height, IntPtr hParent, IntPtr hMenu)
+            int width, int height, IntPtr hParent, IntPtr hMenu, uint controlStyles)
             where TWindow : WindowCore
         {
             return CreateWindow(instanceCreator(), text, styles, exStyles, x, y, width, height, hParent,
-                hMenu);
+                hMenu, controlStyles);
         }
 
         public TWindow CreateWindow<TWindow>(Func<TWindow> instanceCreator, IConstructionParams constructionParams,
             string text = null, WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
-            int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null)
+            int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
+            uint? controlStyles = null)
             where TWindow : WindowCore
         {
             var win = instanceCreator();
-            return CreateWindow(win, constructionParams, text, styles, exStyles, x, y, width, height, hParent, hMenu);
+            return CreateWindow(win, constructionParams, text, styles, exStyles, x, y, width, height, hParent, hMenu,
+                controlStyles);
         }
 
         public TWindow CreateWindow<TWindow>(Func<TWindow> instanceCreator, string text = null,
             WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
-            int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null)
+            int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
+            uint? controlStyles = null)
             where TWindow : WindowCore, IConstructionParamsProvider
         {
             var win = instanceCreator();
             var constructionParams = win.GetConstructionParams();
-            return CreateWindow(win, constructionParams, text, styles, exStyles, x, y, width, height, hParent, hMenu);
+            return CreateWindow(win, constructionParams, text, styles, exStyles, x, y, width, height, hParent, hMenu,
+                controlStyles);
         }
 
 
         private TWindow CreateWindow<TWindow>(TWindow instance, IConstructionParams constructionParams,
             string text, WindowStyles? styles,
             WindowExStyles? exStyles, int? x, int? y,
-            int? width, int? height, IntPtr? hParent, IntPtr? hMenu)
+            int? width, int? height, IntPtr? hParent, IntPtr? hMenu, uint? controlStyles)
             where TWindow : WindowCore
         {
             if (constructionParams == null) constructionParams = new ConstructionParams();
@@ -394,7 +401,8 @@ namespace WinApi.XWin
                 width ?? constructionParams.Width,
                 height ?? constructionParams.Height,
                 hParent ?? constructionParams.ParentHandle,
-                hMenu ?? constructionParams.MenuHandle);
+                hMenu ?? constructionParams.MenuHandle,
+                controlStyles ?? constructionParams.ControlStyles);
         }
 
         public class Cache

@@ -40,12 +40,12 @@ namespace WinApi.XWin.Controls
             WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
-            WindowFactory factory = null)
+            WindowFactory factory = null, uint? controlStyles = null)
             where TWindow : WindowCore, IConstructionParamsProvider, new()
         {
             return (factory ?? ClassFactory.Value).CreateWindow(() => new TWindow(), text, styles, exStyles, x, y,
                 width, height, hParent,
-                hMenu);
+                hMenu, controlStyles);
         }
 
         /// <summary>
@@ -58,13 +58,13 @@ namespace WinApi.XWin.Controls
             WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
-            WindowFactory factory = null)
+            WindowFactory factory = null, uint? controlStyles = null)
             where TWindow : WindowCore, new()
         {
             return (factory ?? ClassFactory.Value).CreateWindow(() => new TWindow(),
                 constructionParams, text, styles, exStyles, x, y,
                 width, height, hParent,
-                hMenu);
+                hMenu, controlStyles);
         }
     }
 }
