@@ -8,7 +8,7 @@ using WinApi.XWin;
 
 namespace Sample.Skia
 {
-    public class SkiaWindowBase : WindowBase
+    public class SkiaWindowBase : EventedWindowCore
     {
         private Size m_currentClientSize;
         private IntPtr m_pixelBufferPtr;

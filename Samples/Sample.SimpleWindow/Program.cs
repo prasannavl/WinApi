@@ -6,22 +6,21 @@ using System.Threading.Tasks;
 using WinApi.Gdi32;
 using WinApi.User32;
 using WinApi.XWin;
+using WinApi.XWin.Controls;
 
 namespace Sample.SimpleWindow
 {
     internal class Program
     {
-        // STA not strictly required for simple applications,
+        // STA not strictly required for simple applications
         // that doesn't use COM, but just keeping up with convention here.
         [STAThread]
         static int Main(string[] args)
         {
-            var w = Window.Create();
-            var factory = WindowFactory.Create("MainWindow");
-            using (var win = factory.CreateFrameWindow<AppWindow>(text: "Hello"))
+            using (var win = Window.Create<AppWindow>(text: "Hello"))
             {
                 win.Show();
-                return new EventLoop(win).Run();
+                return new EventLoop().Run(win);
             }
         }
     }

@@ -4,10 +4,11 @@ using System.Diagnostics;
 using OpenGL;
 using WinApi.User32;
 using WinApi.XWin;
+using WinApi.XWin.Controls;
 
 namespace Sample.OpenGL
 {
-    public class OpenGlWindowBase : WindowBase
+    public class OpenGlWindow : Window
     {
         protected IDeviceContext DeviceContext;
         private bool m_isInit;
@@ -320,17 +321,4 @@ namespace Sample.OpenGL
 
         #endregion
     }
-
-    public sealed class OpenGlMainWindow : OpenGlWindowBase { }
-
-    public class OpenGlMainWindowBase : OpenGlWindowBase
-    {
-        protected override void OnDestroy(ref WindowMessage msg)
-        {
-            base.OnDestroy(ref msg);
-            MessageHelpers.PostQuitMessage();
-        }
-    }
-
-    public sealed class OpenGlWindow : OpenGlWindowBase { }
 }

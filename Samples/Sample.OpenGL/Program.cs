@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using OpenGL;
 using WinApi.Desktop;
 using WinApi.XWin;
+using WinApi.XWin.Controls;
 using WinApi.XWin.Helpers;
 
 namespace Sample.OpenGL
@@ -25,11 +26,10 @@ namespace Sample.OpenGL
             {
                 ApplicationHelpers.SetupDefaultExceptionHandlers();
                 Gl.Initialize();
-                var factory = WindowFactory.Create("MainWindow");
-                using (var win = factory.CreateFrameWindow<OpenGlAppWindow>(text: "Hello"))
+                using (var win = Window.Create<AppWindow>(text: "Hello"))
                 {
                     win.Show();
-                    return new EventLoop(win).Run();
+                    return new EventLoop().Run(win);
                 }
             }
             catch (Exception ex)
@@ -40,7 +40,7 @@ namespace Sample.OpenGL
         }
     }
 
-    public class OpenGlAppWindow : OpenGlMainWindowBase
+    public sealed class AppWindow : OpenGlWindow
     {
         protected override void OnGlContextCreated()
         {

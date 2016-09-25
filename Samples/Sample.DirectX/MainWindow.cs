@@ -5,10 +5,11 @@ using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
+using WinApi.XWin.Controls;
 
 namespace Sample.DirectX
 {
-    public class MainWindow : MainWindowBase
+    public sealed class MainWindow : Window
     {
         private readonly IGraphicsContext m_graphicsContext = Kernel32Helpers.IsWin8OrGreater()
             ? (IGraphicsContext)new D2DGraphicsContext()
@@ -18,8 +19,8 @@ namespace Sample.DirectX
         {
             var size = GetClientSize();
 
-            if (Environment.OSVersion.Version.Major > 6)
-                User32ExperimentalHelpers.EnableBlurBehind(Handle);
+//            if (Environment.OSVersion.Version.Major > 6)
+//                User32ExperimentalHelpers.EnableBlurBehind(Handle);
 
             m_graphicsContext.Init(Handle, ref size);
             return base.OnCreate(ref msg, ref createStruct);
