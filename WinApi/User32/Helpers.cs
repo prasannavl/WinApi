@@ -154,13 +154,28 @@ namespace WinApi.User32
 
         public static MessageBoxResult MessageBox(IntPtr hWnd, string lpText, string lpCaption, MessageBoxFlags type)
         {
-            return (MessageBoxResult) User32Methods.MessageBox(hWnd, lpText, lpCaption, (uint) type);
+            return User32Methods.MessageBox(hWnd, lpText, lpCaption, (uint) type);
         }
 
         public static MessageBoxResult MessageBox(string message, string title = "Info",
             MessageBoxFlags flags = MessageBoxFlags.MB_OK, IntPtr parent = default(IntPtr))
         {
             return MessageBox(parent, message, title, flags);
+        }
+
+        public static uint SendInput(ref Input[] inputs)
+        {
+            var len = (uint) inputs.Length;
+            var size = Marshal.SizeOf<Input>();
+            var gcHandle = GCHandle.Alloc(inputs, GCHandleType.Pinned);
+            try
+            {
+                return User32Methods.SendInput(len, gcHandle.AddrOfPinnedObject(), size);
+            }
+            finally
+            {
+                gcHandle.Free();
+            }
         }
     }
 }
