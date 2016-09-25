@@ -14,6 +14,7 @@ using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
+using WinApi.XWin.Controls;
 using WinApi.XWin.Helpers;
 
 namespace Sample.Skia
@@ -25,12 +26,10 @@ namespace Sample.Skia
             try
             {
                 ApplicationHelpers.SetupDefaultExceptionHandlers();
-
-                var factory = WindowFactory.Create("MainWindow");
-                using (var win = factory.CreateFrameWindow<SkiaAppWindow>(text: "Hello"))
+                using (var win = Window.Create<SkiaWindow>(text: "Hello"))
                 {
                     win.Show();
-                    return new EventLoop(win).Run();
+                    return new EventLoop().Run(win);
                 }
             }
             catch (Exception ex)
@@ -41,7 +40,7 @@ namespace Sample.Skia
         }
     }
 
-    public class SkiaAppWindow : SkiaMainWindowBase
+    public sealed class SkiaWindow : SkiaWindowBase
     {
         protected override void OnSkiaPaint(SKSurface surface)
         {

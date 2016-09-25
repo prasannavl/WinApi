@@ -5,10 +5,11 @@ using WinApi.Core;
 using WinApi.Gdi32;
 using WinApi.User32;
 using WinApi.XWin;
+using WinApi.XWin.Controls;
 
 namespace Sample.Skia
 {
-    public class SkiaWindowBase : EventedWindowCore
+    public class SkiaWindowBase : Window
     {
         private Size m_currentClientSize;
         private IntPtr m_pixelBufferPtr;
@@ -76,17 +77,4 @@ namespace Sample.Skia
             }
         }
     }
-
-    public sealed class SkiaWindow : SkiaWindowBase {}
-
-    public class SkiaMainWindowBase : SkiaWindowBase
-    {
-        protected override void OnDestroy(ref WindowMessage msg)
-        {
-            base.OnDestroy(ref msg);
-            MessageHelpers.PostQuitMessage();
-        }
-    }
-
-    public sealed class SkiaMainWindow : SkiaMainWindowBase {}
 }
