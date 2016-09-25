@@ -10,18 +10,18 @@ namespace WinApi.DwmApi
     {
         public const string LibraryName = "dwmapi";
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern HResult DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttributeType attr,
             [In] ref int attrValue,
             int attrSize);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern HResult DwmIsCompositionEnabled(out bool pfEnabled);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern HResult DwmExtendFrameIntoClientArea(IntPtr hwnd, [In] ref Margin margin);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool DwmDefWindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam,
             out IntPtr lResult);
     }

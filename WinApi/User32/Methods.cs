@@ -13,198 +13,198 @@ namespace WinApi.User32
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadIcon(IntPtr hInstance, string lpIconName);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconResource);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadCursor(IntPtr hInstance, string lpCursorName);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadCursor(IntPtr hInstance, IntPtr lpCursorResource);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadImage(IntPtr hInstance, string lpszName, ResourceImageType uType,
             int cxDesired, int cyDesired, LoadResourceFlags fuLoad);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadImage(IntPtr hInstance, IntPtr resourceId, ResourceImageType uType,
             int cxDesired, int cyDesired, LoadResourceFlags fuLoad);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadBitmap(IntPtr hInstance, string lpBitmapName);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr LoadBitmap(IntPtr hInstance, IntPtr resourceId);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr BeginPaint(IntPtr hwnd, out PaintStruct lpPaint);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern void EndPaint(IntPtr hwnd, [In] ref PaintStruct lpPaint);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr MonitorFromWindow(IntPtr hwnd, WindowMonitorFlag dwFlags);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int DrawText(IntPtr hdc, string lpString, int nCount, [In] ref Rectangle lpRect,
             uint uFormat);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool RegisterHotKey(IntPtr hWnd, int id, KeyModifierFlags fsModifiers, VirtualKey vk);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint SendInput(uint nInputs, IntPtr pInputs, int cbSize);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ValidateRect(IntPtr hWnd, [In] ref Rectangle lpRect);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ValidateRect(IntPtr hWnd, IntPtr lpRect);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool InvalidateRect(IntPtr hWnd, [In] ref Rectangle lpRect, bool bErase);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetDC(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern int GetSystemMetrics(SystemMetrics nIndex);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam,
             SystemParamtersInfoFlags fWinIni);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetWindowDC(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr WindowFromDC(IntPtr hdc);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ReleaseDC(IntPtr hwnd, IntPtr hdc);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool InvertRect(IntPtr hdc, [In] ref Rectangle lprc);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetRectEmpty(out Rectangle lprc);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool AdjustWindowRect([In] [Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool AdjustWindowRectEx([In] [Out] ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
             WindowExStyles dwExStyle);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool CopyRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IntersectRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc1,
             [In] ref Rectangle lprcSrc2);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool UnionRect(out Rectangle lprcDst, [In] ref Rectangle lprcSrc1,
             [In] ref Rectangle lprcSrc2);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IsRectEmpty([In] ref Rectangle lprc);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool PtInRect([In] ref Rectangle lprc, Point pt);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool OffsetRect([In] [Out] ref Rectangle lprc, int dx, int dy);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool InflateRect([In] [Out] ref Rectangle lprc, int dx, int dy);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool FrameRect(IntPtr hdc, [In] ref Rectangle lprc, IntPtr hbr);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool FillRect(IntPtr hdc, [In] ref Rectangle lprc, IntPtr hbr);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern RegionType GetWindowRgn(IntPtr hWnd, IntPtr hRgn);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
-        [DllImport(LibraryName)]
-        internal static extern bool WinHelp(IntPtr hWndMain, string lpszHelp, uint uCommand, uint dwData);
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern bool WinHelp(IntPtr hWndMain, string lpszHelp, uint uCommand, uint dwData);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool InvalidateRgn(IntPtr hWnd, IntPtr hRgn, bool bErase);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetUpdateRect(IntPtr hwnd, out Rectangle rect, bool bErase);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ValidateRgn(IntPtr hWnd, IntPtr hRgn);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetDCEx(IntPtr hWnd, IntPtr hrgnClip, DeviceContextFlags flags);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern void DisableProcessWindowsGhosting();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool UpdateLayeredWindow(IntPtr hwnd, IntPtr hdcDst,
             [In] ref Point pptDst, [In] ref Size psize, IntPtr hdcSrc, [In] ref Point pptSrc, uint crKey,
             [In] ref BlendFunction pblend, uint dwFlags);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In] [Out] ref Rectangle rect,
             int cPoints = 2);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In] [Out] ref Point rect,
             int cPoints = 1);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ScreenToClient(IntPtr hWnd, [In] [Out] ref Point lpPoint);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr WindowFromPhysicalPoint(Point point);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr WindowFromPoint(Point point);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IsWindowVisible(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool OpenIcon(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IsWindow(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IsHungAppWindow(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IsZoomed(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IsIconic(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool LogicalToPhysicalPoint(IntPtr hwnd, [In] [Out] ref Point point);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr ChildWindowFromPoint(IntPtr hwndParent, Point point);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr ChildWindowFromPointEx(IntPtr hwndParent, Point point,
             ChildWindowFromPointFlags flags);
 
@@ -215,54 +215,54 @@ namespace WinApi.User32
         public static extern MessageBoxResult MessageBoxEx(IntPtr hWnd, string lpText, string lpCaption, uint type,
             ushort wLanguageId);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
         #region Keyboard, Mouse & Input Method Functions
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool IsWindowEnabled(IntPtr hWnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ReleaseCapture();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr SetCapture(IntPtr hWnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetFocus();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr SetFocus(IntPtr hWnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr SetActiveWindow(IntPtr hWnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetActiveWindow();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool BlockInput(bool fBlockIt);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint WaitForInputIdle(IntPtr hProcess, uint dwMilliseconds);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool DragDetect(IntPtr hwnd, Point point);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ClientToScreen(IntPtr hwnd, [In] [Out] ref Point point);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ClipCursor([In] ref Rectangle rect);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ClipCursor(IntPtr ptr);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool TrackMouseEvent([In] [Out] ref TrackMouseEventOptions lpEventTrack);
 
         #endregion
@@ -312,7 +312,7 @@ namespace WinApi.User32
         ///     AnimateWindow supports RTL windows.
         ///     Avoid animating a window that has a drop shadow because it produces visually distracting, jerky animations.
         /// </remarks>
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool AnimateWindow(IntPtr hwnd, int dwTime, AnimateWindowFlags dwFlags);
 
         /// <summary>
@@ -345,10 +345,10 @@ namespace WinApi.User32
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ShowWindow(IntPtr hwnd, ShowWindowCommands nCmdShow);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool UpdateWindow(IntPtr hwnd);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
@@ -367,88 +367,92 @@ namespace WinApi.User32
             IntPtr lpParam);
 
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetWindowRect(IntPtr hwnd, out Rectangle lpRect);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetClientRect(IntPtr hwnd, out Rectangle lpRect);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass,
             string lpszWindow);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetForegroundWindow();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetTopWindow();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetNextWindow(IntPtr hwnd, uint wCmd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetWindow(IntPtr hwnd, uint wCmd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool AllowSetForegroundWindow(uint dwProcessId);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetForegroundWindow(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool BringWindowToTop(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetWindowPos(IntPtr hwnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
             SetWindowPosFlags flags);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int GetWindowTextLength(IntPtr hWnd);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool SetWindowText(IntPtr hwnd, string lpString);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetWindowInfo(IntPtr hwnd, [In] [Out] ref WindowInfo pwi);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetWindowPlacement(IntPtr hWnd,
             [In] ref WindowPlacement lpwndpl);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetWindowPlacement(IntPtr hWnd, out WindowPlacement lpwndpl);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool RedrawWindow(IntPtr hWnd, [In] ref Rectangle lprcUpdate, IntPtr hrgnUpdate,
             RedrawWindowFlags flags);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool DestroyWindow(IntPtr hwnd);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool CloseWindow(IntPtr hwnd);
 
         #endregion
 
         #region Window Class Functions
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern ushort RegisterClassEx([In] ref WindowClassEx lpwcx);
+
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern ushort RegisterClassEx(ref WindowClassExBlittable lpwcx);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
@@ -460,10 +464,10 @@ namespace WinApi.User32
             return IntPtr.Size > 4 ? GetWindowLongPtr_x64(hwnd, nIndex) : new IntPtr(GetWindowLong(hwnd, nIndex));
         }
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         private static extern int GetWindowLong(IntPtr hwnd, int nIndex);
 
-        [DllImport(LibraryName, EntryPoint = "GetWindowLongPtr")]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet, EntryPoint = "GetWindowLongPtr")]
         private static extern IntPtr GetWindowLongPtr_x64(IntPtr hwnd, int nIndex);
 
         // This static method is required because Win32 does not support
@@ -475,14 +479,18 @@ namespace WinApi.User32
                 : new IntPtr(SetWindowLong(hwnd, nIndex, dwNewLong.ToInt32()));
         }
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         private static extern int SetWindowLong(IntPtr hwnd, int nIndex, int dwNewLong);
 
-        [DllImport(LibraryName, EntryPoint = "SetWindowLongPtr")]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet, EntryPoint = "SetWindowLongPtr")]
         private static extern IntPtr SetWindowLongPtr_x64(IntPtr hwnd, int nIndex, IntPtr dwNewLong);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool GetClassInfoEx(IntPtr hInstance, string lpClassName, out WindowClassEx lpWndClass);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern bool GetClassInfoEx(IntPtr hInstance, string lpClassName,
+            out WindowClassExBlittable lpWndClass);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
@@ -492,10 +500,10 @@ namespace WinApi.User32
             return IntPtr.Size > 4 ? GetClassLongPtr_x64(hwnd, nIndex) : new IntPtr(GetClassLong(hwnd, nIndex));
         }
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         private static extern uint GetClassLong(IntPtr hWnd, int nIndex);
 
-        [DllImport(LibraryName, EntryPoint = "GetClassLongPtr")]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet, EntryPoint = "GetClassLongPtr")]
         private static extern IntPtr GetClassLongPtr_x64(IntPtr hWnd, int nIndex);
 
 
@@ -506,24 +514,24 @@ namespace WinApi.User32
                 : new IntPtr(SetClassLong(hWnd, nIndex, dwNewLong.ToInt32()));
         }
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         private static extern uint SetClassLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        [DllImport(LibraryName, EntryPoint = "SetClassLongPtr")]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet, EntryPoint = "SetClassLongPtr")]
         private static extern IntPtr SetClassLongPtr_x64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
         #endregion
 
         #region Window Procedure Functions
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr DefWindowProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr CallWindowProc(WindowProc lpPrevWndFunc, IntPtr hWnd, uint uMsg, IntPtr wParam,
             IntPtr lParam);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint uMsg, IntPtr wParam,
             IntPtr lParam);
 
@@ -531,7 +539,7 @@ namespace WinApi.User32
 
         #region Message Functions
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool PeekMessage(out Message lpMsg, IntPtr hWnd, uint wMsgFilterMin,
             uint wMsgFilterMax, uint wRemoveMsg);
 
@@ -557,7 +565,7 @@ namespace WinApi.User32
         ///     using the keyboard, the application must call IsDialogMessage.For more information, see Dialog Box Keyboard
         ///     Interface.
         /// </remarks>
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr DispatchMessage([In] ref Message lpMsg);
 
         /// <summary>
@@ -589,7 +597,7 @@ namespace WinApi.User32
         ///     using the keyboard, the application must call IsDialogMessage.For more information, see Dialog Box Keyboard
         ///     Interface.
         /// </remarks>
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool TranslateMessage([In] ref Message lpMsg);
 
         /// <summary>
@@ -659,50 +667,50 @@ namespace WinApi.User32
         ///     actions available because the application is actually not responding. When in the debugger mode, the system does
         ///     not generate a ghost window.
         /// </returns>
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int GetMessage(out Message lpMsg, IntPtr hwnd, uint wMsgFilterMin,
             uint wMsgFilterMax);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern void PostQuitMessage(int nExitCode);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetMessageExtraInfo();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr SetMessageExtraInfo(IntPtr lParam);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool WaitMessage();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr SendMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool SendNotifyMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ReplyMessage(IntPtr lResult);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetInputState();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint GetMessagePos();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint GetMessageTime();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool InSendMessage();
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint GetQueueStatus(QueueStatusFlags flags);
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool PostThreadMessage(uint threadId, uint msg, IntPtr wParam, IntPtr lParam);
 
         #endregion

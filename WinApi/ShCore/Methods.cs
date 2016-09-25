@@ -9,7 +9,8 @@ namespace WinApi.ShCore
     {
         public const string LibraryName = "shcore";
 
-        [DllImport(LibraryName)]
-        public static extern HResult GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, out uint dpiX, out uint dpiY);
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern HResult GetDpiForMonitor(IntPtr hmonitor, MonitorDpiType dpiType, out uint dpiX,
+            out uint dpiY);
     }
 }

@@ -9,7 +9,7 @@ namespace WinApi.UxTheme
     {
         public const string LibraryName = "uxtheme";
 
-        [DllImport(LibraryName)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern HResult SetWindowThemeAttribute(
             IntPtr hwnd,
             WindowThemeAttributeType eAttributeType,

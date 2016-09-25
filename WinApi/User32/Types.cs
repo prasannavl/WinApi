@@ -72,7 +72,7 @@ namespace WinApi.User32
     /// <summary>
     ///     Note: Marshalled
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = Properties.BuildCharSet)]
     public struct WindowClass
     {
         public WindowClassStyles Styles;
@@ -90,7 +90,7 @@ namespace WinApi.User32
     /// <summary>
     ///     Note: Marshalled
     /// </summary>
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, CharSet = Properties.BuildCharSet)]
     public struct WindowClassEx
     {
         public uint Size;
@@ -107,6 +107,24 @@ namespace WinApi.User32
         public IntPtr SmallIconHandle;
     }
 
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct WindowClassExBlittable
+    {
+        public uint Size;
+        public WindowClassStyles Styles;
+        public IntPtr WindowProc;
+        public int ClassExtraBytes;
+        public int WindowExtraBytes;
+        public IntPtr InstanceHandle;
+        public IntPtr IconHandle;
+        public IntPtr CursorHandle;
+        public IntPtr BackgroundBrushHandle;
+        public IntPtr MenuName;
+        public IntPtr ClassName;
+        public IntPtr SmallIconHandle;
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowInfo
     {
@@ -120,11 +138,6 @@ namespace WinApi.User32
         public uint BorderY;
         public ushort WindowType;
         public ushort CreatorVersion;
-
-        public static void Initialize(ref WindowInfo obj)
-        {
-            obj.Size = (uint) Marshal.SizeOf<WindowInfo>();
-        }
     }
 
     [StructLayout(LayoutKind.Sequential)]

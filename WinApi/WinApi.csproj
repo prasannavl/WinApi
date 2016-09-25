@@ -53,8 +53,11 @@
     <Compile Include="Gdi32\Helpers.cs" />
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Types.cs" />
+    <Compile Include="KernelBase\Methods.cs" />
     <Compile Include="XWin\ConstructionParams.cs" />
-    <Compile Include="XWin\Window.cs" />
+    <Compile Include="XWin\Controls\EditBox.cs" />
+    <Compile Include="XWin\Controls\StaticBox.cs" />
+    <Compile Include="XWin\Controls\Window.cs" />
     <Compile Include="XWin\Helpers\MessageBoxHelpers.cs" />
     <Compile Include="Kernel32\Helpers.cs" />
     <Compile Include="Kernel32\Methods.cs" />
