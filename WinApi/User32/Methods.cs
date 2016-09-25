@@ -218,6 +218,12 @@ namespace WinApi.User32
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetThreadDesktop(IntPtr hDesk);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr GetThreadDesktop(uint threadId);
+
         #region Keyboard, Mouse & Input Method Functions
 
         [DllImport(LibraryName, ExactSpelling = true)]
@@ -303,6 +309,31 @@ namespace WinApi.User32
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetKeyboardState(IntPtr lpKeyState);
+
+        #endregion
+
+        #region Cursor Functions
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool GetCursorPos(out Point point);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetCursorPos(int x, int y);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetPhysicalCursorPos(int x, int y);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SetSystemCursor(IntPtr cursor, SystemCursor id);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern int ShowCursor(bool bShow);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr SetCursor(IntPtr hCursor);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr CopyCursor(IntPtr hCursor);
 
         #endregion
 

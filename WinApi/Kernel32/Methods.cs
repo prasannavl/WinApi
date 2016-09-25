@@ -165,6 +165,15 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetCurrentProcess();
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern uint GetCurrentThreadId();
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr GetCurrentThread();
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern uint GetCurrentProcessorNumber();
+
         #endregion
     }
 }
