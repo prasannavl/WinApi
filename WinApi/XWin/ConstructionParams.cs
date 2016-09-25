@@ -12,6 +12,7 @@ namespace WinApi.XWin
     {
         WindowStyles Styles { get; }
         WindowExStyles ExStyles { get; }
+        uint ControlStyles { get; }
         int Width { get; }
         int Height { get; }
         int X { get; }
@@ -29,6 +30,7 @@ namespace WinApi.XWin
         public virtual IntPtr ParentHandle => IntPtr.Zero;
         public virtual IntPtr MenuHandle => IntPtr.Zero;
         public virtual WindowStyles Styles => 0;
+        public virtual uint ControlStyles => 0;
         public virtual WindowExStyles ExStyles => 0;
     }
 
