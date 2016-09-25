@@ -43,7 +43,7 @@ namespace Sample.Simple
 
         public sealed class SampleWindow : Window
         {
-            private NativeWindow m_textBox;
+            private StaticBox m_textBox;
             private Rectangle m_textBoxPadding;
 
             protected override bool OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)

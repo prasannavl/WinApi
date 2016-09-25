@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace WinApi.User32
 {
@@ -22,6 +23,35 @@ namespace WinApi.User32
         public static IntPtr SetClassLongPtr(IntPtr hwnd, ClassLongFlags nIndex, IntPtr dwNewLong)
         {
             return User32Methods.SetClassLongPtr(hwnd, (int) nIndex, dwNewLong);
+        }
+
+        public static bool GetClassInfoEx(IntPtr hInstance, string lpClassName,
+            out WindowClassEx classInfo)
+        {
+            WindowClassExBlittable classExBlittable;
+            if (User32Methods.GetClassInfoEx(hInstance, lpClassName, out classExBlittable))
+            {
+                classInfo = new WindowClassEx
+                {
+                    Size = classExBlittable.Size,
+                    BackgroundBrushHandle = classExBlittable.BackgroundBrushHandle,
+                    ClassExtraBytes = classExBlittable.ClassExtraBytes,
+                    CursorHandle = classExBlittable.CursorHandle,
+                    InstanceHandle = classExBlittable.InstanceHandle,
+                    Styles = classExBlittable.Styles,
+                    IconHandle = classExBlittable.IconHandle,
+                    SmallIconHandle = classExBlittable.SmallIconHandle,
+                    WindowExtraBytes = classExBlittable.WindowExtraBytes,
+                    WindowProc = Marshal.GetDelegateForFunctionPointer<WindowProc>(classExBlittable.WindowProc),
+                    ClassName = Marshal.SystemDefaultCharSize == 1
+                        ? Marshal.PtrToStringAnsi(classExBlittable.ClassName)
+                        : Marshal.PtrToStringUni(classExBlittable.ClassName),
+                    // Menu name left out, since GetClassInfo doesn't return it
+                };
+                return true;
+            }
+            classInfo = new WindowClassEx();
+            return false;
         }
 
         public static IntPtr LoadIcon(IntPtr hInstance, SystemIcon icon)

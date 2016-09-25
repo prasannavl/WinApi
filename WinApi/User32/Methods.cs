@@ -265,6 +265,21 @@ namespace WinApi.User32
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool TrackMouseEvent([In] [Out] ref TrackMouseEventOptions lpEventTrack);
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool GetLastInputInfo(out LastInputInfo plii);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern uint MapVirtualKey(uint uCode, VirtualKeyMapType uMapType);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern uint MapVirtualKey(VirtualKey uCode, VirtualKeyMapType uMapType);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern uint MapVirtualKeyEx(uint uCode, VirtualKeyMapType uMapType, IntPtr dwhkl);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern uint MapVirtualKeyEx(VirtualKey uCode, VirtualKeyMapType uMapType, IntPtr dwhkl);
+
         #endregion
 
         #region Window Functions
@@ -450,9 +465,8 @@ namespace WinApi.User32
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern ushort RegisterClassEx([In] ref WindowClassEx lpwcx);
 
-
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern ushort RegisterClassEx(ref WindowClassExBlittable lpwcx);
+        public static extern ushort RegisterClassEx([In] ref WindowClassExBlittable lpwcx);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
@@ -484,9 +498,6 @@ namespace WinApi.User32
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet, EntryPoint = "SetWindowLongPtr")]
         private static extern IntPtr SetWindowLongPtr_x64(IntPtr hwnd, int nIndex, IntPtr dwNewLong);
-
-        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern bool GetClassInfoEx(IntPtr hInstance, string lpClassName, out WindowClassEx lpWndClass);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool GetClassInfoEx(IntPtr hInstance, string lpClassName,
