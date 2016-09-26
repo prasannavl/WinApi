@@ -9,6 +9,7 @@ namespace WinApi.User32
     public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
     public delegate IntPtr GetMsgProc(int code, IntPtr wParam, IntPtr lParam);
+    public delegate void TimerProc(IntPtr hWnd, uint uMsg, IntPtr nIdEvent, uint dwTickCountMillis);
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Message

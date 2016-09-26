@@ -59,6 +59,15 @@ namespace WinApi.User32
         public static extern uint SendInput(uint nInputs, IntPtr pInputs, int cbSize);
 
         [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern uint SendInput(uint nInputs, [In] Input[] pInputs, int cbSize);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr SetTimer(IntPtr hWnd, IntPtr nIdEvent, uint uElapseMillis, TimerProc lpTimerFunc);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool KillTimer(IntPtr hwnd, IntPtr uIdEvent);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ValidateRect(IntPtr hWnd, [In] ref Rectangle lpRect);
 
         [DllImport(LibraryName, ExactSpelling = true)]
