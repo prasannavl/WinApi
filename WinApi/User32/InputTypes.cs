@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -23,9 +24,9 @@ namespace WinApi.User32
         ///     result of the user holding down the key. If the keystroke is held long enough, multiple messages are sent. However,
         ///     the repeat count is not cumulative.
         /// </summary>
-        public int RepeatCount => unchecked((int) Value & 0x000000ff);
+        public uint RepeatCount => Value & 0x0000ffff;
 
-        public int ScanCode => unchecked(((int) Value >> 16) & 0x0000000f);
+        public uint ScanCode => (Value >> 16) & 0x000000ff;
 
         /// <summary>
         ///     Indicates whether the key is an extended key, such as the right-hand ALT and CTRL keys that appear on an enhanced
@@ -82,116 +83,138 @@ namespace WinApi.User32
     [StructLayout(LayoutKind.Sequential)]
     public struct KeyboardInput
     {
-        public ushort KeyCode;
-        public uint ScanCode;
+        public ushort VirtualKeyCode;
+        public ushort ScanCode;
         public KeyboardInputFlags Flags;
         public uint Time;
         public IntPtr ExtraInfo;
 
-        public VirtualKey VKey
+        public VirtualKey Key
         {
-            get { return (VirtualKey) KeyCode; }
-            set { KeyCode = (ushort) value; }
+            get { return (VirtualKey) VirtualKeyCode; }
+            set { VirtualKeyCode = (ushort) value; }
         }
     }
 
     [StructLayout(LayoutKind.Explicit)]
+    public struct InputPacket
+    {
+        [FieldOffset(0)]
+        public MouseInput MouseInput;
+        [FieldOffset(0)]
+        public KeyboardInput KeyboardInput;
+        [FieldOffset(0)]
+        public HardwareInput HardwareInput;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct Input
     {
-        [FieldOffset(0)] public InputType Type;
-        [FieldOffset(4)] public MouseInput MouseInput;
-        [FieldOffset(4)] public KeyboardInput KeyboardInput;
-        [FieldOffset(4)] public HardwareInput HardwareInput;
+        public InputType Type;
+        public InputPacket Packet;
 
-        public static void InitializeHardwareInput(out Input input, uint message, ushort low, ushort high)
+        public static void InitHardwareInput(out Input input, uint message, ushort low, ushort high)
         {
             input = new Input
             {
                 Type = InputType.INPUT_HARDWARE,
-                HardwareInput =
+                Packet = new InputPacket()
                 {
-                    Message = message,
-                    Low = low,
-                    High = high
+                    HardwareInput = new HardwareInput
+                    {
+                        Message = message,
+                        Low = low,
+                        High = high
+                    }
                 }
             };
         }
 
-        public static void InitializeHardwareInput(out Input input, uint message, uint wParam)
+        public static void InitHardwareInput(out Input input, uint message, uint wParam)
         {
-            input = new Input
-            {
-                Type = InputType.INPUT_HARDWARE,
-                HardwareInput =
-                {
-                    Message = message,
-                    WParam = wParam
-                }
-            };
+            InitHardwareInput(out input, message, (ushort) wParam, (ushort) (wParam >> 16));
         }
 
-        public static void InitializeKeyboardInput(out Input input, ushort scanCode, KeyEvent keyEvent,
+        public static void InitKeyboardInput(out Input input, ushort scanCode, KeyEvent keyEvent,
             bool isExtendedKey = false, uint timestampMillis = 0)
         {
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
-                KeyboardInput =
+                Packet = new InputPacket()
                 {
-                    Time = timestampMillis,
-                    Flags = KeyboardInputFlags.KEYEVENTF_SCANCODE,
-                    ScanCode = scanCode
+                    KeyboardInput =
+                    {
+                        Time = timestampMillis,
+                        Flags = KeyboardInputFlags.KEYEVENTF_SCANCODE,
+                        ScanCode = scanCode,
+                        VirtualKeyCode = 0,
+                    }
                 }
             };
             if (keyEvent == KeyEvent.Up)
-                input.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
+                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
             if (isExtendedKey)
-                input.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_EXTENDEDKEY;
+                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_EXTENDEDKEY;
         }
 
-        public static void InitializeKeyboardInput(out Input input, char charCode, uint timestampMillis = 0)
+        public static void InitKeyboardInput(out Input input, char charCode, KeyEvent keyEvent, uint timestampMillis = 0)
         {
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
-                KeyboardInput =
+                Packet = new InputPacket()
                 {
-                    Time = timestampMillis,
-                    Flags = KeyboardInputFlags.KEYEVENTF_UNICODE | KeyboardInputFlags.KEYEVENTF_KEYUP,
-                    ScanCode = charCode
+                    KeyboardInput =
+                    {
+                        Time = timestampMillis,
+                        Flags = KeyboardInputFlags.KEYEVENTF_UNICODE,
+                        ScanCode = charCode,
+                        VirtualKeyCode = 0,
+                    }
                 }
             };
+            if (keyEvent == KeyEvent.Up)
+                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
         }
 
-        public static void InitializeKeyboardInput(out Input input, VirtualKey key, KeyEvent keyEvent,
+        public static void InitKeyboardInput(out Input input, VirtualKey key, KeyEvent keyEvent,
             uint timestampMillis = 0)
         {
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
-                KeyboardInput =
+                Packet = new InputPacket()
                 {
-                    Time = timestampMillis,
-                    VKey = key
+                    KeyboardInput =
+                    {
+                        Time = timestampMillis,
+                        Key = key,
+                        ScanCode = 0,
+                        Flags = 0,
+                    }
                 }
             };
             if (keyEvent == KeyEvent.Up)
-                input.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
+                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
         }
 
-        public static void InitializeMouseInput(out Input input, int x, int y, MouseInputFlags flags, uint data = 0,
+        public static void InitMouseInput(out Input input, int x, int y, MouseInputFlags flags, uint data = 0,
             uint timestampMillis = 0)
         {
             input = new Input
             {
                 Type = InputType.INPUT_MOUSE,
-                MouseInput =
+                Packet = new InputPacket()
                 {
-                    Time = timestampMillis,
-                    X = x,
-                    Y = y,
-                    Data = data,
-                    Flags = flags
+                    MouseInput =
+                    {
+                        Time = timestampMillis,
+                        X = x,
+                        Y = y,
+                        Data = data,
+                        Flags = flags,
+                    }
                 }
             };
         }
