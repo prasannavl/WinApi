@@ -163,7 +163,7 @@ namespace WinApi.User32
             return MessageBox(parent, message, title, flags);
         }
 
-        public static uint SendInput(ref Input[] inputs)
+        public static uint SendInput(Input[] inputs)
         {
             var len = (uint) inputs.Length;
             var size = Marshal.SizeOf<Input>();
@@ -176,6 +176,12 @@ namespace WinApi.User32
             {
                 gcHandle.Free();
             }
+        }
+
+        public static unsafe uint SendInput(ref Input input)
+        {
+            fixed (Input* ptr = &input)
+                return User32Methods.SendInput(1, new IntPtr(ptr), Marshal.SizeOf<Input>());
         }
     }
 }
