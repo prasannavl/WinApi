@@ -54,8 +54,7 @@ namespace WinApi.XWin
 
         protected virtual void OnCommand(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hWnd) {}
 
-        protected virtual void OnKeyEvent(ref WindowMessage msg, VirtualKey key, KeyboardInputState inputState,
-            bool isSystemContext) {}
+        protected virtual void OnKeyEvent(ref WindowMessage msg, VirtualKey key, KeyEvent keyEvent, KeyboardInputState inputState, bool isSystemContext) {}
 
         protected virtual void OnKeyChar(ref WindowMessage msg, char inputChar, KeyboardInputState inputState,
             bool isSystemContext, bool isDeadChar) {}
@@ -269,9 +268,9 @@ namespace WinApi.XWin
                 bool isSystemContext)
             {
                 var key = (VirtualKey) msg.WParam.ToSafeInt32();
-                var lParam = msg.LParam.ToSafeUInt32();
-                var inputState = new KeyboardInputState(lParam);
-                windowCore.OnKeyEvent(ref msg, key, inputState, isSystemContext);
+                var lParam = msg.LParam.ToSafeInt32();
+                var inputState = new KeyboardInputState((uint)lParam);
+                windowCore.OnKeyEvent(ref msg, key, keyEvent, inputState, isSystemContext);
                 // Standard return. 0 if already processed
             }
 
