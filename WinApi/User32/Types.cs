@@ -283,9 +283,9 @@ namespace WinApi.User32
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public unsafe struct NonClientAreaRectangle
+    public struct NonClientAreaRectangle
     {
-        [FieldOffset(0)] public Rectangle* InputWindowRect;
-        [FieldOffset(0)] public Rectangle* OutputClientRect;
+        [FieldOffset(0)] public Rectangle InputWindowRect;
+        [FieldOffset(0)] public Rectangle OutputClientRect;
     }
 }

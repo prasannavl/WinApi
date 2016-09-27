@@ -22,6 +22,31 @@ namespace WinApi.XWin
         {
             switch (msg.Id)
             {
+                case WM.NCACTIVATE:
+                {
+                    MessageHandlers.ProcessNonClientActivate(this, ref msg);
+                    break;
+                }
+                case WM.NCCALCSIZE:
+                {
+                    MessageHandlers.ProcessNonClientCalcSize(this, ref msg);
+                    break;
+                }
+                case WM.NCDESTROY:
+                {
+                    MessageHandlers.ProcessNonClientDestroy(this, ref msg);
+                    break;
+                }
+                case WM.SHOWWINDOW:
+                {
+                    MessageHandlers.ProcessShowWindow(this, ref msg);
+                    break;
+                }
+                case WM.QUIT:
+                {
+                    MessageHandlers.ProcessQuit(this, ref msg);
+                    break;
+                }
                 case WM.CLOSE:
                 {
                     MessageHandlers.ProcessClose(this, ref msg);
@@ -261,7 +286,7 @@ namespace WinApi.XWin
 
         protected override void OnMessage(ref WindowMessage msg)
         {
-            ((IWindowMessageProcessor)this).ProcessMessage(ref msg);
+            ((IWindowMessageProcessor) this).ProcessMessage(ref msg);
             base.OnMessage(ref msg);
         }
 
@@ -321,7 +346,8 @@ namespace WinApi.XWin
         protected virtual void OnShow(bool isShown, ShowWindowStatusFlags flags) {}
         protected virtual void OnQuit(int code) {}
 
-        protected virtual NonClientActivationResult OnNonClientActivate(bool isShown, IntPtr updateRegion) => new NonClientActivationResult();
+        protected virtual NonClientActivationResult OnNonClientActivate(bool isShown, IntPtr updateRegion)
+            => new NonClientActivationResult();
 
         protected virtual void OnNonClientDestroy(ref WindowMessage msg) {}
 
@@ -613,23 +639,6 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
-            public static unsafe void ProcessNonClientCalcSize(EventedWindowCore windowCore, ref WindowMessage msg)
-            {
-                var shouldProvideClientArea = msg.WParam.ToSafeUInt32() > 0;
-                if (shouldProvideClientArea)
-                {
-                    var nonClientArea = (NonClientArea*) msg.LParam.ToPointer();
-                    msg.Result = new IntPtr((int) windowCore.OnNonClientCalcSizeGetArea(nonClientArea));
-                    // If providing, 0 preserves previous area & align top-left
-                }
-                else
-                {
-                    var nonClientRect = (NonClientAreaRectangle*) msg.LParam.ToPointer();
-                    windowCore.OnNonClientCalcSizeWithRect(nonClientRect);
-                    // Implicit 0 return; 
-                }
-            }
-
             public static void ProcessShowWindow(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var isShown = msg.WParam.ToSafeUInt32() > 0;
@@ -662,6 +671,23 @@ namespace WinApi.XWin
                 // When wParam == TRUE, result is ignored.
                 // var result = TRUE // Default processing;
                 // var result = FALSE // Prevent changes.
+            }
+
+            public static unsafe void ProcessNonClientCalcSize(EventedWindowCore windowCore, ref WindowMessage msg)
+            {
+                var shouldProvideClientArea = msg.WParam.ToSafeUInt32() > 0;
+                if (shouldProvideClientArea)
+                {
+                    var nonClientArea = (NonClientArea*)msg.LParam.ToPointer();
+                    msg.Result = new IntPtr((int)windowCore.OnNonClientCalcSizeGetArea(nonClientArea));
+                    // If providing, 0 preserves previous area & align top-left
+                }
+                else
+                {
+                    var nonClientRect = (NonClientAreaRectangle*)msg.LParam.ToPointer();
+                    windowCore.OnNonClientCalcSizeWithRect(nonClientRect);
+                    // Implicit 0 return; 
+                }
             }
         }
     }
