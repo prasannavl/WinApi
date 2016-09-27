@@ -7,8 +7,8 @@
     <ProjectGuid>{52271447-963C-4CCA-8495-875AA61125CE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Sample.Simple</RootNamespace>
-    <AssemblyName>Sample.Simple</AssemblyName>
+    <RootNamespace>WinApi.TestGround</RootNamespace>
+    <AssemblyName>WinApi.TestGround</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

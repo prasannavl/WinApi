@@ -1,26 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using WinApi.Core;
-using WinApi.Kernel32;
+using WinApi.Desktop;
 using WinApi.User32;
 using WinApi.XWin;
 using WinApi.XWin.Controls;
 using WinApi.XWin.Controls.Layouts;
-using WinApi.Desktop;
-using WinApi.XWin.Helpers;
 
-namespace Sample.Simple
+namespace Sample.SimulateInput
 {
     class Program
     {
