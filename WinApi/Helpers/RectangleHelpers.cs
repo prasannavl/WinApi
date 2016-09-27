@@ -1,7 +1,7 @@
 ﻿using System;
 using WinApi.User32;
 
-namespace WinApi.XWin.Helpers
+namespace WinApi.Helpers
 {
     public static class RectangleHelpers
     {
