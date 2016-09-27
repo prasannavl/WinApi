@@ -14,7 +14,7 @@ namespace Sample.DirectX
             ? (IGraphicsContext)new D2DGraphicsContext()
             : new D2DRenderTargetGraphicsContext();
 
-        protected override bool OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
+        protected override CreationResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
             var size = GetClientSize();
 
