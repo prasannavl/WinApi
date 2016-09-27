@@ -60,32 +60,32 @@ namespace WinApi.XWin
         public bool SetSize(int width, int height)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, -1, -1, width, height,
-                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOMOVE | SetWindowPosFlags.SWP_NOZORDER);
+                WindowPositionFlags.SWP_NOACTIVATE | WindowPositionFlags.SWP_NOMOVE | WindowPositionFlags.SWP_NOZORDER);
         }
 
         public bool SetPosition(int x, int y)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, -1, -1,
-                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOSIZE | SetWindowPosFlags.SWP_NOZORDER);
+                WindowPositionFlags.SWP_NOACTIVATE | WindowPositionFlags.SWP_NOSIZE | WindowPositionFlags.SWP_NOZORDER);
         }
 
         public bool SetPosition(int x, int y, int width, int height)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height,
-                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOZORDER);
+                WindowPositionFlags.SWP_NOACTIVATE | WindowPositionFlags.SWP_NOZORDER);
         }
 
-        public bool SetPosition(int x, int y, int width, int height, SetWindowPosFlags flags)
+        public bool SetPosition(int x, int y, int width, int height, WindowPositionFlags flags)
         {
             return User32Methods.SetWindowPos(Handle, IntPtr.Zero, x, y, width, height, flags);
         }
 
-        public bool SetPosition(HwndZOrder order, int x, int y, int width, int height, SetWindowPosFlags flags)
+        public bool SetPosition(HwndZOrder order, int x, int y, int width, int height, WindowPositionFlags flags)
         {
             return User32Helpers.SetWindowPos(Handle, order, x, y, width, height, flags);
         }
 
-        public bool SetPosition(IntPtr hWndInsertAfter, int x, int y, int width, int height, SetWindowPosFlags flags)
+        public bool SetPosition(IntPtr hWndInsertAfter, int x, int y, int width, int height, WindowPositionFlags flags)
         {
             return User32Methods.SetWindowPos(Handle, hWndInsertAfter, x, y, width, height, flags);
         }
@@ -95,7 +95,7 @@ namespace WinApi.XWin
             return SetPosition(ref rect);
         }
 
-        public bool SetPosition(Rectangle rect, SetWindowPosFlags flags)
+        public bool SetPosition(Rectangle rect, WindowPositionFlags flags)
         {
             return SetPosition(ref rect, flags);
         }
@@ -103,10 +103,10 @@ namespace WinApi.XWin
         public bool SetPosition(ref Rectangle rect)
         {
             return SetPosition(rect.Left, rect.Top, rect.Width, rect.Height,
-                SetWindowPosFlags.SWP_NOACTIVATE | SetWindowPosFlags.SWP_NOZORDER);
+                WindowPositionFlags.SWP_NOACTIVATE | WindowPositionFlags.SWP_NOZORDER);
         }
 
-        public bool SetPosition(ref Rectangle rect, SetWindowPosFlags flags)
+        public bool SetPosition(ref Rectangle rect, WindowPositionFlags flags)
         {
             return SetPosition(rect.Left, rect.Top, rect.Width, rect.Height, flags);
         }
