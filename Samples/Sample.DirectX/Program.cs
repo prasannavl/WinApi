@@ -22,6 +22,7 @@ namespace Sample.DirectX
                 // Create the window without a dependency on WinApi.XWin.Controls
                 using (
                     var win = factory.CreateWindow(() => new MainWindow(),
+                    constructionParams: new FrameWindowConstructionParams(),
                         exStyles:
                         WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE |
                         WindowExStyles.WS_EX_DLGMODALFRAME))

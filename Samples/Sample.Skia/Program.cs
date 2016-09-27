@@ -14,6 +14,7 @@ using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
 using WinApi.Desktop;
+using WinApi.UxTheme;
 using WinApi.XWin.Helpers;
 
 namespace Sample.Skia
@@ -27,7 +28,8 @@ namespace Sample.Skia
                 ApplicationHelpers.SetupDefaultExceptionHandlers();
                 // Using it without a dependency on WinApi.XWin.Controls
                 var factory = WindowFactory.Create();
-                using (var win = factory.CreateWindow(() => new SkiaWindow(), "Hello"))
+                using (var win = factory.CreateWindow(() => new SkiaWindow(), "Hello", 
+                    constructionParams: new FrameWindowConstructionParams()))
                 {
                     win.Show();
                     return new EventLoop().Run(win);
@@ -46,7 +48,7 @@ namespace Sample.Skia
         protected override void OnSkiaPaint(SKSurface surface)
         {
             var canvas = surface.Canvas;
-            canvas.Clear(new SKColor(70, 120, 110, 200));
+            canvas.Clear(new SKColor(70, 120, 110, 100));
             base.OnSkiaPaint(surface);
         }
     }

@@ -49,10 +49,10 @@ namespace Sample.Skia
 
         protected virtual void OnSkiaPaint(SKSurface surface) {}
 
-        protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
+        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
         {
             PaintStruct ps;
-            hdc = User32Methods.BeginPaint(Handle, out ps);
+            var hdc = User32Methods.BeginPaint(Handle, out ps);
             try
             {
                 ResizePixelBuffersIfRequired();
