@@ -8,6 +8,25 @@ namespace WinApi.UxTheme
     [StructLayout(LayoutKind.Sequential)]
     public struct Margin
     {
+        public Margin(int left = 0, int right = 0, int top = 0, int bottom = 0)
+        {
+            Left = left;
+            Right = right;
+            Top = top;
+            Bottom = bottom;
+        }
+
+        public Margin(int x = 0, int y = 0)
+        {
+            Left = Right = x;
+            Top = Bottom = y;
+        }
+
+        public Margin(int all = 0)
+        {
+            Left = Right = Top = Bottom = all;
+        }
+
         public int Left, Right, Top, Bottom;
     }
 
