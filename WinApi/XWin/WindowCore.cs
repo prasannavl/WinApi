@@ -130,6 +130,7 @@ namespace WinApi.XWin
                 WParam = wParam,
                 LParam = lParam,
                 Result = IntPtr.Zero,
+                Hwnd = hwnd,
                 Handled = false
             };
             try
@@ -184,6 +185,7 @@ namespace WinApi.XWin
         public IntPtr LParam;
         public IntPtr Result;
         public bool Handled;
+        public IntPtr Hwnd;
 
         public void SetHandled(bool handled = true)
         {
