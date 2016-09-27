@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinApi.Core;
+using WinApi.Helpers;
 using WinApi.User32;
 using WinApi.XWin.Helpers;
 
