@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sample.Simple</RootNamespace>
     <AssemblyName>Sample.Simple</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -93,8 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
-      <Project>{0fba6bbc-2700-4a49-81d1-ea4587390eca}</Project>
+      <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.XWin.Controls\WinApi.XWin.Controls.csproj">
+      <Project>{c00c4085-244e-4013-b9eb-b1f86e19b3d5}</Project>
+      <Name>WinApi.XWin.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
       <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>

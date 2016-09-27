@@ -9,12 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using SkiaSharp;
 using WinApi;
-using WinApi.Desktop;
 using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
-using WinApi.XWin.Controls;
+using WinApi.Desktop;
 using WinApi.XWin.Helpers;
 
 namespace Sample.Skia
@@ -26,7 +25,9 @@ namespace Sample.Skia
             try
             {
                 ApplicationHelpers.SetupDefaultExceptionHandlers();
-                using (var win = Window.Create<SkiaWindow>(text: "Hello"))
+                // Using it without a dependency on WinApi.XWin.Controls
+                var factory = WindowFactory.Create();
+                using (var win = factory.CreateWindow(() => new SkiaWindow(), "Hello"))
                 {
                     win.Show();
                     return new EventLoop().Run(win);

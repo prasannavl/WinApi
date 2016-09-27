@@ -3,9 +3,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OpenGL;
-using WinApi.Desktop;
 using WinApi.XWin;
 using WinApi.XWin.Controls;
+using WinApi.Desktop;
 using WinApi.XWin.Helpers;
 
 namespace Sample.OpenGL

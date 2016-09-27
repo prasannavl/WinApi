@@ -5,11 +5,10 @@ using WinApi.Core;
 using WinApi.Gdi32;
 using WinApi.User32;
 using WinApi.XWin;
-using WinApi.XWin.Controls;
 
 namespace Sample.Skia
 {
-    public class SkiaWindowBase : Window
+    public class SkiaWindowBase : EventedWindowCore
     {
         private Size m_currentClientSize;
         private IntPtr m_pixelBufferPtr;

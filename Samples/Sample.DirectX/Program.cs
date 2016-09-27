@@ -1,9 +1,8 @@
 ﻿using System;
-using WinApi.Desktop;
 using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.XWin;
-using WinApi.XWin.Controls;
+using WinApi.Desktop;
 using WinApi.XWin.Helpers;
 
 namespace Sample.DirectX
@@ -19,8 +18,10 @@ namespace Sample.DirectX
                 var factory = new WindowFactory("MainWindow",
                     WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
                     cache.ProcessHandle, IntPtr.Zero, cache.ArrowCursorHandle, IntPtr.Zero, null);
+
+                // Create the window without a dependency on WinApi.XWin.Controls
                 using (
-                    var win = Window.Create<MainWindow>(factory: factory,
+                    var win = factory.CreateWindow(() => new MainWindow(),
                         exStyles:
                         WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE |
                         WindowExStyles.WS_EX_DLGMODALFRAME))

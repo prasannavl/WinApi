@@ -129,7 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
-      <Project>{0fba6bbc-2700-4a49-81d1-ea4587390eca}</Project>
+      <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">

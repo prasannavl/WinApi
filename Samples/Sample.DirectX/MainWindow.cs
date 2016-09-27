@@ -5,11 +5,10 @@ using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
-using WinApi.XWin.Controls;
 
 namespace Sample.DirectX
 {
-    public sealed class MainWindow : Window
+    public sealed class MainWindow : EventedWindowCore
     {
         private readonly IGraphicsContext m_graphicsContext = Kernel32Helpers.IsWin8OrGreater()
             ? (IGraphicsContext)new D2DGraphicsContext()

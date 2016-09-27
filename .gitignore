@@ -3,6 +3,7 @@
 
 *.VC.db
 *.VC.opendb
+*project.lock.json
 
 # User-specific files
 *.suo

@@ -23,7 +23,7 @@ namespace WinApi.XWin.Controls
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
             WindowFactory factory = null, EditStyles? controlStyles = null)
         {
-            return (factory ?? ClassFactory.Value).CreateWindow(() => new EditBox(), text, styles, exStyles, x, y, width,
+            return (factory ?? ClassFactory.Value).CreateWindowEx(() => new EditBox(), text, styles, exStyles, x, y, width,
                 height, hParent, hMenu, (uint) (controlStyles ?? 0));
         }
 

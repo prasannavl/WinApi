@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Text;
-using WinApi.Kernel32;
 using WinApi.XWin;
 
 namespace WinApi.Desktop

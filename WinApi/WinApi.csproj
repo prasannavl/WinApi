@@ -43,6 +43,7 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="project.json" />
     <None Include="WinApi.nuspec" />
+    <None Include="XWin\project.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Types.cs" />
@@ -53,15 +54,10 @@
     <Compile Include="Gdi32\Helpers.cs" />
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Types.cs" />
+    <Compile Include="Helpers\RectangleHelpers.cs" />
     <Compile Include="KernelBase\Methods.cs" />
     <Compile Include="User32\InputConstants.cs" />
     <Compile Include="User32\InputTypes.cs" />
-    <Compile Include="XWin\ConstructionParams.cs" />
-    <Compile Include="XWin\Controls\Button.cs" />
-    <Compile Include="XWin\Controls\EditBox.cs" />
-    <Compile Include="XWin\Controls\StaticBox.cs" />
-    <Compile Include="XWin\Controls\Window.cs" />
-    <Compile Include="XWin\Helpers\MessageBoxHelpers.cs" />
     <Compile Include="Kernel32\Helpers.cs" />
     <Compile Include="Kernel32\Methods.cs" />
     <Compile Include="Kernel32\Types.cs" />
@@ -75,14 +71,15 @@
     <Compile Include="User32\Experimental\Types.cs" />
     <Compile Include="User32\Helpers.cs" />
     <Compile Include="User32\Methods.cs" />
-    <Compile Include="XWin\Helpers\RectangleHelpers.cs" />
     <Compile Include="User32\Types.cs" />
     <Compile Include="UxTheme\Methods.cs" />
     <Compile Include="UxTheme\Types.cs" />
+    <Compile Include="XWin\ConstructionParams.cs" />
+    <Compile Include="XWin\EventedWindowCore.cs" />
     <Compile Include="XWin\EventLoop.cs" />
+    <Compile Include="XWin\Helpers\MessageBoxHelpers.cs" />
     <Compile Include="XWin\MessageHelpers.cs" />
     <Compile Include="XWin\NativeWindow.cs" />
-    <Compile Include="XWin\EventedWindowCore.cs" />
     <Compile Include="XWin\WindowCore.cs" />
     <Compile Include="XWin\WindowFactory.cs" />
   </ItemGroup>

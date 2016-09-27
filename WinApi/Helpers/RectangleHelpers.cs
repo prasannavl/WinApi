@@ -3,7 +3,7 @@ using WinApi.User32;
 
 namespace WinApi.XWin.Helpers
 {
-    public static unsafe class RectangleHelpers
+    public static class RectangleHelpers
     {
         public static Rectangle CreateFrom(ref Rectangle lvalue, ref Rectangle rvalue,
             Func<int, int, int> operation,
