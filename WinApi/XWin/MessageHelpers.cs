@@ -6,10 +6,10 @@ namespace WinApi.XWin
 {
     public static class MessageHelpers
     {
-        public static void RunDwmDefWindowProc(ref WindowMessage msg, IntPtr windowHandle)
+        public static void RunDwmDefWindowProc(ref WindowMessage msg)
         {
             IntPtr res;
-            if (DwmApiMethods.DwmDefWindowProc(windowHandle, (uint) msg.Id, msg.WParam, msg.LParam, out res))
+            if (DwmApiMethods.DwmDefWindowProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam, out res))
                 msg.SetHandledWithResult(res);
         }
 
