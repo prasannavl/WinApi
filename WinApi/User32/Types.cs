@@ -33,6 +33,19 @@ namespace WinApi.User32
             Bottom = bottom;
         }
 
+        public Rectangle(int width = 0, int height = 0)
+        {
+            this.Left = 0;
+            this.Top = 0;
+            this.Right = width;
+            this.Bottom = height;
+        }
+
+        public Rectangle(int all = 0)
+        {
+            Left = Right = Top = Bottom = all;
+        }
+
         public int Left, Top, Right, Bottom;
 
         public int Width
@@ -203,5 +216,76 @@ namespace WinApi.User32
         public uint HoverTime;
 
         public const uint DefaultHoverTime = 0xFFFFFFFF;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MinMaxInfo
+    {
+        Point Reserved;
+        /// <summary>
+        /// The maximized width (x member) and the maximized height (y member) of the window. For top-level windows, this value is based on the width of the primary monitor.
+        /// </summary>
+        public Point MaxSize;
+        /// <summary>
+        /// The position of the left side of the maximized window (x member) and the position of the top of the maximized window (y member). For top-level windows, this value is based on the position of the primary monitor.
+        /// </summary>
+        public Point MaxPosition;
+        /// <summary>
+        /// The minimum tracking width (x member) and the minimum tracking height (y member) of the window. This value can be obtained programmatically from the system metrics SM_CXMINTRACK and SM_CYMINTRACK (see the GetSystemMetrics function).
+        /// </summary>
+        public Point MinTrackSize;
+        /// <summary>
+        /// The maximum tracking width (x member) and the maximum tracking height (y member) of the window. This value is based on the size of the virtual screen and can be obtained programmatically from the system metrics SM_CXMAXTRACK and SM_CYMAXTRACK (see the GetSystemMetrics function).
+        /// </summary>
+        public Point MaxTrackSize;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct WindowPosition
+    {
+        public IntPtr WindowHandle;
+        public IntPtr HwndZOrderInsertAfter;
+        public int X;
+        public int Y;
+        public int Width;
+        public int Height;
+        public WindowPositionFlags Flags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public unsafe struct NonClientArea
+    {
+        public NonClientSizeParamRegionUnion Region;
+        public WindowPosition* Position;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct NonClientSizeParamRegionUnion
+    {
+        [FieldOffset(0)] public NonClientSizeInputParam Input;
+        [FieldOffset(0)] public NonClientSizeInputParam Output;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct NonClientSizeInputParam
+    {
+        public Rectangle TargetWindowRect;
+        public Rectangle CurrentWindowRect;
+        public Rectangle CurrentClientRect;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct NonClientSizeOutputParam
+    {
+        public Rectangle ResultClientRect;
+        public Rectangle SrcRect;
+        public Rectangle DestRect;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public unsafe struct NonClientAreaRectangle
+    {
+        [FieldOffset(0)] public Rectangle* InputWindowRect;
+        [FieldOffset(0)] public Rectangle* OutputClientRect;
     }
 }
