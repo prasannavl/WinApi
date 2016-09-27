@@ -263,7 +263,7 @@ namespace WinApi.User32
     public struct NonClientSizeParamRegionUnion
     {
         [FieldOffset(0)] public NonClientSizeInputParam Input;
-        [FieldOffset(0)] public NonClientSizeInputParam Output;
+        [FieldOffset(0)] public NonClientSizeOutputParam Output;
     }
 
     [StructLayout(LayoutKind.Sequential)]

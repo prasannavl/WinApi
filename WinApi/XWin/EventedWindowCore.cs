@@ -340,13 +340,13 @@ namespace WinApi.XWin
         protected virtual void OnMouseButtonEvent(ref WindowMessage msg, ref Point point, MouseButton button,
             MouseInputKeyStateFlags mouseInputKeyState) {}
 
-        protected virtual unsafe WindowViewRegionFlags OnNonClientCalcSizeGetArea(NonClientArea* nonClientArea) => 0;
-        protected virtual unsafe void OnNonClientCalcSizeWithRect(NonClientAreaRectangle* nonClientRect) {}
+        protected virtual unsafe WindowViewRegionFlags OnNonClientCalcSizeGetArea(ref WindowMessage msg, NonClientArea* nonClientArea) => 0;
+        protected virtual unsafe void OnNonClientCalcSizeWithRect(ref WindowMessage msg, NonClientAreaRectangle* nonClientRect) {}
 
-        protected virtual void OnShow(bool isShown, ShowWindowStatusFlags flags) {}
-        protected virtual void OnQuit(int code) {}
+        protected virtual void OnShow(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags) {}
+        protected virtual void OnQuit(ref WindowMessage msg, int code) {}
 
-        protected virtual NonClientActivationResult OnNonClientActivate(bool isShown, IntPtr updateRegion)
+        protected virtual NonClientActivationResult OnNonClientActivate(ref WindowMessage msg, bool isShown, IntPtr updateRegion)
             => new NonClientActivationResult();
 
         protected virtual void OnNonClientDestroy(ref WindowMessage msg) {}
@@ -643,13 +643,13 @@ namespace WinApi.XWin
             {
                 var isShown = msg.WParam.ToSafeUInt32() > 0;
                 var flags = (ShowWindowStatusFlags) msg.LParam.ToSafeInt32();
-                windowCore.OnShow(isShown, flags);
+                windowCore.OnShow(ref msg, isShown, flags);
             }
 
             public static void ProcessQuit(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var quitCode = msg.WParam.ToSafeInt32();
-                windowCore.OnQuit(quitCode);
+                windowCore.OnQuit(ref msg, quitCode);
             }
 
             public static void ProcessNonClientDestroy(EventedWindowCore windowCore, ref WindowMessage msg)
@@ -663,7 +663,7 @@ namespace WinApi.XWin
                 var isShown = msg.WParam.ToSafeInt32() > 0;
                 // lParam is used only if visual styles are disabled.
                 var updateRegion = msg.LParam;
-                var res = windowCore.OnNonClientActivate(isShown, updateRegion);
+                var res = windowCore.OnNonClientActivate(ref msg, isShown, updateRegion);
                 if (res.PreventRegionUpdates)
                     msg.LParam = new IntPtr(-1);
                 msg.Result = new IntPtr(res.PreventDeactivationChanges ? 0 : 1);
@@ -679,13 +679,13 @@ namespace WinApi.XWin
                 if (shouldProvideClientArea)
                 {
                     var nonClientArea = (NonClientArea*)msg.LParam.ToPointer();
-                    msg.Result = new IntPtr((int)windowCore.OnNonClientCalcSizeGetArea(nonClientArea));
+                    msg.Result = new IntPtr((int)windowCore.OnNonClientCalcSizeGetArea(ref msg, nonClientArea));
                     // If providing, 0 preserves previous area & align top-left
                 }
                 else
                 {
                     var nonClientRect = (NonClientAreaRectangle*)msg.LParam.ToPointer();
-                    windowCore.OnNonClientCalcSizeWithRect(nonClientRect);
+                    windowCore.OnNonClientCalcSizeWithRect(ref msg, nonClientRect);
                     // Implicit 0 return; 
                 }
             }
