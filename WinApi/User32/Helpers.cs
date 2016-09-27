@@ -71,7 +71,7 @@ namespace WinApi.User32
         }
 
         public static bool SetWindowPos(IntPtr hwnd, HwndZOrder order, int x, int y, int cx, int cy,
-            SetWindowPosFlags flags)
+            WindowPositionFlags flags)
         {
             return User32Methods.SetWindowPos(hwnd, new IntPtr((int) order), x, y, cx, cy, flags);
         }

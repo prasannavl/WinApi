@@ -490,7 +490,7 @@ namespace WinApi.User32
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetWindowPos(IntPtr hwnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy,
-            SetWindowPosFlags flags);
+            WindowPositionFlags flags);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
