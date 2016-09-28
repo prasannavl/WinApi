@@ -1,5 +1,5 @@
 ﻿using System;
-using Sample.DirectX.Helpers;
+using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -77,18 +77,25 @@ namespace Sample.DirectX
         public virtual void Initalize(IntPtr hwnd, Size size)
         {
             Hwnd = hwnd;
-            Size = size;
+            Size = GetValidatedSize(ref size);
             ConnectD3DRenderTargetView();
         }
 
         public virtual void Resize(ref Size size)
         {
-            Size = size;
+            Size = GetValidatedSize(ref size);
             Disconnect3DRenderTargetView();
             DisposableHelpers.DisposeAndSetNull(ref m_d3DRenderTargetView);
             // Resize retaining other properties.
             SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
             ConnectD3DRenderTargetView();
+        }
+
+        public static Size GetValidatedSize(ref Size size)
+        {
+            var h = size.Height >= 0 ? size.Height : 0;
+            var w = size.Width >= 0 ? size.Width : 0;
+            return new Size(w, h);
         }
 
         public virtual void Destroy()
@@ -174,7 +181,7 @@ namespace Sample.DirectX
                 BufferCount = 2,
                 OutputHandle = Hwnd,
                 IsWindowed = true,
-                SwapEffect = GetDefaultSwapEffectForPlatform()
+                SwapEffect = GetDefaultSwapEffectForPlatform(),
             };
 
             SwapChain = new SwapChain(

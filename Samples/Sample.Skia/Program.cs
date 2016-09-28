@@ -9,11 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using SkiaSharp;
 using WinApi;
+using WinApi.Core;
 using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.XWin;
 using WinApi.Desktop;
+using WinApi.DwmApi;
 using WinApi.UxTheme;
 using WinApi.XWin.Helpers;
 
@@ -48,7 +50,7 @@ namespace Sample.Skia
         protected override void OnSkiaPaint(SKSurface surface)
         {
             var canvas = surface.Canvas;
-            canvas.Clear(new SKColor(70, 120, 110, 100));
+            canvas.Clear(new SKColor(70, 120, 110, 200));
             base.OnSkiaPaint(surface);
         }
     }

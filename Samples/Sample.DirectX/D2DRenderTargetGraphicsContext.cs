@@ -16,13 +16,20 @@ namespace Sample.DirectX
         public void Init(IntPtr hwnd, ref Size size, bool deferInitUntilFirstDraw = true)
         {
             m_hwnd = hwnd;
-            m_size = new Size2(size.Width, size.Height);
+            m_size = GetValidatedSize2(ref size);
             if (!deferInitUntilFirstDraw) CreateResources();
+        }
+
+        public static Size2 GetValidatedSize2(ref Size size)
+        {
+            var h = size.Height >= 0 ? size.Height : 0;
+            var w = size.Width >= 0 ? size.Width : 0;
+            return new Size2(w, h); 
         }
 
         public void Resize(ref Size size)
         {
-            m_size = new Size2(size.Width, size.Height);
+            m_size = GetValidatedSize2(ref size);
             ResizeRenderTarget();
         }
 

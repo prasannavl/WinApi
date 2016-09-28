@@ -22,7 +22,7 @@ namespace Sample.DirectX
         public void Init(IntPtr hwnd, ref Size size, bool deferInitUntilFirstDraw = true)
         {
             this.m_hwnd = hwnd;
-            this.m_size = size;
+            m_size = size;
             if (!deferInitUntilFirstDraw) EnsureDxResources();
         }
 
@@ -62,7 +62,7 @@ namespace Sample.DirectX
         public void Resize(ref Size size)
         {
             m_size = size;
-            m_dxResources?.Resize(ref size);
+            m_dxResources?.Resize(ref m_size);
         }
 
         private void EnsureDxResources()

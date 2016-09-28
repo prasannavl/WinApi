@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Sample.DirectX.Helpers
+namespace Sample.DirectX
 {
     public class DisposableHelpers
     {

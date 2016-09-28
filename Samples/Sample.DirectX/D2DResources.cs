@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Sample.DirectX.Helpers;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using WinApi.Core;

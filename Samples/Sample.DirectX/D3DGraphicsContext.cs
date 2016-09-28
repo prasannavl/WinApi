@@ -32,7 +32,8 @@ namespace Sample.DirectX
 
         public void Resize(ref Size size)
         {
-            m_dxResources?.Resize(ref size);
+            m_size = size;
+            m_dxResources?.Resize(ref m_size);
         }
 
         private void EnsureDxResources()
