@@ -109,66 +109,64 @@ namespace WinApi.XWin
                 }
                 case WM.LBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Left, MouseButtonEvent.Up);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.LBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Left, MouseButtonEvent.Down);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.LBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Left,
-                        MouseButtonEvent.DoubleClick);
+                    MessageHandlers.ProcessMouseDoubleClick(this, ref msg);
+
                     break;
                 }
                 case WM.RBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Right, MouseButtonEvent.Up);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.RBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Right, MouseButtonEvent.Down);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.RBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Right,
-                        MouseButtonEvent.DoubleClick);
+                    MessageHandlers.ProcessMouseDoubleClick(this, ref msg);
+
                     break;
                 }
                 case WM.MBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Middle, MouseButtonEvent.Up);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.MBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Middle, MouseButtonEvent.Down);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.MBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Middle,
-                        MouseButtonEvent.DoubleClick);
+                    MessageHandlers.ProcessMouseDoubleClick(this, ref msg);
                     break;
                 }
                 case WM.XBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Other, MouseButtonEvent.Up);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.XBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Other, MouseButtonEvent.Down);
+                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg);
                     break;
                 }
                 case WM.XBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseButtonEvent(this, ref msg, MouseButton.Other,
-                        MouseButtonEvent.DoubleClick);
+                    MessageHandlers.ProcessMouseDoubleClick(this, ref msg);
                     break;
                 }
                 case WM.MOUSEACTIVATE:
@@ -310,7 +308,7 @@ namespace WinApi.XWin
         protected virtual MouseActivationResult OnMouseActivate(ref WindowMessage msg, IntPtr activeTopLevelParentHwnd,
             short messageId, HitTestResult hitTestResult) => 0;
 
-        protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta, 
+        protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta,
             bool isWheelDirectionHorizontal, MouseInputKeyStateFlags flags) {}
 
         protected virtual void OnMouseLeave(ref WindowMessage msg) {}
@@ -338,18 +336,25 @@ namespace WinApi.XWin
             KeyboardInputState keyState, IntPtr windowHandle) => 0;
 
         protected virtual void OnMouseButtonEvent(ref WindowMessage msg, ref Point point, MouseButton button,
-            MouseInputKeyStateFlags mouseInputKeyState) {}
+            bool inputKeyState, MouseInputKeyStateFlags mouseInputKeyState) {}
 
-        protected virtual unsafe WindowViewRegionFlags OnNonClientCalcSizeGetArea(ref WindowMessage msg, NonClientArea* nonClientArea) => 0;
-        protected virtual unsafe void OnNonClientCalcSizeWithRect(ref WindowMessage msg, NonClientAreaRectangle* nonClientRect) {}
+        protected virtual unsafe WindowViewRegionFlags OnNonClientCalcSizeGetArea(ref WindowMessage msg,
+            NonClientArea* nonClientArea) => 0;
+
+        protected virtual unsafe void OnNonClientCalcSizeWithRect(ref WindowMessage msg,
+            NonClientAreaRectangle* nonClientRect) {}
 
         protected virtual void OnShow(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags) {}
         protected virtual void OnQuit(ref WindowMessage msg, int code) {}
 
-        protected virtual NonClientActivationResult OnNonClientActivate(ref WindowMessage msg, bool isShown, IntPtr updateRegion)
+        protected virtual NonClientActivationResult OnNonClientActivate(ref WindowMessage msg, bool isShown,
+                IntPtr updateRegion)
             => new NonClientActivationResult();
 
         protected virtual void OnNonClientDestroy(ref WindowMessage msg) {}
+
+        protected virtual void OnMouseDoubleClick(ref WindowMessage msg, ref Point point, MouseButton button,
+            MouseInputKeyStateFlags mouseInputKeyState) {}
 
         public static class MessageHandlers
         {
@@ -358,6 +363,7 @@ namespace WinApi.XWin
                 windowCore.OnClose(ref msg);
                 // Standard return. 0 if already processed
             }
+
 
             public static void ProcessTimeChange(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -395,13 +401,14 @@ namespace WinApi.XWin
                     // error that's unhandled from OnPaint, the flood of WM_PAINT to the thread's message loop 
                     // will prevent the MessageBox from being displayed, and the application ends up with 
                     // inconsistent state. This prevents that from happening. This is the ONLY non-standard
-                    // behaviour that's applied - and its also happens only if the code in OnPaint throws an 
+                    // behaviour that's applied - and it also happens only if the code in OnPaint throws an 
                     // exception. 
                     if (!flag)
                         windowCore.Validate();
                 }
                 // Standard return. 0 if already processed
             }
+
 
             public static void ProcessEraseBkgnd(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -410,6 +417,7 @@ namespace WinApi.XWin
                 // 1 - prevent default erase.
                 // 0 - Let DefWndProc erase the background with the window class's brush.
             }
+
 
             public static void ProcessSize(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -420,6 +428,7 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessMove(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Point point;
@@ -428,11 +437,13 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static unsafe void ProcessCreate(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 msg.Result = new IntPtr((int) windowCore.OnCreate(ref msg, ref *(CreateStruct*) msg.LParam));
                 // Return 0 to continue creation. -1 to destroy and prevent
             }
+
 
             public static void ProcessActivate(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -445,6 +456,7 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessActivateApp(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var isActive = msg.WParam.ToSafeInt32() != 0;
@@ -452,6 +464,7 @@ namespace WinApi.XWin
                 windowCore.OnActivateApp(ref msg, isActive, oppositeThreadId);
                 // Standard return. 0 if already processed
             }
+
 
             public static unsafe void ProcessDisplayChange(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -462,6 +475,7 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessMouseMove(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Point point;
@@ -471,25 +485,69 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMouseButtonEvent(EventedWindowCore windowCore, ref WindowMessage msg,
-                MouseButton button,
-                MouseButtonEvent mouseButtonEvent)
+
+            public static void ProcessMouseButtonEvent(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                //TODO: refine handling
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 var wParam = msg.WParam.ToSafeInt32();
                 var mouseInputKeyState = (MouseInputKeyStateFlags) wParam.Low();
-                if (button == MouseButton.Other)
+
+                var msgId = (int) msg.Id;
+                var isButtonUp = false;
+                MouseButton button;
+                if ((msgId > 0x200) && (msgId < 0x204))
+                {
+                    button = MouseButton.Left;
+                    if (msg.Id == WM.LBUTTONUP) isButtonUp = true;
+                }
+                else if ((msgId > 0x203) && (msgId < 0x207))
+                {
+                    button = MouseButton.Right;
+                    if (msg.Id == WM.RBUTTONUP) isButtonUp = true;
+                }
+                else if ((msgId > 0x206) && (msgId < 0x210))
+                {
+                    button = MouseButton.Middle;
+                    if (msg.Id == WM.MBUTTONUP) isButtonUp = true;
+                }
+                else
+                {
+                    button = (MouseInputXButtonFlag) wParam.High() == MouseInputXButtonFlag.XBUTTON1
+                        ? MouseButton.XButton1
+                        : MouseButton.XButton2;
+                    if (msg.Id == WM.XBUTTONUP) isButtonUp = true;
+                }
+                windowCore.OnMouseButtonEvent(ref msg, ref point, button, isButtonUp, mouseInputKeyState);
+                // Normal: Standard return. 0 if already processed
+                // XButton: TRUE if processed, 0 if not
+            }
+
+
+            public static void ProcessMouseDoubleClick(EventedWindowCore windowCore, ref WindowMessage msg)
+            {
+                Point point;
+                msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
+                var wParam = msg.WParam.ToSafeInt32();
+                var mouseInputKeyState = (MouseInputKeyStateFlags) wParam.Low();
+
+                var msgId = msg.Id;
+                MouseButton button;
+                if (msgId == WM.LBUTTONDBLCLK)
+                    button = MouseButton.Left;
+                else if (msgId == WM.RBUTTONDBLCLK)
+                    button = MouseButton.Right;
+                else if (msgId == WM.MBUTTONDBLCLK)
+                    button = MouseButton.Middle;
+                else
                 {
                     button = (MouseInputXButtonFlag) wParam.High() == MouseInputXButtonFlag.XBUTTON1
                         ? MouseButton.XButton1
                         : MouseButton.XButton2;
                 }
-                windowCore.OnMouseButtonEvent(ref msg, ref point, button, mouseInputKeyState);
-                // Normal: Standard return. 0 if already processed
-                // XButton: TRUE if processed, 0 if not
+                windowCore.OnMouseDoubleClick(ref msg, ref point, button, mouseInputKeyState);
             }
+
 
             public static void ProcessMouseActivate(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -503,6 +561,7 @@ namespace WinApi.XWin
                 // Return activation result
             }
 
+
             public static void ProcessMouseHover(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 Point point;
@@ -512,12 +571,14 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessMouseLeave(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 // Nothing to do here
                 windowCore.OnMouseLeave(ref msg);
                 // Standard return. 0 if already processed
             }
+
 
             public static void ProcessMouseWheel(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -532,10 +593,21 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessKeyChar(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                var isSystemContext = msg.Id == WM.SYSCHAR || msg.Id == WM.SYSDEADCHAR;
-                var isDeadChar = msg.Id == WM.DEADCHAR || msg.Id == WM.SYSDEADCHAR;
+                var isSystemContext = false;
+                var isDeadChar = false;
+                if (msg.Id == WM.CHAR) {}
+                else if (msg.Id == WM.SYSCHAR)
+                    isSystemContext = true;
+                else if (msg.Id == WM.DEADCHAR)
+                    isDeadChar = true;
+                else
+                {
+                    isSystemContext = true;
+                    isDeadChar = true;
+                }
                 var inputChar = (char) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeUInt32();
                 var inputState = new KeyboardInputState(lParam);
@@ -543,16 +615,18 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessKeyEvent(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                var isSystemContext = msg.Id == WM.SYSKEYDOWN || msg.Id == WM.SYSKEYUP;
-                var isKeyUp = msg.Id == WM.KEYUP || msg.Id == WM.SYSKEYUP;
+                var isSystemContext = (msg.Id == WM.SYSKEYDOWN) || (msg.Id == WM.SYSKEYUP);
+                var isKeyUp = (msg.Id == WM.KEYUP) || (msg.Id == WM.SYSKEYUP);
                 var key = (VirtualKey) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeInt32();
                 var inputState = new KeyboardInputState((uint) lParam);
                 windowCore.OnKeyEvent(ref msg, key, isKeyUp, inputState, isSystemContext);
                 // Standard return. 0 if already processed
             }
+
 
             public static void ProcessCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -563,6 +637,7 @@ namespace WinApi.XWin
                 windowCore.OnCommand(ref msg, cmdSource, id, hWnd);
                 // Standard return. 0 if already processed
             }
+
 
             public static void ProcessSysCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -577,6 +652,7 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessMenuCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var menuIndex = msg.WParam.ToSafeInt32();
@@ -585,12 +661,14 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessLostFocus(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var oppositeWindowHandle = msg.WParam;
                 windowCore.OnLostFocus(ref msg, oppositeWindowHandle);
                 // Standard return. 0 if already processed
             }
+
 
             public static void ProcessGotFocus(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -599,12 +677,14 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessCaptureChanged(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var handleOfWindowReceivingCapture = msg.LParam;
                 windowCore.OnInputCaptureChanged(ref msg, handleOfWindowReceivingCapture);
                 // Standard return. 0 if already processed
             }
+
 
             public static void ProcessHitTest(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -613,6 +693,7 @@ namespace WinApi.XWin
                 msg.Result = new IntPtr((int) windowCore.OnHitTest(ref msg, ref point));
                 // Return value is the HitTestResult
             }
+
 
             public static void ProcessAppCommand(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -627,6 +708,7 @@ namespace WinApi.XWin
                 // Return TRUE if handled.
             }
 
+
             public static void ProcessHotKey(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var screenshotHotKey = (ScreenshotHotKey) msg.WParam.ToSafeInt32();
@@ -637,6 +719,7 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
+
             public static void ProcessShowWindow(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var isShown = msg.WParam.ToSafeUInt32() > 0;
@@ -644,17 +727,20 @@ namespace WinApi.XWin
                 windowCore.OnShow(ref msg, isShown, flags);
             }
 
+
             public static void ProcessQuit(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var quitCode = msg.WParam.ToSafeInt32();
                 windowCore.OnQuit(ref msg, quitCode);
             }
 
+
             public static void ProcessNonClientDestroy(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 // No parameters here
                 windowCore.OnNonClientDestroy(ref msg);
             }
+
 
             public static void ProcessNonClientActivate(EventedWindowCore windowCore, ref WindowMessage msg)
             {
@@ -671,18 +757,19 @@ namespace WinApi.XWin
                 // var result = FALSE // Prevent changes.
             }
 
+
             public static unsafe void ProcessNonClientCalcSize(EventedWindowCore windowCore, ref WindowMessage msg)
             {
                 var shouldProvideClientArea = msg.WParam.ToSafeUInt32() > 0;
                 if (shouldProvideClientArea)
                 {
-                    var nonClientArea = (NonClientArea*)msg.LParam.ToPointer();
-                    msg.Result = new IntPtr((int)windowCore.OnNonClientCalcSizeGetArea(ref msg, nonClientArea));
+                    var nonClientArea = (NonClientArea*) msg.LParam.ToPointer();
+                    msg.Result = new IntPtr((int) windowCore.OnNonClientCalcSizeGetArea(ref msg, nonClientArea));
                     // If providing, 0 preserves previous area & align top-left
                 }
                 else
                 {
-                    var nonClientRect = (NonClientAreaRectangle*)msg.LParam.ToPointer();
+                    var nonClientRect = (NonClientAreaRectangle*) msg.LParam.ToPointer();
                     windowCore.OnNonClientCalcSizeWithRect(ref msg, nonClientRect);
                     // Implicit 0 return; 
                 }
@@ -705,19 +792,6 @@ namespace WinApi.XWin
         Other = 0x8,
         XButton1 = 0x10 | Other,
         XButton2 = 0x20 | Other
-    }
-
-    public enum MouseButtonEvent
-    {
-        Up,
-        Down,
-        DoubleClick
-    }
-
-    public enum ScrollDirection
-    {
-        Horizontal,
-        Vertical
     }
 
     public enum EraseBackgroundResult
