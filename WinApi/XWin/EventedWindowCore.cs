@@ -183,12 +183,12 @@ namespace WinApi.XWin
                 }
                 case WM.MOUSEWHEEL:
                 {
-                    MessageHandlers.ProcessMouseWheel(this, ref msg, ScrollDirection.Vertical);
+                    MessageHandlers.ProcessMouseWheel(this, ref msg);
                     break;
                 }
                 case WM.MOUSEHWHEEL:
                 {
-                    MessageHandlers.ProcessMouseWheel(this, ref msg, ScrollDirection.Horizontal);
+                    MessageHandlers.ProcessMouseWheel(this, ref msg);
                     break;
                 }
                 case WM.MOUSELEAVE:
@@ -310,8 +310,8 @@ namespace WinApi.XWin
         protected virtual MouseActivationResult OnMouseActivate(ref WindowMessage msg, IntPtr activeTopLevelParentHwnd,
             short messageId, HitTestResult hitTestResult) => 0;
 
-        protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta,
-            MouseInputKeyStateFlags flags) {}
+        protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta, 
+            bool isWheelDirectionHorizontal, MouseInputKeyStateFlags flags) {}
 
         protected virtual void OnMouseLeave(ref WindowMessage msg) {}
         protected virtual void OnMouseHover(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) {}
@@ -519,18 +519,16 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessMouseWheel(EventedWindowCore windowCore, ref WindowMessage msg,
-                ScrollDirection wheelScrollDirection)
+            public static void ProcessMouseWheel(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                //TODO: refine handling
                 Point point;
                 msg.LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
                 var wParam = msg.WParam.ToSafeInt32();
                 // Multiple or divisons of (WHEEL_DELTA = 120)
                 var wheelDelta = wParam.High();
                 var flags = (MouseInputKeyStateFlags) wParam.Low();
-
-                windowCore.OnMouseWheel(ref msg, ref point, wheelDelta, flags);
+                var isWheelDirectionHorizontal = msg.Id == WM.MOUSEHWHEEL;
+                windowCore.OnMouseWheel(ref msg, ref point, wheelDelta, isWheelDirectionHorizontal, flags);
                 // Standard return. 0 if already processed
             }
 
