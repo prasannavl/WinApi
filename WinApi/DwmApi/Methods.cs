@@ -13,7 +13,12 @@ namespace WinApi.DwmApi
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern HResult DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttributeType attr,
             [In] ref int attrValue,
-            int attrSize);
+            uint attrSize = sizeof(int));
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern HResult DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttributeType attr,
+            IntPtr attrValue,
+            uint attrSize);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern HResult DwmIsCompositionEnabled(out bool pfEnabled);
