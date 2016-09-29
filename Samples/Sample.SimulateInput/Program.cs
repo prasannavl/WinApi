@@ -64,14 +64,14 @@ namespace Sample.SimulateInput
                     {
                         m_timesExecuted++;
                         var inputs = new Input[8];
-                        Input.InitKeyboardInput(out inputs[0], VirtualKey.H, KeyEvent.Up);
-                        Input.InitKeyboardInput(out inputs[1], VirtualKey.H, KeyEvent.Down);
-                        Input.InitKeyboardInput(out inputs[2], VirtualKey.E, KeyEvent.Up);
-                        Input.InitKeyboardInput(out inputs[3], VirtualKey.E, KeyEvent.Down);
-                        Input.InitKeyboardInput(out inputs[4], VirtualKey.L, KeyEvent.Up);
-                        Input.InitKeyboardInput(out inputs[5], VirtualKey.L, KeyEvent.Down);
-                        Input.InitKeyboardInput(out inputs[6], VirtualKey.O, KeyEvent.Up);
-                        Input.InitKeyboardInput(out inputs[7], VirtualKey.O, KeyEvent.Down);
+                        Input.InitKeyboardInput(out inputs[0], VirtualKey.H, true);
+                        Input.InitKeyboardInput(out inputs[1], VirtualKey.H, false);
+                        Input.InitKeyboardInput(out inputs[2], VirtualKey.E, true);
+                        Input.InitKeyboardInput(out inputs[3], VirtualKey.E, false);
+                        Input.InitKeyboardInput(out inputs[4], VirtualKey.L, true);
+                        Input.InitKeyboardInput(out inputs[5], VirtualKey.L, false);
+                        Input.InitKeyboardInput(out inputs[6], VirtualKey.O, true);
+                        Input.InitKeyboardInput(out inputs[7], VirtualKey.O, false);
                         var x = User32Helpers.SendInput(inputs);
                     }
                     catch (Exception ex)
@@ -84,7 +84,7 @@ namespace Sample.SimulateInput
                 return base.OnCreate(ref msg, ref createStruct);
             }
 
-            protected override void OnKeyEvent(ref WindowMessage msg, VirtualKey key, KeyEvent keyEvent, KeyboardInputState inputState, bool isSystemContext)
+            protected override void OnKeyEvent(ref WindowMessage msg, VirtualKey key, bool isKeyUp, KeyboardInputState inputState, bool isSystemContext)
             {
                 var str = $"\r\n{DateTime.Now} :" +
                               $" {key} => {inputState.IsKeyUpTransition}; " +
@@ -94,7 +94,7 @@ namespace Sample.SimulateInput
                               $"{inputState.IsExtendedKey}" + "\r\n" +
                               $"No. of text display changes: {m_timesExecuted}" + "\0";
                 m_textBox.SetText(str);
-                base.OnKeyEvent(ref msg, key, keyEvent, inputState, isSystemContext);
+                base.OnKeyEvent(ref msg, key, isKeyUp, inputState, isSystemContext);
             }
 
             protected override void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size)
