@@ -33,6 +33,18 @@ namespace WinApi.Kernel32
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern void QueryUnbiasedInterruptTime(out ulong unbiasedTime);
 
+        [DllImport(LibraryName)]
+        public static extern void GetLocalTime(out SystemTime lpSystemTime);
+
+        [DllImport(LibraryName)]
+        public static extern bool SetLocalTime(ref SystemTime lpSystemTime);
+
+        [DllImport(LibraryName)]
+        public static extern void GetSystemTime(out SystemTime lpSystemTime);
+
+        [DllImport(LibraryName)]
+        public static extern bool SetSystemTime(ref SystemTime lpSystemTime);
+
         #region Console Functions
 
         [DllImport(LibraryName, ExactSpelling = true)]
@@ -175,5 +187,37 @@ namespace WinApi.Kernel32
         public static extern uint GetCurrentProcessorNumber();
 
         #endregion
+
+        #region File Management Functions
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern FileAttributes GetFileAttributes(string lpFileName);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern bool SetFileAttributes(string lpFileName, FileAttributes dwFileAttributes);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern bool GetFileAttributesEx(string lpFileName, FileAttributeInfoLevel fInfoLevelId, out FileAttributeData lpFileInformation);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern IntPtr CreateFile(string lpFileName,
+            uint dwDesiredAccess,
+            FileShareMode dwShareMode,
+            IntPtr lpSecurityAttributes,
+            FileCreationDisposition dwCreationDisposition,
+            uint dwFlagsAndAttributes,
+            IntPtr hTemplateFile);
+
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern IntPtr CreateFile(string lpFileName,
+            uint dwDesiredAccess,
+            FileShareMode dwShareMode,
+            ref SecurityAttributes lpSecurityAttributes,
+            FileCreationDisposition dwCreationDisposition,
+            uint dwFlagsAndAttributes,
+            IntPtr hTemplateFile);
+
+        #endregion
+
     }
 }
