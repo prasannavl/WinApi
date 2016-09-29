@@ -236,12 +236,6 @@ namespace WinApi.User32
         CURSOR_SUPPRESSED = 0x00000002
     }
 
-    public enum KeyEvent
-    {
-        Up,
-        Down
-    }
-
     public enum InputType
     {
         /// <summary>

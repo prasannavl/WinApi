@@ -198,42 +198,42 @@ namespace WinApi.XWin
                 }
                 case WM.CHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(this, ref msg, false, false);
+                    MessageHandlers.ProcessKeyChar(this, ref msg);
                     break;
                 }
                 case WM.SYSCHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(this, ref msg, true, false);
+                    MessageHandlers.ProcessKeyChar(this, ref msg);
                     break;
                 }
                 case WM.DEADCHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(this, ref msg, false, true);
+                    MessageHandlers.ProcessKeyChar(this, ref msg);
                     break;
                 }
                 case WM.SYSDEADCHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(this, ref msg, true, true);
+                    MessageHandlers.ProcessKeyChar(this, ref msg);
                     break;
                 }
                 case WM.KEYUP:
                 {
-                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Up, false);
+                    MessageHandlers.ProcessKeyEvent(this, ref msg);
                     break;
                 }
                 case WM.KEYDOWN:
                 {
-                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Down, false);
+                    MessageHandlers.ProcessKeyEvent(this, ref msg);
                     break;
                 }
                 case WM.SYSKEYUP:
                 {
-                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Up, true);
+                    MessageHandlers.ProcessKeyEvent(this, ref msg);
                     break;
                 }
                 case WM.SYSKEYDOWN:
                 {
-                    MessageHandlers.ProcessKeyEvent(this, ref msg, KeyEvent.Down, true);
+                    MessageHandlers.ProcessKeyEvent(this, ref msg);
                     break;
                 }
                 case WM.COMMAND:
@@ -325,7 +325,7 @@ namespace WinApi.XWin
 
         protected virtual void OnCommand(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hWnd) {}
 
-        protected virtual void OnKeyEvent(ref WindowMessage msg, VirtualKey key, KeyEvent keyEvent,
+        protected virtual void OnKeyEvent(ref WindowMessage msg, VirtualKey key, bool isKeyUp,
             KeyboardInputState inputState, bool isSystemContext) {}
 
         protected virtual void OnKeyChar(ref WindowMessage msg, char inputChar, KeyboardInputState inputState,
@@ -534,10 +534,10 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessKeyChar(EventedWindowCore windowCore, ref WindowMessage msg, bool isSystemContext,
-                bool isDeadChar)
+            public static void ProcessKeyChar(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                //TODO: refine handling
+                var isSystemContext = msg.Id == WM.SYSCHAR || msg.Id == WM.SYSDEADCHAR;
+                var isDeadChar = msg.Id == WM.DEADCHAR || msg.Id == WM.SYSDEADCHAR;
                 var inputChar = (char) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeUInt32();
                 var inputState = new KeyboardInputState(lParam);
@@ -545,14 +545,14 @@ namespace WinApi.XWin
                 // Standard return. 0 if already processed
             }
 
-            public static void ProcessKeyEvent(EventedWindowCore windowCore, ref WindowMessage msg, KeyEvent keyEvent,
-                bool isSystemContext)
+            public static void ProcessKeyEvent(EventedWindowCore windowCore, ref WindowMessage msg)
             {
-                //TODO: refine handling
+                var isSystemContext = msg.Id == WM.SYSKEYDOWN || msg.Id == WM.SYSKEYUP;
+                var isKeyUp = msg.Id == WM.KEYUP || msg.Id == WM.SYSKEYUP;
                 var key = (VirtualKey) msg.WParam.ToSafeInt32();
                 var lParam = msg.LParam.ToSafeInt32();
                 var inputState = new KeyboardInputState((uint) lParam);
-                windowCore.OnKeyEvent(ref msg, key, keyEvent, inputState, isSystemContext);
+                windowCore.OnKeyEvent(ref msg, key, isKeyUp, inputState, isSystemContext);
                 // Standard return. 0 if already processed
             }
 

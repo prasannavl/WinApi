@@ -55,6 +55,7 @@
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Types.cs" />
     <Compile Include="Helpers\RectangleHelpers.cs" />
+    <Compile Include="Kernel32\Constants.cs" />
     <Compile Include="KernelBase\Methods.cs" />
     <Compile Include="User32\InputConstants.cs" />
     <Compile Include="User32\InputTypes.cs" />

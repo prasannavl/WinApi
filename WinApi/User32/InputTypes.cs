@@ -135,7 +135,7 @@ namespace WinApi.User32
             InitHardwareInput(out input, message, (ushort) wParam, (ushort) (wParam >> 16));
         }
 
-        public static void InitKeyboardInput(out Input input, ushort scanCode, KeyEvent keyEvent,
+        public static void InitKeyboardInput(out Input input, ushort scanCode, bool isKeyUp,
             bool isExtendedKey = false, uint timestampMillis = 0)
         {
             input = new Input
@@ -152,13 +152,13 @@ namespace WinApi.User32
                     }
                 }
             };
-            if (keyEvent == KeyEvent.Up)
+            if (isKeyUp)
                 input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
             if (isExtendedKey)
                 input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_EXTENDEDKEY;
         }
 
-        public static void InitKeyboardInput(out Input input, char charCode, KeyEvent keyEvent, uint timestampMillis = 0)
+        public static void InitKeyboardInput(out Input input, char charCode, bool isKeyUp, uint timestampMillis = 0)
         {
             input = new Input
             {
@@ -174,11 +174,11 @@ namespace WinApi.User32
                     }
                 }
             };
-            if (keyEvent == KeyEvent.Up)
+            if (isKeyUp)
                 input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
         }
 
-        public static void InitKeyboardInput(out Input input, VirtualKey key, KeyEvent keyEvent,
+        public static void InitKeyboardInput(out Input input, VirtualKey key, bool isKeyUp,
             uint timestampMillis = 0)
         {
             input = new Input
@@ -195,7 +195,7 @@ namespace WinApi.User32
                     }
                 }
             };
-            if (keyEvent == KeyEvent.Up)
+            if (isKeyUp)
                 input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
         }
 
