@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using WinApi.Core;
@@ -10,7 +6,7 @@ using Device = SharpDX.Direct2D1.Device;
 using Factory = SharpDX.DirectWrite.Factory;
 using Factory1 = SharpDX.Direct2D1.Factory1;
 
-namespace Sample.DirectX
+namespace Sample.DirectX.Dx
 {
     public class D2DResources : D3DResources
     {

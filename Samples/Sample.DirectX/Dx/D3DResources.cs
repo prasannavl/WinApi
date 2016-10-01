@@ -1,14 +1,12 @@
 ﻿using System;
-using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
-using WinApi.Kernel32;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace Sample.DirectX
+namespace Sample.DirectX.Dx
 {
     public class D3DResources : IDisposable
     {
@@ -171,11 +169,11 @@ namespace Sample.DirectX
         {
             EnsureD3DDevice();
             EnsureDxgiFactory();
+            var m = new ModeDescription(Size.Width, Size.Height, new Rational(60, 1),
+                Format.B8G8R8A8_UNorm) { Scaling = DisplayModeScaling.Unspecified };
             var swapChainDesc = new SwapChainDescription
             {
-                ModeDescription =
-                    new ModeDescription(Size.Width, Size.Height, new Rational(60, 1),
-                        Format.B8G8R8A8_UNorm),
+                ModeDescription = m,
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 2,

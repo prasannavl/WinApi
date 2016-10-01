@@ -117,8 +117,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="D2DGraphicsContext.cs" />
-    <Compile Include="D2DResources.cs" />
-    <Compile Include="D3DResources.cs" />
+    <Compile Include="Dx\D2DResources.cs" />
+    <Compile Include="Dx\D3DResources.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="D2DRenderTargetGraphicsContext.cs" />
     <Compile Include="D3DGraphicsContext.cs" />
@@ -144,7 +144,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DxVersionInfo.txt" />
+    <Content Include="Dx\DxVersionInfo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

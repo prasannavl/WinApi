@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sample.DirectX.Dx;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
@@ -44,7 +45,6 @@ namespace Sample.DirectX
 
             context.BeginDraw();
             context.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.3f));
-
             for (var i = 0; i < 10; i++)
             {
                 b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
