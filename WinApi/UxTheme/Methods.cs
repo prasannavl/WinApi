@@ -13,7 +13,7 @@ namespace WinApi.UxTheme
         public static extern HResult SetWindowThemeAttribute(
             IntPtr hwnd,
             WindowThemeAttributeType eAttributeType,
-            [In] ref WindowThemeNCAttribute pvAttribute,
-            int size);
+            [In] ref WindowThemeAttributeOptions pvAttribute,
+            uint size);
     }
 }
