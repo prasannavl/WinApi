@@ -146,7 +146,10 @@ namespace WinApi.XWin
             finally
             {
                 if (wmsg.Id == WM.DESTROY)
+                {
                     Closed?.Invoke(this);
+                    IsSourceOwner = false;
+                }
             }
         }
 
@@ -186,6 +189,16 @@ namespace WinApi.XWin
         public IntPtr Result;
         public bool Handled;
         public IntPtr Hwnd;
+
+        public WindowMessage(IntPtr hwnd, uint id, IntPtr wParam, IntPtr lParam)
+        {
+            Hwnd = hwnd;
+            Id = (WM) id;
+            WParam = wParam;
+            LParam = lParam;
+            Result = IntPtr.Zero;
+            Handled = false;
+        }
 
         public void SetHandled(bool handled = true)
         {
