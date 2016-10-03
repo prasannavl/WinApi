@@ -1,6 +1,7 @@
 ﻿using System;
 using WinApi.Kernel32;
 using WinApi.User32;
+using WinApi.XWin.Helpers;
 
 namespace WinApi.XWin
 {
