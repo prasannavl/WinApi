@@ -51,7 +51,7 @@ namespace WinApi.XWin
                 }
                 case WM.NCDESTROY:
                 {
-                    OnNonClientDestroy(ref msg);
+                    OnNcDestroy(ref msg);
                     break;
                 }
                 case WM.CLOSE:
@@ -76,13 +76,13 @@ namespace WinApi.XWin
                 }
                 case WM.NCACTIVATE:
                 {
-                    MessageHandlers.ProcessNonClientActivate(ref msg, OnNonClientActivate);
+                    MessageHandlers.ProcessNcActivate(ref msg, OnNcActivate);
                     break;
                 }
                 case WM.NCCALCSIZE:
                 {
-                    MessageHandlers.ProcessNonClientCalcSize(ref msg, OnNonClientCalcSizeGetArea,
-                        OnNonClientCalcSizeWithRect);
+                    MessageHandlers.ProcessNcCalcSize(ref msg, OnNcCalcSizeRequest,
+                        OnNcCalcSizeResponse);
                     break;
                 }
                 case WM.SHOWWINDOW:
@@ -360,20 +360,20 @@ namespace WinApi.XWin
         protected virtual void OnMouseButton(ref WindowMessage msg, ref Point point, MouseButton button,
             bool inputKeyState, MouseInputKeyStateFlags mouseInputKeyState) {}
 
-        protected virtual unsafe WindowViewRegionFlags OnNonClientCalcSizeGetArea(ref WindowMessage msg,
-            NonClientArea* nonClientArea) => 0;
+        protected virtual unsafe WindowViewRegionFlags OnNcCalcSizeRequest(ref WindowMessage msg,
+            NcCalcSizeRequestParams* ncCalcSizeRequestParams) => 0;
 
-        protected virtual unsafe void OnNonClientCalcSizeWithRect(ref WindowMessage msg,
-            NonClientAreaRectangle* nonClientRect) {}
+        protected virtual unsafe void OnNcCalcSizeResponse(ref WindowMessage msg,
+            NcCalcSizeResponseParams* ncCalcSizeResponseParams) {}
 
         protected virtual void OnShow(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags) {}
         protected virtual void OnQuit(ref WindowMessage msg, int code) {}
 
-        protected virtual NonClientActivationResult OnNonClientActivate(ref WindowMessage msg, bool isShown,
+        protected virtual NcActivationResult OnNcActivate(ref WindowMessage msg, bool isShown,
                 IntPtr updateRegion)
-            => new NonClientActivationResult();
+            => new NcActivationResult();
 
-        protected virtual void OnNonClientDestroy(ref WindowMessage msg) {}
+        protected virtual void OnNcDestroy(ref WindowMessage msg) {}
 
         protected virtual void OnMouseDoubleClick(ref WindowMessage msg, ref Point point, MouseButton button,
             MouseInputKeyStateFlags mouseInputKeyState) {}

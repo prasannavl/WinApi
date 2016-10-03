@@ -7,99 +7,6 @@ namespace WinApi.XWin
 {
     public class MessageHandlers
     {
-        public delegate void ActivateAppHandler(ref WindowMessage msg, bool isActive, uint oppositeThreadId);
-
-        public delegate void ActivateHandler(
-            ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized, IntPtr oppositeWindowHandle);
-
-        public delegate AppCommandResult AppCommandHandler(
-            ref WindowMessage msg, AppCommand cmd, AppCommandDevice device, KeyboardInputState keyState,
-            IntPtr windowHandle);
-
-        public delegate void CaptureChangedHandler(ref WindowMessage msg, IntPtr handleOfWindowReceivingCapture);
-
-        public delegate void CommandHandler(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hwnd);
-
-        public delegate CreationResult CreateHandler(ref WindowMessage msg, ref CreateStruct createStruct);
-
-        public delegate void DisplayChangeHandler(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size);
-
-        public delegate EraseBackgroundResult EraseBkgndHandler(ref WindowMessage msg, IntPtr cHdc);
-
-        public delegate void FocusHandler(ref WindowMessage msg, IntPtr oppositeWindowHandle);
-
-        public delegate HitTestResult HitTestHandler(ref WindowMessage msg, ref Point point);
-
-        public delegate void HotKeyHandler(
-            ref WindowMessage msg, VirtualKey key, HotKeyInputState keyState, ScreenshotHotKey screenshotHotKey);
-
-        public delegate void KeyCharHandler(
-            ref WindowMessage msg, char inputChar, KeyboardInputState inputState, bool isSystemContext, bool isDeadChar);
-
-        public delegate void KeyHandler(
-            ref WindowMessage msg, VirtualKey key, bool isKeyUp, KeyboardInputState inputState, bool isSystemContext);
-
-        public delegate void MenuCommandHandler(ref WindowMessage msg, int index, IntPtr menuHandle);
-
-        public delegate MouseActivationResult MouseActivateHandler(
-            ref WindowMessage msg, IntPtr activeTopLevelParentHwnd, ushort messageId, HitTestResult hitTestResult);
-
-        public delegate void MouseButtonHandler(
-            ref WindowMessage msg, ref Point point, MouseButton button, bool isButtonUp,
-            MouseInputKeyStateFlags keyStateFlags);
-
-        public delegate void MouseDoubleClickHandler(
-            ref WindowMessage msg, ref Point point, MouseButton button, MouseInputKeyStateFlags keyStateFlags);
-
-        public delegate void MouseHoverHandler(
-            ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags keyStateFlags);
-
-        public delegate void MouseMoveHandler(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags);
-
-        public delegate void MouseWheelHandler(
-            ref WindowMessage msg, ref Point point, short wheelDelta, bool isWheelDirectionHorizontal,
-            MouseInputKeyStateFlags flags);
-
-        public delegate void MoveHandler(ref WindowMessage msg, ref Point point);
-
-        public delegate NonClientActivationResult NcActivateHandler(
-            ref WindowMessage msg, bool isShown, IntPtr updateRegion);
-
-        public unsafe delegate WindowViewRegionFlags NonClientCalcSizeGetAreaHandler(
-            ref WindowMessage msg, NonClientArea* nonClientArea);
-
-        public unsafe delegate void NonClientCalcSizeWithRectHandler(
-            ref WindowMessage msg, NonClientAreaRectangle* nonClientRect);
-
-        public delegate void PaintHandler(ref WindowMessage msg, IntPtr cHdc);
-
-        public delegate void QuitHandler(ref WindowMessage msg, int code);
-
-        public delegate void ShowWindowHandler(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags);
-
-        public delegate void SizeHandler(ref WindowMessage msg, WindowSizeFlag flag, ref Size size);
-
-        public delegate void SysCommandHandler(
-            ref WindowMessage msg, SysCommand cmd, short mouseCursorXOrZero, short mouseCursorYOrKeyMnemonic);
-
-        public static unsafe void ProcessNonClientCalcSize(ref WindowMessage msg,
-            NonClientCalcSizeGetAreaHandler areaHandler, NonClientCalcSizeWithRectHandler rectHandler)
-        {
-            var shouldProvideClientArea = msg.WParam.ToSafeUInt32() > 0;
-            if (shouldProvideClientArea)
-            {
-                var nonClientArea = (NonClientArea*) msg.LParam.ToPointer();
-                msg.Result = new IntPtr((int) areaHandler(ref msg, nonClientArea));
-                // If providing, 0 preserves previous area & align top-left
-            }
-            else
-            {
-                var nonClientRect = (NonClientAreaRectangle*) msg.LParam.ToPointer();
-                rectHandler(ref msg, nonClientRect);
-                // Implicit 0 return; 
-            }
-        }
-
         public static void ProcessShowWindow(ref WindowMessage msg, ShowWindowHandler handler)
         {
             var isShown = msg.WParam.ToSafeUInt32() > 0;
@@ -111,21 +18,6 @@ namespace WinApi.XWin
         {
             var quitCode = msg.WParam.ToSafeInt32();
             handler(ref msg, quitCode);
-        }
-
-        public static void ProcessNonClientActivate(ref WindowMessage msg, NcActivateHandler handler)
-        {
-            var isShown = msg.WParam.ToSafeInt32() > 0;
-            // lParam is used only if visual styles are disabled.
-            var updateRegion = msg.LParam;
-            var res = handler(ref msg, isShown, updateRegion);
-            if (res.PreventRegionUpdates)
-                msg.LParam = new IntPtr(-1);
-            msg.Result = new IntPtr(res.PreventDeactivationChanges ? 0 : 1);
-            // To prevent Nc region update in DefWndProc, set LParam = -1;
-            // When wParam == TRUE, result is ignored.
-            // var result = TRUE // Default processing;
-            // var result = FALSE // Prevent changes.
         }
 
         public static unsafe void ProcessCreate(ref WindowMessage msg, CreateHandler handler)
@@ -410,6 +302,122 @@ namespace WinApi.XWin
             handler(ref msg, key, keyState, screenshotHotKey);
             // Standard return. 0 if already processed
         }
+
+        #region Delegate Types
+
+        public delegate void ActivateAppHandler(ref WindowMessage msg, bool isActive, uint oppositeThreadId);
+
+        public delegate void ActivateHandler(
+            ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized, IntPtr oppositeWindowHandle);
+
+        public delegate AppCommandResult AppCommandHandler(
+            ref WindowMessage msg, AppCommand cmd, AppCommandDevice device, KeyboardInputState keyState,
+            IntPtr windowHandle);
+
+        public delegate void CaptureChangedHandler(ref WindowMessage msg, IntPtr handleOfWindowReceivingCapture);
+
+        public delegate void CommandHandler(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hwnd);
+
+        public delegate CreationResult CreateHandler(ref WindowMessage msg, ref CreateStruct createStruct);
+
+        public delegate void DisplayChangeHandler(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size);
+
+        public delegate EraseBackgroundResult EraseBkgndHandler(ref WindowMessage msg, IntPtr cHdc);
+
+        public delegate void FocusHandler(ref WindowMessage msg, IntPtr oppositeWindowHandle);
+
+        public delegate HitTestResult HitTestHandler(ref WindowMessage msg, ref Point point);
+
+        public delegate void HotKeyHandler(
+            ref WindowMessage msg, VirtualKey key, HotKeyInputState keyState, ScreenshotHotKey screenshotHotKey);
+
+        public delegate void KeyCharHandler(
+            ref WindowMessage msg, char inputChar, KeyboardInputState inputState, bool isSystemContext, bool isDeadChar);
+
+        public delegate void KeyHandler(
+            ref WindowMessage msg, VirtualKey key, bool isKeyUp, KeyboardInputState inputState, bool isSystemContext);
+
+        public delegate void MenuCommandHandler(ref WindowMessage msg, int index, IntPtr menuHandle);
+
+        public delegate MouseActivationResult MouseActivateHandler(
+            ref WindowMessage msg, IntPtr activeTopLevelParentHwnd, ushort messageId, HitTestResult hitTestResult);
+
+        public delegate void MouseButtonHandler(
+            ref WindowMessage msg, ref Point point, MouseButton button, bool isButtonUp,
+            MouseInputKeyStateFlags keyStateFlags);
+
+        public delegate void MouseDoubleClickHandler(
+            ref WindowMessage msg, ref Point point, MouseButton button, MouseInputKeyStateFlags keyStateFlags);
+
+        public delegate void MouseHoverHandler(
+            ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags keyStateFlags);
+
+        public delegate void MouseMoveHandler(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags);
+
+        public delegate void MouseWheelHandler(
+            ref WindowMessage msg, ref Point point, short wheelDelta, bool isWheelDirectionHorizontal,
+            MouseInputKeyStateFlags flags);
+
+        public delegate void MoveHandler(ref WindowMessage msg, ref Point point);
+
+        public delegate void PaintHandler(ref WindowMessage msg, IntPtr cHdc);
+
+        public delegate void QuitHandler(ref WindowMessage msg, int code);
+
+        public delegate void ShowWindowHandler(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags);
+
+        public delegate void SizeHandler(ref WindowMessage msg, WindowSizeFlag flag, ref Size size);
+
+        public delegate void SysCommandHandler(
+            ref WindowMessage msg, SysCommand cmd, short mouseCursorXOrZero, short mouseCursorYOrKeyMnemonic);
+
+        #endregion
+
+        #region Non-client Handling
+
+        public delegate NcActivationResult NcActivateHandler(
+            ref WindowMessage msg, bool isShown, IntPtr updateRegion);
+
+        public unsafe delegate WindowViewRegionFlags NcCalcSizeRequestHandler(
+            ref WindowMessage msg, NcCalcSizeRequestParams* ncCalcSizeRequestParams);
+
+        public unsafe delegate void NcCalcSizeResponseHandler(
+            ref WindowMessage msg, NcCalcSizeResponseParams* nonClientResponseParams);
+
+        public static unsafe void ProcessNcCalcSize(ref WindowMessage msg,
+            NcCalcSizeRequestHandler requestHandler, NcCalcSizeResponseHandler responseHandler)
+        {
+            var shouldProvideClientArea = msg.WParam.ToSafeUInt32() > 0;
+            if (shouldProvideClientArea)
+            {
+                var nonClientArea = (NcCalcSizeRequestParams*) msg.LParam.ToPointer();
+                msg.Result = new IntPtr((int) requestHandler(ref msg, nonClientArea));
+                // If providing, 0 preserves previous area & align top-left
+            }
+            else
+            {
+                var nonClientRect = (NcCalcSizeResponseParams*) msg.LParam.ToPointer();
+                responseHandler(ref msg, nonClientRect);
+                // Implicit 0 return; 
+            }
+        }
+
+        public static void ProcessNcActivate(ref WindowMessage msg, NcActivateHandler handler)
+        {
+            var isShown = msg.WParam.ToSafeInt32() > 0;
+            // lParam is used only if visual styles are disabled.
+            var updateRegion = msg.LParam;
+            var res = handler(ref msg, isShown, updateRegion);
+            if (res.PreventRegionUpdates)
+                msg.LParam = new IntPtr(-1);
+            msg.Result = new IntPtr(res.PreventDeactivationChanges ? 0 : 1);
+            // To prevent Nc region update in DefWndProc, set LParam = -1;
+            // When wParam == TRUE, result is ignored.
+            // var result = TRUE // Default processing;
+            // var result = FALSE // Prevent changes.
+        }
+
+        #endregion
     }
 
     public enum MouseButton
@@ -441,7 +449,7 @@ namespace WinApi.XWin
         Handled = 1
     }
 
-    public struct NonClientActivationResult
+    public struct NcActivationResult
     {
         public bool PreventRegionUpdates;
         public bool PreventDeactivationChanges;

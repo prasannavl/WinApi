@@ -253,21 +253,21 @@ namespace WinApi.User32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct NonClientArea
+    public unsafe struct NcCalcSizeRequestParams
     {
-        public NonClientSizeParamRegionUnion Region;
+        public NcCalcSizeRegionUnion Region;
         public WindowPosition* Position;
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public struct NonClientSizeParamRegionUnion
+    public struct NcCalcSizeRegionUnion
     {
-        [FieldOffset(0)] public NonClientSizeInputParam Input;
-        [FieldOffset(0)] public NonClientSizeOutputParam Output;
+        [FieldOffset(0)] public NcCalcSizeInput Input;
+        [FieldOffset(0)] public NcCalcSizeOutput Output;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct NonClientSizeInputParam
+    public struct NcCalcSizeInput
     {
         public Rectangle TargetWindowRect;
         public Rectangle CurrentWindowRect;
@@ -275,7 +275,7 @@ namespace WinApi.User32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct NonClientSizeOutputParam
+    public struct NcCalcSizeOutput
     {
         public Rectangle ResultClientRect;
         public Rectangle SrcRect;
@@ -283,7 +283,7 @@ namespace WinApi.User32
     }
 
     [StructLayout(LayoutKind.Explicit)]
-    public struct NonClientAreaRectangle
+    public struct NcCalcSizeResponseParams
     {
         [FieldOffset(0)] public Rectangle InputWindowRect;
         [FieldOffset(0)] public Rectangle OutputClientRect;
