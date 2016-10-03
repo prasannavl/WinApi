@@ -277,7 +277,7 @@ namespace WinApi.User32
     [StructLayout(LayoutKind.Sequential)]
     public struct NcCalcSizeOutput
     {
-        public Rectangle ResultClientRect;
+        public Rectangle TargetClientRect;
         public Rectangle SrcRect;
         public Rectangle DestRect;
     }
