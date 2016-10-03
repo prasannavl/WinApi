@@ -318,7 +318,7 @@ namespace WinApi.XWin
 
         public delegate void CommandHandler(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hwnd);
 
-        public delegate CreationResult CreateHandler(ref WindowMessage msg, ref CreateStruct createStruct);
+        public delegate CreateWindowResult CreateHandler(ref WindowMessage msg, ref CreateStruct createStruct);
 
         public delegate void DisplayChangeHandler(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size);
 
@@ -436,7 +436,7 @@ namespace WinApi.XWin
         DisableDefaultErase = 1
     }
 
-    public enum CreationResult
+    public enum CreateWindowResult
     {
         Default = 0,
         PreventCreation = -1

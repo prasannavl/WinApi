@@ -316,7 +316,7 @@ namespace WinApi.XWin
         protected virtual void OnSystemTimeChange(ref WindowMessage msg) {}
         protected virtual void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size) {}
         protected virtual void OnMove(ref WindowMessage msg, ref Point size) {}
-        protected virtual CreationResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct) => 0;
+        protected virtual CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct) => 0;
 
         protected virtual void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
             IntPtr oppositeWindowHandle) {}
