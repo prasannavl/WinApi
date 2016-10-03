@@ -1,8 +1,15 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using SharpDX.Text;
 using WinApi.Core;
 using WinApi.Desktop;
 using WinApi.DwmApi;
+using WinApi.Gdi32;
 using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
@@ -17,7 +24,7 @@ namespace Sample.DirectX
             ? (IGraphicsContext)new D2DGraphicsContext()
             : new D2DRenderTargetGraphicsContext();
 
-        protected override CreationResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
+        protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
             var size = GetClientSize();
 

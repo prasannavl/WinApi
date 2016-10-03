@@ -171,6 +171,7 @@ namespace Sample.DirectX.Dx
             EnsureDxgiFactory();
             var m = new ModeDescription(Size.Width, Size.Height, new Rational(60, 1),
                 Format.B8G8R8A8_UNorm) { Scaling = DisplayModeScaling.Unspecified };
+
             var swapChainDesc = new SwapChainDescription
             {
                 ModeDescription = m,

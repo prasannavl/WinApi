@@ -42,7 +42,7 @@ namespace Sample.SimulateInput
             private TimerProc m_timerProc;
             private int m_timesExecuted;
 
-            protected override CreationResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
+            protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
             {
                 m_textBox = StaticBox.Create(
                     "Ahoy!",

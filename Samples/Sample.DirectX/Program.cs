@@ -3,6 +3,7 @@ using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.XWin;
 using WinApi.Desktop;
+using WinApi.Gdi32;
 using WinApi.XWin.Helpers;
 
 namespace Sample.DirectX
@@ -21,11 +22,8 @@ namespace Sample.DirectX
 
                 // Create the window without a dependency on WinApi.XWin.Controls
                 using (
-                    var win = factory.CreateWindow(() => new MainWindow(),
-                    constructionParams: new FrameWindowConstructionParams(),
-                        exStyles:
-                        WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_WINDOWEDGE |
-                        WindowExStyles.WS_EX_DLGMODALFRAME))
+                    var win = factory.CreateWindow(() => new MainWindow(), "Hello",
+                        constructionParams: new FrameWindowConstructionParams()))
                 {
                     win.Show();
                     return new EventLoop().Run(win);
