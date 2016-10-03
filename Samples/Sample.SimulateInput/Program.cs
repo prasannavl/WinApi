@@ -84,7 +84,7 @@ namespace Sample.SimulateInput
                 return base.OnCreate(ref msg, ref createStruct);
             }
 
-            protected override void OnKeyEvent(ref WindowMessage msg, VirtualKey key, bool isKeyUp, KeyboardInputState inputState, bool isSystemContext)
+            protected override void OnKey(ref WindowMessage msg, VirtualKey key, bool isKeyUp, KeyboardInputState inputState, bool isSystemContext)
             {
                 var str = $"\r\n{DateTime.Now} :" +
                               $" {key} => {inputState.IsKeyUpTransition}; " +
@@ -94,7 +94,7 @@ namespace Sample.SimulateInput
                               $"{inputState.IsExtendedKey}" + "\r\n" +
                               $"No. of text display changes: {m_timesExecuted}" + "\0";
                 m_textBox.SetText(str);
-                base.OnKeyEvent(ref msg, key, isKeyUp, inputState, isSystemContext);
+                base.OnKey(ref msg, key, isKeyUp, inputState, isSystemContext);
             }
 
             protected override void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size)
