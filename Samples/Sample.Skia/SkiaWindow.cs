@@ -8,45 +8,84 @@ using WinApi.XWin;
 
 namespace Sample.Skia
 {
-    public class SkiaWindowBase : EventedWindowCore
-    {
-        private Size m_currentClientSize;
-        private IntPtr m_pixelBufferPtr;
-        private int m_pixelBufferSize;
-        private int m_pixelBufferStride;
 
-        private void ResizePixelBuffersIfRequired()
+    public abstract class WindowWithPixelBuffers : EventedWindowCore
+    {
+        protected IntPtr PixelBufferPtr { get; private set; }
+        protected Size PixelBufferImageSize { get; private set; }
+        protected int PixelBufferSize { get; private set; }
+        protected int PixelBufferStride { get; private set; }
+
+        protected void ResizePixelBuffersIfRequired(ref Size targetSize)
         {
-            var size = GetClientSize();
-            var sizeCurrent = m_currentClientSize;
-            if (sizeCurrent.Width + sizeCurrent.Height == size.Width + size.Height)
+            var size = targetSize;
+            if (targetSize == PixelBufferImageSize)
                 return;
 
-            var stride = 4*((size.Width*32 + 31)/32);
-            var pixelBufferRequiredSize = size.Height*stride;
-            if (pixelBufferRequiredSize != m_pixelBufferSize)
+            var stride = 4 * ((size.Width * 32 + 31) / 32);
+            var pixelBufferRequiredSize = size.Height * stride;
+            if (pixelBufferRequiredSize != PixelBufferSize)
             {
-                if (m_pixelBufferPtr != IntPtr.Zero)
-                    Marshal.FreeHGlobal(m_pixelBufferPtr);
-                m_pixelBufferPtr = Marshal.AllocHGlobal(pixelBufferRequiredSize);
-                m_pixelBufferSize = pixelBufferRequiredSize;
-                m_currentClientSize = size;
-                m_pixelBufferStride = stride;
+                if (PixelBufferPtr != IntPtr.Zero)
+                    Marshal.FreeHGlobal(PixelBufferPtr);
+                PixelBufferPtr = Marshal.AllocHGlobal(pixelBufferRequiredSize);
+                PixelBufferSize = pixelBufferRequiredSize;
             }
+
+            PixelBufferStride = stride;
+            PixelBufferImageSize = size;
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (m_pixelBufferPtr != IntPtr.Zero)
+            if (PixelBufferPtr != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(m_pixelBufferPtr);
-                m_pixelBufferPtr = IntPtr.Zero;
-                m_pixelBufferSize = 0;
-                m_currentClientSize = new Size();
+                Marshal.FreeHGlobal(PixelBufferPtr);
+                PixelBufferPtr = IntPtr.Zero;
+                PixelBufferSize = 0;
+                PixelBufferImageSize = new Size();
             }
             base.Dispose(disposing);
         }
+    }
 
+    public class SkiaNcWindowBase : WindowWithPixelBuffers
+    {
+        protected virtual void OnSkiaPaint(SKSurface surface) { }
+
+        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
+        {
+            var hdc = User32Methods.GetWindowDC(Handle);
+            try
+            {
+                var size = GetWindowSize();
+                ResizePixelBuffersIfRequired(ref size);
+                using (var surface = SKSurface.Create(
+                    size.Width,
+                    size.Height,
+                    SKColorType.Bgra8888,
+                    SKAlphaType.Premul,
+                    PixelBufferPtr,
+                    PixelBufferStride))
+                {
+                    if (surface != null)
+                    {
+                        OnSkiaPaint(surface);
+                        Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, PixelBufferPtr);
+                    }
+                }
+                base.OnPaint(ref msg, hdc);
+            }
+            finally
+            {
+                User32Methods.ReleaseDC(Handle, hdc);
+                this.Validate();
+            }
+        }
+    }
+
+    public class SkiaWindowBase : WindowWithPixelBuffers
+    {
         protected virtual void OnSkiaPaint(SKSurface surface) {}
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
@@ -55,19 +94,22 @@ namespace Sample.Skia
             var hdc = User32Methods.BeginPaint(Handle, out ps);
             try
             {
-                ResizePixelBuffersIfRequired();
-                var size = m_currentClientSize;
+                var size = GetClientSize();
+                ResizePixelBuffersIfRequired(ref size);
                 using (var surface = SKSurface.Create(
                     size.Width,
                     size.Height,
                     SKColorType.Bgra8888,
                     SKAlphaType.Premul,
-                    m_pixelBufferPtr,
-                    m_pixelBufferStride))
+                    PixelBufferPtr,
+                    PixelBufferStride))
                 {
-                    OnSkiaPaint(surface);
+                    if (surface != null)
+                    {
+                        OnSkiaPaint(surface);
+                        Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, PixelBufferPtr);
+                    }
                 }
-                Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, m_pixelBufferPtr);
                 base.OnPaint(ref msg, hdc);
             }
             finally
