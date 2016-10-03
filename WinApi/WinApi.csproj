@@ -80,7 +80,7 @@
     <Compile Include="XWin\EventLoop.cs" />
     <Compile Include="XWin\Helpers\MessageBoxHelpers.cs" />
     <Compile Include="XWin\MessageHandlers.cs" />
-    <Compile Include="XWin\MessageHelpers.cs" />
+    <Compile Include="XWin\Helpers\MessageHelpers.cs" />
     <Compile Include="XWin\NativeWindow.cs" />
     <Compile Include="XWin\WindowCore.cs" />
     <Compile Include="XWin\WindowFactory.cs" />
