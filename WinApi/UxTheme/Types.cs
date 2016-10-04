@@ -8,9 +8,9 @@ using WinApi.User32;
 namespace WinApi.UxTheme
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct Margin
+    public struct Margins
     {
-        public Margin(int left = 0, int right = 0, int top = 0, int bottom = 0)
+        public Margins(int left = 0, int right = 0, int top = 0, int bottom = 0)
         {
             Left = left;
             Right = right;
@@ -18,13 +18,13 @@ namespace WinApi.UxTheme
             Bottom = bottom;
         }
 
-        public Margin(int x = 0, int y = 0)
+        public Margins(int x = 0, int y = 0)
         {
             Left = Right = x;
             Top = Bottom = y;
         }
 
-        public Margin(int all = 0)
+        public Margins(int all = 0)
         {
             Left = Right = Top = Bottom = all;
         }

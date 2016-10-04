@@ -24,7 +24,7 @@ namespace WinApi.DwmApi
         public static extern HResult DwmIsCompositionEnabled(out bool pfEnabled);
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern HResult DwmExtendFrameIntoClientArea(IntPtr hwnd, [In] ref Margin margin);
+        public static extern HResult DwmExtendFrameIntoClientArea(IntPtr hwnd, [In] ref Margins margins);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool DwmDefWindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam,
