@@ -72,6 +72,7 @@
     <Compile Include="User32\Helpers.cs" />
     <Compile Include="User32\Methods.cs" />
     <Compile Include="User32\Types.cs" />
+    <Compile Include="UxTheme\Helpers.cs" />
     <Compile Include="UxTheme\Methods.cs" />
     <Compile Include="UxTheme\Types.cs" />
     <Compile Include="Windows\ConstructionParams.cs" />
