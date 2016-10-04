@@ -52,7 +52,7 @@ namespace Sample.DirectX
             PaintStruct ps;
             var hdc = User32Methods.BeginPaint(m_hwnd, out ps);
             var b = Gdi32Methods.CreateSolidBrush(0);
-            User32Methods.FillRect(hdc, ref ps.PaintRectangle, b);
+            User32Methods.FillRect(hdc, ref ps.PaintRect, b);
             Gdi32Methods.DeleteObject(b);
             User32Methods.EndPaint(m_hwnd, ref ps);
         }

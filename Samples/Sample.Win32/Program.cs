@@ -79,7 +79,7 @@ namespace Sample.Win32
                 {
                     PaintStruct ps;
                     var hdc = User32Methods.BeginPaint(hwnd, out ps);
-                    User32Methods.FillRect(hdc, ref ps.PaintRectangle,
+                    User32Methods.FillRect(hdc, ref ps.PaintRect,
                         Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
                     User32Methods.EndPaint(hwnd, ref ps);
                     break;

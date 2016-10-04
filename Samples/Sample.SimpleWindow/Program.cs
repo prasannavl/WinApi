@@ -31,7 +31,7 @@ namespace Sample.SimpleWindow
         {
             PaintStruct ps;
             hdc = User32Methods.BeginPaint(Handle, out ps);
-            User32Methods.FillRect(hdc, ref ps.PaintRectangle,
+            User32Methods.FillRect(hdc, ref ps.PaintRect,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             User32Methods.EndPaint(Handle, ref ps);
 
