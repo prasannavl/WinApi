@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 
 // ReSharper disable InconsistentNaming
 
@@ -69,32 +70,29 @@ namespace WinApi.Gdi32
         }
 
         public static unsafe int SetRgbBitsToDevice(IntPtr hdc, int width, int height, byte[] bits, int xSrc = 0,
-            int ySrc = 0, int xDest = 0, int yDest = 0, bool isRgba = true)
+            int ySrc = 0, int xDest = 0, int yDest = 0, bool isRgba = true, bool isImageTopDown = true)
         {
             fixed (byte* ptr = &bits[0])
             {
-                return SetRgbBitsToDevice(hdc, width, height, (IntPtr)ptr, xSrc, ySrc, xDest, yDest, isRgba);
+                return SetRgbBitsToDevice(hdc, width, height, (IntPtr) ptr, xSrc, ySrc, xDest, yDest, isRgba);
             }
         }
 
         public static unsafe int SetRgbBitsToDevice(IntPtr hdc, int width, int height, IntPtr pixelBufferPtr,
             int xSrc = 0,
-            int ySrc = 0, int xDest = 0, int yDest = 0, bool isRgba = true)
+            int ySrc = 0, int xDest = 0, int yDest = 0, bool isRgba = true, bool isImageTopDown = true)
         {
-            var bi = new BitmapInfoHeader()
+            var bi = new BitmapInfoHeader
             {
                 Size = (uint) Marshal.SizeOf<BitmapInfoHeader>(),
                 Width = width,
-                Height = height,
+                Height = isImageTopDown ? -height : height,
                 CompressionMode = BitmapCompressionMode.BI_RGB,
                 BitCount = isRgba ? (ushort) 32 : (ushort) 24,
-                Planes = 1,
+                Planes = 1
             };
-            var absHeight = (uint) Math.Abs(height);
-            var absWidth = (uint) Math.Abs(width);
-
-            return Gdi32Methods.SetDIBitsToDevice(hdc, xDest, yDest, absWidth, absHeight, xSrc, ySrc, 0,
-                absHeight, pixelBufferPtr, new IntPtr(&bi),
+            return Gdi32Methods.SetDIBitsToDevice(hdc, xDest, yDest, (uint) width, (uint) height, xSrc, ySrc, 0,
+                (uint) height, pixelBufferPtr, new IntPtr(&bi),
                 DibBmiColorUsageFlag.DIB_RGB_COLORS);
         }
     }
