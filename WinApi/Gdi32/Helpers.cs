@@ -90,8 +90,11 @@ namespace WinApi.Gdi32
                 BitCount = isRgba ? (ushort) 32 : (ushort) 24,
                 Planes = 1,
             };
-            return Gdi32Methods.SetDIBitsToDevice(hdc, xDest, yDest, (uint) width, (uint) height, xSrc, ySrc, 0,
-                (uint) height, pixelBufferPtr, new IntPtr(&bi),
+            var absHeight = (uint) Math.Abs(height);
+            var absWidth = (uint) Math.Abs(width);
+
+            return Gdi32Methods.SetDIBitsToDevice(hdc, xDest, yDest, absWidth, absHeight, xSrc, ySrc, 0,
+                absHeight, pixelBufferPtr, new IntPtr(&bi),
                 DibBmiColorUsageFlag.DIB_RGB_COLORS);
         }
     }
