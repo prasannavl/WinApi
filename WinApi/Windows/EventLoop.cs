@@ -1,9 +1,8 @@
 ﻿using System;
-using WinApi.Kernel32;
 using WinApi.User32;
-using WinApi.XWin.Helpers;
+using WinApi.Windows.Helpers;
 
-namespace WinApi.XWin
+namespace WinApi.Windows
 {
     public interface IEventLoop
     {

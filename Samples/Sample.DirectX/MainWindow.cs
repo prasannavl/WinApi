@@ -14,6 +14,7 @@ using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.UxTheme;
+using WinApi.Windows;
 using WinApi.XWin;
 
 namespace Sample.DirectX

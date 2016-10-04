@@ -1,5 +1,5 @@
 ﻿using System;
-using WinApi.XWin;
+using WinApi.Windows;
 
 namespace WinApi.Desktop
 {

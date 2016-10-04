@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WinApi.Gdi32;
 using WinApi.User32;
-using WinApi.XWin;
-using WinApi.XWin.Controls;
+using WinApi.Windows;
+using WinApi.Windows.Controls;
 
 namespace Sample.SimpleWindow
 {

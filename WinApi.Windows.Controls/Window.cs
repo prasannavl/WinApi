@@ -1,7 +1,7 @@
 ﻿using System;
 using WinApi.User32;
 
-namespace WinApi.XWin.Controls
+namespace WinApi.Windows.Controls
 {
     public class Window : EventedWindowCore, IConstructionParamsProvider
     {

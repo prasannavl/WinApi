@@ -1,7 +1,7 @@
 using System;
 using WinApi.User32;
 
-namespace WinApi.XWin
+namespace WinApi.Windows
 {
     public interface IConstructionParamsProvider
     {

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using System.Threading;
 using WinApi.Core;
 using WinApi.User32;
 
-namespace WinApi.XWin
+namespace WinApi.Windows
 {
     public interface IWindowMessageProcessor
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using WinApi.Kernel32;
 using WinApi.User32;
-using WinApi.XWin;
 using WinApi.Desktop;
 using WinApi.Gdi32;
-using WinApi.XWin.Helpers;
+using WinApi.Windows;
+using WinApi.Windows.Helpers;
 
 namespace Sample.DirectX
 {

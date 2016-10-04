@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using WinApi.Gdi32;
 using WinApi.Kernel32;
 using WinApi.User32;
 
-namespace WinApi.XWin
+namespace WinApi.Windows
 {
     public class WindowFactory
     {

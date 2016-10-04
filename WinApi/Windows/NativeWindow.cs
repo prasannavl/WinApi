@@ -3,7 +3,7 @@ using System.Text;
 using WinApi.Core;
 using WinApi.User32;
 
-namespace WinApi.XWin
+namespace WinApi.Windows
 {
     public interface INativeAttachable
     {

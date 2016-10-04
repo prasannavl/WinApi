@@ -3,9 +3,9 @@ using System.Runtime.ExceptionServices;
 using WinApi.Core;
 using WinApi.Desktop;
 using WinApi.User32;
-using WinApi.XWin;
-using WinApi.XWin.Controls;
-using WinApi.XWin.Controls.Layouts;
+using WinApi.Windows;
+using WinApi.Windows.Controls;
+using WinApi.Windows.Controls.Layouts;
 
 namespace Sample.SimulateInput
 {

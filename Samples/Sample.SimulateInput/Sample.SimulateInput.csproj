@@ -58,9 +58,9 @@
       <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WinApi.XWin.Controls\WinApi.XWin.Controls.csproj">
+    <ProjectReference Include="..\..\WinApi.Windows.Controls\WinApi.Windows.Controls.csproj">
       <Project>{c00c4085-244e-4013-b9eb-b1f86e19b3d5}</Project>
-      <Name>WinApi.XWin.Controls</Name>
+      <Name>WinApi.Windows.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
       <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>

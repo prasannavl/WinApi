@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using OpenGL;
 using WinApi.User32;
-using WinApi.XWin;
-using WinApi.XWin.Controls;
+using WinApi.Windows;
+using WinApi.Windows.Controls;
 
 namespace Sample.OpenGL
 {

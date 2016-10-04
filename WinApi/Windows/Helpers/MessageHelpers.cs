@@ -2,7 +2,7 @@
 using WinApi.DwmApi;
 using WinApi.User32;
 
-namespace WinApi.XWin.Helpers
+namespace WinApi.Windows.Helpers
 {
     public static class MessageHelpers
     {

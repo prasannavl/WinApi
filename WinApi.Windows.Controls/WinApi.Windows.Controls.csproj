@@ -8,8 +8,8 @@
     <ProjectGuid>{C00C4085-244E-4013-B9EB-B1F86E19B3D5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinApi.XWin.Controls</RootNamespace>
-    <AssemblyName>WinApi.XWin.Controls</AssemblyName>
+    <RootNamespace>WinApi.Windows.Controls</RootNamespace>
+    <AssemblyName>WinApi.Windows.Controls</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

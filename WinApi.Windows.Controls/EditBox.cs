@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WinApi.User32;
 
-namespace WinApi.XWin.Controls
+namespace WinApi.Windows.Controls
 {
     public class EditBox : EventedWindowCore, IConstructionParamsProvider
     {

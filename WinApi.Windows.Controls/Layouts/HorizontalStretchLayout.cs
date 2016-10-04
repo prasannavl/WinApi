@@ -2,9 +2,8 @@
 using WinApi.Core;
 using WinApi.Helpers;
 using WinApi.User32;
-using WinApi.XWin.Helpers;
 
-namespace WinApi.XWin.Controls.Layouts
+namespace WinApi.Windows.Controls.Layouts
 {
     public class HorizontalStretchLayout
     {

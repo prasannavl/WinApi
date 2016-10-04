@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Win32", "Samples\Sam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Skia", "Samples\Sample.Skia\Sample.Skia.csproj", "{5FF4BAC3-D221-4023-9EE9-51C1F5C85D50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinApi.XWin.Controls", "WinApi.XWin.Controls\WinApi.XWin.Controls.csproj", "{C00C4085-244E-4013-B9EB-B1F86E19B3D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinApi.Windows.Controls", "WinApi.Windows.Controls\WinApi.Windows.Controls.csproj", "{C00C4085-244E-4013-B9EB-B1F86E19B3D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinApi.Desktop", "WinApi.Desktop\WinApi.Desktop.csproj", "{509F07FA-CFAC-4316-BB8D-D4571A0A6379}"
 EndProject

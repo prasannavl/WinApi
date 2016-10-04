@@ -3,7 +3,7 @@ using WinApi.Core;
 using WinApi.Extensions;
 using WinApi.User32;
 
-namespace WinApi.XWin
+namespace WinApi.Windows
 {
     public class MessageHandlers
     {

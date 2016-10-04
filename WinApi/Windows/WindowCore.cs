@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WinApi.User32;
 
-namespace WinApi.XWin
+namespace WinApi.Windows
 {
     /// <summary>
     /// The minimum core for all windows. It derives from the NativeWindow, 
