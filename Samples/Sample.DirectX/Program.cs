@@ -20,7 +20,7 @@ namespace Sample.DirectX
                     WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
                     cache.ProcessHandle, IntPtr.Zero, cache.ArrowCursorHandle, IntPtr.Zero, null);
 
-                // Create the window without a dependency on WinApi.XWin.Controls
+                // Create the window without a dependency on WinApi.Windows.Controls
                 using (
                     var win = factory.CreateWindow(() => new MainWindow(), "Hello",
                         constructionParams: new FrameWindowConstructionParams()))

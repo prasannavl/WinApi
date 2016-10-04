@@ -21,7 +21,7 @@ Platform: `netstandard 1.2`
 - Provide a single DLL that can over time, be a direct equivalent of C/C++ `windows.h` header file for the CLR. Other Windows SDK wrappers may, or may not be in fragmented into separate packages.
 - Sufficient base to be able to write custom toolkits over Win32 based on Direct2D, Direct3D or even an external graphics library like Skia, without depending on WPF or WinForms - `Examples of usage with Direct2D, 3D, Skia, OpenGL are all in the samples`.
 - Always retain parity with the native API when it comes to constants (Eg: `WS_OVERLAPPEDWINDOW`, will never be changed to `OverlappedWindow` to look more like C#. The only exceptions: `WM` and `VirtualKey` - the message id, and virtual key constants for simpler usability).
-- `WinApi.XWin` - See below.
+- `WinApi.Windows` - See below.
 - All structs, flags, should always have the names in the idiomatic C# style. (Eg: `public enum WindowStyles { .. WS_OVERLAPPEDWINDOW = 0x00.  }`). Never WINDOWSTYLE, or MARGINS or RECT. Always `Margin`, `Rectangle`, etc. (It actually is surprisingly clean once drop the usual depencendies like WinForms, or WPF which always provide alternative forms).
 - Use variants such as `int` for Windows types like `BOOL` - to ensure minimum Marashalling impact when inside a structure. Using `bool` requires another copy, since bool in CLR is 1 byte, but the unmanaged variant could be 1, 2 or 4 bytes, depending on the context. However, when it comes to functions `bool` is used directly, since int conversion there is not only tedious but is bound to loose semantic value.
 
@@ -29,7 +29,7 @@ Platform: `netstandard 1.2`
 
 - Provide fully documented API (both from headers and MSDN, where-ever applicable) in the releases. Everything should be `IntelliSense capable`. No MSDN round-trips, while doing low level programming with CLR.
 
-**WinApi.XWin:**
+**WinApi.Windows:**
 
 - Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
 - Fundamental concepts similar to ATL/WTL, but in a C# idiomatic way.
@@ -243,7 +243,7 @@ namespace Sample.Win32
 
 Well, that's quite verbose - for the sake of example, even though we never usually end up using it this way. But if you'd like, you can use it, all while being very transparent in terms of the low level API. Now, to be more in line with practical uses.
 
-Here's a comparison to ATL/WTL, using the XWin namespace.
+Here's a comparison to ATL/WTL, using the `WinApi.Windows` namespace.
 
 Using C++ with ATL/WTL, here's a complete compilable program:
 
@@ -323,11 +323,11 @@ int wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int)
 
 ``` 
 
-And now the same using WinApi.WinX:
+And now the same using WinApi.Windows:
 
 ```c#
 using System;
-using WinApi.XWin;
+using WinApi.Windows;
 using WinApi.User32;
 
 namespace MySuperLowLevelProgram {
