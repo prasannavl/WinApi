@@ -229,7 +229,7 @@ namespace Sample.Win32
                 {
                     PaintStruct ps;
                     var hdc = User32Methods.BeginPaint(hwnd, out ps);
-                    User32Methods.FillRect(hdc, ref ps.PaintRectangle,
+                    User32Methods.FillRect(hdc, ref ps.PaintRect,
                         Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
                     User32Methods.EndPaint(hwnd, ref ps);
                     break;
@@ -352,7 +352,7 @@ namespace MySuperLowLevelProgram {
         {
             PaintStruct ps;
             hdc = User32Methods.BeginPaint(Handle, out ps);
-            User32Methods.FillRect(hdc, ref ps.PaintRectangle,
+            User32Methods.FillRect(hdc, ref ps.PaintRect,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             User32Methods.EndPaint(Handle, ref ps);
 
@@ -379,7 +379,7 @@ namespace MySuperLowLevelProgram {
                     // basis, when I need it since all the default methods
                     // are publicly, exposed with the MessageHandlers class.
                     //
-                    // MessageHandlers.OnEraseBkgnd(this, ref msg);
+                    // MessageHandlers.ProcessEraseBkgnd(ref msg, this.OnEraseBkgnd);
                     // return;
 
                     msg.Result = new IntPtr(1);
