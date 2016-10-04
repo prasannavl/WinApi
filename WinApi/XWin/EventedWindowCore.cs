@@ -22,7 +22,7 @@ namespace WinApi.XWin
     /// </summary>
     public abstract class EventedWindowCore : WindowCore, IWindowMessageProcessor
     {
-        unsafe void IWindowMessageProcessor.ProcessMessage(ref WindowMessage msg)
+        void IWindowMessageProcessor.ProcessMessage(ref WindowMessage msg)
         {
             switch (msg.Id)
             {
@@ -81,8 +81,7 @@ namespace WinApi.XWin
                 }
                 case WM.NCCALCSIZE:
                 {
-                    MessageHandlers.ProcessNcCalcSize(ref msg, OnNcCalcSizeRequest,
-                        OnNcCalcSizeResponse);
+                    MessageHandlers.ProcessNcCalcSize(ref msg, OnNcCalcSize);
                     break;
                 }
                 case WM.SHOWWINDOW:
@@ -301,8 +300,14 @@ namespace WinApi.XWin
                     MessageHandlers.ProcessHotKey(ref msg, OnHotKey);
                     break;
                 }
+                case WM.GETMINMAXINFO:
+                {
+                    MessageHandlers.ProcessGetMinMaxInfo(ref msg, OnMinMaxInfo);
+                    break;
+                }
             }
         }
+
 
         protected override void OnMessage(ref WindowMessage msg)
         {
@@ -312,6 +317,7 @@ namespace WinApi.XWin
 
         protected virtual void OnClose(ref WindowMessage msg) {}
         protected virtual EraseBackgroundResult OnEraseBkgnd(ref WindowMessage msg, IntPtr cHdc) => 0;
+        protected virtual void OnMinMaxInfo(ref WindowMessage msg, ref MinMaxInfo minmaxinfo) {}
         protected virtual void OnDestroy(ref WindowMessage msg) {}
         protected virtual void OnSystemTimeChange(ref WindowMessage msg) {}
         protected virtual void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size) {}
@@ -319,7 +325,7 @@ namespace WinApi.XWin
         protected virtual CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct) => 0;
 
         protected virtual void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
-            IntPtr oppositeWindowHandle) {}
+            IntPtr oppositeHwnd) {}
 
         protected virtual void OnPaint(ref WindowMessage msg, IntPtr cHdc) {}
         protected virtual void OnDisplayChange(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size) {}
@@ -336,8 +342,8 @@ namespace WinApi.XWin
         protected virtual void OnMouseLeave(ref WindowMessage msg) {}
         protected virtual void OnMouseHover(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) {}
         protected virtual void OnInputCaptureChanged(ref WindowMessage msg, IntPtr handleOfWindowReceivingCapture) {}
-        protected virtual void OnGotFocus(ref WindowMessage msg, IntPtr oppositeWindowHandle) {}
-        protected virtual void OnLostFocus(ref WindowMessage msg, IntPtr oppositeWindowHandle) {}
+        protected virtual void OnGotFocus(ref WindowMessage msg, IntPtr oppositeHwnd) {}
+        protected virtual void OnLostFocus(ref WindowMessage msg, IntPtr oppositeHwnd) {}
         protected virtual void OnMenuCommand(ref WindowMessage msg, int menuIndex, IntPtr menuHandle) {}
 
         protected virtual void OnSysCommand(ref WindowMessage msg, SysCommand cmd, short mouseCursorX,
@@ -355,16 +361,13 @@ namespace WinApi.XWin
             ScreenshotHotKey screenshotHotKey) {}
 
         protected virtual AppCommandResult OnAppCommand(ref WindowMessage msg, AppCommand cmd, AppCommandDevice device,
-            KeyboardInputState keyState, IntPtr windowHandle) => 0;
+            KeyboardInputState keyState, IntPtr hwnd) => 0;
 
         protected virtual void OnMouseButton(ref WindowMessage msg, ref Point point, MouseButton button,
             bool inputKeyState, MouseInputKeyStateFlags mouseInputKeyState) {}
 
-        protected virtual unsafe WindowViewRegionFlags OnNcCalcSizeRequest(ref WindowMessage msg,
-            NcCalcSizeRequestParams* ncCalcSizeRequestParams) => 0;
-
-        protected virtual unsafe void OnNcCalcSizeResponse(ref WindowMessage msg,
-            NcCalcSizeResponseParams* ncCalcSizeResponseParams) {}
+        protected virtual WindowViewRegionFlags OnNcCalcSize(ref WindowMessage msg, bool shouldCalcValidRects,
+            ref NcCalcSizeParams ncCalcSizeParams) => 0;
 
         protected virtual void OnShow(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags) {}
         protected virtual void OnQuit(ref WindowMessage msg, int code) {}

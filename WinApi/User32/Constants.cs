@@ -4914,6 +4914,15 @@ namespace WinApi.User32
         FAPPCOMMAND_MASK = 0xF000
     }
 
+    public enum MonitorInfoFlag
+    {
+        MONITORINFOF_NONE = 0,
+        /// <summary>
+        /// This is the primary display monitor.
+        /// </summary>
+        MONITORINFOF_PRIMARY = 0x00000001
+    }
+
     public enum WM
     {
         NULL = 0x0000,

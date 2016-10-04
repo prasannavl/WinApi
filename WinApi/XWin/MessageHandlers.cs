@@ -26,6 +26,14 @@ namespace WinApi.XWin
             // Return 0 to continue creation. -1 to destroy and prevent
         }
 
+        public static unsafe void ProcessGetMinMaxInfo(ref WindowMessage msg, GetMinMaxInfoHandler handler)
+        {
+            var lPtr = (MinMaxInfo*)msg.LParam;
+            var minMaxInfo = *lPtr;
+            handler(ref msg, ref minMaxInfo);
+            *lPtr = minMaxInfo;
+        }
+
         public static void ProcessSize(ref WindowMessage msg, SizeHandler handler)
         {
             Size size;
@@ -62,8 +70,8 @@ namespace WinApi.XWin
             msg.WParam.BreakSafeInt32To16Signed(out high, out low);
             var flag = (WindowActivateFlag) low;
             var isMinimized = high != 0;
-            var oppositeWindowHandle = msg.LParam;
-            handler(ref msg, flag, isMinimized, oppositeWindowHandle);
+            var oppositeHwnd = msg.LParam;
+            handler(ref msg, flag, isMinimized, oppositeHwnd);
             // Standard return. 0 if already processed
         }
 
@@ -253,15 +261,15 @@ namespace WinApi.XWin
 
         public static void ProcessLostFocus(ref WindowMessage msg, FocusHandler handler)
         {
-            var oppositeWindowHandle = msg.WParam;
-            handler(ref msg, oppositeWindowHandle);
+            var oppositeHwnd = msg.WParam;
+            handler(ref msg, oppositeHwnd);
             // Standard return. 0 if already processed
         }
 
         public static void ProcessGotFocus(ref WindowMessage msg, FocusHandler handler)
         {
-            var oppositeWindowHandle = msg.WParam;
-            handler(ref msg, oppositeWindowHandle);
+            var oppositeHwnd = msg.WParam;
+            handler(ref msg, oppositeHwnd);
             // Standard return. 0 if already processed
         }
 
@@ -288,8 +296,8 @@ namespace WinApi.XWin
             var cmd = (AppCommand) (lParam.HighAsInt() & (uint) AppCommandDevice.FAPPCOMMAND_MASK);
             var device = (AppCommandDevice) (lParam.HighAsInt() & (uint) AppCommandDevice.FAPPCOMMAND_MASK);
             var keyState = new KeyboardInputState(lParam.LowAsInt());
-            var windowHandle = msg.WParam;
-            msg.Result = new IntPtr((int) handler(ref msg, cmd, device, keyState, windowHandle));
+            var hwnd = msg.WParam;
+            msg.Result = new IntPtr((int) handler(ref msg, cmd, device, keyState, hwnd));
             // Return TRUE if handled.
         }
 
@@ -308,11 +316,13 @@ namespace WinApi.XWin
         public delegate void ActivateAppHandler(ref WindowMessage msg, bool isActive, uint oppositeThreadId);
 
         public delegate void ActivateHandler(
-            ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized, IntPtr oppositeWindowHandle);
+            ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized, IntPtr oppositeHwnd);
 
         public delegate AppCommandResult AppCommandHandler(
             ref WindowMessage msg, AppCommand cmd, AppCommandDevice device, KeyboardInputState keyState,
-            IntPtr windowHandle);
+            IntPtr hwnd);
+
+        public delegate void GetMinMaxInfoHandler(ref WindowMessage msg, ref MinMaxInfo minMaxInfo);
 
         public delegate void CaptureChangedHandler(ref WindowMessage msg, IntPtr handleOfWindowReceivingCapture);
 
@@ -324,7 +334,7 @@ namespace WinApi.XWin
 
         public delegate EraseBackgroundResult EraseBkgndHandler(ref WindowMessage msg, IntPtr cHdc);
 
-        public delegate void FocusHandler(ref WindowMessage msg, IntPtr oppositeWindowHandle);
+        public delegate void FocusHandler(ref WindowMessage msg, IntPtr oppositeHwnd);
 
         public delegate HitTestResult HitTestHandler(ref WindowMessage msg, ref Point point);
 
@@ -378,38 +388,28 @@ namespace WinApi.XWin
         public delegate NcActivationResult NcActivateHandler(
             ref WindowMessage msg, bool isShown, IntPtr updateRegion);
 
-        public unsafe delegate WindowViewRegionFlags NcCalcSizeRequestHandler(
-            ref WindowMessage msg, NcCalcSizeRequestParams* ncCalcSizeRequestParams);
-
-        public unsafe delegate void NcCalcSizeResponseHandler(
-            ref WindowMessage msg, NcCalcSizeResponseParams* nonClientResponseParams);
+        public delegate WindowViewRegionFlags NcCalcSizeHandler(
+            ref WindowMessage msg, bool shouldCalcValidRects, ref NcCalcSizeParams ncCalcSizeParams);
 
         public static unsafe void ProcessNcCalcSize(ref WindowMessage msg,
-            NcCalcSizeRequestHandler requestHandler, NcCalcSizeResponseHandler responseHandler)
+            NcCalcSizeHandler handler)
         {
-            var shouldProvideClientArea = msg.WParam.ToSafeUInt32() > 0;
-            if (shouldProvideClientArea)
-            {
-                var nonClientArea = (NcCalcSizeRequestParams*) msg.LParam.ToPointer();
-                msg.Result = new IntPtr((int) requestHandler(ref msg, nonClientArea));
-                // If providing, 0 preserves previous area & align top-left
-            }
-            else
-            {
-                var nonClientRect = (NcCalcSizeResponseParams*) msg.LParam.ToPointer();
-                responseHandler(ref msg, nonClientRect);
-                // Implicit 0 return; 
-            }
+            var shouldCalcValidRects = msg.WParam.ToSafeUInt32() > 0;
+            var lPtr = (NcCalcSizeParams*) msg.LParam;
+            var ncCalcSizeParams = *lPtr;
+            msg.Result = new IntPtr((int) handler(ref msg, shouldCalcValidRects, ref ncCalcSizeParams));
+            *lPtr = ncCalcSizeParams;
+            // If providing, 0 preserves previous area & align top-left
         }
 
-        public static void ProcessNcActivate(ref WindowMessage msg, NcActivateHandler handler)
+        public static unsafe void ProcessNcActivate(ref WindowMessage msg, NcActivateHandler handler)
         {
             var isShown = msg.WParam.ToSafeInt32() > 0;
             // lParam is used only if visual styles are disabled.
             var updateRegion = msg.LParam;
             var res = handler(ref msg, isShown, updateRegion);
             if (res.PreventRegionUpdates)
-                msg.LParam = new IntPtr(-1);
+                *((int*)msg.LParam) = -1;
             msg.Result = new IntPtr(res.PreventDeactivationChanges ? 0 : 1);
             // To prevent Nc region update in DefWndProc, set LParam = -1;
             // When wParam == TRUE, result is ignored.

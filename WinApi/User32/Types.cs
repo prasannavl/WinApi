@@ -14,7 +14,7 @@ namespace WinApi.User32
     [StructLayout(LayoutKind.Sequential)]
     public struct Message
     {
-        public IntPtr WindowHandle;
+        public IntPtr Hwnd;
         public uint Value;
         public IntPtr WParam;
         public IntPtr LParam;
@@ -71,7 +71,7 @@ namespace WinApi.User32
     {
         public IntPtr HandleDC;
         public int EraseBackgroundValue;
-        public Rectangle PaintRectangle;
+        public Rectangle PaintRect;
         private int ReservedInternalRestore;
         private int ReservedInternalIncUpdate;
         private fixed byte ReservedInternalRgb [32];
@@ -125,8 +125,8 @@ namespace WinApi.User32
     public struct WindowInfo
     {
         public uint Size;
-        public Rectangle WindowRectangle;
-        public Rectangle ClientRectangle;
+        public Rectangle WindowRect;
+        public Rectangle ClientRect;
         public WindowStyles Styles;
         public WindowExStyles ExStyles;
         public uint WindowStatus;
@@ -142,7 +142,7 @@ namespace WinApi.User32
         public IntPtr CreateParams;
         public IntPtr InstanceHandle;
         public IntPtr MenuHandle;
-        public IntPtr ParentWindowHandle;
+        public IntPtr ParentHwnd;
         public int Height;
         public int Width;
         public int Y;
@@ -212,7 +212,7 @@ namespace WinApi.User32
     {
         public uint Size;
         public TrackMouseEventFlags Flags;
-        public IntPtr TrackedWindowHandle;
+        public IntPtr TrackedHwnd;
         public uint HoverTime;
 
         public const uint DefaultHoverTime = 0xFFFFFFFF;
@@ -243,7 +243,7 @@ namespace WinApi.User32
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowPosition
     {
-        public IntPtr WindowHandle;
+        public IntPtr Hwnd;
         public IntPtr HwndZOrderInsertAfter;
         public int X;
         public int Y;
@@ -253,7 +253,7 @@ namespace WinApi.User32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct NcCalcSizeRequestParams
+    public unsafe struct NcCalcSizeParams
     {
         public NcCalcSizeRegionUnion Region;
         public WindowPosition* Position;
@@ -278,14 +278,28 @@ namespace WinApi.User32
     public struct NcCalcSizeOutput
     {
         public Rectangle TargetClientRect;
-        public Rectangle SrcRect;
         public Rectangle DestRect;
+        public Rectangle SrcRect;
     }
 
-    [StructLayout(LayoutKind.Explicit)]
-    public struct NcCalcSizeResponseParams
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MonitorInfo
     {
-        [FieldOffset(0)] public Rectangle InputWindowRect;
-        [FieldOffset(0)] public Rectangle OutputClientRect;
+        /// <summary>
+        /// The size of the structure, in bytes.
+        /// </summary>
+        public uint Size;
+        /// <summary>
+        /// A RECT structure that specifies the display monitor rectangle, expressed in virtual-screen coordinates. Note that if the monitor is not the primary display monitor, some of the rectangle's coordinates may be negative values.
+        /// </summary>
+        public Rectangle MonitorRect;
+        /// <summary>
+        /// A RECT structure that specifies the work area rectangle of the display monitor, expressed in virtual-screen coordinates. Note that if the monitor is not the primary display monitor, some of the rectangle's coordinates may be negative values.
+        /// </summary>
+        public Rectangle WorkRect;
+        /// <summary>
+        /// A set of flags that represent attributes of the display monitor.
+        /// </summary>
+        public MonitorInfoFlag Flags;
     }
 }

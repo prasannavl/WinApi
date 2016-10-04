@@ -233,6 +233,9 @@ namespace WinApi.User32
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetThreadDesktop(uint threadId);
 
+        [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
+        public static extern bool GetMonitorInfo(IntPtr hMonitor, out MonitorInfo lpmi);
+
         #region Keyboard, Mouse & Input Method Functions
 
         [DllImport(LibraryName, ExactSpelling = true)]
