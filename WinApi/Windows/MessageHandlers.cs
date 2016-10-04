@@ -409,7 +409,7 @@ namespace WinApi.Windows
             var updateRegion = msg.LParam;
             var res = handler(ref msg, isShown, updateRegion);
             if (res.PreventRegionUpdates)
-                *((int*)msg.LParam) = -1;
+                msg.LParam = new IntPtr(-1);
             msg.Result = new IntPtr(res.PreventDeactivationChanges ? 0 : 1);
             // To prevent Nc region update in DefWndProc, set LParam = -1;
             // When wParam == TRUE, result is ignored.
