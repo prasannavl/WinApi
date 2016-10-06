@@ -245,6 +245,14 @@ namespace WinApi.Gdi32
         DEFAULT_GUI_FONT = 17,
     }
 
+    public enum DcRegionType
+    {
+        Clip = 1,
+        Meta = 2,
+        IntersectedMetaClip = 3,
+        System = 4,
+    }
+
     [Flags]
     public enum BitBltFlags
     {
@@ -302,6 +310,7 @@ namespace WinApi.Gdi32
         /// <summary>
         ///     Prevents the bitmap from being mirrored.
         /// </summary>
-        NOMIRRORBITMAP = unchecked((int) 0x80000000)
+        NOMIRRORBITMAP = unchecked((int)0x80000000)
     }
+
 }

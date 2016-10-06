@@ -190,5 +190,9 @@ namespace WinApi.Gdi32
             int nWidthDest, int nHeightDest,
             IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc,
             BlendFunction blendFunction);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern int GetRandomRgn(IntPtr hdc, IntPtr hrgn, DcRegionType iNum);
+
     }
 }
