@@ -191,8 +191,32 @@ namespace WinApi.Gdi32
             IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc,
             BlendFunction blendFunction);
 
+        /// <summary>
+        ///     The GetRandomRgn function copies the system clipping region of a specified device context to a specific region.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="hrgn">
+        ///     A handle to a region. Before the function is called, this identifies an existing region. After the
+        ///     function returns, this identifies a copy of the current system region. The old region identified by hrgn is
+        ///     overwritten.
+        /// </param>
+        /// <param name="iNum">This parameter must be SYSRGN.</param>
+        /// <returns>
+        ///     If the function succeeds, the return value is 1. If the function fails, the return value is -1. If the region
+        ///     to be retrieved is NULL, the return value is 0. If the function fails or the region to be retrieved is NULL, hrgn
+        ///     is not initialized.
+        /// </returns>
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern int GetRandomRgn(IntPtr hdc, IntPtr hrgn, DcRegionType iNum);
 
+        /// <summary>
+        /// The OffsetRgn function moves a region by the specified offsets.
+        /// </summary>
+        /// <param name="hrgn">Handle to the region to be moved.</param>
+        /// <param name="nXOffset">Specifies the number of logical units to move left or right.</param>
+        /// <param name="nYOffset">Specifies the number of logical units to move up or down.</param>
+        /// <returns>The return value specifies the new region's complexity. </returns>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType OffsetRgn(IntPtr hrgn, int nXOffset, int nYOffset);
     }
 }
