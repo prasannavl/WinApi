@@ -655,7 +655,7 @@ namespace WinApi.User32
     }
 
     [Flags]
-    public enum RegionCombinationFlags
+    public enum RegionModeFlags
     {
         RGN_AND = 1,
         RGN_OR = 2,
@@ -945,65 +945,65 @@ namespace WinApi.User32
         /// <summary>
         ///     Returns a DC that corresponds to the window rectangle rather than the client rectangle.
         /// </summary>
-        WINDOW = 0x0000000,
+        DCX_WINDOW = 0x0000000,
 
         /// <summary>
         ///     Returns a DC from the cache, rather than the OWNDC or CLASSDC window. Essentially overrides CS_OWNDC and
         ///     CS_CLASSDC.
         /// </summary>
-        CACHE = 0x0000000,
+        DCX_CACHE = 0x0000000,
 
         /// <summary>
         ///     Does not reset the attributes of this DC to the default attributes when this DC is released.
         /// </summary>
-        NORESETATTRS = 0x0000000,
+        DCX_NORESETATTRS = 0x0000000,
 
         /// <summary>
         ///     Excludes the visible regions of all child windows below the window identified by hWnd.
         /// </summary>
-        CLIPCHILDREN = 0x0000000,
+        DCX_CLIPCHILDREN = 0x0000000,
 
         /// <summary>
         ///     Excludes the visible regions of all sibling windows above the window identified by hWnd.
         /// </summary>
-        CLIPSIBLINGS = 0x0000001,
+        DCX_CLIPSIBLINGS = 0x0000001,
 
         /// <summary>
         ///     Uses the visible region of the parent window. The parent's WS_CLIPCHILDREN and CS_PARENTDC style bits are ignored.
         ///     The origin is set to the upper-left corner of the window identified by hWnd.
         /// </summary>
-        PARENTCLIP = 0x0000002,
+        DCX_PARENTCLIP = 0x0000002,
 
         /// <summary>
         ///     The clipping region identified by hrgnClip is excluded from the visible region of the returned DC.
         /// </summary>
-        EXCLUDERGN = 0x0000004,
+        DCX_EXCLUDERGN = 0x0000004,
 
         /// <summary>
         ///     The clipping region identified by hrgnClip is intersected with the visible region of the returned DC.
         /// </summary>
-        INTERSECTRGN = 0x0000008,
+        DCX_INTERSECTRGN = 0x0000008,
 
         /// <summary>
         ///     Undocumented flag
         /// </summary>
-        EXCLUDEUPDATE = 0x0000010,
+        DCX_EXCLUDEUPDATE = 0x0000010,
 
         /// <summary>
         ///     Reserved; do not use.
         /// </summary>
-        INTERSECTUPDATE = 0x0000020,
+        DCX_INTERSECTUPDATE = 0x0000020,
 
         /// <summary>
         ///     Allows drawing even if there is a LockWindowUpdate call in effect that would otherwise exclude this window. Used
         ///     for drawing during tracking.
         /// </summary>
-        LOCKWINDOWUPDATE = 0x0000040,
+        DCX_LOCKWINDOWUPDATE = 0x0000040,
 
         /// <summary>
         ///     Reserved; do not use.
         /// </summary>
-        VALIDATE = 0x0020000
+        DCX_VALIDATE = 0x0020000
     }
 
     [Flags]

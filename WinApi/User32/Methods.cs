@@ -144,6 +144,9 @@ namespace WinApi.User32
         public static extern RegionType GetWindowRgn(IntPtr hWnd, IntPtr hRgn);
 
         [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType GetWindowRgnBox(IntPtr hWnd, out Rectangle lprc);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, LayeredWindowAttributeFlag dwFlags);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]

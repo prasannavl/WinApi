@@ -101,7 +101,7 @@ namespace WinApi.Gdi32
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern int CombineRgn(IntPtr hrgnDest, IntPtr hrgnSrc1,
-            IntPtr hrgnSrc2, RegionCombinationFlags fnCombineMode);
+            IntPtr hrgnSrc2, RegionModeFlags fnCombineMode);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool OffsetViewportOrgEx(IntPtr hdc, int nXOffset, int nYOffset, out Point lpPoint);
@@ -112,11 +112,137 @@ namespace WinApi.Gdi32
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern int SetMapMode(IntPtr hdc, int fnMapMode);
 
+
+        /// <summary>
+        ///     The GetClipBox function retrieves the dimensions of the tightest bounding rectangle that can be drawn around the
+        ///     current visible area on the device. The visible area is defined by the current clipping region or clip path, as
+        ///     well as any overlapping windows.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="lprc">A pointer to a RECT structure that is to receive the rectangle dimensions, in logical units.</param>
+        /// <returns>If the function succeeds, the return value specifies the clipping box's complexity.</returns>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType GetClipBox(IntPtr hdc, out Rectangle lprc);
+
+        /// <summary>
+        ///     The GetClipRgn function retrieves a handle identifying the current application-defined clipping region for the
+        ///     specified device context.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="hrgn">
+        ///     A handle to an existing region before the function is called. After the function returns, this
+        ///     parameter is a handle to a copy of the current clipping region.
+        /// </param>
+        /// <returns>
+        ///     f the function succeeds and there is no clipping region for the given device context, the return value is
+        ///     zero. If the function succeeds and there is a clipping region for the given device context, the return value is 1.
+        ///     If an error occurs, the return value is -1.
+        /// </returns>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern int GetClipRgn(IntPtr hdc, IntPtr hrgn);
+
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern RegionType SelectClipRgn(IntPtr hdc, IntPtr hrgn);
 
+        /// <summary>
+        ///     The ExtSelectClipRgn function combines the specified region with the current clipping region using the specified
+        ///     mode.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="hrgn">
+        ///     A handle to the region to be selected. This handle must not be NULL unless the RGN_COPY mode is
+        ///     specified.
+        /// </param>
+        /// <param name="fnMode">The operation to be performed</param>
+        /// <returns>The return value specifies the new clipping region's complexity.</returns>
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern RegionType ExtSelectClipRgn(IntPtr hdc, IntPtr hrgn, RegionCombinationFlags fnMode);
+        public static extern RegionType ExtSelectClipRgn(IntPtr hdc, IntPtr hrgn, RegionModeFlags fnMode);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType IntersectClipRect(IntPtr hdc,
+            int nLeftRect,
+            int nTopRect,
+            int nRightRect,
+            int nBottomRect
+        );
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType ExcludeClipRect(IntPtr hdc,
+            int nLeftRect,
+            int nTopRect,
+            int nRightRect,
+            int nBottomRect
+        );
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType OffsetClipRgn(IntPtr hdc,
+            int nXOffset,
+            int nYOffset
+        );
+
+        /// <summary>
+        ///     The GetMetaRgn function retrieves the current metaregion for the specified device context.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="hrgn">
+        ///     A handle to an existing region before the function is called. After the function returns, this
+        ///     parameter is a handle to a copy of the current metaregion.
+        /// </param>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool GetMetaRgn(IntPtr hdc, IntPtr hrgn);
+
+        /// <summary>
+        ///     The SetMetaRgn function intersects the current clipping region for the specified device context with the current
+        ///     metaregion and saves the combined region as the new metaregion for the specified device context. The clipping
+        ///     region is reset to a null region.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <returns>The return value specifies the new clipping region's complexity.</returns>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType SetMetaRgn(IntPtr hdc);
+
+        /// <summary>
+        ///     The LPtoDP function converts logical coordinates into device coordinates. The conversion depends on the mapping
+        ///     mode of the device context, the settings of the origins and extents for the window and viewport, and the world
+        ///     transformation.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="lpPoints">
+        ///     A pointer to an array of POINT structures. The x-coordinates and y-coordinates contained in each
+        ///     of the POINT structures will be transformed.
+        /// </param>
+        /// <param name="nCount">The number of points in the array.</param>
+        /// <remarks>
+        ///     The LPtoDP function fails if the logical coordinates exceed 32 bits, or if the converted device coordinates exceed
+        ///     27 bits. In the case of such an overflow, the results for all the points are undefined.
+        ///     LPtoDP calculates complex floating-point arithmetic, and it has a caching system for efficiency.Therefore, the
+        ///     conversion result of an initial call to LPtoDP might not exactly match the conversion result of a later call to
+        ///     LPtoDP.We recommend not to write code that relies on the exact match of the conversion results from multiple calls
+        ///     to LPtoDP even if the parameters that are passed to each call are identical.
+        /// </remarks>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool LPtoDP(IntPtr hdc, [In] [Out] ref Point lpPoints, int nCount);
+
+        /// <summary>
+        ///     The DPtoLP function converts device coordinates into logical coordinates. The conversion depends on the mapping
+        ///     mode of the device context, the settings of the origins and extents for the window and viewport, and the world
+        ///     transformation.
+        /// </summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <param name="lpPoints">
+        ///     A pointer to an array of POINT structures. The x-coordinates and y-coordinates contained in each
+        ///     of the POINT structures will be transformed.
+        /// </param>
+        /// <param name="nCount">The number of points in the array.</param>
+        /// <remarks>
+        ///     The DPtoLP function fails if the device coordinates exceed 27 bits, or if the converted logical coordinates exceed
+        ///     32 bits. In the case of such an overflow, the results for all the points are undefined.
+        /// </remarks>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool DPtoLP(IntPtr hdc, [In] [Out] ref Point lpPoints, int nCount);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool SelectClipPath(IntPtr hdc, RegionModeFlags iMode);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool FillRgn(IntPtr hdc, IntPtr hrgn, IntPtr hbr);
@@ -210,7 +336,7 @@ namespace WinApi.Gdi32
         public static extern int GetRandomRgn(IntPtr hdc, IntPtr hrgn, DcRegionType iNum);
 
         /// <summary>
-        /// The OffsetRgn function moves a region by the specified offsets.
+        ///     The OffsetRgn function moves a region by the specified offsets.
         /// </summary>
         /// <param name="hrgn">Handle to the region to be moved.</param>
         /// <param name="nXOffset">Specifies the number of logical units to move left or right.</param>
@@ -218,5 +344,8 @@ namespace WinApi.Gdi32
         /// <returns>The return value specifies the new region's complexity. </returns>
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern RegionType OffsetRgn(IntPtr hrgn, int nXOffset, int nYOffset);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern RegionType GetRgnBox(IntPtr hWnd, out Rectangle lprc);
     }
 }
