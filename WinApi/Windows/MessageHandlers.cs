@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using WinApi.Core;
 using WinApi.Extensions;
 using WinApi.User32;
@@ -22,16 +23,15 @@ namespace WinApi.Windows
 
         public static unsafe void ProcessCreate(ref WindowMessage msg, CreateHandler handler)
         {
-            msg.Result = new IntPtr((int) handler(ref msg, ref *(CreateStruct*) msg.LParam));
+            var lPtr = (CreateStructWrapper*) msg.LParam;
+            msg.Result = new IntPtr((int) handler(ref msg, ref lPtr->Value));
             // Return 0 to continue creation. -1 to destroy and prevent
         }
 
         public static unsafe void ProcessGetMinMaxInfo(ref WindowMessage msg, GetMinMaxInfoHandler handler)
         {
-            var lPtr = (MinMaxInfo*)msg.LParam;
-            var minMaxInfo = *lPtr;
-            handler(ref msg, ref minMaxInfo);
-            *lPtr = minMaxInfo;
+            var lPtr = (MinMaxInfoWrapper*) msg.LParam;
+            handler(ref msg, ref lPtr->Value);
         }
 
         public static void ProcessSize(ref WindowMessage msg, SizeHandler handler)
@@ -311,6 +311,22 @@ namespace WinApi.Windows
             // Standard return. 0 if already processed
         }
 
+        #region Pointer-Ref-Helper Wrappers
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct CreateStructWrapper
+        {
+            public CreateStruct Value;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct MinMaxInfoWrapper
+        {
+            public MinMaxInfo Value;
+        }
+
+        #endregion
+
         #region Delegate Types
 
         public delegate void ActivateAppHandler(ref WindowMessage msg, bool isActive, uint oppositeThreadId);
@@ -391,18 +407,26 @@ namespace WinApi.Windows
         public delegate WindowViewRegionFlags NcCalcSizeHandler(
             ref WindowMessage msg, bool shouldCalcValidRects, ref NcCalcSizeParams ncCalcSizeParams);
 
+        #region Pointer-Ref-Helper Wrappers
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NcCalcSizeParamsWrapper
+        {
+            public NcCalcSizeParams Value;
+        }
+
+        #endregion
+
         public static unsafe void ProcessNcCalcSize(ref WindowMessage msg,
             NcCalcSizeHandler handler)
         {
             var shouldCalcValidRects = msg.WParam.ToSafeUInt32() > 0;
-            var lPtr = (NcCalcSizeParams*) msg.LParam;
-            var ncCalcSizeParams = *lPtr;
-            msg.Result = new IntPtr((int) handler(ref msg, shouldCalcValidRects, ref ncCalcSizeParams));
-            *lPtr = ncCalcSizeParams;
+            var lPtr = (NcCalcSizeParamsWrapper*) msg.LParam;
+            msg.Result = new IntPtr((int) handler(ref msg, shouldCalcValidRects, ref lPtr->Value));
             // If providing, 0 preserves previous area & align top-left
         }
 
-        public static unsafe void ProcessNcActivate(ref WindowMessage msg, NcActivateHandler handler)
+        public static void ProcessNcActivate(ref WindowMessage msg, NcActivateHandler handler)
         {
             var isShown = msg.WParam.ToSafeInt32() > 0;
             // lParam is used only if visual styles are disabled.
