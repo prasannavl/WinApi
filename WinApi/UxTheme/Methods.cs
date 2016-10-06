@@ -134,6 +134,16 @@ namespace WinApi.UxTheme
             [In] ref Rectangle pClipRect
         );
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern HResult DrawThemeBackground(
+            IntPtr hTheme,
+            IntPtr hdc,
+            int iPartId,
+            int iStateId,
+            [In] ref Rectangle pRect,
+            IntPtr pClipRect
+        );
+
         /// <summary>
         ///     Draws the background image defined by the visual style for the specified control part.
         /// </summary>
