@@ -37,8 +37,8 @@ namespace Sample.OpenGL
                 Init();
             }
             OnGlPaint();
-            Validate();
             base.OnPaint(ref msg, hdc);
+            Validate();
         }
 
         protected override void OnDestroy(ref WindowMessage msg)

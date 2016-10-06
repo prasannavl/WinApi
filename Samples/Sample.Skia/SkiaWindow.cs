@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SkiaSharp;
-using WinApi.Core;
+using WinApi.Desktop;
 using WinApi.Gdi32;
 using WinApi.User32;
-using WinApi.XWin;
+using WinApi.Windows;
+using Size = WinApi.Core.Size;
 
 namespace Sample.Skia
 {
-
     public abstract class WindowWithPixelBuffers : EventedWindowCore
     {
         protected IntPtr PixelBufferPtr { get; private set; }
@@ -19,11 +19,10 @@ namespace Sample.Skia
         protected void ResizePixelBuffersIfRequired(ref Size targetSize)
         {
             var size = targetSize;
-            if (targetSize == PixelBufferImageSize)
-                return;
+            if (targetSize == PixelBufferImageSize) return;
 
-            var stride = 4 * ((size.Width * 32 + 31) / 32);
-            var pixelBufferRequiredSize = size.Height * stride;
+            var stride = 4*((size.Width*32 + 31)/32);
+            var pixelBufferRequiredSize = size.Height*stride;
             if (pixelBufferRequiredSize != PixelBufferSize)
             {
                 if (PixelBufferPtr != IntPtr.Zero)
@@ -49,41 +48,6 @@ namespace Sample.Skia
         }
     }
 
-    public class SkiaNcWindowBase : WindowWithPixelBuffers
-    {
-        protected virtual void OnSkiaPaint(SKSurface surface) { }
-
-        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
-        {
-            var hdc = User32Methods.GetWindowDC(Handle);
-            try
-            {
-                var size = GetWindowSize();
-                ResizePixelBuffersIfRequired(ref size);
-                using (var surface = SKSurface.Create(
-                    size.Width,
-                    size.Height,
-                    SKColorType.Bgra8888,
-                    SKAlphaType.Premul,
-                    PixelBufferPtr,
-                    PixelBufferStride))
-                {
-                    if (surface != null)
-                    {
-                        OnSkiaPaint(surface);
-                        Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, PixelBufferPtr);
-                    }
-                }
-                base.OnPaint(ref msg, hdc);
-            }
-            finally
-            {
-                User32Methods.ReleaseDC(Handle, hdc);
-                this.Validate();
-            }
-        }
-    }
-
     public class SkiaWindowBase : WindowWithPixelBuffers
     {
         protected virtual void OnSkiaPaint(SKSurface surface) {}
@@ -95,6 +59,7 @@ namespace Sample.Skia
             try
             {
                 var size = GetClientSize();
+
                 ResizePixelBuffersIfRequired(ref size);
                 using (var surface = SKSurface.Create(
                     size.Width,

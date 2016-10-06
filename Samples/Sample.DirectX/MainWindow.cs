@@ -15,6 +15,7 @@ using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.UxTheme;
 using WinApi.Windows;
+using WinApi.Windows.Helpers;
 
 namespace Sample.DirectX
 {
@@ -28,8 +29,8 @@ namespace Sample.DirectX
         {
             var size = GetClientSize();
 
-            //            if (Environment.OSVersion.Version.Major > 6)
-            //                User32ExperimentalHelpers.EnableBlurBehind(Handle);
+//                        if (Environment.OSVersion.Version.Major > 6)
+//                            User32ExperimentalHelpers.EnableBlurBehind(Handle);
 
             m_graphicsContext.Init(Handle, ref size);
             return base.OnCreate(ref msg, ref createStruct);
@@ -50,5 +51,6 @@ namespace Sample.DirectX
             m_graphicsContext.Dispose();
             base.Dispose(disposing);
         }
+
     }
 }

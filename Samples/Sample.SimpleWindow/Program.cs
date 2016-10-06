@@ -17,7 +17,7 @@ namespace Sample.SimpleWindow
         [STAThread]
         static int Main(string[] args)
         {
-            using (var win = Window.Create<AppWindow>(text: "Hello"))
+            using (var win = Window.Create<AppWindow>("Hello"))
             {
                 win.Show();
                 return new EventLoop().Run(win);

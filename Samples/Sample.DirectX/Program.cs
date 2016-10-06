@@ -15,11 +15,7 @@ namespace Sample.DirectX
             try
             {
                 ApplicationHelpers.SetupDefaultExceptionHandlers();
-                var cache = WindowFactory.Cache.Instance;
-                var factory = new WindowFactory("MainWindow",
-                    WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-                    cache.ProcessHandle, IntPtr.Zero, cache.ArrowCursorHandle, IntPtr.Zero, null);
-
+                var factory = WindowFactory.Create(hBgBrush: IntPtr.Zero);
                 // Create the window without a dependency on WinApi.Windows.Controls
                 using (
                     var win = factory.CreateWindow(() => new MainWindow(), "Hello",

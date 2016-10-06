@@ -18,8 +18,7 @@ namespace Sample.SimulateInput
 
             try
             {
-                // Use window color brush to emulate Win Forms like behaviour
-                var factory = WindowFactory.Create(hBgBrush: new IntPtr((int) SystemColor.COLOR_WINDOW));
+                var factory = WindowFactory.Create();
                 using (var win = Window.Create<SampleWindow>(factory: factory, text: "Hello"))
                 {
                     win.Show();
@@ -50,8 +49,10 @@ namespace Sample.SimulateInput
 
                 m_editBox = EditBox.Create(
                     "Nothing here yet.",
-                    hParent: Handle, 
-                    controlStyles: EditBox.EditStyles.ES_MULTILINE | EditBox.EditStyles.ES_WANTRETURN | (EditBox.EditStyles)WindowStyles.WS_VSCROLL);
+                    hParent: Handle,
+                    controlStyles:
+                    EditBox.EditStyles.ES_MULTILINE | EditBox.EditStyles.ES_WANTRETURN |
+                    (EditBox.EditStyles) WindowStyles.WS_VSCROLL);
 
                 m_layout.ClientArea = GetClientRect();
                 m_layout.Margin = new Rectangle(10, 10, 10, 10);
@@ -84,15 +85,16 @@ namespace Sample.SimulateInput
                 return base.OnCreate(ref msg, ref createStruct);
             }
 
-            protected override void OnKey(ref WindowMessage msg, VirtualKey key, bool isKeyUp, KeyboardInputState inputState, bool isSystemContext)
+            protected override void OnKey(ref WindowMessage msg, VirtualKey key, bool isKeyUp,
+                KeyboardInputState inputState, bool isSystemContext)
             {
                 var str = $"\r\n{DateTime.Now} :" +
-                              $" {key} => {inputState.IsKeyUpTransition}; " +
-                              $"{inputState.RepeatCount}; " +
-                              $"{inputState.ScanCode}; " +
-                              $"{inputState.IsContextual}; " +
-                              $"{inputState.IsExtendedKey}" + "\r\n" +
-                              $"No. of text display changes: {m_timesExecuted}" + "\0";
+                          $" {key} => {inputState.IsKeyUpTransition}; " +
+                          $"{inputState.RepeatCount}; " +
+                          $"{inputState.ScanCode}; " +
+                          $"{inputState.IsContextual}; " +
+                          $"{inputState.IsExtendedKey}" + "\r\n" +
+                          $"No. of text display changes: {m_timesExecuted}" + "\0";
                 m_textBox.SetText(str);
                 base.OnKey(ref msg, key, isKeyUp, inputState, isSystemContext);
             }
@@ -100,7 +102,7 @@ namespace Sample.SimulateInput
             protected override void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size)
             {
                 m_layout.SetSize(ref size);
-                this.SetFocus();
+                SetFocus();
                 base.OnSize(ref msg, flag, ref size);
             }
         }
