@@ -95,5 +95,15 @@ namespace WinApi.Gdi32
                 (uint) height, pixelBufferPtr, new IntPtr(&bi),
                 DibBmiColorUsageFlag.DIB_RGB_COLORS);
         }
+
+        public static IntPtr CreateSolidBrush(uint r, uint g, uint b)
+        {
+            return Gdi32Methods.CreateSolidBrush(ColorFromRgb(r, g, b));
+        }
+
+        public static uint ColorFromRgb(uint r, uint g, uint b)
+        {
+            return r | (g << 8) | (b << 16);
+        }
     }
 }
