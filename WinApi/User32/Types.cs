@@ -302,4 +302,17 @@ namespace WinApi.User32
         /// </summary>
         public MonitorInfoFlag Flags;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct TitleBarInfo
+    {
+        public uint Size;
+        public Rectangle TitleBarRect;
+        public ElementSystemStates TitleBarStates;
+        private ElementSystemStates Reserved;
+        public ElementSystemStates MinimizeButtonStates;
+        public ElementSystemStates MaximizeButtonStates;
+        public ElementSystemStates HelpButtonStates;
+        public ElementSystemStates CloseButtonStates;
+    }
 }

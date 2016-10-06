@@ -183,5 +183,13 @@ namespace WinApi.User32
             fixed (Input* ptr = &input)
                 return User32Methods.SendInput(1, new IntPtr(ptr), Marshal.SizeOf<Input>());
         }
+
+        public static unsafe bool GetTitleBarInfo(IntPtr hwnd, ref TitleBarInfo pti)
+        {
+            if (pti.Size == 0)
+                pti.Size = (uint)Marshal.SizeOf<TitleBarInfo>();
+            fixed (TitleBarInfo* ptr = &pti)
+                return User32Methods.GetTitleBarInfo(hwnd, new IntPtr(ptr));
+        }
     }
 }

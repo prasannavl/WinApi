@@ -324,6 +324,15 @@ namespace WinApi.User32
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetKeyboardState(IntPtr lpKeyState);
 
+        /// <summary>
+        /// Retrieves information about the specified title bar.
+        /// </summary>
+        /// <param name="hwnd">A handle to the title bar whose information is to be retrieved.</param>
+        /// <param name="pti">A pointer to a TITLEBARINFO structure to receive the information. Note that you must set the cbSize member to sizeof(TITLEBARINFO) before calling this function.</param>
+        /// <returns></returns>
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool GetTitleBarInfo(IntPtr hwnd, IntPtr pti);
+
         #endregion
 
         #region Cursor Functions
