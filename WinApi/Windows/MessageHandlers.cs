@@ -407,6 +407,8 @@ namespace WinApi.Windows
         public delegate WindowViewRegionFlags NcCalcSizeHandler(
             ref WindowMessage msg, bool shouldCalcValidRects, ref NcCalcSizeParams ncCalcSizeParams);
 
+        public delegate void NcPaintHandler(ref WindowMessage msg, IntPtr updateRegion);
+
         #region Pointer-Ref-Helper Wrappers
 
         [StructLayout(LayoutKind.Sequential)]
@@ -439,6 +441,12 @@ namespace WinApi.Windows
             // When wParam == TRUE, result is ignored.
             // var result = TRUE // Default processing;
             // var result = FALSE // Prevent changes.
+        }
+
+        public static void ProcessNcPaint(ref WindowMessage msg,
+            NcPaintHandler handler)
+        {
+            handler(ref msg, msg.WParam);
         }
 
         #endregion

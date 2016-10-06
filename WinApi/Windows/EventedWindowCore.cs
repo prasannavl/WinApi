@@ -303,6 +303,11 @@ namespace WinApi.Windows
                     MessageHandlers.ProcessGetMinMaxInfo(ref msg, OnMinMaxInfo);
                     break;
                 }
+                case WM.NCPAINT:
+                {
+                    MessageHandlers.ProcessNcPaint(ref msg, OnNcPaint);
+                    break;
+                }
             }
         }
 
@@ -375,6 +380,7 @@ namespace WinApi.Windows
             => new NcActivationResult();
 
         protected virtual void OnNcDestroy(ref WindowMessage msg) {}
+        protected virtual void OnNcPaint(ref WindowMessage msg, IntPtr updateregion) {}
 
         protected virtual void OnMouseDoubleClick(ref WindowMessage msg, ref Point point, MouseButton button,
             MouseInputKeyStateFlags mouseInputKeyState) {}
