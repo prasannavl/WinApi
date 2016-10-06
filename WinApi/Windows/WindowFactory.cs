@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using WinApi.Gdi32;
 using WinApi.Kernel32;
 using WinApi.User32;
 
@@ -197,15 +198,15 @@ namespace WinApi.Windows
 
         public static WindowFactory Create(string className = null,
             WindowClassStyles styles = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-            IntPtr hInstance = default(IntPtr), IntPtr hIcon = default(IntPtr),
-            IntPtr hCursor = default(IntPtr), IntPtr hBgBrush = default(IntPtr), WindowProc wndProc = null)
+            IntPtr? hInstance = null, IntPtr? hIcon = null,
+            IntPtr? hCursor = null, IntPtr? hBgBrush = null, WindowProc wndProc = null)
         {
             var cache = Cache.Instance;
             return new WindowFactory(className, styles,
-                hInstance == default(IntPtr) ? cache.ProcessHandle : hInstance,
-                hIcon == default(IntPtr) ? cache.AppIconHandle : hIcon,
-                hCursor == default(IntPtr) ? cache.ArrowCursorHandle : hCursor,
-                hBgBrush, wndProc);
+                hInstance ?? cache.ProcessHandle,
+                hIcon ?? cache.AppIconHandle,
+                hCursor ?? cache.ArrowCursorHandle,
+                hBgBrush ?? (IntPtr)SystemColor.COLOR_WINDOW, wndProc);
         }
 
 
