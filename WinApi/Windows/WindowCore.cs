@@ -144,7 +144,7 @@ namespace WinApi.Windows
             }
             finally
             {
-                if (wmsg.Id == WM.DESTROY)
+                if (wmsg.Id == WM.NCDESTROY)
                 {
                     Closed?.Invoke(this);
                     IsSourceOwner = false;
