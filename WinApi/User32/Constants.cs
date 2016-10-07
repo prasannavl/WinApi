@@ -1744,33 +1744,28 @@ namespace WinApi.User32
     public enum ElementSystemStates
     {
         /// <summary>
-        /// The element can accept the focus.
+        ///     The element can accept the focus.
         /// </summary>
-
         STATE_SYSTEM_FOCUSABLE = 0x00100000,
 
         /// <summary>
-        /// The element is invisible.
+        ///     The element is invisible.
         /// </summary>
-
         STATE_SYSTEM_INVISIBLE = 0x00008000,
 
         /// <summary>
-        /// The element has no visible representation.
+        ///     The element has no visible representation.
         /// </summary>
-
         STATE_SYSTEM_OFFSCREEN = 0x00010000,
 
         /// <summary>
-        /// The element is unavailable.
+        ///     The element is unavailable.
         /// </summary>
-
         STATE_SYSTEM_UNAVAILABLE = 0x00000001,
 
         /// <summary>
-        /// The element is in the pressed state.
+        ///     The element is in the pressed state.
         /// </summary>
-
         STATE_SYSTEM_PRESSED = 0x00000008
     }
 
@@ -2053,9 +2048,107 @@ namespace WinApi.User32
     public enum HitTestResult
     {
         /// <summary>
-        ///     In the border of a window that does not have a sizing border.
+        ///     On the screen background or on a dividing line between windows (same as HTNOWHERE, except that the DefWindowProc
+        ///     function produces a system beep to indicate an error).
         /// </summary>
-        HTBORDER = 18,
+        HTERROR = -2,
+
+        /// <summary>
+        ///     In a window currently covered by another window in the same thread (the message will be sent to underlying windows
+        ///     in the same thread until one of them returns a code that is not HTTRANSPARENT).
+        /// </summary>
+        HTTRANSPARENT = -1,
+
+        /// <summary>
+        ///     On the screen background or on a dividing line between windows.
+        /// </summary>
+        HTNOWHERE = 0,
+
+        /// <summary>
+        ///     In a client area.
+        /// </summary>
+        HTCLIENT = 1,
+
+        /// <summary>
+        ///     In a title bar.
+        /// </summary>
+        HTCAPTION = 2,
+
+        /// <summary>
+        ///     In a window menu or in a Close button in a child window.
+        /// </summary>
+        HTSYSMENU = 3,
+
+        /// <summary>
+        ///     In a size box (same as HTSIZE).
+        /// </summary>
+        HTGROWBOX = 4,
+
+        /// <summary>
+        ///     In a size box (same as HTGROWBOX).
+        /// </summary>
+        HTSIZE = HTGROWBOX,
+
+        /// <summary>
+        ///     In a menu.
+        /// </summary>
+        HTMENU = 5,
+
+
+        /// <summary>
+        ///     In a horizontal scroll bar.
+        /// </summary>
+        HTHSCROLL = 6,
+
+        /// <summary>
+        ///     In the vertical scroll bar.
+        /// </summary>
+        HTVSCROLL = 7,
+
+        /// <summary>
+        ///     In a Minimize button.
+        /// </summary>
+        HTMINBUTTON = 8,
+
+        /// <summary>
+        ///     In a Minimize button.
+        /// </summary>
+        HTREDUCE = HTMINBUTTON,
+
+        /// <summary>
+        ///     In a Maximize button.
+        /// </summary>
+        HTMAXBUTTON = 9,
+
+        /// <summary>
+        ///     In a Maximize button.
+        /// </summary>
+        HTZOOM = HTMAXBUTTON,
+
+        /// <summary>
+        ///     In the left border of a resizable window (the user can click the mouse to resize the window horizontally).
+        /// </summary>
+        HTLEFT = 10,
+
+        /// <summary>
+        ///     In the right border of a resizable window (the user can click the mouse to resize the window horizontally).
+        /// </summary>
+        HTRIGHT = 11,
+
+        /// <summary>
+        ///     In the upper-horizontal border of a window.
+        /// </summary>
+        HTTOP = 12,
+
+        /// <summary>
+        ///     In the upper-left corner of a window border.
+        /// </summary>
+        HTTOPLEFT = 13,
+
+        /// <summary>
+        ///     In the upper-right corner of a window border.
+        /// </summary>
+        HTTOPRIGHT = 14,
 
         /// <summary>
         ///     In the lower-horizontal border of a resizable window (the user can click the mouse to resize the window
@@ -2076,14 +2169,11 @@ namespace WinApi.User32
         HTBOTTOMRIGHT = 17,
 
         /// <summary>
-        ///     In a title bar.
+        ///     In the border of a window that does not have a sizing border.
         /// </summary>
-        HTCAPTION = 2,
+        HTBORDER = 18,
 
-        /// <summary>
-        ///     In a client area.
-        /// </summary>
-        HTCLIENT = 1,
+        HTOBJECT = 19,
 
         /// <summary>
         ///     In a Close button.
@@ -2091,101 +2181,9 @@ namespace WinApi.User32
         HTCLOSE = 20,
 
         /// <summary>
-        ///     On the screen background or on a dividing line between windows (same as HTNOWHERE, except that the DefWindowProc
-        ///     function produces a system beep to indicate an error).
-        /// </summary>
-        HTERROR = -2,
-
-        /// <summary>
-        ///     In a size box (same as HTSIZE).
-        /// </summary>
-        HTGROWBOX = 4,
-
-        /// <summary>
         ///     In a Help button.
         /// </summary>
-        HTHELP = 21,
-
-        /// <summary>
-        ///     In a horizontal scroll bar.
-        /// </summary>
-        HTHSCROLL = 6,
-
-        /// <summary>
-        ///     In the left border of a resizable window (the user can click the mouse to resize the window horizontally).
-        /// </summary>
-        HTLEFT = 10,
-
-        /// <summary>
-        ///     In a menu.
-        /// </summary>
-        HTMENU = 5,
-
-        /// <summary>
-        ///     In a Maximize button.
-        /// </summary>
-        HTMAXBUTTON = 9,
-
-        /// <summary>
-        ///     In a Minimize button.
-        /// </summary>
-        HTMINBUTTON = 8,
-
-        /// <summary>
-        ///     On the screen background or on a dividing line between windows.
-        /// </summary>
-        HTNOWHERE = 0,
-
-        /// <summary>
-        ///     In a Minimize button.
-        /// </summary>
-        HTREDUCE = 8,
-
-        /// <summary>
-        ///     In the right border of a resizable window (the user can click the mouse to resize the window horizontally).
-        /// </summary>
-        HTRIGHT = 11,
-
-        /// <summary>
-        ///     In a size box (same as HTGROWBOX).
-        /// </summary>
-        HTSIZE = 4,
-
-        /// <summary>
-        ///     In a window menu or in a Close button in a child window.
-        /// </summary>
-        HTSYSMENU = 3,
-
-        /// <summary>
-        ///     In the upper-horizontal border of a window.
-        /// </summary>
-        HTTOP = 12,
-
-        /// <summary>
-        ///     In the upper-left corner of a window border.
-        /// </summary>
-        HTTOPLEFT = 13,
-
-        /// <summary>
-        ///     In the upper-right corner of a window border.
-        /// </summary>
-        HTTOPRIGHT = 14,
-
-        /// <summary>
-        ///     In a window currently covered by another window in the same thread (the message will be sent to underlying windows
-        ///     in the same thread until one of them returns a code that is not HTTRANSPARENT).
-        /// </summary>
-        HTTRANSPARENT = -1,
-
-        /// <summary>
-        ///     In the vertical scroll bar.
-        /// </summary>
-        HTVSCROLL = 7,
-
-        /// <summary>
-        ///     In a Maximize button.
-        /// </summary>
-        HTZOOM = 9
+        HTHELP = 21
     }
 
     public enum ResourceImageType
@@ -4951,8 +4949,9 @@ namespace WinApi.User32
     public enum MonitorInfoFlag
     {
         MONITORINFOF_NONE = 0,
+
         /// <summary>
-        /// This is the primary display monitor.
+        ///     This is the primary display monitor.
         /// </summary>
         MONITORINFOF_PRIMARY = 0x00000001
     }
@@ -4960,15 +4959,13 @@ namespace WinApi.User32
     public enum LayeredWindowAttributeFlag
     {
         /// <summary>
-        /// Use bAlpha to determine the opacity of the layered window.
+        ///     Use bAlpha to determine the opacity of the layered window.
         /// </summary>
-
         LWA_ALPHA = 0x00000002,
 
         /// <summary>
-        /// Use crKey as the transparency color.
+        ///     Use crKey as the transparency color.
         /// </summary>
-
         LWA_COLORKEY = 0x00000001
     }
 
