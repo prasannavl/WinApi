@@ -264,7 +264,7 @@ namespace WinApi.Gdi32
         public static extern bool LineTo(IntPtr hdc, int nXEnd, int nYEnd);
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool MoveToEx(IntPtr hdc, int x, int y, IntPtr lpPoint);
+        public static extern bool MoveToEx(IntPtr hdc, int x, int y, out Point lpPoint);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool RoundRect(IntPtr hdc, int nLeftRect, int nTopRect,
