@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using WinApi.Core;
+using WinApi.Extensions;
 using WinApi.User32;
 
 namespace WinApi.Windows
@@ -161,12 +162,12 @@ namespace WinApi.Windows
 
         public WindowStyles GetStyles()
         {
-            return (WindowStyles) GetParam(WindowLongFlags.GWL_STYLE);
+            return (WindowStyles)GetParam(WindowLongFlags.GWL_STYLE).ToSafeInt32();
         }
 
         public WindowExStyles GetExStyles()
         {
-            return (WindowExStyles) GetParam(WindowLongFlags.GWL_EXSTYLE);
+            return (WindowExStyles) GetParam(WindowLongFlags.GWL_EXSTYLE).ToSafeInt32();
         }
 
         public WindowStyles SetStyle(WindowStyles styles)
