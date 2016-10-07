@@ -12,8 +12,8 @@ namespace WinApi.Windows
     }
 
     /// <summary>
-    /// A simple wrapper around the Win32 window. It has nothing except
-    /// the handle of the window. All functions here are direct api calls.
+    ///     A simple wrapper around the Win32 window. It has nothing except
+    ///     the handle of the window. All functions here are direct api calls.
     /// </summary>
     public class NativeWindow : INativeAttachable
     {
@@ -149,14 +149,34 @@ namespace WinApi.Windows
             return new Size {Width = rect.Width, Height = rect.Height};
         }
 
-        public IntPtr SetItem(WindowLongFlags index, IntPtr value)
+        public IntPtr SetParam(WindowLongFlags index, IntPtr value)
         {
             return User32Methods.SetWindowLongPtr(Handle, (int) index, value);
         }
 
-        public IntPtr GetItem(WindowLongFlags index)
+        public IntPtr GetParam(WindowLongFlags index)
         {
             return User32Methods.GetWindowLongPtr(Handle, (int) index);
+        }
+
+        public WindowStyles GetStyles()
+        {
+            return (WindowStyles) GetParam(WindowLongFlags.GWL_STYLE);
+        }
+
+        public WindowExStyles GetExStyles()
+        {
+            return (WindowExStyles) GetParam(WindowLongFlags.GWL_EXSTYLE);
+        }
+
+        public WindowStyles SetStyle(WindowStyles styles)
+        {
+            return (WindowStyles) SetParam(WindowLongFlags.GWL_STYLE, new IntPtr((int) styles));
+        }
+
+        public WindowExStyles SetExStyles(WindowExStyles exStyles)
+        {
+            return (WindowExStyles) SetParam(WindowLongFlags.GWL_EXSTYLE, new IntPtr((int) exStyles));
         }
 
         public bool Show()
@@ -167,6 +187,38 @@ namespace WinApi.Windows
         public bool Hide()
         {
             return User32Methods.ShowWindow(Handle, ShowWindowCommands.SW_HIDE);
+        }
+
+        public IntPtr BeginPaint(out PaintStruct ps)
+        {
+            return User32Methods.BeginPaint(Handle, out ps);
+        }
+
+        public void EndPaint(ref PaintStruct ps)
+        {
+            User32Methods.EndPaint(Handle, ref ps);
+        }
+
+        public void RedrawFrame()
+        {
+            SetPosition(new Rectangle(),
+                WindowPositionFlags.SWP_FRAMECHANGED | WindowPositionFlags.SWP_NOMOVE |
+                WindowPositionFlags.SWP_NOSIZE);
+        }
+
+        public IntPtr GetDc()
+        {
+            return User32Methods.GetDC(Handle);
+        }
+
+        public IntPtr GetWindowDc()
+        {
+            return User32Methods.GetWindowDC(Handle);
+        }
+
+        public bool ReleaseDc(IntPtr hdc)
+        {
+            return User32Methods.ReleaseDC(Handle, hdc);
         }
 
         public bool SetState(ShowWindowCommands flags)

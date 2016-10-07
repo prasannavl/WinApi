@@ -51,10 +51,10 @@ namespace WinApi.Windows
         void INativeConnectable.ConnectWindowProc(IntPtr baseWindowProcPtr)
         {
             m_baseWindowProcPtr = baseWindowProcPtr == IntPtr.Zero
-                ? GetItem(WindowLongFlags.GWLP_WNDPROC)
+                ? GetParam(WindowLongFlags.GWLP_WNDPROC)
                 : baseWindowProcPtr;
             m_instanceWindowProc = WindowProc;
-            SetItem(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(m_instanceWindowProc));
+            SetParam(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(m_instanceWindowProc));
             OnSourceConnected();
         }
 
@@ -67,7 +67,7 @@ namespace WinApi.Windows
         {
             if (m_baseWindowProcPtr != IntPtr.Zero)
             {
-                SetItem(WindowLongFlags.GWLP_WNDPROC, m_baseWindowProcPtr);
+                SetParam(WindowLongFlags.GWLP_WNDPROC, m_baseWindowProcPtr);
                 m_baseWindowProcPtr = IntPtr.Zero;
             }
         }
