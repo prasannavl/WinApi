@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using WinApi.Core;
 
 namespace WinApi.User32
 {
@@ -190,6 +191,21 @@ namespace WinApi.User32
                 pti.Size = (uint)Marshal.SizeOf<TitleBarInfo>();
             fixed (TitleBarInfo* ptr = &pti)
                 return User32Methods.GetTitleBarInfo(hwnd, new IntPtr(ptr));
+        }
+
+        public static unsafe int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Point point)
+        {
+            fixed (Point* ptr = &point)
+                return User32Methods.MapWindowPoints(hWndFrom, hWndTo, new IntPtr(ptr), 1);
+        }
+
+        public static unsafe int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Rectangle rect)
+        {
+            fixed (Rectangle* ptr = &rect)
+            {
+                var ptPtr = (Point*) ptr;
+                return User32Methods.MapWindowPoints(hWndFrom, hWndTo, new IntPtr(ptPtr), 2);
+            }
         }
     }
 }

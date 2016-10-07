@@ -176,12 +176,7 @@ namespace WinApi.User32
             [In] ref BlendFunction pblend, uint dwFlags);
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In] [Out] ref Rectangle rect,
-            int cPoints = 2);
-
-        [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In] [Out] ref Point rect,
-            int cPoints = 1);
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, IntPtr lpPoints, int cPoints);
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ScreenToClient(IntPtr hWnd, [In] [Out] ref Point lpPoint);
