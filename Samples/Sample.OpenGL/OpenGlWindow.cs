@@ -27,18 +27,20 @@ namespace Sample.OpenGL
 
         protected virtual void OnGlContextCreated() {}
 
-        protected virtual void OnGlPaint() {}
+        protected virtual void OnGlPaint(ref PaintStruct ps) {}
 
-        protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
+        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
         {
+            PaintStruct ps;
+            var hdc = BeginPaint(out ps);
             if (!m_isInit)
             {
                 m_isInit = true;
                 Init();
             }
-            OnGlPaint();
-            base.OnPaint(ref msg, hdc);
-            Validate();
+            OnGlPaint(ref ps);
+            base.OnPaint(ref msg, cHdc);
+            EndPaint(ref ps);
         }
 
         protected override void OnDestroy(ref WindowMessage msg)

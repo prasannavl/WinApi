@@ -47,7 +47,7 @@ namespace Sample.Skia
             var clientRect = new Rectangle(windowRect.Width, windowRect.Height);
             var canvas = surface.Canvas;
             canvas.Clear(new SKColor(120, 170, 140, 255));
-            var textPainter = new SKPaint() {TextSize = 35, IsAntialias = true};
+            var textPainter = new SKPaint {TextSize = 35, IsAntialias = true};
             var str = "Hello there!";
             var textBounds = new SKRect();
             var m = textPainter.MeasureText(str, ref textBounds);

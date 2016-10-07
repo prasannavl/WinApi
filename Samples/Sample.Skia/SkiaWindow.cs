@@ -55,7 +55,7 @@ namespace Sample.Skia
         protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
         {
             PaintStruct ps;
-            var hdc = User32Methods.BeginPaint(Handle, out ps);
+            var hdc = BeginPaint(out ps);
             try
             {
                 var size = GetClientSize();
@@ -79,7 +79,7 @@ namespace Sample.Skia
             }
             finally
             {
-                User32Methods.EndPaint(Handle, ref ps);
+                EndPaint(ref ps);
             }
         }
     }

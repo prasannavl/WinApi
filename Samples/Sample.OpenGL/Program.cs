@@ -57,7 +57,7 @@ namespace Sample.OpenGL
             base.OnGlContextCreated();
         }
 
-        protected override void OnGlPaint()
+        protected override void OnGlPaint(ref PaintStruct ps)
         {
             Gl.Clear(ClearBufferMask.ColorBufferBit);
             var size = GetClientSize();

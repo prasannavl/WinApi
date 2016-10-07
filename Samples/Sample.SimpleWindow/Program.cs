@@ -30,10 +30,10 @@ namespace Sample.SimpleWindow
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
             PaintStruct ps;
-            hdc = User32Methods.BeginPaint(Handle, out ps);
+            hdc = BeginPaint(out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRect,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
-            User32Methods.EndPaint(Handle, ref ps);
+            EndPaint(ref ps);
 
             // Prevent default processing. Not actually
             // required here. This is one of the reasons msg ref is 
