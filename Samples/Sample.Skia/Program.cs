@@ -10,6 +10,7 @@ using System.Linq;
 using WinApi.Desktop;
 using WinApi.Extensions;
 using WinApi.Gdi32;
+using WinApi.User32.Experimental;
 using WinApi.Windows;
 using WinApi.Windows.Helpers;
 
@@ -46,13 +47,15 @@ namespace Sample.Skia
             var windowRect = GetWindowRect();
             var clientRect = new Rectangle(windowRect.Width, windowRect.Height);
             var canvas = surface.Canvas;
-            canvas.Clear(new SKColor(120, 170, 140, 255));
+            canvas.Clear(new SKColor(120, 50, 70, 200));
             var textPainter = new SKPaint {TextSize = 35, IsAntialias = true};
             var str = "Hello there!";
             var textBounds = new SKRect();
             var m = textPainter.MeasureText(str, ref textBounds);
+            
             canvas.DrawText(str, (clientRect.Width - textBounds.Width)/2, (clientRect.Height - textBounds.Height)/2,
                 textPainter);
+
             base.OnSkiaPaint(surface);
         }
     }

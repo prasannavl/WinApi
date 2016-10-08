@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sample.DirectX
+namespace WinApi.Utils
 {
     public class DisposableHelpers
     {

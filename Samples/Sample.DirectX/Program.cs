@@ -1,8 +1,11 @@
 ﻿using System;
+using WinApi.Core;
 using WinApi.Kernel32;
 using WinApi.User32;
 using WinApi.Desktop;
+using WinApi.DwmApi;
 using WinApi.Gdi32;
+using WinApi.UxTheme;
 using WinApi.Windows;
 using WinApi.Windows.Helpers;
 

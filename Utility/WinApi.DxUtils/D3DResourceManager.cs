@@ -4,11 +4,12 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
+using WinApi.Utils;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace Sample.DirectX.Dx
+namespace WinApi.DxUtils
 {
-    public class D3DResources : IDisposable
+    public class D3DResourceManager : IDisposable
     {
         public static SwapEffect GetDefaultSwapEffectForPlatform(Version version = null)
         {

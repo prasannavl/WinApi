@@ -104,6 +104,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Utility\WinApi.Utils\WinApi.Utils.csproj">
+      <Project>{bdb2a27f-fb53-4258-9579-4af36f20c26a}</Project>
+      <Name>WinApi.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
       <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>

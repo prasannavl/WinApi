@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sample.DirectX.Dx;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SharpDX.DXGI;
@@ -11,12 +6,13 @@ using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Gdi32;
 using WinApi.User32;
+using WinApi.Utils;
 
-namespace Sample.DirectX
+namespace WinApi.DxUtils.Contexts
 {
-    class D2DGraphicsContext : IGraphicsContext
+    public class D2DGraphicsContext : IGraphicsContext
     {
-        private D2DResources m_dxResources;
+        private D2DResourceManager m_dxResourceManager;
         private IntPtr m_hwnd;
         private Size m_size;
 
@@ -31,12 +27,12 @@ namespace Sample.DirectX
         {
             EnsureDxResources();
             Draw2D();
-            m_dxResources.SwapChain.Present(1, PresentFlags.None);
+            m_dxResourceManager.SwapChain.Present(1, PresentFlags.None);
         }
 
         private void Draw2D()
         {
-            var context = m_dxResources.D2DContext;
+            var context = m_dxResourceManager.D2DContext;
             var rand = new Random();
             var w = m_size.Width;
             var h = m_size.Height;
@@ -44,7 +40,12 @@ namespace Sample.DirectX
             var b = new SolidColorBrush(context, new RawColor4(0.5f, 0.6f, 0.4f, 0.6f));
 
             context.BeginDraw();
+            context.Clear(new RawColor4(0, 0, 0, 0f));
+            context.PushAxisAlignedClip(new RawRectangleF(0, 1, m_size.Width, m_size.Height), AntialiasMode.Aliased);
             context.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.3f));
+
+            context.DrawText("Hello there!", new TextFormat(m_dxResourceManager.DWriteFactory, "Segoe UI", 24), new RawRectangleF(0, 0, 200, 200), b);
+
             for (var i = 0; i < 10; i++)
             {
                 b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
@@ -55,6 +56,7 @@ namespace Sample.DirectX
                     new RawRectangleF(rand.NextFloat(0, w), rand.NextFloat(0, h), rand.NextFloat(0, w),
                         rand.NextFloat(0, h)), b);
             }
+            context.PopAxisAlignedClip();
             context.EndDraw();
             b.Dispose();
         }
@@ -62,16 +64,16 @@ namespace Sample.DirectX
         public void Resize(ref Size size)
         {
             m_size = size;
-            m_dxResources?.Resize(ref m_size);
+            m_dxResourceManager?.Resize(ref m_size);
         }
 
         private void EnsureDxResources()
         {
-            if (m_dxResources == null)
+            if (m_dxResourceManager == null)
             {
                 PaintDefault();
-                m_dxResources = new D2DResources();
-                m_dxResources.Initalize(m_hwnd, m_size);
+                m_dxResourceManager = new D2DResourceManager();
+                m_dxResourceManager.Initalize(m_hwnd, m_size);
             }
         }
 
@@ -87,8 +89,8 @@ namespace Sample.DirectX
 
         public void Dispose()
         {
-            m_dxResources?.Destroy();
-            m_dxResources = null;
+            m_dxResourceManager?.Destroy();
+            m_dxResourceManager = null;
         }
     }
 }

@@ -9,6 +9,7 @@ using SharpDX.Text;
 using WinApi.Core;
 using WinApi.Desktop;
 using WinApi.DwmApi;
+using WinApi.DxUtils.Contexts;
 using WinApi.Gdi32;
 using WinApi.Kernel32;
 using WinApi.User32;
@@ -28,10 +29,6 @@ namespace Sample.DirectX
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
             var size = GetClientSize();
-
-//                        if (Environment.OSVersion.Version.Major > 6)
-//                            User32ExperimentalHelpers.EnableBlurBehind(Handle);
-
             m_graphicsContext.Init(Handle, ref size);
             return base.OnCreate(ref msg, ref createStruct);
         }

@@ -2,13 +2,14 @@
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using WinApi.Core;
+using WinApi.Utils;
 using Device = SharpDX.Direct2D1.Device;
 using Factory = SharpDX.DirectWrite.Factory;
 using Factory1 = SharpDX.Direct2D1.Factory1;
 
-namespace Sample.DirectX.Dx
+namespace WinApi.DxUtils
 {
-    public class D2DResources : D3DResources
+    public class D2DResourceManager : D3DResourceManager
     {
         private Device m_d2DDevice;
         private DeviceContext m_d2DContext;
@@ -43,6 +44,7 @@ namespace Sample.DirectX.Dx
         {
             base.Initalize(hwnd, size);
             ConnectD2DContextToDxgiSurface();
+            EnsureDWriteFactory();
         }
 
         public override void Resize(ref Size size)

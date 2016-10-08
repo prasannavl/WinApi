@@ -1,9 +1,18 @@
 ﻿using System;
 using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
+using WinApi.Core;
 using WinApi.Desktop;
+using WinApi.DwmApi;
+using WinApi.Extensions;
+using WinApi.Gdi32;
+using WinApi.Kernel32;
 using WinApi.User32;
-using WinApi.XWin;
-using WinApi.XWin.Controls;
+using WinApi.User32.Experimental;
+using WinApi.UxTheme;
+using WinApi.Windows;
+using WinApi.Windows.Controls;
+using WinApi.Windows.Helpers;
 
 namespace WinApi.TestGround
 {
@@ -16,9 +25,8 @@ namespace WinApi.TestGround
 
             try
             {
-                // Use window color brush to emulate Win Forms like behaviour
-                var factory = WindowFactory.Create(hBgBrush: new IntPtr((int) SystemColor.COLOR_WINDOW));
-                using (var win = Window.Create<TestWindow>(factory: factory, text: "Hello"))
+                var factory = WindowFactory.Create(hBgBrush: IntPtr.Zero);
+                using (var win = Window.Create(factory: factory, text: "Hello"))
                 {
                     win.Show();
                     return new EventLoop().Run(win);
@@ -29,11 +37,6 @@ namespace WinApi.TestGround
                 ApplicationHelpers.ShowCriticalError(ex);
             }
             return 0;
-        }
-
-        public sealed class TestWindow : Window
-        {
-
         }
     }
 }

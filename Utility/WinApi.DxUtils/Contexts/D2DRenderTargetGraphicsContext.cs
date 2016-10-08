@@ -3,8 +3,11 @@ using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
+using WinApi.Utils;
+using Factory = SharpDX.Direct2D1.Factory;
+using FactoryType = SharpDX.Direct2D1.FactoryType;
 
-namespace Sample.DirectX
+namespace WinApi.DxUtils.Contexts
 {
     public class D2DRenderTargetGraphicsContext : IGraphicsContext
     {
@@ -43,18 +46,24 @@ namespace Sample.DirectX
             var b = new SolidColorBrush(m_renderTarget, new RawColor4(0, 0, 0, 0));
 
             m_renderTarget.BeginDraw();
-            m_renderTarget.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.3f));
+            m_renderTarget.Clear(new RawColor4(0, 0, 0, 0f));
+            m_renderTarget.PushAxisAlignedClip(new RawRectangleF(0, 1, m_size.Width, m_size.Height), AntialiasMode.Aliased);
+            m_renderTarget.Clear(new RawColor4(0f, 0f, 0f, 1f));
+             b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
 
-            for (var i = 0; i < 10; i++)
-            {
-                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
-                m_renderTarget.FillEllipse(
-                    new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
-                        rand.Next(0, h)), b);
-                m_renderTarget.FillRectangle(
-                    new RawRectangleF(rand.NextFloat(0, w), rand.NextFloat(0, h), rand.NextFloat(0, w),
-                        rand.NextFloat(0, h)), b);
-            }
+            m_renderTarget.FillRectangle(new RawRectangleF(200, 200, 500, 700), b);
+
+//            for (var i = 0; i < 10; i++)
+//            {
+//                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
+//                m_renderTarget.FillEllipse(
+//                    new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
+//                        rand.Next(0, h)), b);
+//                m_renderTarget.FillRectangle(
+//                    new RawRectangleF(rand.NextFloat(0, w), rand.NextFloat(0, h), rand.NextFloat(0, w),
+//                        rand.NextFloat(0, h)), b);
+//            }
+            m_renderTarget.PopAxisAlignedClip();
             m_renderTarget.EndDraw();
             b.Dispose();
         }

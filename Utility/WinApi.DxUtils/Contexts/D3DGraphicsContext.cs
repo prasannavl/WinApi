@@ -1,15 +1,14 @@
 ﻿using System;
-using Sample.DirectX.Dx;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Gdi32;
 using WinApi.User32;
 
-namespace Sample.DirectX
+namespace WinApi.DxUtils.Contexts
 {
-    class D3DGraphicsContext : IGraphicsContext
+    public class D3DGraphicsContext : IGraphicsContext
     {
-        private D3DResources m_dxResources;
+        private D3DResourceManager m_dxResourceManager;
         private IntPtr m_hwnd;
         private Size m_size;
 
@@ -23,9 +22,9 @@ namespace Sample.DirectX
         public void Draw()
         {
             EnsureDxResources();
-            var target = m_dxResources.D3DRenderTargetView;
-            var context = m_dxResources.D3DContext;
-            var swapChain = m_dxResources.SwapChain;
+            var target = m_dxResourceManager.D3DRenderTargetView;
+            var context = m_dxResourceManager.D3DContext;
+            var swapChain = m_dxResourceManager.SwapChain;
 
             context.ClearRenderTargetView(target, new RawColor4(0.5f, 0.6f, 0.7f, 0.7f));
             swapChain.Present(1, 0);
@@ -34,16 +33,16 @@ namespace Sample.DirectX
         public void Resize(ref Size size)
         {
             m_size = size;
-            m_dxResources?.Resize(ref m_size);
+            m_dxResourceManager?.Resize(ref m_size);
         }
 
         private void EnsureDxResources()
         {
-            if (m_dxResources == null)
+            if (m_dxResourceManager == null)
             {
                 PaintDefault();
-                m_dxResources = new D3DResources();
-                m_dxResources.Initalize(m_hwnd, m_size);
+                m_dxResourceManager = new D3DResourceManager();
+                m_dxResourceManager.Initalize(m_hwnd, m_size);
             }
         }
 
@@ -59,7 +58,7 @@ namespace Sample.DirectX
 
         public void Dispose()
         {
-            m_dxResources.Dispose();
+            m_dxResourceManager.Dispose();
         }
     }
 }
