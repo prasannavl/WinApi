@@ -9,21 +9,21 @@ namespace WinApi.DxUtils.D3D11
     public class D3DMetaFactory
     {
         public static D3DMetaResource Create(Adapter adapter, DeviceCreationFlags creationFlags = 0,
-            SwapChainDescription? description = null)
+            SwapChainDescription? description = null, FeatureLevel[] levels = null)
         {
-            return CreateCore(adapter, DriverType.Null, creationFlags, description, false);
+            return CreateCore(adapter, DriverType.Null, creationFlags, description, levels, false);
         }
 
         public static D3DMetaResource Create(DriverType type = DriverType.Hardware,
             DeviceCreationFlags creationFlags = DeviceCreationFlags.SingleThreaded,
-            SwapChainDescription? description = null, bool allowWarpFallbackDriver = true)
+            SwapChainDescription? description = null, FeatureLevel[] levels = null, bool allowWarpFallbackDriver = true)
         {
-            return CreateCore(null, type, creationFlags, description, allowWarpFallbackDriver);
+            return CreateCore(null, type, creationFlags, description, levels, allowWarpFallbackDriver);
         }
 
         private static D3DMetaResource CreateCore(Adapter adapter, DriverType type,
             DeviceCreationFlags creationFlags,
-            SwapChainDescription? description, bool allowWarpFallbackDriver)
+            SwapChainDescription? description, FeatureLevel[] levels, bool allowWarpFallbackDriver)
         {
             SwapChainDescription desc;
             if (description.HasValue)
@@ -35,7 +35,8 @@ namespace WinApi.DxUtils.D3D11
             creationFlags |= DeviceCreationFlags.Debug;
 #endif
 
-            Func<Device> deviceCreator = () => CreateD3DDevice(adapter, type, creationFlags, allowWarpFallbackDriver);
+            Func<Device> deviceCreator =
+                () => CreateD3DDevice(adapter, type, creationFlags, levels, allowWarpFallbackDriver);
 
             Func<D3DMetaResource, SwapChain> swapChainCreator =
                 rm =>
@@ -51,17 +52,20 @@ namespace WinApi.DxUtils.D3D11
         }
 
         public static Device CreateD3DDevice(Adapter adapter, DriverType type, DeviceCreationFlags flags,
-            bool allowWarpFallback)
+            FeatureLevel[] levels, bool allowWarpFallback)
         {
             if (adapter != null) return new Device(adapter, flags);
             try
             {
-                return new Device(type, flags);
+                return levels != null ? new Device(type, flags, levels) : new Device(type, flags);
             }
             catch
             {
-                if (allowWarpFallback && (type != DriverType.Warp))
-                    return new Device(DriverType.Warp, flags);
+                var warpDriverType = DriverType.Warp;
+                if (allowWarpFallback && (type != warpDriverType))
+                    return levels != null
+                        ? new Device(warpDriverType, flags, levels)
+                        : new Device(warpDriverType, flags);
                 throw;
             }
         }
@@ -77,7 +81,7 @@ namespace WinApi.DxUtils.D3D11
             {
                 // Mode description height and size is correctly set by the resource manager
                 ModeDescription = new ModeDescription(0, 0, new Rational(60, 1), Format.B8G8R8A8_UNorm)
-                { Scaling = DisplayModeScaling.Unspecified },
+                    {Scaling = DisplayModeScaling.Unspecified},
                 SampleDescription = new SampleDescription(1, 0),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 2,
