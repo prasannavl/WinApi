@@ -4,7 +4,6 @@ using System.Linq;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using WinApi.Core;
-using WinApi.DxUtils.Core;
 using WinApi.Utils;
 using Device = SharpDX.Direct3D11.Device;
 

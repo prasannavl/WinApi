@@ -1,10 +1,7 @@
 ﻿using System;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
-using WinApi.DxUtils;
-using WinApi.DxUtils.D3D11_1;
-using WinApi.DxUtils.D3D11_2;
-using WinApi.DxUtils.D3D11_2;
+using WinApi.DxUtils.D3D11;
 using WinApi.Gdi32;
 using WinApi.User32;
 
@@ -45,7 +42,7 @@ namespace Sample.DirectX.Contexts
             if (m_d3DMetaResource == null)
             {
                 PaintDefault();
-                m_d3DMetaResource = D3DMetaFactory.Create3D();
+                m_d3DMetaResource = D3DMetaFactory.Create();
                 m_d3DMetaResource.Initalize(m_hwnd, m_size);
             }
         }
