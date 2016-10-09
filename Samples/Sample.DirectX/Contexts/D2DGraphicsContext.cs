@@ -5,12 +5,14 @@ using SharpDX.DirectWrite;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
+using WinApi.DxUtils.D2D1_1;
+using WinApi.DxUtils.D3D11;
 using WinApi.Gdi32;
 using WinApi.User32;
 using WinApi.Utils;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 
-namespace WinApi.DxUtils.Contexts
+namespace Sample.DirectX.Contexts
 {
     public class D2DGraphicsContext : IGraphicsContext
     {
@@ -86,9 +88,9 @@ namespace WinApi.DxUtils.Contexts
         {
             if (m_d2DMetaResource != null) return;
             PaintDefault();
-            m_d2DMetaResource = DxMetaFactory.Create2D();
+            m_d2DMetaResource = D2DMetaFactory.Create();
             m_d3DMetaResource =
-                DxMetaFactory.Create3D(creationFlags:
+                D3DMetaFactory.Create(creationFlags:
                     DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded);
             m_d2DMetaResource.Initialize(m_d3DMetaResource, true);
             m_d3DMetaResource.Initalize(m_hwnd, m_size);

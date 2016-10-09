@@ -6,7 +6,8 @@ using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.Desktop;
-using WinApi.DxUtils;
+using WinApi.DxUtils.D2D1_1;
+using WinApi.DxUtils.D3D11;
 using WinApi.User32;
 using WinApi.Windows;
 using WinApi.Windows.Controls;
@@ -38,11 +39,13 @@ namespace DxTest
 
     public sealed class MainWindow : Window
     {
+        private readonly D2DMetaResource m_d2DMetaResource = D2DMetaFactory.Create();
+
         private readonly D3DMetaResource m_d3DMetaResource =
-            DxMetaFactory.Create3D(creationFlags:
+            D3DMetaFactory.Create(creationFlags:
                 DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded);
 
-        private readonly D2DMetaResource m_d2DMetaResource = DxMetaFactory.Create2D();
+        private SharpDX.DirectWrite.Factory m_dWriteFactory;
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
@@ -54,23 +57,21 @@ namespace DxTest
 
             return base.OnCreate(ref msg, ref createStruct);
         }
-        private SharpDX.DirectWrite.Factory m_dWriteFactory;
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
             var target = m_d3DMetaResource.RenderTargetView;
             var swapChain = m_d3DMetaResource.SwapChain;
+
             var size = GetClientSize();
+
             var context = m_d2DMetaResource.Context;
-            var rand = new Random();
             var w = size.Width;
             var h = size.Height;
-
             context.BeginDraw();
             context.Clear(new RawColor4(0, 0, 0, 0f));
             context.PushAxisAlignedClip(new RawRectangleF(0, 1, w, h), AntialiasMode.Aliased);
             context.Clear(new RawColor4(0.3f, 0.4f, 0.5f, 0.3f));
-
             var b = new SolidColorBrush(context, new RawColor4(0.5f, 0.6f, 0.4f, 0.6f));
             var textFormat = new TextFormat(m_dWriteFactory, "Segoe UI", 24);
             context.DrawText("Hello there!", textFormat, new RawRectangleF(0, 0, 200, 200), b);
@@ -78,7 +79,6 @@ namespace DxTest
             b.Dispose();
             context.PopAxisAlignedClip();
             context.EndDraw();
-
             //context.ClearRenderTargetView(target, new RawColor4(0.5f, 0.6f, 0.7f, 0.7f));
             swapChain.Present(1, 0);
         }

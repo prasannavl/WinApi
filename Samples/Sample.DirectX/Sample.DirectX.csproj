@@ -116,6 +116,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contexts\D2DGraphicsContext.cs" />
+    <Compile Include="Contexts\D2DRenderTargetGraphicsContext.cs" />
+    <Compile Include="Contexts\D3DGraphicsContext.cs" />
+    <Compile Include="Contexts\IGraphicsContext.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

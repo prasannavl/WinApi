@@ -1,7 +1,7 @@
 ﻿using System;
 using WinApi.Core;
 
-namespace WinApi.DxUtils.Contexts
+namespace Sample.DirectX.Contexts
 {
     public interface IGraphicsContext : IDisposable {
         void Init(IntPtr hwnd, ref Size size, bool deferInitUntilFirstDraw = true);

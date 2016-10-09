@@ -7,7 +7,7 @@ using WinApi.Utils;
 using Factory = SharpDX.Direct2D1.Factory;
 using FactoryType = SharpDX.Direct2D1.FactoryType;
 
-namespace WinApi.DxUtils.Contexts
+namespace Sample.DirectX.Contexts
 {
     public class D2DRenderTargetGraphicsContext : IGraphicsContext
     {
@@ -21,13 +21,6 @@ namespace WinApi.DxUtils.Contexts
             m_hwnd = hwnd;
             m_size = GetValidatedSize2(ref size);
             if (!deferInitUntilFirstDraw) CreateResources();
-        }
-
-        public static Size2 GetValidatedSize2(ref Size size)
-        {
-            var h = size.Height >= 0 ? size.Height : 0;
-            var w = size.Width >= 0 ? size.Width : 0;
-            return new Size2(w, h); 
         }
 
         public void Resize(ref Size size)
@@ -47,23 +40,23 @@ namespace WinApi.DxUtils.Contexts
 
             m_renderTarget.BeginDraw();
             m_renderTarget.Clear(new RawColor4(0, 0, 0, 0f));
-            m_renderTarget.PushAxisAlignedClip(new RawRectangleF(0, 1, m_size.Width, m_size.Height), AntialiasMode.Aliased);
+            //m_renderTarget.PushAxisAlignedClip(new RawRectangleF(0, 1, m_size.Width, m_size.Height), AntialiasMode.Aliased);
             m_renderTarget.Clear(new RawColor4(0f, 0f, 0f, 1f));
-             b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
+            b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
 
             m_renderTarget.FillRectangle(new RawRectangleF(200, 200, 500, 700), b);
 
-//            for (var i = 0; i < 10; i++)
-//            {
-//                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
-//                m_renderTarget.FillEllipse(
-//                    new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
-//                        rand.Next(0, h)), b);
-//                m_renderTarget.FillRectangle(
-//                    new RawRectangleF(rand.NextFloat(0, w), rand.NextFloat(0, h), rand.NextFloat(0, w),
-//                        rand.NextFloat(0, h)), b);
-//            }
-            m_renderTarget.PopAxisAlignedClip();
+            for (var i = 0; i < 10; i++)
+            {
+                b.Color = new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f);
+                m_renderTarget.FillEllipse(
+                    new Ellipse(new RawVector2(rand.NextFloat(0, w), rand.NextFloat(0, h)), rand.NextFloat(0, w),
+                        rand.Next(0, h)), b);
+                m_renderTarget.FillRectangle(
+                    new RawRectangleF(rand.NextFloat(0, w), rand.NextFloat(0, h), rand.NextFloat(0, w),
+                        rand.NextFloat(0, h)), b);
+            }
+            //m_renderTarget.PopAxisAlignedClip();
             m_renderTarget.EndDraw();
             b.Dispose();
         }
@@ -71,6 +64,13 @@ namespace WinApi.DxUtils.Contexts
         public void Dispose()
         {
             Destroy();
+        }
+
+        public static Size2 GetValidatedSize2(ref Size size)
+        {
+            var h = size.Height >= 0 ? size.Height : 0;
+            var w = size.Width >= 0 ? size.Width : 0;
+            return new Size2(w, h);
         }
 
         private void CreateResources()
