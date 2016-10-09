@@ -8,7 +8,7 @@ namespace WinApi.DxUtils.Contexts
 {
     public class D3DGraphicsContext : IGraphicsContext
     {
-        private D3DResourceManager m_dxResourceManager;
+        private D3DMetaResource m_d3DMetaResource;
         private IntPtr m_hwnd;
         private Size m_size;
 
@@ -22,9 +22,9 @@ namespace WinApi.DxUtils.Contexts
         public void Draw()
         {
             EnsureDxResources();
-            var target = m_dxResourceManager.D3DRenderTargetView;
-            var context = m_dxResourceManager.D3DContext;
-            var swapChain = m_dxResourceManager.SwapChain;
+            var target = m_d3DMetaResource.RenderTargetView;
+            var context = m_d3DMetaResource.Context;
+            var swapChain = m_d3DMetaResource.SwapChain;
 
             context.ClearRenderTargetView(target, new RawColor4(0.5f, 0.6f, 0.7f, 0.7f));
             swapChain.Present(1, 0);
@@ -33,16 +33,16 @@ namespace WinApi.DxUtils.Contexts
         public void Resize(ref Size size)
         {
             m_size = size;
-            m_dxResourceManager?.Resize(ref m_size);
+            m_d3DMetaResource?.Resize(ref m_size);
         }
 
         private void EnsureDxResources()
         {
-            if (m_dxResourceManager == null)
+            if (m_d3DMetaResource == null)
             {
                 PaintDefault();
-                m_dxResourceManager = new D3DResourceManager();
-                m_dxResourceManager.Initalize(m_hwnd, m_size);
+                m_d3DMetaResource = DxMetaFactory.Create3D();
+                m_d3DMetaResource.Initalize(m_hwnd, m_size);
             }
         }
 
@@ -58,7 +58,7 @@ namespace WinApi.DxUtils.Contexts
 
         public void Dispose()
         {
-            m_dxResourceManager.Dispose();
+            m_d3DMetaResource.Dispose();
         }
     }
 }

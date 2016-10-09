@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using WinApi.Core;
 using WinApi.Kernel32;
 using WinApi.User32;

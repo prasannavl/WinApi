@@ -43,10 +43,15 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WinApi.SharedUtils", "Utili
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinApi.DxUtils", "Utility\WinApi.DxUtils\WinApi.DxUtils.csproj", "{E6DC94C4-03F9-492F-8347-3BCE32E8E853}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{BC7017BC-8E89-4205-BDD4-BED2FA88212E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DxTest", "Misc\DxTest\DxTest.csproj", "{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Utility\WinApi.SharedUtils\WinApi.SharedUtils.projitems*{9298ead6-226d-48ae-ba66-fc77e8e9a347}*SharedItemsImports = 13
 		Utility\WinApi.SharedUtils\WinApi.SharedUtils.projitems*{bdb2a27f-fb53-4258-9579-4af36f20c26a}*SharedItemsImports = 4
+		Utility\WinApi.SharedUtils\WinApi.SharedUtils.projitems*{e2f14bf8-5382-42db-88b7-4f7c2cddffcc}*SharedItemsImports = 4
 		Utility\WinApi.SharedUtils\WinApi.SharedUtils.projitems*{e6dc94c4-03f9-492f-8347-3bce32e8e853}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -222,6 +227,18 @@ Global
 		{E6DC94C4-03F9-492F-8347-3BCE32E8E853}.Release|x64.Build.0 = Release|Any CPU
 		{E6DC94C4-03F9-492F-8347-3BCE32E8E853}.Release|x86.ActiveCfg = Release|Any CPU
 		{E6DC94C4-03F9-492F-8347-3BCE32E8E853}.Release|x86.Build.0 = Release|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Debug|x64.Build.0 = Debug|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Debug|x86.Build.0 = Debug|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Release|x64.ActiveCfg = Release|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Release|x64.Build.0 = Release|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Release|x86.ActiveCfg = Release|Any CPU
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -239,5 +256,6 @@ Global
 		{BDB2A27F-FB53-4258-9579-4AF36F20C26A} = {D80D00C6-1205-4294-B9A4-68C77C807FD7}
 		{9298EAD6-226D-48AE-BA66-FC77E8E9A347} = {D80D00C6-1205-4294-B9A4-68C77C807FD7}
 		{E6DC94C4-03F9-492F-8347-3BCE32E8E853} = {D80D00C6-1205-4294-B9A4-68C77C807FD7}
+		{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC} = {BC7017BC-8E89-4205-BDD4-BED2FA88212E}
 	EndGlobalSection
 EndGlobal

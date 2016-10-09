@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E6DC94C4-03F9-492F-8347-3BCE32E8E853}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{E2F14BF8-5382-42DB-88B7-4F7C2CDDFFCC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinApi.DxUtils</RootNamespace>
-    <AssemblyName>WinApi.DxUtils</AssemblyName>
+    <RootNamespace>DxTest</RootNamespace>
+    <AssemblyName>DxTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,12 +24,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpDX, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
@@ -56,28 +65,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contexts\D2DGraphicsContext.cs" />
-    <Compile Include="Contexts\D2DRenderTargetGraphicsContext.cs" />
-    <Compile Include="Contexts\D3DGraphicsContext.cs" />
-    <Compile Include="Contexts\IGraphicsContext.cs" />
-    <Compile Include="D2DMetaResource.cs" />
-    <Compile Include="D3DMetaResource.cs" />
-    <Compile Include="DxMetaFactory.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DxVersionInfo.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="app.manifest" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Utility\WinApi.DxUtils\WinApi.DxUtils.csproj">
+      <Project>{E6DC94C4-03F9-492F-8347-3BCE32E8E853}</Project>
+      <Name>WinApi.DxUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Utility\WinApi.Utils\WinApi.Utils.csproj">
+      <Project>{bdb2a27f-fb53-4258-9579-4af36f20c26a}</Project>
+      <Name>WinApi.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
+      <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
+      <Name>WinApi.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.Windows.Controls\WinApi.Windows.Controls.csproj">
+      <Project>{c00c4085-244e-4013-b9eb-b1f86e19b3d5}</Project>
+      <Name>WinApi.Windows.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
       <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
       <Name>WinApi</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\WinApi.SharedUtils\WinApi.SharedUtils.projitems" Label="Shared" />
+  <Import Project="..\..\Utility\WinApi.SharedUtils\WinApi.SharedUtils.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
