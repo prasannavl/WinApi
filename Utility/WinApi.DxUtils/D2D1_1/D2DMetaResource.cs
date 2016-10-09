@@ -1,17 +1,18 @@
 ﻿using System;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
+using WinApi.DxUtils.Core;
 using WinApi.Utils;
 using Device = SharpDX.Direct2D1.Device;
 using Factory1 = SharpDX.Direct2D1.Factory1;
 
-namespace WinApi.DxUtils
+namespace WinApi.DxUtils.D2D1_1
 {
     public class D2DMetaResource : IDisposable, IDxgiConnectable
     {
         private DeviceContext m_context;
         private CreationProperties m_creationProperties;
-        private D3DMetaResource m_d3DMetaResource;
+        private IDxgi1Container m_dxgiContainer;
         private Device m_device;
         private Factory1 m_factory;
         private bool m_isDisposed;
@@ -57,16 +58,16 @@ namespace WinApi.DxUtils
             DisconnectContextFromDxgiSurface();
         }
 
-        public void Initialize(D3DMetaResource d3DMetaResource, bool linkToD3DManager = false)
+        public void Initialize(IDxgi1Container dxgiContainer, bool autoLink = false)
         {
             CheckDisposed();
-            m_d3DMetaResource = d3DMetaResource;
-            if (linkToD3DManager) d3DMetaResource.AddLinkedResource(this);
+            m_dxgiContainer = dxgiContainer;
+            if (autoLink) dxgiContainer.AddLinkedResource(this);
         }
 
         public void Destroy()
         {
-            m_d3DMetaResource?.RemoveLinkedResource(this);
+            m_dxgiContainer?.RemoveLinkedResource(this);
             DisconnectContextFromDxgiSurface();
             DisposableHelpers.DisposeAndSetNull(ref m_context);
             DisposableHelpers.DisposeAndSetNull(ref m_device);
@@ -88,7 +89,7 @@ namespace WinApi.DxUtils
         private void CreateDevice()
         {
             EnsureFactory();
-            Device = new Device(m_d3DMetaResource.DxgiDevice, m_creationProperties);
+            Device = new Device(m_dxgiContainer.DxgiDevice, m_creationProperties);
         }
 
         private void EnsureDevice()
@@ -112,7 +113,7 @@ namespace WinApi.DxUtils
         private void ConnectContextToDxgiSurface()
         {
             EnsureContext();
-            using (var surface = m_d3DMetaResource.SwapChain.GetBackBuffer<Surface>(0))
+            using (var surface = m_dxgiContainer.SwapChain.GetBackBuffer<Surface>(0))
             {
                 using (var bitmap = new Bitmap1(Context, surface))
                     Context.Target = bitmap;

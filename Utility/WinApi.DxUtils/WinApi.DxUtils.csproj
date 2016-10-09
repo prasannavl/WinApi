@@ -56,13 +56,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contexts\D2DGraphicsContext.cs" />
-    <Compile Include="Contexts\D2DRenderTargetGraphicsContext.cs" />
-    <Compile Include="Contexts\D3DGraphicsContext.cs" />
-    <Compile Include="Contexts\IGraphicsContext.cs" />
-    <Compile Include="D2DMetaResource.cs" />
-    <Compile Include="D3DMetaResource.cs" />
-    <Compile Include="DxMetaFactory.cs" />
+    <Compile Include="D3D11\D3D11ContainerCore.cs" />
+    <Compile Include="Core\DxgiContainerBase.cs" />
+    <Compile Include="D2D1_1\D2DMetaFactory.cs" />
+    <Compile Include="D2D1_1\D2DMetaResource.cs" />
+    <Compile Include="D3D11\D3D11Container.cs" />
+    <Compile Include="D3D11\D3DMetaFactory.cs" />
+    <Compile Include="D3D11\D3DMetaResource.cs" />
+    <Compile Include="D3D11_1\D3DMetaResource.cs" />
+    <Compile Include="Core\DxgiContainer.cs" />
+    <Compile Include="DxMetaResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +80,7 @@
       <Name>WinApi</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\WinApi.SharedUtils\WinApi.SharedUtils.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

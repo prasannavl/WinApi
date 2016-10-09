@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX.DirectWrite;
+using WinApi.DxUtils.D2D1_1;
+using WinApi.DxUtils.D3D11_1;
 using WinApi.Utils;
 
 namespace WinApi.DxUtils
