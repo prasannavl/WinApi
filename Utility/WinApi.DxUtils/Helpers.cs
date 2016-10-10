@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WinApi.Utils
+namespace WinApi.DxUtils
 {
-    public class DisposableHelpers
+    public static class DisposableHelpers
     {
         public static void DisposeAndSetNull<T>(ref T obj)
             where T : class, IDisposable

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WinApi.Utils
+namespace Sample.DirectX
 {
     public static class RandomExtensions
     {
