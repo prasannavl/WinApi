@@ -63,6 +63,7 @@
     <Compile Include="D3D11\D3D11Container.cs" />
     <Compile Include="D3D11\D3DMetaFactory.cs" />
     <Compile Include="D3D11\D3DMetaResource.cs" />
+    <Compile Include="D3D11_1\D3DMetaFactory.cs" />
     <Compile Include="D3D11_1\D3DMetaResource.cs" />
     <Compile Include="Core\DxgiContainer.cs" />
     <Compile Include="DxMetaResource.cs" />

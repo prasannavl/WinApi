@@ -27,14 +27,13 @@ namespace WinApi.DxUtils.D3D11_1
         private RenderTargetView m_renderTargetView;
         private SwapChain1 m_swapChain;
 
-        public D3DMetaResource(Func<Device1> deviceCreator, Func<D3DMetaResource, SwapChain1> swapChainCreator,
-            ref Size size, bool autoInit = true)
+        public D3DMetaResource(Func<Device1> deviceCreator, Func<D3DMetaResource, SwapChain1> swapChainCreator)
         {
             m_deviceCreator = deviceCreator;
             m_swapChainCreator = swapChainCreator;
-            if (autoInit) InitializeInternal(ref size);
         }
 
+        public IntPtr Hwnd { get; private set; }
         public Size Size { get; private set; }
 
         public Device1 Device1
@@ -87,25 +86,23 @@ namespace WinApi.DxUtils.D3D11_1
             LinkedResources.Clear();
         }
 
+        public override SharpDX.Direct3D11.Device Device => Device1;
         public override Device DxgiDevice => DxgiDevice2;
         public override Factory DxgiFactory => DxgiFactory2;
         public override SwapChain SwapChain => SwapChain1;
+        public override DeviceContext Context => Context1;
 
         ~D3DMetaResource()
         {
             Dispose();
         }
 
-        public void Initalize(ref Size size)
+        public void Initalize(IntPtr hwnd, Size size)
         {
             CheckDisposed();
             if (Device != null)
                 Destroy();
-            InitializeInternal(ref size);
-        }
-
-        private void InitializeInternal(ref Size size)
-        {
+            Hwnd = hwnd;
             Size = GetValidatedSize(ref size);
             ConnectRenderTargetView();
         }
@@ -113,12 +110,12 @@ namespace WinApi.DxUtils.D3D11_1
         public void Resize(ref Size size)
         {
             CheckDisposed();
-            Size = GetValidatedSize(ref size);
             DisconnectLinkedResources();
             DisconnectRenderTargetView();
             DisposableHelpers.DisposeAndSetNull(ref m_renderTargetView);
+            Size = GetValidatedSize(ref size);
             // Resize retaining other properties.
-            SwapChain1.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
+            SwapChain1?.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
             ConnectRenderTargetView();
             ConnectLinkedResources();
         }
@@ -142,13 +139,13 @@ namespace WinApi.DxUtils.D3D11_1
 
         protected override void CreateDevice()
         {
-            Device = m_deviceCreator();
+            Device1 = m_deviceCreator();
         }
 
         protected override void CreateDxgiDevice()
         {
             EnsureDevice();
-            DxgiDevice2 = Device.QueryInterface<SharpDX.DXGI.Device2>();
+            DxgiDevice2 = Device1.QueryInterface<SharpDX.DXGI.Device2>();
         }
 
         protected override void CreateAdapter()
