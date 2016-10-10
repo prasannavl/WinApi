@@ -66,7 +66,12 @@ namespace WinApi.UxTheme
         /// <summary>
         ///     Prevents mirroring of the question mark, even in right-to-left (RTL) layout.
         /// </summary>
-        WTNCA_NOMIRRORHELP = 0x00000008
+        WTNCA_NOMIRRORHELP = 0x00000008,
+
+        /// <summary>
+        /// All valid bits
+        /// </summary>
+        WTNCA_VALIDBITS = WTNCA_NODRAWCAPTION | WTNCA_NODRAWICON | WTNCA_NOMIRRORHELP | WTNCA_NOSYSMENU
     }
 
     [Flags]
