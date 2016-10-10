@@ -10,14 +10,24 @@ namespace WinApi.Utils
 {
     public class DwmWindow : EventedWindowCore
     {
-        protected bool EnableBlurBehind;
-        protected Rectangle FrameInsetRect;
-        protected Rectangle FrameOutsetRect;
+        protected Rectangle DwmFrameInsetRect;
+        protected Rectangle DwmFrameOutsetRect;
         private bool m_isFirstNcCalcDone;
+
+        protected bool DwmDrawCaptionIcon { get; set; }
+        protected bool DwmDrawCaptionTitle { get; set; }
+        protected bool DwmBlurBehind { get; set; }
+        protected bool DwmAllowSystemMenu { get; set; }
+
+        protected virtual int GetSystemTopBorderHeight()
+        {
+            return User32Methods.GetSystemMetrics(SystemMetrics.SM_CYBORDER);
+        }
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
-            CalculateNcOutset(ref FrameOutsetRect);
+            SetupWindowThemeAttributes();
+            CalculateNcOutset(ref DwmFrameOutsetRect);
             RedrawFrame();
             return base.OnCreate(ref msg, ref createStruct);
         }
@@ -29,21 +39,37 @@ namespace WinApi.Utils
 
         protected virtual Margins GetDwmMargins()
         {
-            return new Margins(FrameInsetRect.Left, FrameInsetRect.Right, -FrameOutsetRect.Top + FrameInsetRect.Top,
-                FrameInsetRect.Bottom);
+            return new Margins(DwmFrameInsetRect.Left, DwmFrameInsetRect.Right,
+                // -DwmFrameInsetRect.Top
+                // Use above instead to add Dwm top frame extension without accounting for the current offset.
+                // DwmFrameInsetRect.Top should be ideally the negative value of caption area height including borders. 
+                // So offseting this way, instead of subtracting, removes the title bar entirely,
+                // with the exception of top border (which is a part of a client area now).
+                GetSystemTopBorderHeight() + DwmFrameInsetRect.Top,
+                DwmFrameInsetRect.Bottom);
+        }
+
+        protected virtual void SetupWindowThemeAttributes()
+        {
+            WindowThemeNcAttributeFlags flags = 0;
+            if (!DwmDrawCaptionIcon)
+                flags |= WindowThemeNcAttributeFlags.WTNCA_NODRAWICON;
+            if (!DwmDrawCaptionTitle)
+                flags |= WindowThemeNcAttributeFlags.WTNCA_NODRAWCAPTION;
+            if (!DwmAllowSystemMenu)
+                flags |= WindowThemeNcAttributeFlags.WTNCA_NOSYSMENU;
+            UxThemeHelpers.SetWindowThemeNonClientAttributes(Handle,
+                WindowThemeNcAttributeFlags.WTNCA_VALIDBITS & ~WindowThemeNcAttributeFlags.WTNCA_NOMIRRORHELP, flags);
         }
 
         protected virtual void SetupDwm()
         {
-            const WindowThemeNcAttributeFlags wtncaOpts = WindowThemeNcAttributeFlags.WTNCA_NODRAWCAPTION |
-                                                          WindowThemeNcAttributeFlags.WTNCA_NODRAWICON;
-            UxThemeHelpers.SetWindowThemeNonClientAttributes(Handle, wtncaOpts, wtncaOpts);
             var dwmMargins = GetDwmMargins();
             DwmApiMethods.DwmExtendFrameIntoClientArea(Handle, ref dwmMargins);
-            var policy = (int)DwmNCRenderingPolicy.DWMNCRP_ENABLED;
+            var policy = (int) DwmNCRenderingPolicy.DWMNCRP_ENABLED;
             DwmApiHelpers.DwmSetWindowAttribute(Handle, DwmWindowAttributeType.DWMWA_NCRENDERING_POLICY,
                 ref policy);
-            if (EnableBlurBehind)
+            if (DwmBlurBehind)
                 User32ExperimentalHelpers.EnableBlurBehind(Handle);
         }
 
@@ -65,9 +91,9 @@ namespace WinApi.Utils
                 return base.OnNcCalcSize(ref msg, shouldCalcValidRects, ref ncCalcSizeParams);
             }
             ncCalcSizeParams.Region.Output.TargetClientRect.Top += 0;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Bottom -= FrameOutsetRect.Bottom;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Left -= FrameOutsetRect.Left;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Right -= FrameOutsetRect.Right;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Bottom -= DwmFrameOutsetRect.Bottom;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Left -= DwmFrameOutsetRect.Left;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Right -= DwmFrameOutsetRect.Right;
             msg.SetHandled();
             return 0;
         }
@@ -76,9 +102,9 @@ namespace WinApi.Utils
         {
             GetClientRect(out rect);
             User32Helpers.MapWindowPoints(Handle, IntPtr.Zero, ref rect);
-            rect.Left += FrameOutsetRect.Left;
-            rect.Right += FrameOutsetRect.Right;
-            rect.Bottom += FrameOutsetRect.Bottom;
+            rect.Left += DwmFrameOutsetRect.Left;
+            rect.Right += DwmFrameOutsetRect.Right;
+            rect.Bottom += DwmFrameOutsetRect.Bottom;
         }
 
         public static void GetFrameEdgeSizerWidth(out CartesianWidth width)
@@ -105,11 +131,11 @@ namespace WinApi.Utils
             if (y < topEdge + sizerYWidth)
             {
                 // Inside the top sizing area
-                if (x < leftEdge + 2 * sizerXWidth)
+                if (x < leftEdge + 2*sizerXWidth)
                 {
                     return HitTestResult.HTTOPLEFT;
                 }
-                if (x >= rightEdge - 2 * sizerXWidth)
+                if (x >= rightEdge - 2*sizerXWidth)
                 {
                     return HitTestResult.HTTOPRIGHT;
                 }
@@ -129,11 +155,11 @@ namespace WinApi.Utils
                 return HitTestResult.HTCLIENT;
             }
             // Inside the bottom area
-            if (x < leftEdge + 2 * sizerXWidth)
+            if (x < leftEdge + 2*sizerXWidth)
             {
                 return HitTestResult.HTBOTTOMLEFT;
             }
-            if (x >= rightEdge - 2 * sizerXWidth)
+            if (x >= rightEdge - 2*sizerXWidth)
             {
                 return HitTestResult.HTBOTTOMRIGHT;
             }
@@ -146,7 +172,7 @@ namespace WinApi.Utils
             CartesianWidth frameSizerWidth;
             GetFrameEdgeRect(out frameEdge);
             GetFrameEdgeSizerWidth(out frameSizerWidth);
-            var captionHeight = -FrameOutsetRect.Top + FrameInsetRect.Top;
+            var captionHeight = -DwmFrameOutsetRect.Top + DwmFrameInsetRect.Top;
             msg.SetHandled();
             var res = FrameHitTest(ref point, ref frameEdge, ref frameSizerWidth);
             if (res == HitTestResult.HTCLIENT)
