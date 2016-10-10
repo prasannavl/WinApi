@@ -35,6 +35,8 @@ namespace WinApi.DxUtils.D3D11
         {
             EnsureDevice();
             EnsureSwapChain();
+            // Bail if it was explicitly created without SwapChain
+            if (SwapChain == null) return;
             using (var backBuffer = SwapChain.GetBackBuffer<Texture2D>(0))
             {
                 RenderTargetView = new RenderTargetView(Device, backBuffer);
@@ -45,6 +47,8 @@ namespace WinApi.DxUtils.D3D11
         {
             EnsureContext();
             EnsureRenderTargetView();
+            // Bail if it was explicitly created without RTV
+            if (RenderTargetView == null) return;
             Context.OutputMerger.SetRenderTargets(RenderTargetView);
         }
 
