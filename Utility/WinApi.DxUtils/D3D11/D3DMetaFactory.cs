@@ -61,7 +61,7 @@ namespace WinApi.DxUtils.D3D11
             }
             catch
             {
-                var warpDriverType = DriverType.Warp;
+                const DriverType warpDriverType = DriverType.Warp;
                 if (allowWarpFallback && (type != warpDriverType))
                     return levels != null
                         ? new Device(warpDriverType, flags, levels)
@@ -72,6 +72,10 @@ namespace WinApi.DxUtils.D3D11
 
         public static SwapEffect GetBestSwapEffectForPlatform(Version version = null)
         {
+            if (version == null)
+                version = Environment.OSVersion.Version;
+            if (version.Major > 6) return SwapEffect.FlipDiscard; // Win 10+
+            if ((version.Major > 5) && (version.Minor > 1)) return SwapEffect.FlipSequential; // 6.2+ - Win 8+
             return SwapEffect.Discard;
         }
 

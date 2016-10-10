@@ -100,12 +100,12 @@ namespace WinApi.DxUtils.D3D11
         public void Resize(ref Size size)
         {
             CheckDisposed();
-            Size = D3D11Container.GetValidatedSize(ref size);
             DisconnectLinkedResources();
             DisconnectRenderTargetView();
             DisposableHelpers.DisposeAndSetNull(ref m_renderTargetView);
+            Size = D3D11Container.GetValidatedSize(ref size);
             // Resize retaining other properties.
-            SwapChain.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
+            SwapChain?.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
             ConnectRenderTargetView();
             ConnectLinkedResources();
         }
