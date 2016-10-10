@@ -3,6 +3,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Device = SharpDX.Direct3D11.Device;
+using WinApi.Desktop;
 
 namespace WinApi.DxUtils.D3D11
 {

@@ -7,13 +7,12 @@ using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.DxUtils.Core;
 using WinApi.DxUtils.D3D11;
-using WinApi.Utils;
 using Device = SharpDX.DXGI.Device;
 using Device1 = SharpDX.Direct3D11.Device1;
 
 namespace WinApi.DxUtils.D3D11_1
 {
-    public class D3DMetaResource : D3D11Container, IDisposable, IDxgi1_2
+    public class D3DMetaResource : D3D11Container, ID3D11_1MetaResourceImpl
     {
         private readonly Func<Device1> m_deviceCreator;
         private readonly Func<D3DMetaResource, SwapChain1> m_swapChainCreator;

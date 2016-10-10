@@ -9,12 +9,12 @@ namespace WinApi.DxUtils.D3D11
     public abstract class D3D11ContainerCore : DxgiContainerBase, IDxgi1Container
     {
         public virtual Device Device { get; protected set; }
-        public virtual DeviceContext Context { get; protected set; }
-        public virtual RenderTargetView RenderTargetView { get; protected set; }
         public virtual SharpDX.DXGI.Device DxgiDevice { get; protected set; }
         public virtual Factory DxgiFactory { get; protected set; }
         public virtual Adapter Adapter { get; protected set; }
+        public virtual DeviceContext Context { get; protected set; }
         public virtual SwapChain SwapChain { get; protected set; }
+        public virtual RenderTargetView RenderTargetView { get; protected set; }
 
         public static Size GetValidatedSize(ref Size size)
         {

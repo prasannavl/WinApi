@@ -4,12 +4,12 @@ using System.Linq;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using WinApi.Core;
-using WinApi.Utils;
+using WinApi.DxUtils.Core;
 using Device = SharpDX.Direct3D11.Device;
 
 namespace WinApi.DxUtils.D3D11
 {
-    public class D3DMetaResource : D3D11Container, IDisposable
+    public class D3DMetaResource : D3D11Container, ID3D11MetaResourceImpl
     {
         private readonly Func<Device> m_deviceCreator;
         private readonly Func<D3DMetaResource, SwapChain> m_swapChainCreator;
@@ -103,7 +103,7 @@ namespace WinApi.DxUtils.D3D11
             DisconnectLinkedResources();
             DisconnectRenderTargetView();
             DisposableHelpers.DisposeAndSetNull(ref m_renderTargetView);
-            Size = D3D11Container.GetValidatedSize(ref size);
+            Size = GetValidatedSize(ref size);
             // Resize retaining other properties.
             SwapChain?.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
             ConnectRenderTargetView();

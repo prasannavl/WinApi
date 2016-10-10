@@ -42,20 +42,21 @@
       <HintPath>..\..\packages\SharpDX.Direct3D11.3.0.2\lib\net45\SharpDX.Direct3D11.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SharpDX.DirectComposition, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.DirectComposition.3.0.2\lib\net45\SharpDX.DirectComposition.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX.DXGI, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SharpDX.DXGI.3.0.2\lib\net45\SharpDX.DXGI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="D2D1\D2DMetaFactory.cs" />
+    <Compile Include="D2D1\D2DMetaResource.cs" />
     <Compile Include="D3D11\D3D11ContainerCore.cs" />
     <Compile Include="Core\DxgiContainerBase.cs" />
     <Compile Include="D2D1_1\D2DMetaFactory.cs" />
@@ -65,8 +66,9 @@
     <Compile Include="D3D11\D3DMetaResource.cs" />
     <Compile Include="D3D11_1\D3DMetaFactory.cs" />
     <Compile Include="D3D11_1\D3DMetaResource.cs" />
-    <Compile Include="Core\DxgiContainer.cs" />
-    <Compile Include="DxMetaResource.cs" />
+    <Compile Include="Core\Interfaces.cs" />
+    <Compile Include="Dx11CompatibleManager.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -76,13 +78,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
+      <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
+      <Name>WinApi.Desktop</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
       <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
       <Name>WinApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
-  <Import Project="..\WinApi.SharedUtils\WinApi.SharedUtils.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

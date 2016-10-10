@@ -27,7 +27,7 @@
  *  v11 - Windows 7+
  *  v11.1 - Win 7 (Platform Update)+, Win 8+ 
  *  v11.2 - Win 8.1+
- *  v12 - Win 10+
+ *  v11.3, v12 - Win 10+
  *  ----
  *  
  *  v11 - Device, DeviceContext

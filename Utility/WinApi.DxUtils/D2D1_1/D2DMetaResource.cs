@@ -2,18 +2,18 @@
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using WinApi.DxUtils.Core;
-using WinApi.Utils;
 using Device = SharpDX.Direct2D1.Device;
+using Factory = SharpDX.Direct2D1.Factory;
 using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace WinApi.DxUtils.D2D1_1
 {
-    public class D2DMetaResource : IDisposable, IDxgiConnectable
+    public class D2DMetaResource : ID2D1_1MetaResourceImpl
     {
         private DeviceContext m_context;
         private CreationProperties m_creationProperties;
-        private IDxgi1Container m_dxgiContainer;
         private Device m_device;
+        private IDxgi1Container m_dxgiContainer;
         private Factory1 m_factory;
         private bool m_isDisposed;
 
@@ -21,6 +21,9 @@ namespace WinApi.DxUtils.D2D1_1
         {
             m_creationProperties = props;
         }
+
+        public RenderTarget RenderTarget => Context;
+        public Factory Factory => Factory1;
 
         public Device Device
         {
@@ -34,7 +37,7 @@ namespace WinApi.DxUtils.D2D1_1
             private set { m_context = value; }
         }
 
-        public Factory1 Factory
+        public Factory1 Factory1
         {
             get { return m_factory; }
             private set { m_factory = value; }
@@ -77,12 +80,12 @@ namespace WinApi.DxUtils.D2D1_1
         private void CreateFactory()
         {
             var props = m_creationProperties;
-            Factory = new Factory1((FactoryType) props.ThreadingMode, props.DebugLevel);
+            Factory1 = new Factory1((FactoryType) props.ThreadingMode, props.DebugLevel);
         }
 
         private void EnsureFactory()
         {
-            if (Factory == null)
+            if (Factory1 == null)
                 CreateFactory();
         }
 
