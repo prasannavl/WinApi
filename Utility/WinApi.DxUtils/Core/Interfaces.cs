@@ -9,6 +9,7 @@ namespace WinApi.DxUtils.Core
         SharpDX.DXGI.Device DxgiDevice { get; }
         SharpDX.DXGI.Factory DxgiFactory { get; }
         SharpDX.DXGI.SwapChain SwapChain { get; }
+        SharpDX.DXGI.Adapter Adapter { get; }
     }
 
     // ReSharper disable once InconsistentNaming
@@ -19,11 +20,14 @@ namespace WinApi.DxUtils.Core
         SharpDX.DXGI.SwapChain1 SwapChain1 { get; }
     }
 
-    public interface IDxgi1Container : IDxgiContainerCore, IDxgi1 {}
+    public interface IDxgi1Container : IDxgiContainerCore, IDxgi1, INotifyOnInitDestroy {}
+
+    // ReSharper disable once InconsistentNaming
+    public interface IDxgi1_2Container : IDxgi1Container, IDxgi1_2 {}
 
     public interface ID3D11MetaResource : IDxgi1Container, IDisposable
     {
-        SharpDX.DXGI.Adapter Adapter { get; }
+        SharpDX.Direct3D11.Device Device { get; }
         SharpDX.Direct3D11.DeviceContext Context { get; }
         SharpDX.Direct3D11.RenderTargetView RenderTargetView { get; }
     }
@@ -31,42 +35,22 @@ namespace WinApi.DxUtils.Core
     public interface ID3D11MetaResourceImpl : ID3D11MetaResource
     {
         void Initalize(IntPtr hwnd, Size size);
-        void Resize(ref Size size);
+        void EnsureInitialized();
+        void Resize(Size size);
     }
 
-    // ReSharper disable once InconsistentNaming
-    public interface IDxgi1_2Container : IDxgi1Container, IDxgi1_2 {}
-
-    // ReSharper disable once InconsistentNaming
-    public interface ID3D11_1MetaResource : IDxgi1_2Container, ID3D11MetaResource
-    {
-        SharpDX.Direct3D11.DeviceContext1 Context1 { get; }
-    }
-
-    // ReSharper disable once InconsistentNaming
-    public interface ID3D11_1MetaResourceImpl : ID3D11MetaResourceImpl, ID3D11_1MetaResource {}
-
-    public interface ID2D1MetaResource : IDxgiConnectable, IDisposable
-    {
-        SharpDX.Direct2D1.RenderTarget RenderTarget { get; }
-        SharpDX.Direct2D1.Factory Factory { get; }
-    }
-
-    public interface ID2D1MetaResourceImpl : ID2D1MetaResource
-    {
-        void Initialize(IDxgi1Container dxgiContainer, bool autoLink = false);
-    }
-
-    // ReSharper disable once InconsistentNaming
-    public interface ID2D1_1MetaResource : ID2D1MetaResource
+    public interface ID2D1MetaResource : IDxgiConnectable, INotifyOnInitDestroy, IDisposable
     {
         SharpDX.Direct2D1.Device Device { get; }
         SharpDX.Direct2D1.DeviceContext Context { get; }
         SharpDX.Direct2D1.Factory1 Factory1 { get; }
     }
 
-    // ReSharper disable once InconsistentNaming
-    public interface ID2D1_1MetaResourceImpl : ID2D1_1MetaResource, ID2D1MetaResourceImpl {}
+    public interface ID2D1MetaResourceImpl : ID2D1MetaResource
+    {
+        void Initialize(IDxgi1Container dxgiContainer, bool autoLink = true);
+        void EnsureInitialized();
+    }
 
     public interface IDxgiContainerCore
     {
@@ -80,5 +64,11 @@ namespace WinApi.DxUtils.Core
     {
         void ConnectToDxgi();
         void DisconnectFromDxgi();
+    }
+
+    public interface INotifyOnInitDestroy
+    {
+        event Action Initialized;
+        event Action Destroyed;
     }
 }

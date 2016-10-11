@@ -1,33 +1,46 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using WinApi.DxUtils.Core;
+using Device = SharpDX.Direct2D1.Device;
 using Factory = SharpDX.Direct2D1.Factory;
+using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace WinApi.DxUtils.D2D1
 {
     public class D2DMetaResource : ID2D1MetaResourceImpl
     {
-        private RenderTarget m_renderTarget;
-        private readonly CreationProperties m_creationProperties;
-        private readonly RenderTargetProperties m_renderTargetProps;
-        private Factory m_factory;
-        private bool m_isDisposed;
+        private readonly Action m_onDxgiDestroyedAction;
+        private readonly Action m_onDxgiInitializedAction;
+        private DeviceContext m_context;
+        private CreationProperties m_creationProperties;
+        private Device m_device;
         private IDxgi1Container m_dxgiContainer;
+        private Factory1 m_factory;
+        private bool m_isDisposed;
+        private bool m_isLinked;
 
-        public D2DMetaResource(CreationProperties props, RenderTargetProperties renderTargetProps)
+        public D2DMetaResource(CreationProperties props)
         {
             m_creationProperties = props;
-            m_renderTargetProps = renderTargetProps;
+            m_onDxgiDestroyedAction = () => DestroyInternal(true);
+            m_onDxgiInitializedAction = () => InitializeInternal(true);
         }
 
-        public RenderTarget RenderTarget
+        public Device Device
         {
-            get { return m_renderTarget; }
-            private set { m_renderTarget = value; }
+            get { return m_device; }
+            private set { m_device = value; }
         }
 
-        public Factory Factory
+        public DeviceContext Context
+        {
+            get { return m_context; }
+            private set { m_context = value; }
+        }
+
+        public Factory1 Factory1
         {
             get { return m_factory; }
             private set { m_factory = value; }
@@ -51,51 +64,118 @@ namespace WinApi.DxUtils.D2D1
             DisconnectContextFromDxgiSurface();
         }
 
-        public void Initialize(IDxgi1Container dxgiContainer, bool autoLink = false)
+        public void Initialize(IDxgi1Container dxgiContainer, bool autoLink = true)
         {
             CheckDisposed();
+            if (Device != null)
+                Destroy();
             m_dxgiContainer = dxgiContainer;
-            if (autoLink) dxgiContainer.AddLinkedResource(this);
+            m_isLinked = autoLink;
+            InitializeInternal(false);
+        }
+
+        public void EnsureInitialized()
+        {
+            CheckDisposed();
+            if (Device == null)
+                Initialize(m_dxgiContainer, m_isLinked);
+        }
+
+        public event Action Initialized;
+        public event Action Destroyed;
+
+        private void InitializeInternal(bool dxgiSourcePreserved)
+        {
+            ConnectContextToDxgiSurface();
+            if (!dxgiSourcePreserved) ConnectToDxgiSource(m_isLinked);
+            Initialized?.Invoke();
+        }
+
+        private void ConnectToDxgiSource(bool shouldLink)
+        {
+            m_dxgiContainer.Destroyed += m_onDxgiDestroyedAction;
+            m_dxgiContainer.Initialized += m_onDxgiInitializedAction;
+            if (shouldLink)
+            {
+                m_dxgiContainer.AddLinkedResource(this);
+            }
+        }
+
+        protected void DisconnectFromDxgiSource()
+        {
+            if (m_dxgiContainer == null) return;
+            m_dxgiContainer.Initialized -= m_onDxgiInitializedAction;
+            m_dxgiContainer.Destroyed -= m_onDxgiDestroyedAction;
+            if (m_isLinked) m_dxgiContainer.RemoveLinkedResource(this);
         }
 
         public void Destroy()
         {
-            m_dxgiContainer?.RemoveLinkedResource(this);
+            DestroyInternal(false);
+        }
+
+        private void DestroyInternal(bool preserveDxgiSource)
+        {
+            if (!preserveDxgiSource) DisconnectFromDxgiSource();
             DisconnectContextFromDxgiSurface();
-            DisposableHelpers.DisposeAndSetNull(ref m_renderTarget);
+            DisposableHelpers.DisposeAndSetNull(ref m_context);
+            DisposableHelpers.DisposeAndSetNull(ref m_device);
             DisposableHelpers.DisposeAndSetNull(ref m_factory);
+            Destroyed?.Invoke();
         }
 
         private void CreateFactory()
         {
             var props = m_creationProperties;
-            Factory = new Factory((FactoryType) props.ThreadingMode, props.DebugLevel);
+            Factory1 = new Factory1((FactoryType) props.ThreadingMode, props.DebugLevel);
         }
 
         private void EnsureFactory()
         {
-            if (Factory == null)
+            if (Factory1 == null)
                 CreateFactory();
         }
 
+        private void CreateDevice()
+        {
+            EnsureFactory();
+            Device = new Device(m_dxgiContainer.DxgiDevice, m_creationProperties);
+        }
+
+        private void EnsureDevice()
+        {
+            if (Device == null)
+                CreateDevice();
+        }
+
+        private void CreateContext()
+        {
+            EnsureDevice();
+            Context = new DeviceContext(Device, m_creationProperties.Options);
+        }
+
+        private void EnsureContext()
+        {
+            if (Context == null)
+                CreateContext();
+        }
 
         private void ConnectContextToDxgiSurface()
         {
-            EnsureFactory();
+            EnsureContext();
             using (var surface = m_dxgiContainer.SwapChain.GetBackBuffer<Surface>(0))
             {
-                RenderTarget = new RenderTarget(this.Factory, surface, m_renderTargetProps);
+                using (var bitmap = new Bitmap1(Context, surface))
+                    Context.Target = bitmap;
             }
         }
 
         private void DisconnectContextFromDxgiSurface()
         {
-            var context = RenderTarget;
-            if (context != null)
-            {
-                context.Dispose();
-                RenderTarget = null;
-            }
+            var currentTarget = Context?.Target;
+            if (currentTarget == null) return;
+            currentTarget.Dispose();
+            Context.Target = null;
         }
 
         private void CheckDisposed()

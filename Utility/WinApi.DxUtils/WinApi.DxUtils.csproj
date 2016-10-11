@@ -55,19 +55,15 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\DxgiContainerBase.cs" />
     <Compile Include="D2D1\D2DMetaFactory.cs" />
     <Compile Include="D2D1\D2DMetaResource.cs" />
-    <Compile Include="D3D11\D3D11ContainerCore.cs" />
-    <Compile Include="Core\DxgiContainerBase.cs" />
-    <Compile Include="D2D1_1\D2DMetaFactory.cs" />
-    <Compile Include="D2D1_1\D2DMetaResource.cs" />
     <Compile Include="D3D11\D3D11Container.cs" />
     <Compile Include="D3D11\D3DMetaFactory.cs" />
     <Compile Include="D3D11\D3DMetaResource.cs" />
-    <Compile Include="D3D11_1\D3DMetaFactory.cs" />
-    <Compile Include="D3D11_1\D3DMetaResource.cs" />
     <Compile Include="Core\Interfaces.cs" />
-    <Compile Include="Dx11CompatibleManager.cs" />
+    <Compile Include="DCompManager.cs" />
+    <Compile Include="Dx11MetaResource.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -78,10 +74,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
-      <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
-      <Name>WinApi.Desktop</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
       <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
       <Name>WinApi</Name>

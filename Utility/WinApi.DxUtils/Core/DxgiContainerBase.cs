@@ -1,10 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpDX.DXGI;
 
 namespace WinApi.DxUtils.Core
 {
     public abstract class DxgiContainerBase
     {
+        public event Action Initialized;
+        public event Action Destroyed;
+
+        protected void InvokeInitializedEvent()
+        {
+            Initialized?.Invoke();
+        }
+
+        protected void InvokeDestroyedEvent()
+        {
+            Destroyed?.Invoke();
+        }
+
         private List<IDxgiConnectable> m_connectedResources;
         protected List<IDxgiConnectable> LinkedResources
         {
