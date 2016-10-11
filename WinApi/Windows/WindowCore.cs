@@ -118,8 +118,11 @@ namespace WinApi.Windows
             return WindowProc(hwnd, msg, IntPtr.Zero, lParam);
         }
 
-
-        protected virtual void OnMessage(ref WindowMessage msg) {}
+        protected virtual void OnMessage(ref WindowMessage msg)
+        {
+            if (!msg.Handled)
+                msg.SetHandledWithResult(WindowBaseProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam));
+        }
 
         protected virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
         {
@@ -135,7 +138,7 @@ namespace WinApi.Windows
             try
             {
                 OnMessage(ref wmsg);
-                return wmsg.Handled ? wmsg.Result : WindowBaseProc(hwnd, msg, wParam, lParam);
+                return wmsg.Result;
             }
             catch (Exception ex)
             {
