@@ -17,8 +17,9 @@ namespace WinApi.DxUtils
         private Target m_target;
         private Visual m_visual;
 
-        public DCompManager(int variant)
+        public DCompManager(int variant = -1)
         {
+            if (variant == -1) variant = GetVariantForPlatform();
             DeviceVariant = variant;
             m_onDxgiDestroyedAction = () => DestroyInternal(true);
             m_onDxgiInitializedAction = () => InitializeInternal(true);

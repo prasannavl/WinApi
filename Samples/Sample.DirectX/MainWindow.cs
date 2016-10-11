@@ -15,7 +15,7 @@ namespace Sample.DirectX
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
-            m_dx.Initialize(Handle, GetClientSize(), true);
+            m_dx.Initialize(Handle, GetClientSize());
             return base.OnCreate(ref msg, ref createStruct);
         }
 

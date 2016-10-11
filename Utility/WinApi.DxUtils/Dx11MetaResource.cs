@@ -25,7 +25,7 @@ namespace WinApi.DxUtils
         private DCompManager m_dCompManager;
         private Factory m_dWriteFactory;
         public Size Size;
-        public bool UseDComposition;
+        private int m_dCompVariant;
 
         public ID2D1MetaResource D2D => m_d2D;
         public ID3D11MetaResource D3D => m_d3D;
@@ -36,13 +36,15 @@ namespace WinApi.DxUtils
             Destroy();
         }
 
-        public void Initialize(IntPtr hwnd, Size size, bool useDComposition)
+        public void Initialize(IntPtr hwnd, Size size, int directCompositionVariant = -1)
         {
             if (m_d3D != null)
                 Destroy();
             Hwnd = hwnd;
             Size = size;
-            UseDComposition = useDComposition;
+            m_dCompVariant = directCompositionVariant != -1
+                ? directCompositionVariant
+                : DCompManager.GetVariantForPlatform();
             Create();
             InitializeInternal();
         }
@@ -50,7 +52,7 @@ namespace WinApi.DxUtils
         public void EnsureInitialized()
         {
             if (m_d3D?.Device == null)
-                Initialize(Hwnd, Size, UseDComposition);
+                Initialize(Hwnd, Size, m_dCompVariant);
         }
 
         public void Resize(Size size)
@@ -62,13 +64,13 @@ namespace WinApi.DxUtils
         {
             m_d3D.Initalize(Hwnd, Size);
             m_d2D.Initialize(m_d3D);
-            if (UseDComposition) m_dCompManager.Initialize(Hwnd, m_d3D, false);
+            if (m_dCompVariant > 0) m_dCompManager.Initialize(Hwnd, m_d3D, false);
         }
 
         private void Create()
         {
             var d3dCreationFlags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded;
-            m_d3D = UseDComposition
+            m_d3D = m_dCompVariant > 0
                 ? D3DMetaFactory.CreateForComposition(creationFlags: d3dCreationFlags)
                 : D3DMetaFactory.CreateForWindowTarget(creationFlags: d3dCreationFlags);
             m_d2D = D2DMetaFactory.Create();
@@ -78,10 +80,10 @@ namespace WinApi.DxUtils
 
         public bool PerformResetOnException(SharpDXException ex)
         {
-            Debug.WriteLine("DxMetaManger: ExceptionCheck => ", ex.Message);
             if (ErrorHelpers.ShouldResetDxgiForError(ex.Descriptor)
                 || ex.ResultCode == SharpDX.Direct2D1.ResultCode.RecreateTarget)
             {
+                Debug.WriteLine("Dx11MetaManger: ResetOnException => ", ex.Message);
                 Destroy();
                 return true;
             }
