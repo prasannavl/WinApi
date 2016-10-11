@@ -21,7 +21,6 @@ namespace Sample.DirectX
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
-            msg.SetHandled();
             var rand = new Random();
 
             var size = GetClientSize();
@@ -35,7 +34,6 @@ namespace Sample.DirectX
 
                 context.BeginDraw();
                 context.Clear(new RawColor4(0, 0, 0, 0f));
-
                 var b = new SolidColorBrush(context,
                     new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f));
 

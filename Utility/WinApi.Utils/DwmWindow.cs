@@ -94,7 +94,6 @@ namespace WinApi.Utils
             ncCalcSizeParams.Region.Output.TargetClientRect.Bottom -= DwmFrameOutsetRect.Bottom;
             ncCalcSizeParams.Region.Output.TargetClientRect.Left -= DwmFrameOutsetRect.Left;
             ncCalcSizeParams.Region.Output.TargetClientRect.Right -= DwmFrameOutsetRect.Right;
-            msg.SetHandled();
             return 0;
         }
 
@@ -173,7 +172,6 @@ namespace WinApi.Utils
             GetFrameEdgeRect(out frameEdge);
             GetFrameEdgeSizerWidth(out frameSizerWidth);
             var captionHeight = -DwmFrameOutsetRect.Top + DwmFrameInsetRect.Top;
-            msg.SetHandled();
             var res = FrameHitTest(ref point, ref frameEdge, ref frameSizerWidth);
             if (res == HitTestResult.HTCLIENT)
             {

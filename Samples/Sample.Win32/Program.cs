@@ -12,7 +12,6 @@ namespace Sample.Win32
 {
     internal class Program
     {
-        [STAThread]
         static int Main(string[] args)
         {
             var instanceHandle = Kernel32Methods.GetModuleHandle(IntPtr.Zero);

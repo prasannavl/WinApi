@@ -76,7 +76,7 @@ namespace WinApi.DxUtils
                 : D3DMetaFactory.CreateForWindowTarget(creationFlags: d3dCreationFlags);
             m_d2D = D2DMetaFactory.Create();
             m_dWriteFactory = new Factory(FactoryType.Shared);
-            m_dCompManager = new DCompManager(DCompManager.GetVariantForPlatform());
+            m_dCompManager = new DCompManager(m_dCompVariant);
         }
 
         public bool PerformResetOnException(SharpDXException ex)

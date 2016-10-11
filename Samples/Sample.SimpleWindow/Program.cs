@@ -12,9 +12,6 @@ namespace Sample.SimpleWindow
 {
     internal class Program
     {
-        // STA not strictly required for simple applications
-        // that doesn't use COM, but just keeping up with convention here.
-        [STAThread]
         static int Main(string[] args)
         {
             using (var win = Window.Create<AppWindow>("Hello"))
@@ -27,18 +24,14 @@ namespace Sample.SimpleWindow
 
     public class AppWindow : Window
     {
-        protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
+        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
         {
             PaintStruct ps;
-            hdc = BeginPaint(out ps);
+            var hdc = BeginPaint(out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRect,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             EndPaint(ref ps);
-
-            // Prevent default processing. Not actually
-            // required here. This is one of the reasons msg ref is 
-            // always passed along to all message loop events.
-            msg.SetHandled();
+            base.OnPaint(ref msg, cHdc);
         }
 
         protected override void OnMessage(ref WindowMessage msg)
@@ -46,7 +39,7 @@ namespace Sample.SimpleWindow
             switch (msg.Id)
             {
                 // Note: OnEraseBkgnd method is already available in 
-                // WindowBase, but directly interception here
+                // EventedWindowCore, but directly intercepted here
                 // just for the sake of overriding the
                 // message loop.
                 // Also, note that the message loop is 
@@ -62,7 +55,6 @@ namespace Sample.SimpleWindow
                     // return;
 
                     msg.Result = new IntPtr(1);
-                    msg.SetHandled();
                     return;
                 }
             }

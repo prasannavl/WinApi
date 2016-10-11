@@ -6,13 +6,13 @@ using WinApi.User32;
 namespace WinApi.Windows
 {
     /// <summary>
-    /// The minimum core for all windows. It derives from the NativeWindow, 
-    /// and provides connectivity to the Window procedure. Again, 
-    /// it does nothing more than controlling the message loop
-    /// connection, destruction, and error handling across native
-    /// boundary. It provides the `OnMessage` method that's processes
-    /// the message loop. Any classes that derive from this can 
-    /// create life cycle events from handling the message loop.
+    ///     The minimum core for all windows. It derives from the NativeWindow,
+    ///     and provides connectivity to the Window procedure. Again,
+    ///     it does nothing more than controlling the message loop
+    ///     connection, destruction, and error handling across native
+    ///     boundary. It provides the `OnMessage` method that's processes
+    ///     the message loop. Any classes that derive from this can
+    ///     create life cycle events from handling the message loop.
     /// </summary>
     public class WindowCore : NativeWindow, INativeConnectable, IDisposable
     {
@@ -120,8 +120,7 @@ namespace WinApi.Windows
 
         protected virtual void OnMessage(ref WindowMessage msg)
         {
-            if (!msg.Handled)
-                msg.SetHandledWithResult(WindowBaseProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam));
+            msg.SetResult(WindowBaseProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam));
         }
 
         protected virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -132,8 +131,7 @@ namespace WinApi.Windows
                 WParam = wParam,
                 LParam = lParam,
                 Result = IntPtr.Zero,
-                Hwnd = hwnd,
-                Handled = false
+                Hwnd = hwnd
             };
             try
             {
@@ -170,9 +168,19 @@ namespace WinApi.Windows
         {
             return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
         }
+
+        internal IntPtr CallWindowProc(ref WindowMessage msg)
+        {
+            return WindowProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam);
+        }
+
+        internal IntPtr CallWindowBaseProc(ref WindowMessage msg)
+        {
+            return WindowBaseProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam);
+        }
     }
 
-    public sealed class SealedWindowCore : WindowCore { } 
+    public sealed class SealedWindowCore : WindowCore {}
 
     public interface INativeConnectable : INativeAttachable
     {
@@ -185,12 +193,11 @@ namespace WinApi.Windows
 
     public struct WindowMessage
     {
+        public IntPtr Hwnd;
         public WM Id;
         public IntPtr WParam;
         public IntPtr LParam;
         public IntPtr Result;
-        public bool Handled;
-        public IntPtr Hwnd;
 
         public WindowMessage(IntPtr hwnd, uint id, IntPtr wParam, IntPtr lParam)
         {
@@ -199,23 +206,16 @@ namespace WinApi.Windows
             WParam = wParam;
             LParam = lParam;
             Result = IntPtr.Zero;
-            Handled = false;
         }
 
-        public void SetHandled(bool handled = true)
-        {
-            Handled = handled;
-        }
-
-        public void SetHandledWithResult(IntPtr result)
+        public void SetResult(IntPtr result)
         {
             Result = result;
-            Handled = true;
         }
 
-        public void SetHandledWithResult(int result)
+        public void SetResult(int result)
         {
-            SetHandledWithResult(new IntPtr(result));
+            SetResult(new IntPtr(result));
         }
     }
 

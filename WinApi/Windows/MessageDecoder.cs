@@ -401,13 +401,13 @@ namespace WinApi.Windows
 
         #region Non-client Handling
 
-        public delegate NcActivationResult NcActivateHandler(
-            ref WindowMessage msg, bool isShown, IntPtr updateRegion);
+        public delegate void NcActivateHandler(
+            ref WindowMessage msg, bool isShown, ref IntPtr updateRegion);
 
         public delegate WindowViewRegionFlags NcCalcSizeHandler(
             ref WindowMessage msg, bool shouldCalcValidRects, ref NcCalcSizeParams ncCalcSizeParams);
 
-        public delegate void NcPaintHandler(ref WindowMessage msg, IntPtr updateRegion);
+        public delegate void NcPaintHandler(ref WindowMessage msg, ref IntPtr updateRegion);
 
         #region Pointer-Ref-Helper Wrappers
 
@@ -425,19 +425,15 @@ namespace WinApi.Windows
             var shouldCalcValidRects = msg.WParam.ToSafeUInt32() > 0;
             var lPtr = (NcCalcSizeParamsWrapper*) msg.LParam;
             msg.Result = new IntPtr((int) handler(ref msg, shouldCalcValidRects, ref lPtr->Value));
-            // If providing, 0 preserves previous area & align top-left
+            // If shouldCalcValidRects true, 0 preserves previous area & align top-left
         }
 
         public static void ProcessNcActivate(ref WindowMessage msg, NcActivateHandler handler)
         {
             var isShown = msg.WParam.ToSafeInt32() > 0;
             // lParam is used only if visual styles are disabled.
-            var updateRegion = msg.LParam;
-            var res = handler(ref msg, isShown, updateRegion);
-            if (res.PreventRegionUpdates)
-                msg.LParam = new IntPtr(-1);
-            msg.Result = new IntPtr(res.PreventDeactivationChanges ? 0 : 1);
-            // To prevent Nc region update in DefWndProc, set LParam = -1;
+            handler(ref msg, isShown, ref msg.LParam);
+            // To prevent Nc region update in DefWndProc, set (updateRegion)LParam = -1;
             // When wParam == TRUE, result is ignored.
             // var result = TRUE // Default processing;
             // var result = FALSE // Prevent changes.
@@ -446,7 +442,7 @@ namespace WinApi.Windows
         public static void ProcessNcPaint(ref WindowMessage msg,
             NcPaintHandler handler)
         {
-            handler(ref msg, msg.WParam);
+            handler(ref msg, ref msg.WParam);
         }
 
         #endregion
@@ -474,16 +470,9 @@ namespace WinApi.Windows
         PreventCreation = -1
     }
 
-
     public enum AppCommandResult
     {
         Default = 0,
         Handled = 1
-    }
-
-    public struct NcActivationResult
-    {
-        public bool PreventRegionUpdates;
-        public bool PreventDeactivationChanges;
     }
 }
