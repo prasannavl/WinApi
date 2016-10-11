@@ -57,6 +57,7 @@ namespace WinApi.DxUtils
 
         public void Resize(Size size)
         {
+            Size = size;
             m_d3D?.Resize(size);
         }
 
@@ -81,7 +82,7 @@ namespace WinApi.DxUtils
         public bool PerformResetOnException(SharpDXException ex)
         {
             if (ErrorHelpers.ShouldResetDxgiForError(ex.Descriptor)
-                || ex.ResultCode == SharpDX.Direct2D1.ResultCode.RecreateTarget)
+                || ErrorHelpers.ShouldResetD2DForError(ex.Descriptor))
             {
                 Debug.WriteLine("Dx11MetaManger: ResetOnException => ", ex.Message);
                 Destroy();
