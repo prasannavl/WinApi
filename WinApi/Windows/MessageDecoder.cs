@@ -6,7 +6,7 @@ using WinApi.User32;
 
 namespace WinApi.Windows
 {
-    public class MessageHandlers
+    public class MessageDecoder
     {
         public static void ProcessShowWindow(ref WindowMessage msg, ShowWindowHandler handler)
         {

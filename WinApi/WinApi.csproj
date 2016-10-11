@@ -80,7 +80,7 @@
     <Compile Include="Windows\EventedWindowCore.cs" />
     <Compile Include="Windows\EventLoop.cs" />
     <Compile Include="Windows\Helpers\MessageBoxHelpers.cs" />
-    <Compile Include="Windows\MessageHandlers.cs" />
+    <Compile Include="Windows\MessageDecoder.cs" />
     <Compile Include="Windows\Helpers\MessageHelpers.cs" />
     <Compile Include="Windows\NativeWindow.cs" />
     <Compile Include="Windows\WindowCore.cs" />

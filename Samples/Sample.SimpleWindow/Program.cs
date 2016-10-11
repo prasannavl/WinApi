@@ -56,9 +56,9 @@ namespace Sample.SimpleWindow
                 {
                     // I can even build the loop only on pay-per-use
                     // basis, when I need it since all the default methods
-                    // are publicly, exposed with the MessageHandlers class.
+                    // are publicly, exposed with the MessageDecoder class.
                     //
-                    // MessageHandlers.OnEraseBkgnd(this, ref msg);
+                    // MessageDecoder.OnEraseBkgnd(this, ref msg);
                     // return;
 
                     msg.Result = new IntPtr(1);

@@ -13,14 +13,19 @@ namespace WinApi.Windows
     ///     Derives from the WindowCore, and provides all the life cycle, and input events.
     ///     It doesn't really handle them in any way but just provides the events with the
     ///     correct decoded parameters. All the processing and decoding are done
-    ///     transparently inside the `MessageHandlers` class.
+    ///     transparently inside the `MessageDecoder` class.
     ///     If in certain high-performance requirements, you need only a few events, this
-    ///     can be manually implemented only for the events required using the `MessageHandlers`
+    ///     can be manually implemented only for the events required using the `MessageDecoder`
     ///     class. All of the parameter decoding are transparent.
     /// </summary>
     public abstract class EventedWindowCore : WindowCore, IWindowMessageProcessor
     {
         void IWindowMessageProcessor.ProcessMessage(ref WindowMessage msg)
+        {
+            this.OnMessage(ref msg);
+        }
+
+        protected override void OnMessage(ref WindowMessage msg)
         {
             switch (msg.Id)
             {
@@ -30,7 +35,7 @@ namespace WinApi.Windows
                     var flag = false;
                     try
                     {
-                        MessageHandlers.ProcessPaint(ref msg, OnPaint);
+                        MessageDecoder.ProcessPaint(ref msg, OnPaint);
                         flag = true;
                     }
                     finally
@@ -74,247 +79,249 @@ namespace WinApi.Windows
                 }
                 case WM.NCACTIVATE:
                 {
-                    MessageHandlers.ProcessNcActivate(ref msg, OnNcActivate);
+                    MessageDecoder.ProcessNcActivate(ref msg, OnNcActivate);
                     break;
                 }
                 case WM.NCCALCSIZE:
                 {
-                    MessageHandlers.ProcessNcCalcSize(ref msg, OnNcCalcSize);
+                    MessageDecoder.ProcessNcCalcSize(ref msg, OnNcCalcSize);
                     break;
                 }
                 case WM.SHOWWINDOW:
                 {
-                    MessageHandlers.ProcessShowWindow(ref msg, OnShow);
+                    MessageDecoder.ProcessShowWindow(ref msg, OnShow);
                     break;
                 }
                 case WM.QUIT:
                 {
-                    MessageHandlers.ProcessQuit(ref msg, OnQuit);
+                    MessageDecoder.ProcessQuit(ref msg, OnQuit);
                     break;
                 }
                 case WM.CREATE:
                 {
-                    MessageHandlers.ProcessCreate(ref msg, OnCreate);
+                    MessageDecoder.ProcessCreate(ref msg, OnCreate);
                     break;
                 }
                 case WM.SIZE:
                 {
-                    MessageHandlers.ProcessSize(ref msg, OnSize);
+                    MessageDecoder.ProcessSize(ref msg, OnSize);
                     break;
                 }
                 case WM.MOVE:
                 {
-                    MessageHandlers.ProcessMove(ref msg, OnMove);
+                    MessageDecoder.ProcessMove(ref msg, OnMove);
                     break;
                 }
                 case WM.ACTIVATE:
                 {
-                    MessageHandlers.ProcessActivate(ref msg, OnActivate);
+                    MessageDecoder.ProcessActivate(ref msg, OnActivate);
                     break;
                 }
                 case WM.ERASEBKGND:
                 {
-                    MessageHandlers.ProcessEraseBkgnd(ref msg, OnEraseBkgnd);
+                    MessageDecoder.ProcessEraseBkgnd(ref msg, OnEraseBkgnd);
                     break;
                 }
                 case WM.ACTIVATEAPP:
                 {
-                    MessageHandlers.ProcessActivateApp(ref msg, OnActivateApp);
+                    MessageDecoder.ProcessActivateApp(ref msg, OnActivateApp);
                     break;
                 }
                 case WM.DISPLAYCHANGE:
                 {
-                    MessageHandlers.ProcessDisplayChange(ref msg, OnDisplayChange);
+                    MessageDecoder.ProcessDisplayChange(ref msg, OnDisplayChange);
                     break;
                 }
                 case WM.MOUSEMOVE:
                 {
-                    MessageHandlers.ProcessMouseMove(ref msg, OnMouseMove);
+                    MessageDecoder.ProcessMouseMove(ref msg, OnMouseMove);
                     break;
                 }
                 case WM.LBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.LBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.LBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
+                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
                     break;
                 }
                 case WM.RBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.RBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.RBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
+                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
 
                     break;
                 }
                 case WM.MBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.MBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.MBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
+                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
                     break;
                 }
                 case WM.XBUTTONUP:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.XBUTTONDOWN:
                 {
-                    MessageHandlers.ProcessMouseButton(ref msg, OnMouseButton);
+                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
                     break;
                 }
                 case WM.XBUTTONDBLCLK:
                 {
-                    MessageHandlers.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
+                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
                     break;
                 }
                 case WM.MOUSEACTIVATE:
                 {
-                    MessageHandlers.ProcessMouseActivate(ref msg, OnMouseActivate);
+                    MessageDecoder.ProcessMouseActivate(ref msg, OnMouseActivate);
                     break;
                 }
                 case WM.MOUSEHOVER:
                 {
-                    MessageHandlers.ProcessMouseHover(ref msg, OnMouseHover);
+                    MessageDecoder.ProcessMouseHover(ref msg, OnMouseHover);
                     break;
                 }
                 case WM.MOUSEWHEEL:
                 {
-                    MessageHandlers.ProcessMouseWheel(ref msg, OnMouseWheel);
+                    MessageDecoder.ProcessMouseWheel(ref msg, OnMouseWheel);
                     break;
                 }
                 case WM.MOUSEHWHEEL:
                 {
-                    MessageHandlers.ProcessMouseWheel(ref msg, OnMouseWheel);
+                    MessageDecoder.ProcessMouseWheel(ref msg, OnMouseWheel);
                     break;
                 }
                 case WM.CHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(ref msg, OnKeyChar);
+                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
                     break;
                 }
                 case WM.SYSCHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(ref msg, OnKeyChar);
+                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
                     break;
                 }
                 case WM.DEADCHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(ref msg, OnKeyChar);
+                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
                     break;
                 }
                 case WM.SYSDEADCHAR:
                 {
-                    MessageHandlers.ProcessKeyChar(ref msg, OnKeyChar);
+                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
                     break;
                 }
                 case WM.KEYUP:
                 {
-                    MessageHandlers.ProcessKey(ref msg, OnKey);
+                    MessageDecoder.ProcessKey(ref msg, OnKey);
                     break;
                 }
                 case WM.KEYDOWN:
                 {
-                    MessageHandlers.ProcessKey(ref msg, OnKey);
+                    MessageDecoder.ProcessKey(ref msg, OnKey);
                     break;
                 }
                 case WM.SYSKEYUP:
                 {
-                    MessageHandlers.ProcessKey(ref msg, OnKey);
+                    MessageDecoder.ProcessKey(ref msg, OnKey);
                     break;
                 }
                 case WM.SYSKEYDOWN:
                 {
-                    MessageHandlers.ProcessKey(ref msg, OnKey);
+                    MessageDecoder.ProcessKey(ref msg, OnKey);
                     break;
                 }
                 case WM.COMMAND:
                 {
-                    MessageHandlers.ProcessCommand(ref msg, OnCommand);
+                    MessageDecoder.ProcessCommand(ref msg, OnCommand);
                     break;
                 }
                 case WM.SYSCOMMAND:
                 {
-                    MessageHandlers.ProcessSysCommand(ref msg, OnSysCommand);
+                    MessageDecoder.ProcessSysCommand(ref msg, OnSysCommand);
                     break;
                 }
                 case WM.MENUCOMMAND:
                 {
-                    MessageHandlers.ProcessMenuCommand(ref msg, OnMenuCommand);
+                    MessageDecoder.ProcessMenuCommand(ref msg, OnMenuCommand);
                     break;
                 }
                 case WM.APPCOMMAND:
                 {
-                    MessageHandlers.ProcessAppCommand(ref msg, OnAppCommand);
+                    MessageDecoder.ProcessAppCommand(ref msg, OnAppCommand);
                     break;
                 }
                 case WM.KILLFOCUS:
                 {
-                    MessageHandlers.ProcessLostFocus(ref msg, OnLostFocus);
+                    MessageDecoder.ProcessLostFocus(ref msg, OnLostFocus);
                     break;
                 }
                 case WM.SETFOCUS:
                 {
-                    MessageHandlers.ProcessGotFocus(ref msg, OnGotFocus);
+                    MessageDecoder.ProcessGotFocus(ref msg, OnGotFocus);
                     break;
                 }
                 case WM.CAPTURECHANGED:
                 {
-                    MessageHandlers.ProcessCaptureChanged(ref msg, OnInputCaptureChanged);
+                    MessageDecoder.ProcessCaptureChanged(ref msg, OnInputCaptureChanged);
                     break;
                 }
                 case WM.NCHITTEST:
                 {
-                    MessageHandlers.ProcessHitTest(ref msg, OnHitTest);
+                    MessageDecoder.ProcessHitTest(ref msg, OnHitTest);
                     break;
                 }
                 case WM.HOTKEY:
                 {
-                    MessageHandlers.ProcessHotKey(ref msg, OnHotKey);
+                    MessageDecoder.ProcessHotKey(ref msg, OnHotKey);
                     break;
                 }
                 case WM.GETMINMAXINFO:
                 {
-                    MessageHandlers.ProcessGetMinMaxInfo(ref msg, OnMinMaxInfo);
+                    MessageDecoder.ProcessGetMinMaxInfo(ref msg, OnMinMaxInfo);
                     break;
                 }
                 case WM.NCPAINT:
                 {
-                    MessageHandlers.ProcessNcPaint(ref msg, OnNcPaint);
+                    MessageDecoder.ProcessNcPaint(ref msg, OnNcPaint);
                     break;
                 }
+//                default:
+//                {
+//                    base.OnMessage(ref msg);
+//                    return;
+//                }
             }
-        }
 
-
-        protected override void OnMessage(ref WindowMessage msg)
-        {
-            ((IWindowMessageProcessor) this).ProcessMessage(ref msg);
+            // TODO: Uncomment the above default case and remove this after default processing code path
+            // has been implemented for all the cases above.
             base.OnMessage(ref msg);
         }
 
