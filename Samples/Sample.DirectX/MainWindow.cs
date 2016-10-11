@@ -15,12 +15,13 @@ namespace Sample.DirectX
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
-            m_dx.Initialize(Handle, GetClientSize());
+            m_dx.Initialize(Handle, GetClientSize(), 0);
             return base.OnCreate(ref msg, ref createStruct);
         }
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
         {
+            msg.SetHandled();
             var rand = new Random();
 
             var size = GetClientSize();
@@ -54,6 +55,7 @@ namespace Sample.DirectX
 
                 context.EndDraw();
                 m_dx.D3D.SwapChain.Present(1, 0);
+                this.Validate();
             }
             catch (SharpDXException ex)
             {
