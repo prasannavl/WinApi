@@ -30,5 +30,15 @@ namespace WinApi.DxUtils
             return (code == SharpDX.DXGI.ResultCode.DeviceRemoved.Code) ||
                    (code == SharpDX.DXGI.ResultCode.DeviceReset.Code);
         }
+
+        public static bool ShouldResetD2DForError(ResultDescriptor resultDescriptor)
+        {
+            return ShouldResetD2DForError(resultDescriptor.Code);
+        }
+
+        public static bool ShouldResetD2DForError(int code)
+        {
+            return code == SharpDX.Direct2D1.ResultCode.RecreateTarget.Code;
+        }
     }
 }
