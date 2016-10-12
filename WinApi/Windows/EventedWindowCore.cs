@@ -104,6 +104,16 @@ namespace WinApi.Windows
                     MessageDecoder.ProcessMove(ref msg, OnMove);
                     break;
                 }
+                case WM.WINDOWPOSCHANGED:
+                {
+                    MessageDecoder.ProcessWindowPositionChange(ref msg, OnPositionChanged);
+                    break;
+                }
+                case WM.WINDOWPOSCHANGING:
+                {
+                    MessageDecoder.ProcessWindowPositionChange(ref msg, OnPositionChanging);
+                    break;
+                }
                 case WM.ACTIVATE:
                 {
                     MessageDecoder.ProcessActivate(ref msg, OnActivate);
@@ -157,7 +167,6 @@ namespace WinApi.Windows
                 case WM.RBUTTONDBLCLK:
                 {
                     MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
-
                     break;
                 }
                 case WM.MBUTTONUP:
@@ -272,12 +281,12 @@ namespace WinApi.Windows
                 }
                 case WM.KILLFOCUS:
                 {
-                    MessageDecoder.ProcessLostFocus(ref msg, OnLostFocus);
+                    MessageDecoder.ProcessFocus(ref msg, OnLostFocus);
                     break;
                 }
                 case WM.SETFOCUS:
                 {
-                    MessageDecoder.ProcessGotFocus(ref msg, OnGotFocus);
+                    MessageDecoder.ProcessFocus(ref msg, OnGotFocus);
                     break;
                 }
                 case WM.CAPTURECHANGED:
@@ -312,6 +321,12 @@ namespace WinApi.Windows
                 }
             }
         }
+
+        protected virtual void OnPositionChanged(ref WindowMessage msg, ref WindowPosition windowposition)
+            => MessageHelpers.RunWindowBaseProc(this, ref msg);
+
+        protected virtual void OnPositionChanging(ref WindowMessage msg, ref WindowPosition windowposition)
+            => MessageHelpers.RunWindowBaseProc(this, ref msg);
 
         protected virtual void OnClose(ref WindowMessage msg) =>
             MessageHelpers.RunWindowBaseProc(this, ref msg);

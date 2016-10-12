@@ -259,14 +259,7 @@ namespace WinApi.Windows
             // Standard return. 0 if already processed
         }
 
-        public static void ProcessLostFocus(ref WindowMessage msg, FocusHandler handler)
-        {
-            var oppositeHwnd = msg.WParam;
-            handler(ref msg, oppositeHwnd);
-            // Standard return. 0 if already processed
-        }
-
-        public static void ProcessGotFocus(ref WindowMessage msg, FocusHandler handler)
+        public static void ProcessFocus(ref WindowMessage msg, FocusHandler handler)
         {
             var oppositeHwnd = msg.WParam;
             handler(ref msg, oppositeHwnd);
@@ -311,7 +304,19 @@ namespace WinApi.Windows
             // Standard return. 0 if already processed
         }
 
+        public static unsafe void ProcessWindowPositionChange(ref WindowMessage msg, WindowPositionHandler handler)
+        {
+            var position = (WindowPositionWrapper*) msg.LParam;
+            handler(ref msg, ref position->Value);
+        }
+
         #region Pointer-Ref-Helper Wrappers
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct WindowPositionWrapper
+        {
+            public WindowPosition Value;
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         internal struct CreateStructWrapper
@@ -396,6 +401,8 @@ namespace WinApi.Windows
 
         public delegate void SysCommandHandler(
             ref WindowMessage msg, SysCommand cmd, short mouseCursorXOrZero, short mouseCursorYOrKeyMnemonic);
+
+        public delegate void WindowPositionHandler(ref WindowMessage msg, ref WindowPosition windowPosition);
 
         #endregion
 
