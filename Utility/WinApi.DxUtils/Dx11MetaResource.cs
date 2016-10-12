@@ -57,6 +57,7 @@ namespace WinApi.DxUtils
 
         public void Resize(Size size)
         {
+            if (m_dCompVariant > 0 && (size.Width <= 0 || size.Height <= 0)) return; 
             Size = size;
             m_d3D?.Resize(size);
         }
