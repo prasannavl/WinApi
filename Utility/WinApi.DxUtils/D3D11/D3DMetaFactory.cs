@@ -65,6 +65,9 @@ namespace WinApi.DxUtils.D3D11
                 GetDefaultSwapChainDescription(out desc, target);
 
 #if DEBUG
+            // Note: These have no impact on solution outside
+            // of this project. This is only for internal testing
+            // purposes
             creationFlags |= DeviceCreationFlags.Debug;
 #endif
 

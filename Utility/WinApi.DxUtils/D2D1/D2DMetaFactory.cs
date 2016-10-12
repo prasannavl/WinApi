@@ -25,6 +25,9 @@ namespace WinApi.DxUtils.D2D1
         private static D2DMetaResource CreateCore(ref CreationProperties props)
         {
 #if DEBUG
+            // Note: These have no impact on solution outside
+            // of this project. This is only for internal testing
+            // purposes
             if (props.DebugLevel == 0)
                 props.DebugLevel = DebugLevel.Information;
 #endif
