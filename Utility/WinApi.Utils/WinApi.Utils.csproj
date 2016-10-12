@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="DwmWindow.cs" />
     <Compile Include="DwmWindowHelper.cs" />
-    <Compile Include="PixelBufferManager.cs" />
+    <Compile Include="NativePixelBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types.cs" />
   </ItemGroup>
