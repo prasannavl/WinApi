@@ -331,7 +331,7 @@ namespace WinApi.Windows
         protected virtual void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size) =>
             MessageHelpers.RunWindowBaseProc(this, ref msg);
 
-        protected virtual void OnMove(ref WindowMessage msg, ref Point size) =>
+        protected virtual void OnMove(ref WindowMessage msg, ref Point point) =>
             MessageHelpers.RunWindowBaseProc(this, ref msg);
 
         protected virtual CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)

@@ -46,7 +46,7 @@ namespace WinApi.User32
                     WindowProc = Marshal.GetDelegateForFunctionPointer<WindowProc>(classExBlittable.WindowProc),
                     ClassName = Marshal.SystemDefaultCharSize == 1
                         ? Marshal.PtrToStringAnsi(classExBlittable.ClassName)
-                        : Marshal.PtrToStringUni(classExBlittable.ClassName),
+                        : Marshal.PtrToStringUni(classExBlittable.ClassName)
                     // Menu name left out, since GetClassInfo doesn't return it
                 };
                 return true;
@@ -188,7 +188,7 @@ namespace WinApi.User32
         public static unsafe bool GetTitleBarInfo(IntPtr hwnd, ref TitleBarInfo pti)
         {
             if (pti.Size == 0)
-                pti.Size = (uint)Marshal.SizeOf<TitleBarInfo>();
+                pti.Size = (uint) Marshal.SizeOf<TitleBarInfo>();
             fixed (TitleBarInfo* ptr = &pti)
                 return User32Methods.GetTitleBarInfo(hwnd, new IntPtr(ptr));
         }

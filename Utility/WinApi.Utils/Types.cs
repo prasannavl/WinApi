@@ -1,6 +1,6 @@
 ﻿namespace WinApi.Utils
 {
-    public struct CartesianWidth
+    public struct CartesianValue
     {
         public int X;
         public int Y;
