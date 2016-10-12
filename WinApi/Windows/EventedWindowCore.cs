@@ -322,10 +322,10 @@ namespace WinApi.Windows
             }
         }
 
-        protected virtual void OnPositionChanged(ref WindowMessage msg, ref WindowPosition windowposition)
+        protected virtual void OnPositionChanged(ref WindowMessage msg, ref WindowPosition windowPosition)
             => MessageHelpers.RunWindowBaseProc(this, ref msg);
 
-        protected virtual void OnPositionChanging(ref WindowMessage msg, ref WindowPosition windowposition)
+        protected virtual void OnPositionChanging(ref WindowMessage msg, ref WindowPosition windowPosition)
             => MessageHelpers.RunWindowBaseProc(this, ref msg);
 
         protected virtual void OnClose(ref WindowMessage msg) =>
