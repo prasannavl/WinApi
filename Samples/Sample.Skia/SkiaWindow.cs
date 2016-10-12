@@ -14,7 +14,7 @@ namespace Sample.Skia
 {
     public class SkiaPainter
     {
-        public static void ProcessPaint(ref WindowMessage msg, PixelBufferManager pixelBufferManager,
+        public static void ProcessPaint(ref WindowMessage msg, NativePixelBuffer pixelBuffer,
             Action<SKSurface> handler)
         {
             var hwnd = msg.Hwnd;
@@ -25,19 +25,19 @@ namespace Sample.Skia
                 Rectangle clientRect;
                 User32Methods.GetClientRect(hwnd, out clientRect);
                 var size = clientRect.GetSize();
-                pixelBufferManager.ResizePixelBuffersIfRequired(ref size);
+                pixelBuffer.EnsureSize(ref size);
                 using (var surface = SKSurface.Create(
                     size.Width,
                     size.Height,
                     SKColorType.Bgra8888,
                     SKAlphaType.Premul,
-                    pixelBufferManager.PixelBufferPtr,
-                    pixelBufferManager.PixelBufferStride))
+                    pixelBuffer.Handle,
+                    pixelBuffer.Stride))
                 {
                     if (surface != null)
                     {
                         handler(surface);
-                        Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, pixelBufferManager.PixelBufferPtr);
+                        Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, pixelBuffer.Handle);
                     }
                 }
             }
@@ -50,23 +50,19 @@ namespace Sample.Skia
 
     public class SkiaWindowBase : EventedWindowCore
     {
-        private readonly PixelBufferManager m_pixelBufferManager = new PixelBufferManager();
+        private readonly NativePixelBuffer m_pixelBuffer = new NativePixelBuffer();
 
         protected virtual void OnSkiaPaint(SKSurface surface) {}
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
         {
-            SkiaPainter.ProcessPaint(ref msg, m_pixelBufferManager, OnSkiaPaint);
+            SkiaPainter.ProcessPaint(ref msg, m_pixelBuffer, OnSkiaPaint);
         }
 
         protected override void Dispose(bool disposing)
         {
-            m_pixelBufferManager.Dispose();
+            m_pixelBuffer.Dispose();
             base.Dispose(disposing);
         }
     }
-
-
-
-   
 }
