@@ -44,16 +44,7 @@ namespace WinApi.Utils
 
         protected override HitTestResult OnHitTest(ref WindowMessage msg, ref Point point)
         {
-            var res = m_dwmHelper.HitTest(ref point);
-            if (res == HitTestResult.HTCLIENT)
-            {
-                if (point.Y < m_dwmHelper.GetCaptionHeight())
-                {
-                    // Also do button hit testing
-                    return HitTestResult.HTCAPTION;
-                }
-            }
-            return res;
+            return m_dwmHelper.HitTestWithCaption(ref point);
         }
     }
 }

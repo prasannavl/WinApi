@@ -77,11 +77,11 @@ namespace WinApi.Utils
             if (y < topEdge + sizerYWidth)
             {
                 // Inside the top sizing area
-                if (x < leftEdge + 2 * sizerXWidth)
+                if (x < leftEdge + 2*sizerXWidth)
                 {
                     return HitTestResult.HTTOPLEFT;
                 }
-                if (x >= rightEdge - 2 * sizerXWidth)
+                if (x >= rightEdge - 2*sizerXWidth)
                 {
                     return HitTestResult.HTTOPRIGHT;
                 }
@@ -101,11 +101,11 @@ namespace WinApi.Utils
                 return HitTestResult.HTCLIENT;
             }
             // Inside the bottom area
-            if (x < leftEdge + 2 * sizerXWidth)
+            if (x < leftEdge + 2*sizerXWidth)
             {
                 return HitTestResult.HTBOTTOMLEFT;
             }
-            if (x >= rightEdge - 2 * sizerXWidth)
+            if (x >= rightEdge - 2*sizerXWidth)
             {
                 return HitTestResult.HTBOTTOMRIGHT;
             }
@@ -148,7 +148,7 @@ namespace WinApi.Utils
             var window = m_window;
             var dwmMargins = GetDwmMargins();
             DwmApiMethods.DwmExtendFrameIntoClientArea(window.Handle, ref dwmMargins);
-            var policy = (int)DwmNCRenderingPolicy.DWMNCRP_ENABLED;
+            var policy = (int) DwmNCRenderingPolicy.DWMNCRP_ENABLED;
             DwmApiHelpers.DwmSetWindowAttribute(window.Handle, DwmWindowAttributeType.DWMWA_NCRENDERING_POLICY,
                 ref policy);
             if (BlurBehindEnabled)
@@ -173,6 +173,20 @@ namespace WinApi.Utils
             return FrameHitTest(ref point, ref frameThickness, ref sizingFrameThickness);
         }
 
+        public virtual HitTestResult HitTestWithCaption(ref Point point)
+        {
+            var res = HitTest(ref point);
+            if (res == HitTestResult.HTCLIENT)
+            {
+                if (point.Y < GetCaptionHeight())
+                {
+                    // Also do button hit testing
+                    return HitTestResult.HTCAPTION;
+                }
+            }
+            return res;
+        }
+
         public virtual int GetCaptionHeight()
         {
             return -NcOutsetRect.Top + Padding.Top + GetTopBorderHeight();
@@ -194,5 +208,4 @@ namespace WinApi.Utils
             return true;
         }
     }
-
 }
