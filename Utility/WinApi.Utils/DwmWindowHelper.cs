@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using WinApi.Core;
 using WinApi.DwmApi;
 using WinApi.User32;
@@ -173,18 +174,12 @@ namespace WinApi.Utils
             return FrameHitTest(ref point, ref frameThickness, ref sizingFrameThickness);
         }
 
-        public virtual HitTestResult HitTestWithCaption(ref Point point)
+        public virtual HitTestResult HitTestWithCaptionArea(ref Point point)
         {
             var res = HitTest(ref point);
-            if (res == HitTestResult.HTCLIENT)
-            {
-                if (point.Y < GetCaptionHeight())
-                {
-                    // Also do button hit testing
-                    return HitTestResult.HTCAPTION;
-                }
-            }
-            return res;
+            var clientPoint = point;
+            User32Helpers.MapWindowPoints(IntPtr.Zero, m_window.Handle, ref clientPoint);
+            return res == HitTestResult.HTCLIENT && clientPoint.Y < GetCaptionHeight() ? HitTestResult.HTCAPTION : res;
         }
 
         public virtual int GetCaptionHeight()

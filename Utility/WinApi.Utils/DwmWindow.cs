@@ -10,11 +10,11 @@ namespace WinApi.Utils
 {
     public class DwmWindow : EventedWindowCore
     {
-        private readonly DwmWindowHelper m_dwmHelper;
+        protected readonly DwmWindowHelper DwmHelper;
 
         public DwmWindow()
         {
-            m_dwmHelper = new DwmWindowHelper(this);
+            DwmHelper = new DwmWindowHelper(this);
         }
 
         protected bool DrawCaptionIcon { get; set; }
@@ -23,28 +23,28 @@ namespace WinApi.Utils
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
-            m_dwmHelper.OnCreate(DrawCaptionIcon, DrawCaptionTitle, AllowSystemMenu);
+            DwmHelper.OnCreate(DrawCaptionIcon, DrawCaptionTitle, AllowSystemMenu);
             return base.OnCreate(ref msg, ref createStruct);
         }
 
         protected override void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
             IntPtr oppositeHwnd)
         {
-            m_dwmHelper.ApplyDwmConfig();
+            DwmHelper.ApplyDwmConfig();
             base.OnActivate(ref msg, flag, isMinimized, oppositeHwnd);
         }
 
         protected override WindowViewRegionFlags OnNcCalcSize(ref WindowMessage msg, bool shouldCalcValidRects,
             ref NcCalcSizeParams ncCalcSizeParams)
         {
-            if (m_dwmHelper.TryHandleNcCalcSize(ref ncCalcSizeParams))
+            if (DwmHelper.TryHandleNcCalcSize(ref ncCalcSizeParams))
                 return (WindowViewRegionFlags) msg.Result;
             return base.OnNcCalcSize(ref msg, shouldCalcValidRects, ref ncCalcSizeParams);
         }
 
         protected override HitTestResult OnHitTest(ref WindowMessage msg, ref Point point)
         {
-            return m_dwmHelper.HitTestWithCaption(ref point);
+            return DwmHelper.HitTestWithCaptionArea(ref point);
         }
     }
 }
