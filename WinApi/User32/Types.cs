@@ -25,6 +25,11 @@ namespace WinApi.User32
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle
     {
+        public static Rectangle Create(int x, int y, int width, int height)
+        {
+            return new Rectangle(x, y, width + x, height + y);
+        }
+
         public Rectangle(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
             Left = left;
