@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using WinApi.Core;
+using WinApi.Helpers;
 
 namespace WinApi.User32
 {
@@ -206,6 +207,16 @@ namespace WinApi.User32
                 var ptPtr = (Point*) ptr;
                 return User32Methods.MapWindowPoints(hWndFrom, hWndTo, new IntPtr(ptPtr), 2);
             }
+        }
+
+        public static bool InverseAdjustWindowRectEx(
+            ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
+            WindowExStyles dwExStyle)
+        {
+            var rc = new Rectangle();
+            var res = User32Methods.AdjustWindowRectEx(ref rc, dwStyle, hasMenu, dwExStyle);
+            if (res) RectangleHelpers.Subtract(ref lpRect, ref rc);
+            return res;
         }
     }
 }
