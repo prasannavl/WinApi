@@ -7,11 +7,9 @@ namespace WinApi.Windows.Helpers
 {
     public static class MessageHelpers
     {
-        public static void RunDwmDefWindowProc(ref WindowMessage msg)
+        public static bool RunDwmDefWindowProc(ref WindowMessage msg)
         {
-            IntPtr res;
-            if (DwmApiMethods.DwmDefWindowProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam, out res))
-                msg.SetResult(res);
+            return DwmApiMethods.DwmDefWindowProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam, out msg.Result);
         }
 
         public static void PostQuitMessage(int exitCode = 0)
