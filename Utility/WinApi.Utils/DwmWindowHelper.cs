@@ -17,16 +17,102 @@ namespace WinApi.Utils
     public class DwmWindowHelperCore
     {
         private readonly EventedWindowCore m_window;
-        public bool BlurBehindEnabled;
 
+        public bool BlurBehindEnabled;
         private bool m_isFirstNcCalcDone;
-        public Rectangle NcOutsetRect;
+
+        public Rectangle NcOutsetThickness;
         public Rectangle Padding;
+        public bool RetainSystemCaptionArea;
 
         public DwmWindowHelperCore(EventedWindowCore window)
         {
             m_window = window;
         }
+
+        public virtual int GetTopBorderHeight()
+        {
+            return GetSystemTopBorderHeight();
+        }
+
+        public virtual void GetSizingFrameThickness(out CartesianValue width)
+        {
+            GetSystemSizingFrameThickness(out width);
+        }
+
+        public virtual void CalculateNcOutsetThickness()
+        {
+            NcOutsetThickness = GetSystemNcOutsetThickness(m_window);
+        }
+
+        public int GetTopMarginHeight(bool retainSystemArea)
+        {
+            // NcOutsetThickness.Top should ideally be the negative value of caption area height including top border. 
+            // So using Dwm margins excluding the above removes the caption area entirely, including the top 
+            // border.
+            if (retainSystemArea)
+                return -NcOutsetThickness.Top + Padding.Top;
+            return Padding.Top + GetTopBorderHeight();
+        }
+
+        protected virtual Margins GetDwmMargins()
+        {
+            return new Margins(Padding.Left, Padding.Right, GetTopMarginHeight(RetainSystemCaptionArea), Padding.Bottom);
+        }
+
+        public virtual void GetFrameThickness(out Rectangle rect)
+        {
+            m_window.GetClientRect(out rect);
+            User32Helpers.MapWindowPoints(m_window.Handle, IntPtr.Zero, ref rect);
+            // Don't add top, since the topMargin is calculated to be in parity
+            // with client area already with the Dwm frame extension
+            rect.Left += NcOutsetThickness.Left;
+            rect.Right += NcOutsetThickness.Right;
+            rect.Bottom += NcOutsetThickness.Bottom;
+        }
+
+        public virtual void Initialize(bool drawCaptionIcon, bool drawCaptionTitle,
+            bool allowSystemMenu, bool preventImmediateRedraw = false)
+        {
+            var window = m_window;
+            SetWindowThemeAttributes(window.Handle, drawCaptionIcon, drawCaptionTitle, allowSystemMenu);
+            CalculateNcOutsetThickness();
+            // Redraw frame to trigger NcCalcSize immediately
+            if (!preventImmediateRedraw) window.RedrawFrame();
+        }
+
+        public virtual void ApplyDwmConfig()
+        {
+            var window = m_window;
+            var dwmMargins = GetDwmMargins();
+            DwmApiMethods.DwmExtendFrameIntoClientArea(window.Handle, ref dwmMargins);
+            var policy = (int) DwmNCRenderingPolicy.DWMNCRP_ENABLED;
+            DwmApiHelpers.DwmSetWindowAttribute(window.Handle, DwmWindowAttributeType.DWMWA_NCRENDERING_POLICY,
+                ref policy);
+            if (BlurBehindEnabled)
+                User32ExperimentalHelpers.EnableBlurBehind(window.Handle);
+        }
+
+        public virtual bool TryHandleNcCalcSize(ref NcCalcSizeParams ncCalcSizeParams)
+        {
+            if (!m_isFirstNcCalcDone)
+            {
+                // Use default processing the very first time to ensure compatibility - cascade
+                // and stack windows don't work otherwise.
+                m_isFirstNcCalcDone = true;
+                return false;
+            }
+            // Keep the top unchanged, aligns the client top to the window top.
+            // The caption Nc outsets are shifted later and offset by Dwm frame extensions.
+            // This has to be done in order to retain system default behaviour
+            ncCalcSizeParams.Region.Output.TargetClientRect.Top += 0;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Bottom -= NcOutsetThickness.Bottom;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Left -= NcOutsetThickness.Left;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Right -= NcOutsetThickness.Right;
+            return true;
+        }
+
+        #region Static methods
 
         public static int GetSystemTopBorderHeight()
         {
@@ -113,57 +199,9 @@ namespace WinApi.Utils
             return HitTestResult.HTBOTTOM;
         }
 
-        public virtual int GetTopBorderHeight()
-        {
-            return GetSystemTopBorderHeight();
-        }
+        #endregion
 
-        protected virtual Margins GetDwmMargins()
-        {
-            return new Margins(Padding.Left, Padding.Right,
-                // -Padding.Top
-                // Use above instead to add Dwm top frame extension without accounting for the current offset.
-                // Padding.Top should be ideally the negative value of caption area height including borders. 
-                // So offseting this way, instead of subtracting, removes the title bar entirely,
-                // with the exception of top border (which is a part of a client area now).
-                GetTopBorderHeight() + Padding.Top,
-                Padding.Bottom);
-        }
-
-        public virtual void GetSizingFrameThickness(out CartesianValue width)
-        {
-            GetSystemSizingFrameThickness(out width);
-        }
-
-        public virtual void GetFrameThickness(out Rectangle rect)
-        {
-            m_window.GetClientRect(out rect);
-            User32Helpers.MapWindowPoints(m_window.Handle, IntPtr.Zero, ref rect);
-            rect.Left += NcOutsetRect.Left;
-            rect.Right += NcOutsetRect.Right;
-            rect.Bottom += NcOutsetRect.Bottom;
-        }
-
-        public virtual void ApplyDwmConfig()
-        {
-            var window = m_window;
-            var dwmMargins = GetDwmMargins();
-            DwmApiMethods.DwmExtendFrameIntoClientArea(window.Handle, ref dwmMargins);
-            var policy = (int) DwmNCRenderingPolicy.DWMNCRP_ENABLED;
-            DwmApiHelpers.DwmSetWindowAttribute(window.Handle, DwmWindowAttributeType.DWMWA_NCRENDERING_POLICY,
-                ref policy);
-            if (BlurBehindEnabled)
-                User32ExperimentalHelpers.EnableBlurBehind(window.Handle);
-        }
-
-        public virtual void OnCreate(bool drawCaptionIcon, bool drawCaptionTitle,
-            bool allowSystemMenu)
-        {
-            var window = m_window;
-            SetWindowThemeAttributes(window.Handle, drawCaptionIcon, drawCaptionTitle, allowSystemMenu);
-            NcOutsetRect = GetSystemNcOutsetThickness(window);
-            window.RedrawFrame();
-        }
+        #region Instance Hit-Testing
 
         public virtual HitTestResult HitTest(ref Point point)
         {
@@ -174,33 +212,16 @@ namespace WinApi.Utils
             return FrameHitTest(ref point, ref frameThickness, ref sizingFrameThickness);
         }
 
-        public virtual HitTestResult HitTestWithCaptionArea(ref Point point)
+        public virtual HitTestResult HitTestWithCaptionArea(ref Point point, int? captionAreaHeight = null)
         {
             var res = HitTest(ref point);
             var clientPoint = point;
             User32Helpers.MapWindowPoints(IntPtr.Zero, m_window.Handle, ref clientPoint);
-            return res == HitTestResult.HTCLIENT && clientPoint.Y < GetCaptionHeight() ? HitTestResult.HTCAPTION : res;
+            return (res == HitTestResult.HTCLIENT) && (clientPoint.Y < (captionAreaHeight ?? GetTopMarginHeight(RetainSystemCaptionArea)))
+                ? HitTestResult.HTCAPTION
+                : res;
         }
 
-        public virtual int GetCaptionHeight()
-        {
-            return -NcOutsetRect.Top + Padding.Top + GetTopBorderHeight();
-        }
-
-        public virtual bool TryHandleNcCalcSize(ref NcCalcSizeParams ncCalcSizeParams)
-        {
-            if (!m_isFirstNcCalcDone)
-            {
-                // Use default processing the very first time to ensure compatibility - cascade
-                // and stack windows don't work otherwise.
-                m_isFirstNcCalcDone = true;
-                return false;
-            }
-            ncCalcSizeParams.Region.Output.TargetClientRect.Top += 0;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Bottom -= NcOutsetRect.Bottom;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Left -= NcOutsetRect.Left;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Right -= NcOutsetRect.Right;
-            return true;
-        }
+        #endregion
     }
 }

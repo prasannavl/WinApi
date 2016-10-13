@@ -23,7 +23,7 @@ namespace WinApi.Utils
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
-            DwmHelper.OnCreate(DrawCaptionIcon, DrawCaptionTitle, AllowSystemMenu);
+            DwmHelper.Initialize(DrawCaptionIcon, DrawCaptionTitle, AllowSystemMenu);
             return base.OnCreate(ref msg, ref createStruct);
         }
 
