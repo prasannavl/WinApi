@@ -1980,7 +1980,7 @@ namespace WinApi.User32
         AC_SRC_ALPHA = 0x01
     }
 
-    public enum WindowMonitorFlag
+    public enum MonitorFlag
     {
         /// <summary>
         ///     Returns NULL.

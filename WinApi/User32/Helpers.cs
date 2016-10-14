@@ -209,6 +209,12 @@ namespace WinApi.User32
             }
         }
 
+        public static unsafe bool GetMonitorInfo(IntPtr hMonitor, out MonitorInfo lpmi)
+        {
+            lpmi = new MonitorInfo {Size = (uint) sizeof(MonitorInfo)};
+            return User32Methods.GetMonitorInfo(hMonitor, ref lpmi);
+        }
+
         public static bool InverseAdjustWindowRectEx(
             ref Rectangle lpRect, WindowStyles dwStyle, bool hasMenu,
             WindowExStyles dwExStyle)

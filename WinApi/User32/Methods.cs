@@ -43,7 +43,13 @@ namespace WinApi.User32
         public static extern void EndPaint(IntPtr hwnd, [In] ref PaintStruct lpPaint);
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern IntPtr MonitorFromWindow(IntPtr hwnd, WindowMonitorFlag dwFlags);
+        public static extern IntPtr GetDesktopWindow();
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr MonitorFromPoint(Point pt, MonitorFlag dwFlags);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr MonitorFromWindow(IntPtr hwnd, MonitorFlag dwFlags);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern int DrawText(IntPtr hdc, string lpString, int nCount, [In] ref Rectangle lpRect,
@@ -147,7 +153,8 @@ namespace WinApi.User32
         public static extern RegionType GetWindowRgnBox(IntPtr hWnd, out Rectangle lprc);
 
         [DllImport(LibraryName, ExactSpelling = true)]
-        public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, LayeredWindowAttributeFlag dwFlags);
+        public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha,
+            LayeredWindowAttributeFlag dwFlags);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern bool WinHelp(IntPtr hWndMain, string lpszHelp, uint uCommand, uint dwData);
@@ -215,6 +222,9 @@ namespace WinApi.User32
         public static extern IntPtr ChildWindowFromPointEx(IntPtr hwndParent, Point point,
             ChildWindowFromPointFlags flags);
 
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern IntPtr GetMenu(IntPtr hwnd);
+
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern MessageBoxResult MessageBox(IntPtr hWnd, string lpText, string lpCaption, uint type);
 
@@ -232,7 +242,7 @@ namespace WinApi.User32
         public static extern IntPtr GetThreadDesktop(uint threadId);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern bool GetMonitorInfo(IntPtr hMonitor, out MonitorInfo lpmi);
+        public static extern bool GetMonitorInfo(IntPtr hMonitor, ref MonitorInfo lpmi);
 
         #region Keyboard, Mouse & Input Method Functions
 
@@ -323,10 +333,13 @@ namespace WinApi.User32
         public static extern bool SetKeyboardState(IntPtr lpKeyState);
 
         /// <summary>
-        /// Retrieves information about the specified title bar.
+        ///     Retrieves information about the specified title bar.
         /// </summary>
         /// <param name="hwnd">A handle to the title bar whose information is to be retrieved.</param>
-        /// <param name="pti">A pointer to a TITLEBARINFO structure to receive the information. Note that you must set the cbSize member to sizeof(TITLEBARINFO) before calling this function.</param>
+        /// <param name="pti">
+        ///     A pointer to a TITLEBARINFO structure to receive the information. Note that you must set the cbSize
+        ///     member to sizeof(TITLEBARINFO) before calling this function.
+        /// </param>
         /// <returns></returns>
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool GetTitleBarInfo(IntPtr hwnd, IntPtr pti);
