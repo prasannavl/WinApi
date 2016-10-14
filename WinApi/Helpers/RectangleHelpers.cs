@@ -49,5 +49,21 @@ namespace WinApi.Helpers
             src.Bottom += padding.Bottom;
             src.Right += padding.Right;
         }
+
+        public static void Translate(ref Rectangle src, int x, int y)
+        {
+            src.Top += y;
+            src.Left += x;
+            src.Bottom += y;
+            src.Right += x;
+        }
+
+        public static void Scale(ref Rectangle src, int x, int y)
+        {
+            src.Top *= y;
+            src.Left *= x;
+            src.Bottom *= y;
+            src.Right *= x;
+        }
     }
 }
