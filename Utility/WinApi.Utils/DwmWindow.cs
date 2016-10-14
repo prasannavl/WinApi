@@ -1,6 +1,7 @@
 ﻿using System;
 using WinApi.Core;
 using WinApi.DwmApi;
+using WinApi.Helpers;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.UxTheme;
@@ -25,6 +26,18 @@ namespace WinApi.Utils
         {
             DwmHelper.Initialize(DrawCaptionIcon, DrawCaptionTitle, AllowSystemMenu);
             return base.OnCreate(ref msg, ref createStruct);
+        }
+
+        public override void ClientToWindow(ref Rectangle clientRect, out Rectangle windowRect)
+        {
+            base.ClientToWindow(ref clientRect, out windowRect);
+            windowRect.Top += -DwmHelper.NcOutsetThickness.Top;
+        }
+
+        public override void WindowToClient(ref Rectangle windowRect, out Rectangle clientRect)
+        {
+            windowRect.Top -= -DwmHelper.NcOutsetThickness.Top;
+            base.WindowToClient(ref windowRect, out clientRect);
         }
 
         protected override void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
