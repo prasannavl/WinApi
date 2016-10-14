@@ -2,6 +2,8 @@ using System;
 using System.Text;
 using WinApi.Core;
 using WinApi.Extensions;
+using WinApi.Helpers;
+using WinApi.Kernel32;
 using WinApi.User32;
 
 namespace WinApi.Windows
@@ -162,7 +164,7 @@ namespace WinApi.Windows
 
         public WindowStyles GetStyles()
         {
-            return (WindowStyles)GetParam(WindowLongFlags.GWL_STYLE).ToSafeInt32();
+            return (WindowStyles) GetParam(WindowLongFlags.GWL_STYLE).ToSafeInt32();
         }
 
         public WindowExStyles GetExStyles()
@@ -250,6 +252,50 @@ namespace WinApi.Windows
         public void SetFocus()
         {
             User32Methods.SetFocus(Handle);
+        }
+
+        public Rectangle ClientToWindow(ref Rectangle clientRect)
+        {
+            Rectangle rect;
+            ClientToWindow(ref clientRect, out rect);
+            return rect;
+        }
+
+        public virtual void ClientToWindow(ref Rectangle clientRect, out Rectangle windowRect)
+        {
+            windowRect = clientRect;
+            User32Helpers.MapWindowPoints(Handle, IntPtr.Zero, ref windowRect);
+            User32Methods.AdjustWindowRectEx(ref windowRect, GetStyles(), User32Methods.GetMenu(Handle) != IntPtr.Zero,
+                GetExStyles());
+        }
+
+        public Rectangle WindowToClient(ref Rectangle windowRect)
+        {
+            Rectangle rect;
+            WindowToClient(ref windowRect, out rect);
+            return rect;
+        }
+
+        public virtual void WindowToClient(ref Rectangle windowRect, out Rectangle clientRect)
+        {
+            clientRect = windowRect;
+            User32Helpers.MapWindowPoints(IntPtr.Zero, Handle, ref clientRect);
+            User32Helpers.InverseAdjustWindowRectEx(ref clientRect, GetStyles(),
+                User32Methods.GetMenu(Handle) != IntPtr.Zero,
+                GetExStyles());
+        }
+
+        public void CenterWindow(bool useWorkArea = true)
+        {
+            var monitor = User32Methods.MonitorFromWindow(Handle,
+                MonitorFlag.MONITOR_DEFAULTTONEAREST);
+            MonitorInfo monitorInfo;
+            User32Helpers.GetMonitorInfo(monitor, out monitorInfo);
+            var screenRect = useWorkArea ? monitorInfo.WorkRect : monitorInfo.MonitorRect;
+            var midX = screenRect.Width/2;
+            var midY = screenRect.Height/2;
+            var size = GetWindowSize();
+            SetPosition(midX - size.Width/2, midY - size.Height/2);
         }
 
         public bool Destroy()
