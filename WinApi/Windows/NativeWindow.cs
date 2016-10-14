@@ -285,7 +285,7 @@ namespace WinApi.Windows
                 GetExStyles());
         }
 
-        public void CenterWindow(bool useWorkArea = true)
+        public void CenterToScreen(bool useWorkArea = true)
         {
             var monitor = User32Methods.MonitorFromWindow(Handle,
                 MonitorFlag.MONITOR_DEFAULTTONEAREST);
