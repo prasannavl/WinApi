@@ -26,6 +26,7 @@ namespace Sample.DirectX
                         constructionParams: new FrameWindowConstructionParams(),
                         exStyles: WindowExStyles.WS_EX_APPWINDOW | WindowExStyles.WS_EX_NOREDIRECTIONBITMAP))
                 {
+                    win.CenterWindow();
                     win.Show();
                     return new EventLoop().Run(win);
                 }
