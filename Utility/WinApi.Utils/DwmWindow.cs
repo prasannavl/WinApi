@@ -28,16 +28,16 @@ namespace WinApi.Utils
             return base.OnCreate(ref msg, ref createStruct);
         }
 
-        public override void ClientToWindow(ref Rectangle clientRect, out Rectangle windowRect)
+        public override void ClientToScreen(ref Rectangle clientRect, out Rectangle screenRect)
         {
-            base.ClientToWindow(ref clientRect, out windowRect);
-            windowRect.Top += -DwmHelper.NcOutsetThickness.Top;
+            base.ClientToScreen(ref clientRect, out screenRect);
+            screenRect.Top += -DwmHelper.NcOutsetThickness.Top;
         }
 
-        public override void WindowToClient(ref Rectangle windowRect, out Rectangle clientRect)
+        public override void ScreenToClient(ref Rectangle screenRect, out Rectangle clientRect)
         {
-            windowRect.Top -= -DwmHelper.NcOutsetThickness.Top;
-            base.WindowToClient(ref windowRect, out clientRect);
+            screenRect.Top -= -DwmHelper.NcOutsetThickness.Top;
+            base.ScreenToClient(ref screenRect, out clientRect);
         }
 
         protected override void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,

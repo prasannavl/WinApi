@@ -254,31 +254,31 @@ namespace WinApi.Windows
             User32Methods.SetFocus(Handle);
         }
 
-        public Rectangle ClientToWindow(ref Rectangle clientRect)
+        public Rectangle ClientToScreen(ref Rectangle clientRect)
         {
             Rectangle rect;
-            ClientToWindow(ref clientRect, out rect);
+            ClientToScreen(ref clientRect, out rect);
             return rect;
         }
 
-        public virtual void ClientToWindow(ref Rectangle clientRect, out Rectangle windowRect)
+        public virtual void ClientToScreen(ref Rectangle clientRect, out Rectangle screenRect)
         {
-            windowRect = clientRect;
-            User32Helpers.MapWindowPoints(Handle, IntPtr.Zero, ref windowRect);
-            User32Methods.AdjustWindowRectEx(ref windowRect, GetStyles(), User32Methods.GetMenu(Handle) != IntPtr.Zero,
+            screenRect = clientRect;
+            User32Helpers.MapWindowPoints(Handle, IntPtr.Zero, ref screenRect);
+            User32Methods.AdjustWindowRectEx(ref screenRect, GetStyles(), User32Methods.GetMenu(Handle) != IntPtr.Zero,
                 GetExStyles());
         }
 
-        public Rectangle WindowToClient(ref Rectangle windowRect)
+        public Rectangle ScreenToClient(ref Rectangle screenRect)
         {
             Rectangle rect;
-            WindowToClient(ref windowRect, out rect);
+            ScreenToClient(ref screenRect, out rect);
             return rect;
         }
 
-        public virtual void WindowToClient(ref Rectangle windowRect, out Rectangle clientRect)
+        public virtual void ScreenToClient(ref Rectangle screenRect, out Rectangle clientRect)
         {
-            clientRect = windowRect;
+            clientRect = screenRect;
             User32Helpers.MapWindowPoints(IntPtr.Zero, Handle, ref clientRect);
             User32Helpers.InverseAdjustWindowRectEx(ref clientRect, GetStyles(),
                 User32Methods.GetMenu(Handle) != IntPtr.Zero,
