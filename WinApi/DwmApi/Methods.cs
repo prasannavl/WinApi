@@ -29,5 +29,8 @@ namespace WinApi.DwmApi
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool DwmDefWindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam,
             out IntPtr lResult);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern HResult DwmGetColorizationColor(out int pcrColorization, out bool pfOpaqueBlend);
     }
 }
