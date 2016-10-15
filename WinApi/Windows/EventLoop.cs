@@ -20,13 +20,13 @@ namespace WinApi.Windows
 
         public int Run(WindowCore mainWindow = null)
         {
-            WindowEventHandler destroyHandler = window => { MessageHelpers.PostQuitMessage(); };
-            if (mainWindow != null) mainWindow.Closed += destroyHandler;
+            Action destroyHandler = () => { MessageHelpers.PostQuitMessage(); };
+            if (mainWindow != null) mainWindow.Destroyed += destroyHandler;
             var res = RunCore();
             // Technically, this can be avoided by setting the handler to auto disconnect.
             // However, this helps keep the mainWindow alive, and use this instead of 
             // GC.KeepAlive pattern.
-            if (mainWindow != null) mainWindow.Closed -= destroyHandler;
+            if (mainWindow != null) mainWindow.Destroyed -= destroyHandler;
             return res;
         }
 

@@ -77,7 +77,8 @@ namespace WinApi.Windows
             Factory = factory;
         }
 
-        public event WindowEventHandler Closed;
+        public event Action Destroyed;
+        public event Action Created;
 
         protected void ThrowIfDisposed()
         {
@@ -145,9 +146,13 @@ namespace WinApi.Windows
             }
             finally
             {
-                if (wmsg.Id == WM.NCDESTROY)
+                if (wmsg.Id == WM.CREATE)
                 {
-                    Closed?.Invoke(this);
+                    Created?.Invoke();
+                }
+                else if (wmsg.Id == WM.NCDESTROY)
+                {
+                    Destroyed?.Invoke();
                     IsSourceOwner = false;
                 }
             }
@@ -218,8 +223,6 @@ namespace WinApi.Windows
             SetResult(new IntPtr(result));
         }
     }
-
-    public delegate void WindowEventHandler(WindowCore windowCore);
 
     public delegate void WindowExceptionHandler(WindowException windowException);
 
