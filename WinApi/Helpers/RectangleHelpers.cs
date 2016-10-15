@@ -6,15 +6,15 @@ namespace WinApi.Helpers
     public static class RectangleHelpers
     {
         public static Rectangle CreateFrom(ref Rectangle lvalue, ref Rectangle rvalue,
-            Func<int, int, int> operation,
-            Func<int, int, int> flipSideOperation = null)
+            Func<int, int, int> leftTopOperation,
+            Func<int, int, int> rightBottomOperation = null)
         {
-            if (flipSideOperation == null) flipSideOperation = operation;
+            if (rightBottomOperation == null) rightBottomOperation = leftTopOperation;
             return new Rectangle(
-                operation(lvalue.Left, rvalue.Left),
-                operation(lvalue.Top, rvalue.Top),
-                flipSideOperation(lvalue.Right, rvalue.Right),
-                flipSideOperation(lvalue.Bottom, rvalue.Bottom)
+                leftTopOperation(lvalue.Left, rvalue.Left),
+                leftTopOperation(lvalue.Top, rvalue.Top),
+                rightBottomOperation(lvalue.Right, rvalue.Right),
+                rightBottomOperation(lvalue.Bottom, rvalue.Bottom)
             );
         }
 
