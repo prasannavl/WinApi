@@ -11,12 +11,12 @@ namespace WinApi.Utils
 {
     public sealed class DwmWindowHelper : DwmWindowHelperCore
     {
-        public DwmWindowHelper(EventedWindowCore window) : base(window) {}
+        public DwmWindowHelper(WindowCore window) : base(window) {}
     }
 
     public class DwmWindowHelperCore
     {
-        private readonly EventedWindowCore m_window;
+        private readonly WindowCore m_window;
 
         public bool BlurBehindEnabled;
         private bool m_isFirstNcCalcDone;
@@ -25,7 +25,7 @@ namespace WinApi.Utils
         public Rectangle Padding;
         public bool RetainSystemCaptionArea;
 
-        public DwmWindowHelperCore(EventedWindowCore window)
+        public DwmWindowHelperCore(WindowCore window)
         {
             m_window = window;
         }
@@ -133,7 +133,7 @@ namespace WinApi.Utils
                 WindowThemeNcAttributeFlags.WTNCA_VALIDBITS & ~WindowThemeNcAttributeFlags.WTNCA_NOMIRRORHELP, flags);
         }
 
-        public static Rectangle GetSystemNcOutsetThickness(EventedWindowCore window)
+        public static Rectangle GetSystemNcOutsetThickness(WindowCore window)
         {
             var rect = new Rectangle();
             User32Methods.AdjustWindowRectEx(ref rect, window.GetStyles(), false, window.GetExStyles());
