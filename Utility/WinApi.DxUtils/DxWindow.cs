@@ -33,9 +33,17 @@ namespace WinApi.DxUtils
             Dx.Resize(size);
         }
 
+        private bool m_isFirstBkgdErased;
+
+
         protected override EraseBackgroundResult OnEraseBkgnd(ref WindowMessage msg, IntPtr cHdc)
         {
-            return EraseBackgroundResult.Default;
+            if (m_isFirstBkgdErased)
+            {
+                return EraseBackgroundResult.DisableDefaultErase;
+            }
+            m_isFirstBkgdErased = true;
+            return base.OnEraseBkgnd(ref msg, cHdc);
         }
 
         protected override void Dispose(bool disposing)
