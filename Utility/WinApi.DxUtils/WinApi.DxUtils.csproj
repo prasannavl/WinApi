@@ -65,6 +65,7 @@
     <Compile Include="DCompManager.cs" />
     <Compile Include="Dx11MetaResource.cs" />
     <Compile Include="DxPainter.cs" />
+    <Compile Include="DxWindow.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
