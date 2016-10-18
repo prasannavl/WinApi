@@ -18,14 +18,15 @@ namespace Sample.Skia
             Action<SKSurface> handler)
         {
             var hwnd = msg.Hwnd;
+            Rectangle clientRect;
+            User32Methods.GetClientRect(hwnd, out clientRect);
+            var size = clientRect.GetSize();
+            pixelBuffer.EnsureSize(size.Width, size.Height);
             PaintStruct ps;
             var hdc = User32Methods.BeginPaint(hwnd, out ps);
+            var skPainted = false;
             try
             {
-                Rectangle clientRect;
-                User32Methods.GetClientRect(hwnd, out clientRect);
-                var size = clientRect.GetSize();
-                pixelBuffer.EnsureSize(ref size);
                 using (var surface = SKSurface.Create(
                     size.Width,
                     size.Height,
@@ -37,12 +38,13 @@ namespace Sample.Skia
                     if (surface != null)
                     {
                         handler(surface);
-                        Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, pixelBuffer.Handle);
+                        skPainted = true;
                     }
                 }
             }
             finally
             {
+                if (skPainted) Gdi32Helpers.SetRgbBitsToDevice(hdc, size.Width, size.Height, pixelBuffer.Handle);
                 User32Methods.EndPaint(hwnd, ref ps);
             }
         }
