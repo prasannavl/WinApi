@@ -122,6 +122,10 @@
       <Project>{e6dc94c4-03f9-492f-8347-3bce32e8e853}</Project>
       <Name>WinApi.DxUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Utility\WinApi.Utils\WinApi.Utils.csproj">
+      <Project>{BDB2A27F-FB53-4258-9579-4AF36F20C26A}</Project>
+      <Name>WinApi.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
       <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>

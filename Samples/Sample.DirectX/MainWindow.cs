@@ -5,6 +5,7 @@ using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.DxUtils;
 using WinApi.User32;
+using WinApi.Utils;
 using WinApi.Windows;
 
 namespace Sample.DirectX
@@ -15,7 +16,7 @@ namespace Sample.DirectX
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
-            m_dx.Initialize(Handle, GetClientSize(), 0);
+            m_dx.Initialize(Handle, GetClientSize());
             return base.OnCreate(ref msg, ref createStruct);
         }
 
@@ -50,7 +51,6 @@ namespace Sample.DirectX
                             rand.NextFloat(0, h)), b);
                 }
                 b.Dispose();
-
                 context.EndDraw();
                 m_dx.D3D.SwapChain.Present(1, 0);
                 this.Validate();
