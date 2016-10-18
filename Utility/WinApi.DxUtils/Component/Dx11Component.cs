@@ -14,12 +14,12 @@ namespace WinApi.DxUtils.Component
 {
     public class Dx11Component : IDisposable
     {
+        public WindowSwapChainCompositor Compositor;
         public IntPtr Hwnd;
+        private int m_compVariant;
         private ID2D1_1MetaResourceImpl<IDxgi1_2ContainerWithSwapChain> m_d2D;
         private ID3D11_1MetaResourceImpl m_d3D;
-        private int m_compVariant;
         private Factory m_dWriteFactory;
-        public WindowSwapChainCompositor Compositor;
         public Size Size;
 
         public ID2D1_1MetaResource D2D => m_d2D;
@@ -28,7 +28,10 @@ namespace WinApi.DxUtils.Component
 
         public void Dispose()
         {
-            Destroy();
+            DisposableHelpers.DisposeAndSetNull(ref Compositor);
+            DisposableHelpers.DisposeAndSetNull(ref m_dWriteFactory);
+            DisposableHelpers.DisposeAndSetNull(ref m_d2D);
+            DisposableHelpers.DisposeAndSetNull(ref m_d3D);
         }
 
         public void Initialize(IntPtr hwnd, Size size, int directCompositionVariant = -1)
@@ -82,7 +85,7 @@ namespace WinApi.DxUtils.Component
             if (ErrorHelpers.ShouldResetDxgiForError(ex.Descriptor)
                 || ErrorHelpers.ShouldResetD2DForError(ex.Descriptor))
             {
-                Destroy();
+                m_d3D?.Destroy();
                 return true;
             }
             return false;
@@ -90,10 +93,9 @@ namespace WinApi.DxUtils.Component
 
         public void Destroy()
         {
-            DisposableHelpers.DisposeAndSetNull(ref Compositor);
-            DisposableHelpers.DisposeAndSetNull(ref m_dWriteFactory);
-            DisposableHelpers.DisposeAndSetNull(ref m_d2D);
-            DisposableHelpers.DisposeAndSetNull(ref m_d3D);
+            Compositor?.Destroy();
+            m_d2D.Destroy();
+            m_d3D.Destroy();
         }
     }
 }

@@ -56,6 +56,7 @@ namespace WinApi.DxUtils.Core
         void Initialize(IntPtr hwnd, Size size);
         void EnsureInitialized();
         void Resize(Size size);
+        void Destroy();
     }
 
     // ReSharper disable once InconsistentNaming
@@ -74,6 +75,7 @@ namespace WinApi.DxUtils.Core
     {
         void Initialize(TDxgi1Container dxgiContainer, bool autoLink = true);
         void EnsureInitialized();
+        void Destroy();
     }
 
     public interface IDxgiContainerCore

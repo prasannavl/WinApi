@@ -24,7 +24,8 @@ namespace WinApi.DxUtils.Component
 
         public void Dispose()
         {
-            Destroy();
+            DisposableHelpers.DisposeAndSetNull(ref Compositor);
+            DisposableHelpers.DisposeAndSetNull(ref m_d3D);
         }
 
         public void Initialize(IntPtr hwnd, Size size, int directCompositionVariant = -1)
@@ -74,7 +75,7 @@ namespace WinApi.DxUtils.Component
         {
             if (ErrorHelpers.ShouldResetDxgiForError(ex.Descriptor))
             {
-                Destroy();
+                m_d3D?.Destroy();
                 return true;
             }
             return false;
@@ -82,8 +83,8 @@ namespace WinApi.DxUtils.Component
 
         public void Destroy()
         {
-            DisposableHelpers.DisposeAndSetNull(ref Compositor);
-            DisposableHelpers.DisposeAndSetNull(ref m_d3D);
+            Compositor?.Destroy();
+            m_d3D?.Destroy();
         }
     }
 }
