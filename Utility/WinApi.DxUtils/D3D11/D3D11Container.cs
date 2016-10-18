@@ -1,15 +1,15 @@
-﻿using SharpDX.Direct3D11;
+﻿using System;
+using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.DxUtils.Core;
-using Device = SharpDX.Direct3D11.Device;
 
 namespace WinApi.DxUtils.D3D11
 {
-    public abstract class D3D11ContainerCore : DxgiContainerBase, IDxgi1Container
+    public abstract class D3D11ContainerCore : DxgiContainerBase, IDxgi1ContainerWithSwapChain
     {
-        public virtual Device Device { get; protected set; }
+        public virtual SharpDX.Direct3D11.Device Device { get; protected set; }
         public virtual Adapter Adapter { get; protected set; }
         public virtual DeviceContext Context { get; protected set; }
         public virtual RenderTargetView RenderTargetView { get; protected set; }
@@ -81,39 +81,56 @@ namespace WinApi.DxUtils.D3D11
         protected abstract void CreateRenderTargetView();
     }
 
-    public abstract class D3D11Container : D3D11ContainerCore
+    // ReSharper disable once InconsistentNaming
+    public abstract class D3D11_1ContainerCore : D3D11ContainerCore, IDxgi1_2ContainerWithSwapChain
+    {
+        public override SharpDX.DXGI.Device DxgiDevice => DxgiDevice2;
+        public override Factory DxgiFactory => DxgiFactory2;
+        public override SwapChain SwapChain => SwapChain1;
+        public override DeviceContext Context => Context1;
+        public override SharpDX.Direct3D11.Device Device => Device1;
+
+        public virtual SharpDX.Direct3D11.Device1 Device1 { get; protected set; }
+        public virtual DeviceContext1 Context1 { get; protected set; }
+        public virtual SharpDX.DXGI.Device2 DxgiDevice2 { get; protected set; }
+        public virtual Factory2 DxgiFactory2 { get; protected set; }
+        public virtual SwapChain1 SwapChain1 { get; protected set; }
+    }
+
+    // ReSharper disable once InconsistentNaming
+    public abstract class D3D11_1Container : D3D11_1ContainerCore
     {
         protected override void CreateDxgiDevice()
         {
             EnsureDevice();
-            DxgiDevice = Device.QueryInterface<SharpDX.DXGI.Device>();
+            DxgiDevice2 = Device1.QueryInterface<SharpDX.DXGI.Device2>();
         }
 
         protected override void CreateAdapter()
         {
             EnsureDxgiDevice();
-            Adapter = DxgiDevice.GetParent<Adapter>();
+            Adapter = DxgiDevice2.GetParent<Adapter>();
         }
 
         protected override void CreateDxgiFactory()
         {
             EnsureAdapter();
-            DxgiFactory = Adapter.GetParent<Factory>();
+            DxgiFactory2 = Adapter.GetParent<Factory2>();
         }
 
         protected override void CreateContext()
         {
             EnsureDevice();
-            Context = Device.ImmediateContext;
+            Context1 = Device1.ImmediateContext1;
         }
 
         protected override void CreateRenderTargetView()
         {
             EnsureDevice();
             EnsureSwapChain();
-            using (var backBuffer = SwapChain.GetBackBuffer<Texture2D>(0))
+            using (var backBuffer = SwapChain1.GetBackBuffer<Texture2D>(0))
             {
-                RenderTargetView = new RenderTargetView(Device, backBuffer);
+                RenderTargetView = new RenderTargetView(Device1, backBuffer);
             }
         }
 
@@ -121,15 +138,15 @@ namespace WinApi.DxUtils.D3D11
         {
             EnsureContext();
             EnsureRenderTargetView();
-            Context.OutputMerger.SetRenderTargets(RenderTargetView);
+            Context1.OutputMerger.SetRenderTargets(RenderTargetView);
         }
 
         protected void DisconnectRenderTargetView()
         {
             if (Context == null) return;
             if (RenderTargetView == null) return;
-            Context.ClearRenderTargetView(RenderTargetView, new RawColor4(0, 0, 0, 1));
-            Context.OutputMerger.SetRenderTargets((RenderTargetView) null);
+            //Context.ClearRenderTargetView(RenderTargetView, new RawColor4(0, 0, 0, 1));
+            Context1.OutputMerger.SetRenderTargets((RenderTargetView)null);
         }
     }
 }

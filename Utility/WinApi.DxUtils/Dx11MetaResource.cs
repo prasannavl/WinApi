@@ -12,6 +12,7 @@ using WinApi.Core;
 using WinApi.DxUtils.Core;
 using WinApi.DxUtils.D2D1;
 using WinApi.DxUtils.D3D11;
+using WinApi.DxUtils.DComp;
 using Factory = SharpDX.DirectWrite.Factory;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 
@@ -20,14 +21,14 @@ namespace WinApi.DxUtils
     public class Dx11MetaResource : IDisposable
     {
         public IntPtr Hwnd;
-        private ID2D1MetaResourceImpl m_d2D;
-        private ID3D11MetaResourceImpl m_d3D;
-        private DCompManager m_dCompManager;
+        private ID2D1_1MetaResourceImpl<IDxgi1_2ContainerWithSwapChain> m_d2D;
+        private ID3D11_1MetaResourceImpl m_d3D;
+        private WindowSwapChainCompositor m_windowSwapChainCompositor;
         private Factory m_dWriteFactory;
         public Size Size;
         private int m_dCompVariant;
 
-        public ID2D1MetaResource D2D => m_d2D;
+        public ID2D1_1MetaResource D2D => m_d2D;
         public ID3D11MetaResource D3D => m_d3D;
         public Factory TextFactory => m_dWriteFactory;
 
@@ -44,7 +45,7 @@ namespace WinApi.DxUtils
             Size = size;
             m_dCompVariant = directCompositionVariant != -1
                 ? directCompositionVariant
-                : DCompManager.GetVariantForPlatform();
+                : DCompHelper.GetVariantForPlatform();
             Create();
             InitializeInternal();
         }
@@ -66,7 +67,7 @@ namespace WinApi.DxUtils
         {
             m_d3D.Initalize(Hwnd, Size);
             m_d2D.Initialize(m_d3D);
-            if (m_dCompVariant > 0) m_dCompManager.Initialize(Hwnd, m_d3D, false);
+            if (m_dCompVariant > 0) m_windowSwapChainCompositor.Initialize(Hwnd, m_d3D, false);
         }
 
         private void Create()
@@ -75,9 +76,9 @@ namespace WinApi.DxUtils
             m_d3D = m_dCompVariant > 0
                 ? D3DMetaFactory.CreateForComposition(creationFlags: d3dCreationFlags)
                 : D3DMetaFactory.CreateForWindowTarget(creationFlags: d3dCreationFlags);
-            m_d2D = D2DMetaFactory.Create();
+            m_d2D = D2DMetaFactory.CreateForSwapChain();
             m_dWriteFactory = new Factory(FactoryType.Shared);
-            m_dCompManager = new DCompManager(m_dCompVariant);
+            m_windowSwapChainCompositor = new WindowSwapChainCompositor(m_dCompVariant);
         }
 
         public bool PerformResetOnException(SharpDXException ex)
@@ -94,7 +95,7 @@ namespace WinApi.DxUtils
 
         public void Destroy()
         {
-            DisposableHelpers.DisposeAndSetNull(ref m_dCompManager);
+            DisposableHelpers.DisposeAndSetNull(ref m_windowSwapChainCompositor);
             DisposableHelpers.DisposeAndSetNull(ref m_dWriteFactory);
             DisposableHelpers.DisposeAndSetNull(ref m_d2D);
             DisposableHelpers.DisposeAndSetNull(ref m_d3D);

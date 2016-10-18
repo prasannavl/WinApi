@@ -9,7 +9,7 @@ using Device1 = SharpDX.Direct3D11.Device1;
 
 namespace WinApi.DxUtils.D3D11
 {
-    public class D3DMetaResource : D3D11Container, ID3D11MetaResourceImpl
+    public class D3DMetaResource : D3D11_1Container, ID3D11_1MetaResourceImpl
     {
         private readonly D3DMetaResourceOptions m_creationOpts;
         private Adapter m_adapter;
@@ -29,34 +29,34 @@ namespace WinApi.DxUtils.D3D11
         public IntPtr Hwnd { get; private set; }
         public Size Size { get; private set; }
 
-        public Device1 Device1
+        public override Device1 Device1
         {
             get { return m_device; }
-            private set { m_device = value; }
+            protected set { m_device = value; }
         }
 
-        public DeviceContext1 Context1
+        public override DeviceContext1 Context1
         {
             get { return m_context; }
-            private set { m_context = value; }
+            protected set { m_context = value; }
         }
 
-        public SharpDX.DXGI.Device2 DxgiDevice2
+        public override SharpDX.DXGI.Device2 DxgiDevice2
         {
             get { return m_dxgiDevice; }
-            private set { m_dxgiDevice = value; }
+            protected set { m_dxgiDevice = value; }
         }
 
-        public Factory2 DxgiFactory2
+        public override Factory2 DxgiFactory2
         {
             get { return m_dxgiFactory; }
-            private set { m_dxgiFactory = value; }
+            protected set { m_dxgiFactory = value; }
         }
 
-        public SwapChain1 SwapChain1
+        public override SwapChain1 SwapChain1
         {
             get { return m_swapChain; }
-            private set { m_swapChain = value; }
+            protected set { m_swapChain = value; }
         }
 
         public override RenderTargetView RenderTargetView
@@ -78,12 +78,6 @@ namespace WinApi.DxUtils.D3D11
             Destroy();
             LinkedResources.Clear();
         }
-
-        public override Device DxgiDevice => DxgiDevice2;
-        public override Factory DxgiFactory => DxgiFactory2;
-        public override SwapChain SwapChain => SwapChain1;
-        public override DeviceContext Context => Context1;
-        public override SharpDX.Direct3D11.Device Device => Device1;
 
         public void Initalize(IntPtr hwnd, Size size)
         {
@@ -153,35 +147,11 @@ namespace WinApi.DxUtils.D3D11
             Device1 = D3DMetaFactory.CreateD3DDevice1(m_creationOpts);
         }
 
-        protected override void CreateDxgiDevice()
-        {
-            EnsureDevice();
-            DxgiDevice2 = Device1.QueryInterface<SharpDX.DXGI.Device2>();
-        }
-
-        protected override void CreateAdapter()
-        {
-            EnsureDxgiDevice();
-            Adapter = DxgiDevice2.GetParent<Adapter>();
-        }
-
-        protected override void CreateDxgiFactory()
-        {
-            EnsureAdapter();
-            DxgiFactory2 = Adapter.GetParent<Factory2>();
-        }
-
         protected override void CreateSwapChain()
         {
             EnsureDevice();
             EnsureDxgiFactory();
             SwapChain1 = D3DMetaFactory.CreateSwapChain1(m_creationOpts, this);
-        }
-
-        protected override void CreateContext()
-        {
-            EnsureDevice();
-            Context1 = Device1.ImmediateContext1;
         }
     }
 }

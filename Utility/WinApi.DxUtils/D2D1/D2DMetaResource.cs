@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using SharpDX.Direct2D1;
-using SharpDX.DXGI;
 using WinApi.DxUtils.Core;
 using Device = SharpDX.Direct2D1.Device;
 using Factory = SharpDX.Direct2D1.Factory;
@@ -9,23 +8,29 @@ using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace WinApi.DxUtils.D2D1
 {
-    public class D2DMetaResource : ID2D1MetaResourceImpl
+    public class D2DMetaResource<TDxgiContainer> : ID2D1_1MetaResourceImpl<TDxgiContainer>
+        where TDxgiContainer : IDxgi1Container
     {
         private readonly Action m_onDxgiDestroyedAction;
         private readonly Action m_onDxgiInitializedAction;
+        private readonly Action<D2DMetaResource<TDxgiContainer>> m_dxgiConnector;
+        private readonly Action<D2DMetaResource<TDxgiContainer>> m_dxgiDisconnector;
+
+        public TDxgiContainer DxgiContainer;
+        private bool m_isDisposed;
+        private bool m_isLinked;
         private DeviceContext m_context;
         private CreationProperties m_creationProperties;
         private Device m_device;
-        private IDxgi1Container m_dxgiContainer;
         private Factory1 m_factory;
-        private bool m_isDisposed;
-        private bool m_isLinked;
 
-        public D2DMetaResource(CreationProperties props)
+        public D2DMetaResource(CreationProperties props, Action<D2DMetaResource<TDxgiContainer>> dxgiConnector, Action<D2DMetaResource<TDxgiContainer>> dxgiDisconnector)
         {
             m_creationProperties = props;
             m_onDxgiDestroyedAction = () => DestroyInternal(true);
             m_onDxgiInitializedAction = () => InitializeInternal(true);
+            m_dxgiConnector = dxgiConnector;
+            m_dxgiDisconnector = dxgiDisconnector;
         }
 
         public Device Device
@@ -64,12 +69,15 @@ namespace WinApi.DxUtils.D2D1
             DisconnectContextFromDxgiSurface();
         }
 
-        public void Initialize(IDxgi1Container dxgiContainer, bool autoLink = true)
+        public event Action Initialized;
+        public event Action Destroyed;
+
+        public void Initialize(TDxgiContainer dxgiContainer, bool autoLink = true)
         {
             CheckDisposed();
             if (Device != null)
                 Destroy();
-            m_dxgiContainer = dxgiContainer;
+            DxgiContainer = dxgiContainer;
             m_isLinked = autoLink;
             InitializeInternal(false);
         }
@@ -78,11 +86,8 @@ namespace WinApi.DxUtils.D2D1
         {
             CheckDisposed();
             if (Device == null)
-                Initialize(m_dxgiContainer, m_isLinked);
+                Initialize(DxgiContainer, m_isLinked);
         }
-
-        public event Action Initialized;
-        public event Action Destroyed;
 
         private void InitializeInternal(bool dxgiSourcePreserved)
         {
@@ -93,20 +98,20 @@ namespace WinApi.DxUtils.D2D1
 
         private void ConnectToDxgiSource(bool shouldLink)
         {
-            m_dxgiContainer.Destroyed += m_onDxgiDestroyedAction;
-            m_dxgiContainer.Initialized += m_onDxgiInitializedAction;
+            DxgiContainer.Destroyed += m_onDxgiDestroyedAction;
+            DxgiContainer.Initialized += m_onDxgiInitializedAction;
             if (shouldLink)
             {
-                m_dxgiContainer.AddLinkedResource(this);
+                DxgiContainer.AddLinkedResource(this);
             }
         }
 
-        protected void DisconnectFromDxgiSource()
+        private void DisconnectFromDxgiSource()
         {
-            if (m_dxgiContainer == null) return;
-            m_dxgiContainer.Initialized -= m_onDxgiInitializedAction;
-            m_dxgiContainer.Destroyed -= m_onDxgiDestroyedAction;
-            if (m_isLinked) m_dxgiContainer.RemoveLinkedResource(this);
+            if (DxgiContainer == null) return;
+            DxgiContainer.Initialized -= m_onDxgiInitializedAction;
+            DxgiContainer.Destroyed -= m_onDxgiDestroyedAction;
+            if (m_isLinked) DxgiContainer.RemoveLinkedResource(this);
         }
 
         public void Destroy()
@@ -139,7 +144,7 @@ namespace WinApi.DxUtils.D2D1
         private void CreateDevice()
         {
             EnsureFactory();
-            Device = new Device(m_dxgiContainer.DxgiDevice, m_creationProperties);
+            Device = new Device(DxgiContainer.DxgiDevice, m_creationProperties);
         }
 
         private void EnsureDevice()
@@ -160,32 +165,26 @@ namespace WinApi.DxUtils.D2D1
                 CreateContext();
         }
 
-        private void ConnectContextToDxgiSurface()
-        {
-            EnsureContext();
-            using (var surface = m_dxgiContainer.SwapChain.GetBackBuffer<Surface>(0))
-            {
-                using (var bitmap = new Bitmap1(Context, surface))
-                    Context.Target = bitmap;
-            }
-        }
-
-        private void DisconnectContextFromDxgiSurface()
-        {
-            var currentTarget = Context?.Target;
-            if (currentTarget == null) return;
-            currentTarget.Dispose();
-            Context.Target = null;
-        }
-
         private void CheckDisposed()
         {
-            if (m_isDisposed) throw new ObjectDisposedException(nameof(D2DMetaResource));
+            if (m_isDisposed)
+                throw new ObjectDisposedException(nameof(D2DMetaResource<TDxgiContainer>));
         }
 
         ~D2DMetaResource()
         {
             Dispose();
+        }
+
+        private void ConnectContextToDxgiSurface()
+        {
+            EnsureContext();
+            m_dxgiConnector?.Invoke(this);
+        }
+
+        private void DisconnectContextFromDxgiSurface()
+        {
+            m_dxgiDisconnector?.Invoke(this);
         }
     }
 }

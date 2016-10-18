@@ -58,11 +58,13 @@
     <Compile Include="Core\DxgiContainerBase.cs" />
     <Compile Include="D2D1\D2DMetaFactory.cs" />
     <Compile Include="D2D1\D2DMetaResource.cs" />
+    <Compile Include="D2D1\D2DHelper.cs" />
     <Compile Include="D3D11\D3D11Container.cs" />
     <Compile Include="D3D11\D3DMetaFactory.cs" />
     <Compile Include="D3D11\D3DMetaResource.cs" />
     <Compile Include="Core\Interfaces.cs" />
-    <Compile Include="DCompManager.cs" />
+    <Compile Include="DComp\DCompHelper.cs" />
+    <Compile Include="DComp\WindowSwapChainCompositor.cs" />
     <Compile Include="Dx11MetaResource.cs" />
     <Compile Include="DxPainter.cs" />
     <Compile Include="DxWindow.cs" />

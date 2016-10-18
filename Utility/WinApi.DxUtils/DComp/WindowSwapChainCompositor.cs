@@ -1,25 +1,24 @@
 ﻿using System;
 using SharpDX.DirectComposition;
-using SharpDX.Win32;
 using WinApi.DxUtils.Core;
 
-namespace WinApi.DxUtils
+namespace WinApi.DxUtils.DComp
 {
-    public class DCompManager : IDisposable, INotifyOnInitDestroy
+    public class WindowSwapChainCompositor : IDisposable, INotifyOnInitDestroy
     {
         private readonly Action m_onDxgiDestroyedAction;
         private readonly Action m_onDxgiInitializedAction;
         private IDisposable m_device;
         private bool m_disposed;
-        private IDxgi1Container m_dxgiContainer;
+        private IDxgi1ContainerWithSwapChain m_dxgiContainer;
 
         private bool m_isTopMost;
         private Target m_target;
         private Visual m_visual;
 
-        public DCompManager(int variant = -1)
+        public WindowSwapChainCompositor(int variant = -1)
         {
-            if (variant == -1) variant = GetVariantForPlatform();
+            if (variant == -1) variant = DCompHelper.GetVariantForPlatform();
             DeviceVariant = variant;
             m_onDxgiDestroyedAction = () => DestroyInternal(true);
             m_onDxgiInitializedAction = () => InitializeInternal(true);
@@ -59,10 +58,10 @@ namespace WinApi.DxUtils
 
         private void CheckDisposed()
         {
-            if (m_disposed) throw new ObjectDisposedException(nameof(DCompManager));
+            if (m_disposed) throw new ObjectDisposedException(nameof(WindowSwapChainCompositor));
         }
 
-        ~DCompManager()
+        ~WindowSwapChainCompositor()
         {
             Dispose();
         }
@@ -84,19 +83,7 @@ namespace WinApi.DxUtils
         private void EnsureDevice()
         {
             if (Device == null)
-                CreateDevice();
-        }
-
-        private void CreateDevice()
-        {
-            if (DeviceVariant > 1)
-            {
-                Device = new DesktopDevice(m_dxgiContainer.DxgiDevice);
-            }
-            else if (DeviceVariant == 1)
-            {
-                Device = new Device(m_dxgiContainer.DxgiDevice);
-            }
+                Device = (IDisposable)DCompHelper.CreateDevice(m_dxgiContainer.DxgiDevice, DeviceVariant);
         }
 
         private void CreateResources()
@@ -127,7 +114,7 @@ namespace WinApi.DxUtils
                 CreateResources();
         }
 
-        public void Initialize(IntPtr hwnd, IDxgi1Container dxgiContainer, bool isTopMost = false)
+        public void Initialize(IntPtr hwnd, IDxgi1ContainerWithSwapChain dxgiContainer, bool isTopMost = false)
         {
             if (Device != null)
                 Destroy();
@@ -176,19 +163,6 @@ namespace WinApi.DxUtils
                 if (DeviceVariant > 1) ((DesktopDevice) Device).Commit();
                 else if (DeviceVariant == 1) ((Device) Device).Commit();
             }
-        }
-
-        public static int GetVariantForPlatform(Version platformVersion = null)
-        {
-            if (platformVersion == null)
-                platformVersion = Environment.OSVersion.Version;
-            if (platformVersion.Major > 6) return 2;
-            if (platformVersion.Major == 6)
-            {
-                if (platformVersion.Minor > 2) return 2;
-                if (platformVersion.Minor > 1) return 1;
-            }
-            return 0;
         }
     }
 }
