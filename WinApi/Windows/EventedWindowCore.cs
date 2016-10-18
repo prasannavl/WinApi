@@ -434,7 +434,7 @@ namespace WinApi.Windows
         protected virtual void OnQuit(ref WindowMessage msg, int code) =>
             MessageHelpers.RunWindowBaseProc(this, ref msg);
 
-        protected virtual void OnNcActivate(ref WindowMessage msg, bool isShown,
+        protected virtual void OnNcActivate(ref WindowMessage msg, bool isActive,
             ref IntPtr updateRegion) => MessageHelpers.RunWindowBaseProc(this, ref msg);
 
         protected virtual void OnNcDestroy(ref WindowMessage msg) =>

@@ -409,7 +409,7 @@ namespace WinApi.Windows
         #region Non-client Handling
 
         public delegate void NcActivateHandler(
-            ref WindowMessage msg, bool isShown, ref IntPtr updateRegion);
+            ref WindowMessage msg, bool isActive, ref IntPtr updateRegion);
 
         public delegate WindowViewRegionFlags NcCalcSizeHandler(
             ref WindowMessage msg, bool shouldCalcValidRects, ref NcCalcSizeParams ncCalcSizeParams);
@@ -437,9 +437,9 @@ namespace WinApi.Windows
 
         public static void ProcessNcActivate(ref WindowMessage msg, NcActivateHandler handler)
         {
-            var isShown = msg.WParam.ToSafeInt32() > 0;
+            var isActive = msg.WParam.ToSafeInt32() > 0;
             // lParam is used only if visual styles are disabled.
-            handler(ref msg, isShown, ref msg.LParam);
+            handler(ref msg, isActive, ref msg.LParam);
             // To prevent Nc region update in DefWndProc, set (updateRegion)LParam = -1;
             // When wParam == TRUE, result is ignored.
             // var result = TRUE // Default processing;
