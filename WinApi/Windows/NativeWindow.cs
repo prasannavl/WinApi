@@ -152,6 +152,16 @@ namespace WinApi.Windows
             return new Size {Width = rect.Width, Height = rect.Height};
         }
 
+        public bool IsVisible()
+        {
+            return User32Methods.IsWindowVisible(Handle);
+        }
+
+        public bool IsEnabled()
+        {
+            return User32Methods.IsWindowEnabled(Handle);
+        }
+
         public IntPtr SetParam(WindowLongFlags index, IntPtr value)
         {
             return User32Methods.SetWindowLongPtr(Handle, (int) index, value);
