@@ -84,11 +84,11 @@ namespace WinApi.Utils
         public virtual void ApplyDwmConfig()
         {
             var window = m_window;
-            var dwmMargins = GetDwmMargins();
-            DwmApiMethods.DwmExtendFrameIntoClientArea(window.Handle, ref dwmMargins);
             var policy = (int) DwmNCRenderingPolicy.DWMNCRP_ENABLED;
             DwmApiHelpers.DwmSetWindowAttribute(window.Handle, DwmWindowAttributeType.DWMWA_NCRENDERING_POLICY,
                 ref policy);
+            var dwmMargins = GetDwmMargins();
+            DwmApiMethods.DwmExtendFrameIntoClientArea(window.Handle, ref dwmMargins);
             if (BlurBehindEnabled)
                 User32ExperimentalHelpers.EnableBlurBehind(window.Handle);
         }
