@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
+using WinApi.DxUtils.Component;
 using WinApi.Windows;
 
 namespace WinApi.DxUtils
 {
-    public class DxPainter
+    public static class DxPainter
     {
-        public static void HandlePaint(EventedWindowCore window, Dx11MetaResource resource,
-            Action<Dx11MetaResource> handler)
+        public static void HandlePaint(EventedWindowCore window, Dx11Component resource,
+            Action<Dx11Component> handler)
         {
             resource.EnsureInitialized();
             try
@@ -29,7 +30,7 @@ namespace WinApi.DxUtils
             }
         }
 
-        public static void HandlePaintD2D(EventedWindowCore window, Dx11MetaResource resource,
+        public static void HandlePaintD2D(EventedWindowCore window, Dx11Component resource,
             Action<DeviceContext> handler)
         {
             resource.EnsureInitialized();
@@ -49,13 +50,13 @@ namespace WinApi.DxUtils
             }
         }
 
-        public static void HandlePaintD2DClipped(EventedWindowCore window, Dx11MetaResource resource,
+        public static void HandlePaintD2DClipped(EventedWindowCore window, Dx11Component resource,
             Action<DeviceContext> handler, RawRectangleF clip, RawColor4? clearColorBeforeClip = null)
         {
             HandlePaintD2DClipped(window, resource, handler, ref clip, clearColorBeforeClip);
         }
 
-        public static void HandlePaintD2DClipped(EventedWindowCore window, Dx11MetaResource resource,
+        public static void HandlePaintD2DClipped(EventedWindowCore window, Dx11Component resource,
             Action<DeviceContext> handler, ref RawRectangleF clip, RawColor4? clearColorBeforeClip = null)
         {
             resource.EnsureInitialized();

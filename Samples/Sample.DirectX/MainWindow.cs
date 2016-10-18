@@ -1,9 +1,11 @@
 ﻿using System;
 using SharpDX;
 using SharpDX.Direct2D1;
+using SharpDX.DirectComposition;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.DxUtils;
+using WinApi.DxUtils.Component;
 using WinApi.User32;
 using WinApi.Utils;
 using WinApi.Windows;
@@ -12,7 +14,7 @@ namespace Sample.DirectX
 {
     public sealed class MainWindow : EventedWindowCore
     {
-        private readonly Dx11MetaResource m_dx = new Dx11MetaResource();
+        private readonly Dx11Component m_dx = new Dx11Component();
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
+using WinApi.DxUtils.Component;
 using WinApi.User32;
 using WinApi.Windows;
 
@@ -13,7 +14,7 @@ namespace WinApi.DxUtils
 {
     public class DxWindow : EventedWindowCore
     {
-        protected readonly Dx11MetaResource Dx = new Dx11MetaResource();
+        protected readonly Dx11Component Dx = new Dx11Component();
 
         protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
         {
@@ -21,7 +22,7 @@ namespace WinApi.DxUtils
             return base.OnCreate(ref msg, ref createStruct);
         }
 
-        protected virtual void OnDxPaint(Dx11MetaResource resource) {}
+        protected virtual void OnDxPaint(Dx11Component resource) {}
 
         protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
         {

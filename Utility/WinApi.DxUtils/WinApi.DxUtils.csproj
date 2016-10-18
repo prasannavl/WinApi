@@ -55,18 +55,21 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\ComposedD3DComponent.cs" />
+    <Compile Include="Composition\CompositorCore.cs" />
+    <Compile Include="Composition\WindowCompositor.cs" />
     <Compile Include="Core\DxgiContainerBase.cs" />
     <Compile Include="D2D1\D2D1MetaFactory.cs" />
     <Compile Include="D2D1\D2D1MetaResource.cs" />
     <Compile Include="D2D1\D2D1Helper.cs" />
     <Compile Include="D3D11\D3D11Container.cs" />
+    <Compile Include="D3D11\D3D11Dxgi1_2MetaResource.cs" />
     <Compile Include="D3D11\D3D11DxgiContainer.cs" />
     <Compile Include="D3D11\D3D11MetaFactory.cs" />
     <Compile Include="D3D11\D3D11MetaResource.cs" />
     <Compile Include="Core\Interfaces.cs" />
-    <Compile Include="DComp\DCompHelper.cs" />
-    <Compile Include="DComp\WindowSwapChainCompositor.cs" />
-    <Compile Include="Dx11MetaResource.cs" />
+    <Compile Include="Composition\CompositionHelper.cs" />
+    <Compile Include="Component\Dx11Component.cs" />
     <Compile Include="DxPainter.cs" />
     <Compile Include="DxWindow.cs" />
     <Compile Include="Helpers.cs" />
