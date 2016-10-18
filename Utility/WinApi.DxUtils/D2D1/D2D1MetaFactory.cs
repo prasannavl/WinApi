@@ -3,14 +3,14 @@ using WinApi.DxUtils.Core;
 
 namespace WinApi.DxUtils.D2D1
 {
-    public class D2DMetaFactory
+    public class D2D1MetaFactory
     {
-        public static D2DMetaResource<IDxgi1Container> Create(ref CreationProperties props)
+        public static D2D1MetaResource<IDxgi1Container> Create(ref CreationProperties props)
         {
             return CreateCore(ref props);
         }
 
-        public static D2DMetaResource<IDxgi1Container> Create(
+        public static D2D1MetaResource<IDxgi1Container> Create(
             ThreadingMode threadingMode = ThreadingMode.SingleThreaded,
             DeviceContextOptions contextOptions = DeviceContextOptions.EnableMultithreadedOptimizations,
             DebugLevel debugLevel = DebugLevel.None)
@@ -24,7 +24,7 @@ namespace WinApi.DxUtils.D2D1
             return CreateCore(ref props);
         }
 
-        private static D2DMetaResource<IDxgi1Container> CreateCore(
+        private static D2D1MetaResource<IDxgi1Container> CreateCore(
             ref CreationProperties props)
         {
 #if DEBUG
@@ -34,15 +34,15 @@ namespace WinApi.DxUtils.D2D1
             if (props.DebugLevel == 0)
                 props.DebugLevel = DebugLevel.Information;
 #endif
-            return new D2DMetaResource<IDxgi1Container>(props, null, null);
+            return new D2D1MetaResource<IDxgi1Container>(props, null, null);
         }
 
-        public static D2DMetaResource<IDxgi1_2ContainerWithSwapChain> CreateForSwapChain(ref CreationProperties props)
+        public static D2D1MetaResource<IDxgi1_2ContainerWithSwapChain> CreateForSwapChain(ref CreationProperties props)
         {
             return CreateForSwapChainCore(ref props);
         }
 
-        public static D2DMetaResource<IDxgi1_2ContainerWithSwapChain> CreateForSwapChain(
+        public static D2D1MetaResource<IDxgi1_2ContainerWithSwapChain> CreateForSwapChain(
             ThreadingMode threadingMode = ThreadingMode.SingleThreaded,
             DeviceContextOptions contextOptions = DeviceContextOptions.EnableMultithreadedOptimizations,
             DebugLevel debugLevel = DebugLevel.None)
@@ -56,7 +56,7 @@ namespace WinApi.DxUtils.D2D1
             return CreateForSwapChainCore(ref props);
         }
 
-        private static D2DMetaResource<IDxgi1_2ContainerWithSwapChain> CreateForSwapChainCore(
+        private static D2D1MetaResource<IDxgi1_2ContainerWithSwapChain> CreateForSwapChainCore(
             ref CreationProperties props)
         {
 #if DEBUG
@@ -66,8 +66,8 @@ namespace WinApi.DxUtils.D2D1
             if (props.DebugLevel == 0)
                 props.DebugLevel = DebugLevel.Information;
 #endif
-            return new D2DMetaResource<IDxgi1_2ContainerWithSwapChain>(props, D2DHelper.ConnectContextToDxgiSwapChain,
-                D2DHelper.DisconnectContextFromDxgiSwapChain);
+            return new D2D1MetaResource<IDxgi1_2ContainerWithSwapChain>(props, D2D1Helper.ConnectContextToDxgiSwapChain,
+                D2D1Helper.DisconnectContextFromDxgiSwapChain);
         }
     }
 }

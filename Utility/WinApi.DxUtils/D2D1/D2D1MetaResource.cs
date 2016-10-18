@@ -8,13 +8,13 @@ using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace WinApi.DxUtils.D2D1
 {
-    public class D2DMetaResource<TDxgiContainer> : ID2D1_1MetaResourceImpl<TDxgiContainer>
+    public class D2D1MetaResource<TDxgiContainer> : ID2D1_1MetaResourceImpl<TDxgiContainer>
         where TDxgiContainer : IDxgi1Container
     {
         private readonly Action m_onDxgiDestroyedAction;
         private readonly Action m_onDxgiInitializedAction;
-        private readonly Action<D2DMetaResource<TDxgiContainer>> m_dxgiConnector;
-        private readonly Action<D2DMetaResource<TDxgiContainer>> m_dxgiDisconnector;
+        private readonly Action<D2D1MetaResource<TDxgiContainer>> m_dxgiConnector;
+        private readonly Action<D2D1MetaResource<TDxgiContainer>> m_dxgiDisconnector;
 
         public TDxgiContainer DxgiContainer;
         private bool m_isDisposed;
@@ -24,7 +24,7 @@ namespace WinApi.DxUtils.D2D1
         private Device m_device;
         private Factory1 m_factory;
 
-        public D2DMetaResource(CreationProperties props, Action<D2DMetaResource<TDxgiContainer>> dxgiConnector, Action<D2DMetaResource<TDxgiContainer>> dxgiDisconnector)
+        public D2D1MetaResource(CreationProperties props, Action<D2D1MetaResource<TDxgiContainer>> dxgiConnector, Action<D2D1MetaResource<TDxgiContainer>> dxgiDisconnector)
         {
             m_creationProperties = props;
             m_onDxgiDestroyedAction = () => DestroyInternal(true);
@@ -168,10 +168,10 @@ namespace WinApi.DxUtils.D2D1
         private void CheckDisposed()
         {
             if (m_isDisposed)
-                throw new ObjectDisposedException(nameof(D2DMetaResource<TDxgiContainer>));
+                throw new ObjectDisposedException(nameof(D2D1MetaResource<TDxgiContainer>));
         }
 
-        ~D2DMetaResource()
+        ~D2D1MetaResource()
         {
             Dispose();
         }

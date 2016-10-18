@@ -9,10 +9,10 @@ using SharpDX.Direct2D1;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using WinApi.Core;
+using WinApi.DxUtils.Composition;
 using WinApi.DxUtils.Core;
 using WinApi.DxUtils.D2D1;
 using WinApi.DxUtils.D3D11;
-using WinApi.DxUtils.DComp;
 using Factory = SharpDX.DirectWrite.Factory;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
 
@@ -45,7 +45,7 @@ namespace WinApi.DxUtils
             Size = size;
             m_dCompVariant = directCompositionVariant != -1
                 ? directCompositionVariant
-                : DCompHelper.GetVariantForPlatform();
+                : CompositionHelper.GetVariantForPlatform();
             Create();
             InitializeInternal();
         }
@@ -65,7 +65,7 @@ namespace WinApi.DxUtils
 
         private void InitializeInternal()
         {
-            m_d3D.Initalize(Hwnd, Size);
+            m_d3D.Initialize(Hwnd, Size);
             m_d2D.Initialize(m_d3D);
             if (m_dCompVariant > 0) m_windowSwapChainCompositor.Initialize(Hwnd, m_d3D, false);
         }
@@ -74,9 +74,9 @@ namespace WinApi.DxUtils
         {
             var d3dCreationFlags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded;
             m_d3D = m_dCompVariant > 0
-                ? D3DMetaFactory.CreateForComposition(creationFlags: d3dCreationFlags)
-                : D3DMetaFactory.CreateForWindowTarget(creationFlags: d3dCreationFlags);
-            m_d2D = D2DMetaFactory.CreateForSwapChain();
+                ? D3D11MetaFactory.CreateForComposition(creationFlags: d3dCreationFlags)
+                : D3D11MetaFactory.CreateForWindowTarget(creationFlags: d3dCreationFlags);
+            m_d2D = D2D1MetaFactory.CreateForSwapChain();
             m_dWriteFactory = new Factory(FactoryType.Shared);
             m_windowSwapChainCompositor = new WindowSwapChainCompositor(m_dCompVariant);
         }

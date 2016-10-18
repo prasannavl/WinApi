@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX.DirectComposition;
-using WinApi.DxUtils.Core;
 
-namespace WinApi.DxUtils.DComp
+namespace WinApi.DxUtils.Composition
 {
-    public static class DCompHelper
+    public static class CompositionHelper
     {
         public static int GetVariantForPlatform(Version platformVersion = null)
         {

@@ -2,7 +2,7 @@
 using SharpDX.DirectComposition;
 using WinApi.DxUtils.Core;
 
-namespace WinApi.DxUtils.DComp
+namespace WinApi.DxUtils.Composition
 {
     public class WindowSwapChainCompositor : IDisposable, INotifyOnInitDestroy
     {
@@ -18,7 +18,7 @@ namespace WinApi.DxUtils.DComp
 
         public WindowSwapChainCompositor(int variant = -1)
         {
-            if (variant == -1) variant = DCompHelper.GetVariantForPlatform();
+            if (variant == -1) variant = CompositionHelper.GetVariantForPlatform();
             DeviceVariant = variant;
             m_onDxgiDestroyedAction = () => DestroyInternal(true);
             m_onDxgiInitializedAction = () => InitializeInternal(true);
@@ -83,7 +83,7 @@ namespace WinApi.DxUtils.DComp
         private void EnsureDevice()
         {
             if (Device == null)
-                Device = (IDisposable)DCompHelper.CreateDevice(m_dxgiContainer.DxgiDevice, DeviceVariant);
+                Device = (IDisposable)CompositionHelper.CreateDevice(m_dxgiContainer.DxgiDevice, DeviceVariant);
         }
 
         private void CreateResources()

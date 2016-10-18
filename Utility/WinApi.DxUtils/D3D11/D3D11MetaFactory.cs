@@ -9,51 +9,51 @@ using Device1 = SharpDX.Direct3D11.Device1;
 
 namespace WinApi.DxUtils.D3D11
 {
-    public class D3DMetaFactory
+    public class D3D11MetaFactory
     {
-        public static D3DMetaResource CreateForComposition(Adapter adapter, DeviceCreationFlags creationFlags = 0,
+        public static D3D11MetaResource CreateForComposition(Adapter adapter, DeviceCreationFlags creationFlags = 0,
             SwapChainDescription1? description = null, FeatureLevel[] levels = null)
         {
             return CreateCore(adapter, DriverType.Null, creationFlags, description, levels, false,
                 SwapChainTarget.Composition);
         }
 
-        public static D3DMetaResource CreateForComposition(DriverType type = DriverType.Hardware,
+        public static D3D11MetaResource CreateForComposition(DriverType type = DriverType.Hardware,
             DeviceCreationFlags creationFlags = 0,
             SwapChainDescription1? description = null, FeatureLevel[] levels = null)
         {
             return CreateCore(null, type, creationFlags, description, levels, false, SwapChainTarget.Composition);
         }
 
-        public static D3DMetaResource CreateForWindowTarget(Adapter adapter, DeviceCreationFlags creationFlags = 0,
+        public static D3D11MetaResource CreateForWindowTarget(Adapter adapter, DeviceCreationFlags creationFlags = 0,
             SwapChainDescription1? description = null, FeatureLevel[] levels = null)
         {
             return CreateCore(adapter, DriverType.Null, creationFlags, description, levels, false,
                 SwapChainTarget.Window);
         }
 
-        public static D3DMetaResource CreateForWindowTarget(DriverType type = DriverType.Hardware,
+        public static D3D11MetaResource CreateForWindowTarget(DriverType type = DriverType.Hardware,
             DeviceCreationFlags creationFlags = 0,
             SwapChainDescription1? description = null, FeatureLevel[] levels = null)
         {
             return CreateCore(null, type, creationFlags, description, levels, false, SwapChainTarget.Window);
         }
 
-        public static D3DMetaResource CreateForCoreWindowTarget(Adapter adapter, DeviceCreationFlags creationFlags = 0,
+        public static D3D11MetaResource CreateForCoreWindowTarget(Adapter adapter, DeviceCreationFlags creationFlags = 0,
             SwapChainDescription1? description = null, FeatureLevel[] levels = null)
         {
             return CreateCore(adapter, DriverType.Null, creationFlags, description, levels, false,
                 SwapChainTarget.CoreWindow);
         }
 
-        public static D3DMetaResource CreateForCoreWindowTarget(DriverType type = DriverType.Hardware,
+        public static D3D11MetaResource CreateForCoreWindowTarget(DriverType type = DriverType.Hardware,
             DeviceCreationFlags creationFlags = 0,
             SwapChainDescription1? description = null, FeatureLevel[] levels = null)
         {
             return CreateCore(null, type, creationFlags, description, levels, false, SwapChainTarget.CoreWindow);
         }
 
-        private static D3DMetaResource CreateCore(Adapter adapter, DriverType type,
+        private static D3D11MetaResource CreateCore(Adapter adapter, DriverType type,
             DeviceCreationFlags creationFlags,
             SwapChainDescription1? description, FeatureLevel[] levels, bool allowWarpFallbackDriver,
             SwapChainTarget target)
@@ -71,7 +71,7 @@ namespace WinApi.DxUtils.D3D11
             creationFlags |= DeviceCreationFlags.Debug;
 #endif
 
-            return new D3DMetaResource(new D3DMetaResourceOptions
+            return new D3D11MetaResource(new D3D11MetaResourceOptions
             {
                 Adapter = adapter,
                 SwapChainDescription = desc,
@@ -83,7 +83,7 @@ namespace WinApi.DxUtils.D3D11
             });
         }
 
-        public static Device1 CreateD3DDevice1(D3DMetaResourceOptions creationOpts)
+        public static Device1 CreateD3DDevice1(D3D11DxgiOptions creationOpts)
         {
             using (var device = CreateD3DDevice(creationOpts))
             {
@@ -91,7 +91,7 @@ namespace WinApi.DxUtils.D3D11
             }
         }
 
-        public static Device CreateD3DDevice(D3DMetaResourceOptions creationOpts)
+        public static Device CreateD3DDevice(D3D11DxgiOptions creationOpts)
         {
             var adapter = creationOpts.Adapter;
             var flags = creationOpts.CreationFlags;
@@ -115,7 +115,7 @@ namespace WinApi.DxUtils.D3D11
             }
         }
 
-        public static SwapChain1 CreateSwapChain1(D3DMetaResourceOptions creationOpts, D3DMetaResource resource)
+        public static SwapChain1 CreateSwapChain1(D3D11MetaResourceOptions creationOpts, D3D11MetaResource resource)
         {
             creationOpts.SwapChainDescription.Width = resource.Size.Width;
             creationOpts.SwapChainDescription.Height = resource.Size.Height;
@@ -172,14 +172,18 @@ namespace WinApi.DxUtils.D3D11
         CoreWindow
     }
 
-    public class D3DMetaResourceOptions
+    public class D3D11DxgiOptions
     {
         public Adapter Adapter;
         public DeviceCreationFlags CreationFlags;
         public FeatureLevel[] Levels;
-        public SwapChainDescription1 SwapChainDescription;
-        public SwapChainTarget Target;
         public DriverType Type;
         public bool WarpFallbackEnabled;
+    }
+
+    public class D3D11MetaResourceOptions : D3D11DxgiOptions
+    {
+        public SwapChainDescription1 SwapChainDescription;
+        public SwapChainTarget Target;
     }
 }

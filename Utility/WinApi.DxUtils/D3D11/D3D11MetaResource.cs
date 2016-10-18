@@ -9,9 +9,9 @@ using Device1 = SharpDX.Direct3D11.Device1;
 
 namespace WinApi.DxUtils.D3D11
 {
-    public class D3DMetaResource : D3D11_1Container, ID3D11_1MetaResourceImpl
+    public class D3D11MetaResource : D3D11_1Container, ID3D11_1MetaResourceImpl
     {
-        private readonly D3DMetaResourceOptions m_creationOpts;
+        private readonly D3D11MetaResourceOptions m_creationOpts;
         private Adapter m_adapter;
         private DeviceContext1 m_context;
         private Device1 m_device;
@@ -21,7 +21,7 @@ namespace WinApi.DxUtils.D3D11
         private RenderTargetView m_renderTargetView;
         private SwapChain1 m_swapChain;
 
-        public D3DMetaResource(D3DMetaResourceOptions creationOpts)
+        public D3D11MetaResource(D3D11MetaResourceOptions creationOpts)
         {
             m_creationOpts = creationOpts;
         }
@@ -79,7 +79,7 @@ namespace WinApi.DxUtils.D3D11
             LinkedResources.Clear();
         }
 
-        public void Initalize(IntPtr hwnd, Size size)
+        public void Initialize(IntPtr hwnd, Size size)
         {
             CheckDisposed();
             if (Device1 != null)
@@ -94,7 +94,7 @@ namespace WinApi.DxUtils.D3D11
         {
             CheckDisposed();
             if (Device1 == null)
-                Initalize(Hwnd, Size);
+                Initialize(Hwnd, Size);
         }
 
         public void Resize(Size size)
@@ -119,14 +119,14 @@ namespace WinApi.DxUtils.D3D11
             }
         }
 
-        ~D3DMetaResource()
+        ~D3D11MetaResource()
         {
             Dispose();
         }
 
         private void CheckDisposed()
         {
-            if (m_isDisposed) throw new ObjectDisposedException(nameof(D3DMetaResource));
+            if (m_isDisposed) throw new ObjectDisposedException(nameof(D3D11MetaResource));
         }
 
         public void Destroy()
@@ -144,14 +144,14 @@ namespace WinApi.DxUtils.D3D11
 
         protected override void CreateDevice()
         {
-            Device1 = D3DMetaFactory.CreateD3DDevice1(m_creationOpts);
+            Device1 = D3D11MetaFactory.CreateD3DDevice1(m_creationOpts);
         }
 
         protected override void CreateSwapChain()
         {
             EnsureDevice();
             EnsureDxgiFactory();
-            SwapChain1 = D3DMetaFactory.CreateSwapChain1(m_creationOpts, this);
+            SwapChain1 = D3D11MetaFactory.CreateSwapChain1(m_creationOpts, this);
         }
     }
 }

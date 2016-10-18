@@ -53,7 +53,7 @@ namespace WinApi.DxUtils.Core
 
     public interface ID3D11MetaResourceImpl : ID3D11MetaResource
     {
-        void Initalize(IntPtr hwnd, Size size);
+        void Initialize(IntPtr hwnd, Size size);
         void EnsureInitialized();
         void Resize(Size size);
     }
