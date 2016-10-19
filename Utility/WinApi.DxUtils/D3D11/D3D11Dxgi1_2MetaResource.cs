@@ -25,7 +25,7 @@ namespace WinApi.DxUtils.D3D11
             protected set { m_device = value; }
         }
 
-        public override SharpDX.DXGI.Device2 DxgiDevice2
+        public override Device2 DxgiDevice2
         {
             get { return m_dxgiDevice; }
             protected set { m_dxgiDevice = value; }
@@ -46,7 +46,7 @@ namespace WinApi.DxUtils.D3D11
         protected override void CreateDxgiDevice()
         {
             EnsureDevice();
-            DxgiDevice2 = Device1.QueryInterface<SharpDX.DXGI.Device2>();
+            DxgiDevice2 = Device1.QueryInterface<Device2>();
         }
 
         protected override void CreateAdapter()
@@ -71,6 +71,11 @@ namespace WinApi.DxUtils.D3D11
             CheckDisposed();
             if (Device1 != null)
                 Destroy();
+            InitializeInternal();
+        }
+
+        private void InitializeInternal()
+        {
             EnsureDxgiDevice();
             InvokeInitializedEvent();
         }
@@ -79,7 +84,7 @@ namespace WinApi.DxUtils.D3D11
         {
             CheckDisposed();
             if (Device1 == null)
-                Initialize();
+                InitializeInternal();
         }
 
         public void Dispose()

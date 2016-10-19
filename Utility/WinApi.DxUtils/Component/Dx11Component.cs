@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using SharpDX;
 using SharpDX.Direct3D11;
 using WinApi.Core;
@@ -26,6 +25,8 @@ namespace WinApi.DxUtils.Component
         public ID3D11MetaResource D3D => m_d3D;
         public Factory TextFactory => m_dWriteFactory;
 
+        public bool IsInitialized => m_d3D?.Device != null;
+
         public void Dispose()
         {
             DisposableHelpers.DisposeAndSetNull(ref Compositor);
@@ -47,12 +48,13 @@ namespace WinApi.DxUtils.Component
             InitializeInternal();
         }
 
-        public bool IsInitialized => m_d3D?.Device != null;
-
         public void EnsureInitialized()
         {
             if (!IsInitialized)
-                Initialize(Hwnd, Size, m_compVariant);
+            {
+                Create();
+                InitializeInternal();
+            }
         }
 
         public void Resize(Size size)

@@ -1,34 +1,30 @@
 ﻿using System;
-using System.Diagnostics;
 using SharpDX;
 using SharpDX.Direct3D11;
 using WinApi.Core;
 using WinApi.DxUtils.Composition;
 using WinApi.DxUtils.Core;
-using WinApi.DxUtils.D2D1;
 using WinApi.DxUtils.D3D11;
-using Factory = SharpDX.DirectWrite.Factory;
-using FactoryType = SharpDX.DirectWrite.FactoryType;
 
 namespace WinApi.DxUtils.Component
 {
     public class ComposedD3DComponent : IDisposable
     {
-        public IntPtr Hwnd;
-        private ID3D11_1MetaResourceImpl m_d3D;
-        private int m_compVariant;
         public WindowSwapChainCompositor Compositor;
+        public IntPtr Hwnd;
+        private int m_compVariant;
+        private ID3D11_1MetaResourceImpl m_d3D;
         public Size Size;
 
         public ID3D11MetaResource D3D => m_d3D;
+
+        public bool IsInitialized => m_d3D?.Device != null;
 
         public void Dispose()
         {
             DisposableHelpers.DisposeAndSetNull(ref Compositor);
             DisposableHelpers.DisposeAndSetNull(ref m_d3D);
         }
-
-        public bool IsInitialized => m_d3D?.Device != null;
 
         public void Initialize(IntPtr hwnd, Size size, int directCompositionVariant = -1)
         {
