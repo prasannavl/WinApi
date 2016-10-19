@@ -179,6 +179,28 @@ namespace WinApi.DxUtils.D3D11
         public FeatureLevel[] Levels;
         public DriverType Type;
         public bool WarpFallbackEnabled;
+
+        public D3D11DxgiOptions() { }
+
+        public D3D11DxgiOptions(DriverType type,
+            DeviceCreationFlags flags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded,
+            FeatureLevel[] levels = null, bool warpFallbackEnabled = true)
+        {
+            Type = type;
+            CreationFlags = flags;
+            Levels = levels;
+            WarpFallbackEnabled = warpFallbackEnabled;
+        }
+
+        public D3D11DxgiOptions(Adapter adapter,
+            DeviceCreationFlags flags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded,
+            FeatureLevel[] levels = null, bool warpFallbackEnabled = true)
+        {
+            Adapter = adapter;
+            CreationFlags = flags;
+            Levels = levels;
+            WarpFallbackEnabled = warpFallbackEnabled;
+        }
     }
 
     public class D3D11MetaResourceOptions : D3D11DxgiOptions
