@@ -36,7 +36,7 @@ namespace WinApi.DxUtils.Component
 
         public void Initialize(IntPtr hwnd, Size size, int directCompositionVariant = -1)
         {
-            if (m_d3D != null)
+            if (IsInitialized)
                 Destroy();
             Hwnd = hwnd;
             Size = size;
@@ -47,9 +47,11 @@ namespace WinApi.DxUtils.Component
             InitializeInternal();
         }
 
+        public bool IsInitialized => m_d3D?.Device != null;
+
         public void EnsureInitialized()
         {
-            if (m_d3D?.Device == null)
+            if (!IsInitialized)
                 Initialize(Hwnd, Size, m_compVariant);
         }
 
