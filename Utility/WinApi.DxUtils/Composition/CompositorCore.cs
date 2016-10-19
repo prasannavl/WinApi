@@ -1,4 +1,6 @@
 ﻿using System;
+using SharpDX;
+using SharpDX.DirectComposition;
 using WinApi.DxUtils.Core;
 
 namespace WinApi.DxUtils.Composition
@@ -8,9 +10,9 @@ namespace WinApi.DxUtils.Composition
     {
         private readonly Action m_onDxgiDestroyedAction;
         private readonly Action m_onDxgiInitializedAction;
-        private IDisposable m_device;
-        private bool m_disposed;
         protected TDxgiContainer DxgiContainer;
+        private ComObject m_device;
+        private bool m_disposed;
         protected TOptions Options;
 
         protected CompositorCore(int variant)
@@ -23,7 +25,7 @@ namespace WinApi.DxUtils.Composition
 
         public int DeviceVariant { get; }
 
-        public IDisposable Device
+        public ComObject Device
         {
             get { return m_device; }
             private set { m_device = value; }
@@ -41,7 +43,7 @@ namespace WinApi.DxUtils.Composition
 
         private void CheckDisposed()
         {
-            if (m_disposed) throw new ObjectDisposedException(this.GetType().Name);
+            if (m_disposed) throw new ObjectDisposedException(GetType().Name);
         }
 
         ~CompositorCore()
@@ -52,6 +54,11 @@ namespace WinApi.DxUtils.Composition
         public void Destroy()
         {
             DestroyInternal(false);
+        }
+
+        public void Commit()
+        {
+            CompositionHelper.Commit(Device, DeviceVariant);
         }
 
         private void DestroyInternal(bool preserveDxgiSource)
@@ -65,7 +72,7 @@ namespace WinApi.DxUtils.Composition
         protected void EnsureDevice()
         {
             if (Device == null)
-                Device = (IDisposable) CompositionHelper.CreateDevice(DxgiContainer.DxgiDevice, DeviceVariant);
+                Device = CompositionHelper.CreateDevice(DxgiContainer.DxgiDevice, DeviceVariant);
         }
 
         public void Initialize(TDxgiContainer dxgiContainer, TOptions opts = default(TOptions))
@@ -106,7 +113,7 @@ namespace WinApi.DxUtils.Composition
         {
             CheckDisposed();
             if (Device == null)
-                Initialize(DxgiContainer);
+                InitializeInternal(true);
         }
     }
 }

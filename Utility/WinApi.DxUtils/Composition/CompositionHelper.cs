@@ -1,5 +1,10 @@
 ﻿using System;
+using SharpDX;
 using SharpDX.DirectComposition;
+using SharpDX.DXGI;
+using WinApi.Core;
+using Device = SharpDX.DirectComposition.Device;
+using Surface = SharpDX.DirectComposition.Surface;
 
 namespace WinApi.DxUtils.Composition
 {
@@ -18,7 +23,7 @@ namespace WinApi.DxUtils.Composition
             return 0;
         }
 
-        public static object CreateDevice(SharpDX.DXGI.Device dxgiDevice, int variant = -1)
+        public static ComObject CreateDevice(SharpDX.DXGI.Device dxgiDevice, int variant = -1)
         {
             if (variant == -1) variant = GetVariantForPlatform();
             if (variant > 1)
@@ -26,6 +31,22 @@ namespace WinApi.DxUtils.Composition
                 return new DesktopDevice(dxgiDevice);
             }
             return variant == 1 ? new Device(dxgiDevice) : null;
+        }
+
+        public static void Commit(ComObject device, int variant)
+        {
+            if (variant > 1) ((DesktopDevice) device).Commit();
+            else if (variant == 1) ((Device) device).Commit();
+        }
+
+        public static Surface CreateSurface(ComObject device, int variant, int width, int height, Format pixelFormat,
+            AlphaMode alphaMode)
+        {
+            if (variant > 1)
+            {
+                return new Surface((DesktopDevice) device, width, height, pixelFormat, alphaMode);
+            }
+            return variant == 1 ? new Surface((Device) device, width, height, pixelFormat, alphaMode) : null;
         }
     }
 }

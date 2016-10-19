@@ -1,17 +1,23 @@
 ﻿using System;
+using SharpDX;
+using SharpDX.Direct2D1;
 using SharpDX.DirectComposition;
+using SharpDX.DXGI;
+using WinApi.Core;
 using WinApi.DxUtils.Core;
+using AlphaMode = SharpDX.DXGI.AlphaMode;
+using Device = SharpDX.DirectComposition.Device;
 
 namespace WinApi.DxUtils.Composition
 {
-
-    public class WindowCompositor :
-        CompositorCore<IDxgi1ContainerWithSwapChain, WindowCompositorOptions>
+    public class WindowCompositor<TDxgiContainer, TOptions> :
+            CompositorCore<TDxgiContainer, TOptions>
+        where TDxgiContainer : IDxgi1Container
+        where TOptions : WindowCompositorOptions
     {
-        public WindowCompositor(int variant = -1) : base(variant) { }
-
         private Target m_target;
         private Visual m_visual;
+        public WindowCompositor(int variant = -1) : base(variant) {}
 
         public Target Target
         {
@@ -31,7 +37,7 @@ namespace WinApi.DxUtils.Composition
             var opts = Options;
             if (DeviceVariant > 1)
             {
-                var device = (DesktopDevice)Device;
+                var device = (DesktopDevice) Device;
                 Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
                 Visual = new Visual2(device);
             }
@@ -45,7 +51,15 @@ namespace WinApi.DxUtils.Composition
             //                Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
             //                Visual = new Visual(device);
             //            }
+        }
 
+        public void SetContent(ComObject rootContent)
+        {
+            if (Target != null)
+            {
+                Visual.Content = rootContent;
+                Target.Root = Visual;
+            }
         }
 
         protected override void DestroyResources()
@@ -55,37 +69,27 @@ namespace WinApi.DxUtils.Composition
         }
     }
 
-    public class WindowSwapChainCompositor : WindowCompositor
+    public class WindowSwapChainCompositor : WindowCompositor<IDxgi1ContainerWithSwapChain, WindowCompositorOptions>
     {
-        public WindowSwapChainCompositor(int variant = -1) : base(variant) { }
+        public WindowSwapChainCompositor(int variant = -1) : base(variant) {}
 
         protected override void InitializeResources()
         {
             base.InitializeResources();
-            Compose();
-        }
-
-        private void Compose()
-        {
-            if (Target != null)
-            {
-                Visual.Content = DxgiContainer.SwapChain;
-                Target.Root = Visual;
-                if (DeviceVariant > 1) ((DesktopDevice)Device).Commit();
-                else if (DeviceVariant == 1) ((Device)Device).Commit();
-            }
+            SetContent(DxgiContainer.SwapChain);
+            Commit();
         }
     }
 
-    public struct WindowCompositorOptions
+    public class WindowCompositorOptions
     {
+        public IntPtr Hwnd;
+        public bool IsTopMost;
+
         public WindowCompositorOptions(IntPtr hwnd, bool isTopMost = false)
         {
             Hwnd = hwnd;
             IsTopMost = isTopMost;
         }
-
-        public IntPtr Hwnd;
-        public bool IsTopMost;
     }
 }
