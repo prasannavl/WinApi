@@ -107,8 +107,6 @@ namespace WinApi.DxUtils.D3D11
         protected void DisconnectRenderTargetView()
         {
             if (Context == null) return;
-            if (RenderTargetView == null) return;
-            //Context.ClearRenderTargetView(RenderTargetView, new RawColor4(0, 0, 0, 1));
             Context1.OutputMerger.SetRenderTargets((RenderTargetView) null);
         }
     }
