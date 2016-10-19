@@ -58,6 +58,7 @@
     <Compile Include="Component\ComposedD3DComponent.cs" />
     <Compile Include="Composition\CompositorCore.cs" />
     <Compile Include="Composition\WindowCompositor.cs" />
+    <Compile Include="Composition\WindowSurfaceCompositor.cs" />
     <Compile Include="Core\DxgiContainerBase.cs" />
     <Compile Include="D2D1\D2D1MetaFactory.cs" />
     <Compile Include="D2D1\D2D1MetaResource.cs" />
