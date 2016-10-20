@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>WinApi.Utils</id>
+        <version>1.0.0</version>
+        <title>WinApi.Utils</title>
+        <authors>Prasanna V. Loganathar</authors>
+        <owners>Prasanna V. Loganathar</owners>
+        <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+        <projectUrl>https://github.com/prasannavl/WinApi</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/prasannavl/WinApi/master/Misc/Logo.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Utility library that supplements WinApi</description>
+        <copyright>Copyright © Prasanna V. Loganathar</copyright>
+        <tags>win32 native interop</tags>
+        <dependencies>
+            <dependency id="WinApi" version="1.0.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\Utility\WinApi.Utils\bin\Release\WinApi.Utils.dll" target="lib\portable46-net451+win81+wpa81\WinApi.Utils.dll" />
+    </files>
+</package>

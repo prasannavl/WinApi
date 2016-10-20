@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>WinApi.Windows.Controls</id>
+        <version>1.0.0</version>
+        <title>WinApi.Windows.Controls</title>
+        <authors>Prasanna V. Loganathar</authors>
+        <owners>Prasanna V. Loganathar</owners>
+        <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+        <projectUrl>https://github.com/prasannavl/WinApi</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/prasannavl/WinApi/master/Misc/Logo.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Win32 Native Controls</description>
+        <copyright>Copyright © Prasanna V. Loganathar</copyright>
+        <tags>win32 native interop</tags>
+        <dependencies>
+            <group targetFramework=".NETStandard1.2">
+                <dependency id="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" exclude="Build,Analyzers" />
+                <dependency id="NETStandard.Library" version="1.6.0" exclude="Build,Analyzers" />
+                <dependency id="WinApi" version="1.0.0" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\WinApi.Windows.Controls\bin\Release\WinApi.Windows.Controls.dll" target="lib\netstandard1.2\WinApi.Windows.Controls.dll" />
+    </files>
+</package>

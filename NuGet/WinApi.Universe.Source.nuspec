@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>WinApi.Universe.Source</id>
+        <version>1.0.0</version>
+        <title>WinApi.Universe.Source</title>
+        <authors>Prasanna V. Loganathar</authors>
+        <owners>Prasanna V. Loganathar</owners>
+        <licenseUrl>https://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+        <projectUrl>https://github.com/prasannavl/WinApi</projectUrl>
+        <iconUrl>https://raw.githubusercontent.com/prasannavl/WinApi/master/Misc/Logo.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A simple, direct, ultra-thin CLR library for high-performance Win32 Native Interop</description>
+        <copyright>Copyright © Prasanna V. Loganathar</copyright>
+        <tags>win32 native interop</tags>
+    </metadata>
+    <files>
+        <file src="..\WinApi\**.cs" target="content\WinApi\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
+        <file src="..\WinApi.Desktop\**.cs" target="content\WinApi\Desktop\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
+        <file src="..\WinApi.Windows.Controls\**.cs" target="content\WinApi\Windows\Controls" exclude="**\obj\**;**\AssemblyInfo.cs"/>
+        <file src="..\Utility\WinApi.Utils\**.cs" target="content\WinApi\Utils\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
+        <file src="..\Utility\WinApi.DxUtils\**.cs" target="content\WinApi\DxUtils\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
+    </files>
+</package>
