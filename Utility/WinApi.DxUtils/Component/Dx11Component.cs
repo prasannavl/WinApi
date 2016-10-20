@@ -16,13 +16,13 @@ namespace WinApi.DxUtils.Component
         public WindowSwapChainCompositor Compositor;
         public IntPtr Hwnd;
         private int m_compVariant;
-        private ID2D1_1MetaResourceImpl<IDxgi1_2ContainerWithSwapChain> m_d2D;
-        private ID3D11_1MetaResourceImpl m_d3D;
+        private ID2D1_1MetaResource<IDxgi1_2ContainerWithSwapChain> m_d2D;
+        private ID3D11_1MetaResource m_d3D;
         private Factory m_dWriteFactory;
         public Size Size;
 
-        public ID2D1_1MetaResource D2D => m_d2D;
-        public ID3D11MetaResource D3D => m_d3D;
+        public ID2D1_1MetaResourceCore D2D => m_d2D;
+        public ID3D11MetaResourceCore D3D => m_d3D;
         public Factory TextFactory => m_dWriteFactory;
 
         public bool IsInitialized => m_d3D?.Device != null;

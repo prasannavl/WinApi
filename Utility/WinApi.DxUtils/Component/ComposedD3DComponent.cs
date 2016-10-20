@@ -13,10 +13,10 @@ namespace WinApi.DxUtils.Component
         public WindowSwapChainCompositor Compositor;
         public IntPtr Hwnd;
         private int m_compVariant;
-        private ID3D11_1MetaResourceImpl m_d3D;
+        private ID3D11_1MetaResource m_d3D;
         public Size Size;
 
-        public ID3D11MetaResource D3D => m_d3D;
+        public ID3D11MetaResourceCore D3D => m_d3D;
 
         public bool IsInitialized => m_d3D?.Device != null;
 

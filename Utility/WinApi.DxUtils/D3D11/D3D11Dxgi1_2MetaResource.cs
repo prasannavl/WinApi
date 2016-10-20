@@ -1,11 +1,12 @@
 ﻿using System;
 using SharpDX.DXGI;
+using WinApi.DxUtils.Core;
 using Device1 = SharpDX.Direct3D11.Device1;
 
 namespace WinApi.DxUtils.D3D11
 {
     // ReSharper disable once InconsistentNaming
-    public class D3D11Dxgi1_2MetaResource : D3D11Dxgi1_2ContainerCore
+    public class D3D11Dxgi1_2MetaResource : D3D11Dxgi1_2ContainerCore, IDxgi1MetaResource
     {
         private readonly D3D11DxgiOptions m_opts;
         private Adapter m_adapter;

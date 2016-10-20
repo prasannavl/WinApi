@@ -9,7 +9,7 @@ using Device1 = SharpDX.Direct3D11.Device1;
 
 namespace WinApi.DxUtils.D3D11
 {
-    public class D3D11MetaResource : D3D11_1Container, ID3D11_1MetaResourceImpl
+    public class D3D11MetaResource : D3D11_1Container, ID3D11_1MetaResource
     {
         private readonly D3D11MetaResourceOptions m_creationOpts;
         private Adapter m_adapter;

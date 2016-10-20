@@ -41,7 +41,14 @@ namespace WinApi.DxUtils.Core
     public interface IDxgi1_2ContainerWithSwapChain : IDxgi1ContainerWithSwapChain, IDxgi1_2WithSwapChain {}
 
 
-    public interface ID3D11MetaResource : IDxgi1ContainerWithSwapChain, IDisposable
+    public interface IDxgi1MetaResource : IDxgi1Container
+    {
+        void Initialize();
+        void EnsureInitialized();
+        void Destroy();
+    }
+
+    public interface ID3D11MetaResourceCore : IDxgi1ContainerWithSwapChain, IDisposable
     {
         SharpDX.Direct3D11.Device Device { get; }
         SharpDX.Direct3D11.DeviceContext Context { get; }
@@ -49,9 +56,9 @@ namespace WinApi.DxUtils.Core
     }
 
     // ReSharper disable once InconsistentNaming
-    public interface ID3D11_1MetaResource : ID3D11MetaResource, IDxgi1_2ContainerWithSwapChain {}
+    public interface ID3D11_1MetaResourceCore : ID3D11MetaResourceCore, IDxgi1_2ContainerWithSwapChain {}
 
-    public interface ID3D11MetaResourceImpl : ID3D11MetaResource
+    public interface ID3D11MetaResource : ID3D11MetaResourceCore
     {
         void Initialize(IntPtr hwnd, Size size);
         void EnsureInitialized();
@@ -60,10 +67,10 @@ namespace WinApi.DxUtils.Core
     }
 
     // ReSharper disable once InconsistentNaming
-    public interface ID3D11_1MetaResourceImpl : ID3D11MetaResourceImpl, ID3D11_1MetaResource {}
+    public interface ID3D11_1MetaResource : ID3D11MetaResource, ID3D11_1MetaResourceCore {}
 
     // ReSharper disable once InconsistentNaming
-    public interface ID2D1_1MetaResource : IDxgiConnectable, INotifyOnInitDestroy, IDisposable
+    public interface ID2D1_1MetaResourceCore : IDxgiConnectable, INotifyOnInitDestroy, IDisposable
     {
         SharpDX.Direct2D1.Device Device { get; }
         SharpDX.Direct2D1.DeviceContext Context { get; }
@@ -71,7 +78,7 @@ namespace WinApi.DxUtils.Core
     }
 
     // ReSharper disable once InconsistentNaming
-    public interface ID2D1_1MetaResourceImpl<in TDxgi1Container> : ID2D1_1MetaResource
+    public interface ID2D1_1MetaResource<in TDxgi1Container> : ID2D1_1MetaResourceCore
     {
         void Initialize(TDxgi1Container dxgiContainer, bool autoLink = true);
         void EnsureInitialized();

@@ -8,7 +8,7 @@ using Factory1 = SharpDX.Direct2D1.Factory1;
 
 namespace WinApi.DxUtils.D2D1
 {
-    public class D2D1MetaResource<TDxgiContainer> : ID2D1_1MetaResourceImpl<TDxgiContainer>
+    public class D2D1MetaResource<TDxgiContainer> : ID2D1_1MetaResource<TDxgiContainer>
         where TDxgiContainer : IDxgi1Container
     {
         private readonly Action m_onDxgiDestroyedAction;
