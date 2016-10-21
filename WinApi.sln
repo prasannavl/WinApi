@@ -42,6 +42,22 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinApi.DxUtils", "Utility\WinApi.DxUtils\WinApi.DxUtils.csproj", "{E6DC94C4-03F9-492F-8347-3BCE32E8E853}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{BC7017BC-8E89-4205-BDD4-BED2FA88212E}"
+	ProjectSection(SolutionItems) = preProject
+		Misc\Logo.png = Misc\Logo.png
+		Misc\Logo.svg = Misc\Logo.svg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{6954727F-F722-4ACB-945E-FA962328348E}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet\Package.ps1 = NuGet\Package.ps1
+		NuGet\WinApi.Desktop.nuspec = NuGet\WinApi.Desktop.nuspec
+		NuGet\WinApi.DxUtils.nuspec = NuGet\WinApi.DxUtils.nuspec
+		NuGet\WinApi.nuspec = NuGet\WinApi.nuspec
+		NuGet\WinApi.Source.nuspec = NuGet\WinApi.Source.nuspec
+		NuGet\WinApi.Universe.Source.nuspec = NuGet\WinApi.Universe.Source.nuspec
+		NuGet\WinApi.Utils.nuspec = NuGet\WinApi.Utils.nuspec
+		NuGet\WinApi.Windows.Controls.nuspec = NuGet\WinApi.Windows.Controls.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -231,5 +247,7 @@ Global
 		{62B305BA-BD58-48D0-AD77-EF64F987CA5A} = {7DB2F921-368F-47F4-B39B-9ECEB6CE9DF5}
 		{BDB2A27F-FB53-4258-9579-4AF36F20C26A} = {D80D00C6-1205-4294-B9A4-68C77C807FD7}
 		{E6DC94C4-03F9-492F-8347-3BCE32E8E853} = {D80D00C6-1205-4294-B9A4-68C77C807FD7}
+		{BC7017BC-8E89-4205-BDD4-BED2FA88212E} = {87FF9BC0-3C01-4644-A148-2171F06B56D4}
+		{6954727F-F722-4ACB-945E-FA962328348E} = {87FF9BC0-3C01-4644-A148-2171F06B56D4}
 	EndGlobalSection
 EndGlobal
