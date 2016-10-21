@@ -42,7 +42,6 @@
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="project.json" />
-    <None Include="WinApi.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Types.cs" />
