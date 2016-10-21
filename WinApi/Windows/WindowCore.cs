@@ -121,7 +121,12 @@ namespace WinApi.Windows
 
         protected virtual void OnMessage(ref WindowMessage msg)
         {
-            msg.SetResult(WindowBaseProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam));
+            OnMessageDefault(ref msg);
+        }
+
+        protected virtual void OnMessageDefault(ref WindowMessage msg)
+        {
+            msg.SetResult(CallWindowBaseProc(ref msg));
         }
 
         protected virtual IntPtr WindowProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
@@ -169,11 +174,6 @@ namespace WinApi.Windows
             return windowException.IsHandled;
         }
 
-        protected virtual IntPtr WindowBaseProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
-        {
-            return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
-        }
-
         internal IntPtr CallWindowProc(ref WindowMessage msg)
         {
             return WindowProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam);
@@ -181,7 +181,12 @@ namespace WinApi.Windows
 
         internal IntPtr CallWindowBaseProc(ref WindowMessage msg)
         {
-            return WindowBaseProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam);
+            return CallWindowBaseProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam);
+        }
+
+        private IntPtr CallWindowBaseProc(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam)
+        {
+            return User32Methods.CallWindowProc(m_baseWindowProcPtr, hwnd, msg, wParam, lParam);
         }
     }
 

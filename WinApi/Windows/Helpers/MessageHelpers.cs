@@ -21,22 +21,5 @@ namespace WinApi.Windows.Helpers
         {
             msg.SetResult(coreWindow.CallWindowProc(ref msg));
         }
-
-        public static int RunWindowProcAndGetAsInt(WindowCore coreWindow, ref WindowMessage msg)
-        {
-            msg.SetResult(coreWindow.CallWindowProc(ref msg));
-            return msg.Result.ToSafeInt32();
-        }
-
-        public static void RunWindowBaseProc(WindowCore coreWindow, ref WindowMessage msg)
-        {
-            msg.SetResult(coreWindow.CallWindowBaseProc(ref msg));
-        }
-
-        public static int RunWindowBaseProcAndGetAsInt(WindowCore coreWindow, ref WindowMessage msg)
-        {
-            msg.SetResult(coreWindow.CallWindowBaseProc(ref msg));
-            return msg.Result.ToSafeInt32();
-        }
     }
 }

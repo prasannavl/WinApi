@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using WinApi.Core;
 using WinApi.Extensions;
 using WinApi.User32;
@@ -316,136 +317,142 @@ namespace WinApi.Windows
                 }
                 default:
                 {
-                    base.OnMessage(ref msg);
+                    OnMessageDefault(ref msg);
                     return;
                 }
             }
         }
 
+        private int OnMessageDefaultAndGetAsInt(ref WindowMessage msg)
+        {
+            OnMessageDefault(ref msg);
+            return msg.Result.ToSafeInt32();
+        }
+
         protected virtual void OnPositionChanged(ref WindowMessage msg, ref WindowPosition windowPosition)
-            => MessageHelpers.RunWindowBaseProc(this, ref msg);
+            => OnMessageDefault(ref msg);
 
         protected virtual void OnPositionChanging(ref WindowMessage msg, ref WindowPosition windowPosition)
-            => MessageHelpers.RunWindowBaseProc(this, ref msg);
+            => OnMessageDefault(ref msg);
 
         protected virtual void OnClose(ref WindowMessage msg) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual EraseBackgroundResult OnEraseBkgnd(ref WindowMessage msg, IntPtr cHdc)
-            => (EraseBackgroundResult) MessageHelpers.RunWindowBaseProcAndGetAsInt(this, ref msg);
+            => (EraseBackgroundResult) OnMessageDefaultAndGetAsInt(ref msg);
 
         protected virtual void OnMinMaxInfo(ref WindowMessage msg, ref MinMaxInfo minmaxinfo) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnDestroy(ref WindowMessage msg) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnSystemTimeChange(ref WindowMessage msg) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnMove(ref WindowMessage msg, ref Point point) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
-            => (CreateWindowResult) MessageHelpers.RunWindowBaseProcAndGetAsInt(this, ref msg);
+            => (CreateWindowResult) OnMessageDefaultAndGetAsInt(ref msg);
 
         protected virtual void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
                 IntPtr oppositeHwnd) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnPaint(ref WindowMessage msg, IntPtr cHdc) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnDisplayChange(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnActivateApp(ref WindowMessage msg, bool isActive, uint oppositeThreadId) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnMouseMove(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual HitTestResult OnHitTest(ref WindowMessage msg, ref Point point)
-            => (HitTestResult) MessageHelpers.RunWindowBaseProcAndGetAsInt(this, ref msg);
+            => (HitTestResult) OnMessageDefaultAndGetAsInt(ref msg);
 
         protected virtual MouseActivationResult OnMouseActivate(ref WindowMessage msg, IntPtr activeTopLevelParentHwnd,
                 ushort messageId, HitTestResult hitTestResult)
-            => (MouseActivationResult) MessageHelpers.RunWindowBaseProcAndGetAsInt(this, ref msg);
+            => (MouseActivationResult) OnMessageDefaultAndGetAsInt(ref msg);
 
         protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta,
                 bool isWheelHorizontal, MouseInputKeyStateFlags flags) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnMouseLeave(ref WindowMessage msg) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnMouseHover(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnInputCaptureChanged(ref WindowMessage msg, IntPtr handleOfWindowReceivingCapture) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnGotFocus(ref WindowMessage msg, IntPtr oppositeHwnd) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnLostFocus(ref WindowMessage msg, IntPtr oppositeHwnd) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnMenuCommand(ref WindowMessage msg, int menuIndex, IntPtr menuHandle) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnSysCommand(ref WindowMessage msg, SysCommand cmd, short mouseCursorX,
                 short mouseCursorYOrKeyMnemonic) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnCommand(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hWnd) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnKey(ref WindowMessage msg, VirtualKey key, bool isKeyUp,
                 KeyboardInputState inputState, bool isSystemContext) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnKeyChar(ref WindowMessage msg, char inputChar, KeyboardInputState inputState,
                 bool isSystemContext, bool isDeadChar) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnHotKey(ref WindowMessage msg, VirtualKey key, HotKeyInputState keyState,
                 ScreenshotHotKey screenshotHotKey) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual AppCommandResult OnAppCommand(ref WindowMessage msg, AppCommand cmd, AppCommandDevice device,
                 KeyboardInputState keyState, IntPtr hwnd)
-            => (AppCommandResult) MessageHelpers.RunWindowBaseProcAndGetAsInt(this, ref msg);
+            => (AppCommandResult) OnMessageDefaultAndGetAsInt(ref msg);
 
         protected virtual void OnMouseButton(ref WindowMessage msg, ref Point point, MouseButton button,
                 bool inputKeyState, MouseInputKeyStateFlags mouseInputKeyState) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual WindowViewRegionFlags OnNcCalcSize(ref WindowMessage msg, bool shouldCalcValidRects,
                 ref NcCalcSizeParams ncCalcSizeParams)
-            => (WindowViewRegionFlags) MessageHelpers.RunWindowBaseProcAndGetAsInt(this, ref msg);
+            => (WindowViewRegionFlags) OnMessageDefaultAndGetAsInt(ref msg);
 
         protected virtual void OnShow(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags)
-            => MessageHelpers.RunWindowBaseProc(this, ref msg);
+            => OnMessageDefault(ref msg);
 
         protected virtual void OnQuit(ref WindowMessage msg, int code) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnNcActivate(ref WindowMessage msg, bool isActive,
-            ref IntPtr updateRegion) => MessageHelpers.RunWindowBaseProc(this, ref msg);
+            ref IntPtr updateRegion) => OnMessageDefault(ref msg);
 
         protected virtual void OnNcDestroy(ref WindowMessage msg) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnNcPaint(ref WindowMessage msg, ref IntPtr updateregion) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
 
         protected virtual void OnMouseDoubleClick(ref WindowMessage msg, ref Point point, MouseButton button,
                 MouseInputKeyStateFlags mouseInputKeyState) =>
-            MessageHelpers.RunWindowBaseProc(this, ref msg);
+            OnMessageDefault(ref msg);
     }
 
     public sealed class EventedWindow : EventedWindowCore {}
