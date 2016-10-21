@@ -14,6 +14,5 @@ namespace WinApi
 #else
         public const CharSet BuildCharSet = CharSet.Ansi;
 #endif
-        public const string Version = "1.0.1.0";
     }
 }

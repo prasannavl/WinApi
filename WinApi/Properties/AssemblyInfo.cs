@@ -28,5 +28,5 @@ using WinApi;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion(Properties.Version)]
-[assembly: AssemblyFileVersion(Properties.Version)]
+[assembly: AssemblyVersion("1.0.1.0")]
+[assembly: AssemblyFileVersion("1.0.1.0")]
