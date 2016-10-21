@@ -1,5 +1,5 @@
 function Pack-Nugets {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param(
         [string]$Src = ".", 
         [string]$Destination = "."
@@ -12,7 +12,7 @@ function Pack-Nugets {
 }
 
 function Clean-Nugets {
-    [cmdletbinding()]
+    [CmdletBinding()]
     param(
         [string]$Src = ".",
         [Switch]$Recurse = $False
@@ -130,23 +130,15 @@ function Get-IncrementedVersion {
     $vPatch = $version.Build;
     $vBuild = $version.Revision;
 
-    if ($Major) {
-        $vMajor += $Increment;
-    }
-    if ($Minor) {
-        $vMinor += $Increment;
-    }
-    if ($Patch) {
-        $vPatch += $Increment;
-    }
-    if ($Build) {
-        $vBuild += $Increment;
-    }
+    if ($Major) { $vMajor += $Increment; }
+    if ($Minor) { $vMinor += $Increment; }
+    if ($Patch) { $vPatch += $Increment; }
+    if ($Build) { $vBuild += $Increment; }
     return new-object Version($vMajor, $vMinor, $vPatch, $vBuild);
 }
 
 function Get-CsAssemblyVersion {
-        [CmdletBinding()]
+    [CmdletBinding()]
     param(
         [string]$Path = ".",        
         [string]$Filter = "AssemblyInfo.cs",
@@ -163,7 +155,7 @@ function Get-CsAssemblyVersion {
 }
 
 function Set-CsAssemblyVersion {
-            [CmdletBinding()]
+    [CmdletBinding()]
     param(
         [string]$Path = ".",
         [string]$Filter = "AssemblyInfo.cs",        
@@ -181,7 +173,7 @@ function Set-CsAssemblyVersion {
 }
 
 function Set-NuSpecVersion {
-                [CmdletBinding()]
+    [CmdletBinding()]
     param(
         [string]$Path = ".",
         [string]$Filter = "*.nuspec",
