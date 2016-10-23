@@ -1,6 +1,6 @@
 ﻿# WinApi
 
-A direct, highly opinionated CLR library for the native Win32 API.
+A simple, direct, ultra-thin CLR library for high-performance Win32 Native Interop
 
 ```c#
     static int Main(string[] args)
@@ -13,7 +13,21 @@ A direct, highly opinionated CLR library for the native Win32 API.
     }
 ```
 
+**Nuget:**
+> Install-Package WinApi
+
 Platform: `netstandard 1.2`
+
+**Articles:**
+- <a href="https://www.prasannavl.com/2016/09/introducing-winapi-the-evolution/">Introducing WinApi: The Evolution</a>
+- <a href="https://www.prasannavl.com/2016/09/introducing-winapi-basics/">Introducing WinApi: Basics</a>
+
+**Packages**:
+- **`WinApi`** - The core package that contains all the methods, helpers, and the tiny `WinApi.Windows` namespace.
+- **`WinApi.Desktop`** - Desktop-only helpers.
+- **`WinApi.Utils`** - Provides utilities like `NativePixelBuffer`, `DwmWindow` etc.
+- **`WinApi.DxUtils`** - Provides DirectX utilities that ease the version management of SharpDX factories, and provides cohesive automatic device management to write DirectX application with just a few lines of code automatically managing device loss, device errors, etc.
+- **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which nothing but a helper to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
 
 **Goals:**
 
@@ -32,6 +46,7 @@ Platform: `netstandard 1.2`
 **WinApi.Windows:**
 
 - Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
+- Zero GC allocations on during window messages, and event loop cycles.
 - Fundamental concepts similar to ATL/WTL, but in a C# idiomatic way.
 - NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
 - NativeWindow can also be extended to work with any subclasses like Button, ComboBox, etc, with the same principles.
@@ -59,336 +74,18 @@ While there aren't many well defined reliable wrappers, there are a few - my fav
     ##  Constants.cs (Optionally, if there are too many types, split constants (enums) from pure structs)
 ```
 
-**Example:**
+**Samples:**
 
-A simple Win32 C++ Program (Mostly just C really):
 
-```c
-#define UNICODE
-#define _UNICODE
-#define WIN32_LEAN_AND_MEAN
+C/C++ Samples to serve as comparison standard:
+- Win32 C - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.Native.Win32/main.cpp
+- ATL/C++ - https://github.com/prasannavl/WinApi/blob/master/Samples/Sample.Native.Atl/CAppWindow.cpp
 
-#include <windows.h>
-#include <iostream>
+C# Samples using `WinApi`:
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-     PWSTR pCmdLine, int nCmdShow);
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam,
-     LPARAM lParam);
-
-int wmain()
-{
-	wWinMain(nullptr, nullptr, nullptr, 0);
-}
-
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
-    PWSTR pCmdLine, int nCmdShow)
-{
-	WNDCLASSEX wc = { 0 };
-	wc.hInstance = hInstance;
-	wc.lpszClassName = L"MainWindow";
-	wc.cbSize = sizeof(WNDCLASSEX);
-	wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WindowProc;
-	auto regRes = RegisterClassEx(&wc);
-	if (!regRes)
-	{
-		std::cerr << "window registration failed" << std::endl;
-		return regRes;
-	}
-	auto hwnd = CreateWindowEx(0, wc.lpszClassName, L"Hello", 
-        WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-        CW_USEDEFAULT, nullptr, nullptr, hInstance, nullptr);
-	if (hwnd == nullptr)
-	{
-		std::cerr << "window couldn't be created" << std::endl;
-		return -1;
-	}
-
-	ShowWindow(hwnd, SW_SHOWNORMAL);
-
-	MSG msg = {};
-	while (GetMessage(&msg, nullptr, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-	return 0;
-}
-
-LRESULT HandleDestroy(HWND hWnd)
-{
-	PostQuitMessage(0);
-	return 0;
-}
-
-LRESULT HandlePaint(HWND hwnd)
-{
-	PAINTSTRUCT ps;
-	auto hdc = BeginPaint(hwnd, &ps);
-	FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW));
-	EndPaint(hwnd, &ps);
-	return 0;
-}
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-	case WM_ERASEBKGND:
-        return 1;
-	case WM_DESTROY:
-		return HandleDestroy(hwnd);
-	case WM_PAINT:
-		return HandlePaint(hwnd);
-	}
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
-```
-
-Now the direct C# equivalent using WinApi: 
-
-```c#
-
-using System;
-using System.Runtime.InteropServices;
-using WinApi.Gdi32;
-using WinApi.Kernel32;
-using WinApi.User32;
-
-namespace Sample.Win32
-{
-    internal class Program
-    {
-        [STAThread]
-        static int Main(string[] args)
-        {
-            var instanceHandle = Kernel32Methods.GetModuleHandle(IntPtr.Zero);
-
-            var wc = new WindowClassEx
-            {
-                Size = (uint) Marshal.SizeOf<WindowClassEx>(),
-                ClassName = "MainWindow",
-                CursorHandle = User32Helpers.LoadCursor(IntPtr.Zero, SystemCursor.IDC_ARROW),
-                IconHandle = User32Helpers.LoadIcon(IntPtr.Zero, SystemIcon.IDI_APPLICATION),
-                Styles = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-                BackgroundBrushHandle = new IntPtr((int) StockObject.WHITE_BRUSH),
-                WindowProc = WindowProc,
-                InstanceHandle = instanceHandle
-            };
-
-            var resReg = User32Methods.RegisterClassEx(ref wc);
-            if (resReg == 0)
-            {
-                Console.Error.WriteLine("registration failed");
-                return -1;
-            }
-
-            var hwnd = User32Methods.CreateWindowEx(WindowExStyles.WS_EX_APPWINDOW,
-                wc.ClassName, "Hello", WindowStyles.WS_OVERLAPPEDWINDOW,
-                (int) CreateWindowFlags.CW_USEDEFAULT, (int) CreateWindowFlags.CW_USEDEFAULT,
-                (int) CreateWindowFlags.CW_USEDEFAULT, (int) CreateWindowFlags.CW_USEDEFAULT,
-                IntPtr.Zero, IntPtr.Zero, instanceHandle, IntPtr.Zero);
-
-            if (hwnd == IntPtr.Zero)
-            {
-                Console.Error.WriteLine("window creation failed");
-                return -1;
-            }
-
-            User32Methods.ShowWindow(hwnd, ShowWindowCommands.SW_SHOWNORMAL);
-            User32Methods.UpdateWindow(hwnd);
-
-            Message msg;
-            int res;
-            while ((res = User32Methods.GetMessage(out msg, IntPtr.Zero, 0, 0)) != 0)
-            {
-                User32Methods.TranslateMessage(ref msg);
-                User32Methods.DispatchMessage(ref msg);
-            }
-
-            return res;
-        }
-
-        private static IntPtr WindowProc(IntPtr hwnd, uint umsg,
-            IntPtr wParam, IntPtr lParam)
-        {
-            var msg = (WM) umsg;
-            switch (msg)
-            {
-                case WM.ERASEBKGND:
-                    return new IntPtr(1);
-                case WM.CLOSE:
-                {
-                    User32Methods.PostQuitMessage(0);
-                    break;
-                }
-                case WM.PAINT:
-                {
-                    PaintStruct ps;
-                    var hdc = User32Methods.BeginPaint(hwnd, out ps);
-                    User32Methods.FillRect(hdc, ref ps.PaintRect,
-                        Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
-                    User32Methods.EndPaint(hwnd, ref ps);
-                    break;
-                }
-            }
-            return User32Methods.DefWindowProc(hwnd, umsg, wParam, lParam);
-        }
-    }
-}
-```
-
-Well, that's quite verbose - for the sake of example, even though we never usually end up using it this way. But if you'd like, you can use it, all while being very transparent in terms of the low level API. Now, to be more in line with practical uses.
-
-Here's a comparison to ATL/WTL, using the `WinApi.Windows` namespace.
-
-Using C++ with ATL/WTL, here's a complete compilable program:
-
-```c++
-#define UNICODE
-#define _UNICODE
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-#include <wrl.h>
-#include <atlbase.h>
-#include <atlapp.h>
-#include <atlwin.h>
-#include <atlmisc.h>
-#include <atlcrack.h>
-
-class CAppWindow : public CWindowImpl<CAppWindow, CWindow, CFrameWinTraits>
-{
-private:
-	BEGIN_MSG_MAP(CAppWindow)
-		MSG_WM_DESTROY(OnDestroy)
-		MSG_WM_PAINT(OnPaint)
-		MSG_WM_ERASEBKGND(OnEraseBkgnd)
-	END_MSG_MAP()
-
-public:
-	DECLARE_WND_CLASS_EX(nullptr, 0, -1)
-	int Run();
-
-protected:
-	void OnDestroy();
-	LRESULT OnEraseBkgnd(HDC hdc);
-	void OnPaint(HDC hdc);
-};
-
-int CAppWindow::Run()
-{
-	auto hwnd = Create(0, 0, L"Hello");
-	ShowWindow(SW_SHOWNORMAL);
-	MSG msg;
-	BOOL result;
-	while (result = GetMessage(&msg, 0, 0, 0))
-	{
-        if (result == -1)
-            return GetLastError();
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-	}
-	return 0;
-}
-
-void CAppWindow::OnDestroy()
-{
-	PostQuitMessage(0);
-}
-
-LRESULT CAppWindow::OnEraseBkgnd(HDC hdc)
-{
-	SetMsgHandled(true);
-	return 1;
-}
-
-void CAppWindow::OnPaint(HDC hdc)
-{
-	PAINTSTRUCT ps;
-	BeginPaint(&ps);
-	FillRect(hdc, &ps.rcPaint, (HBRUSH)COLOR_WINDOW);
-	EndPaint(&ps);
-	SetMsgHandled(true);
-}
-
-int wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int)
-{
-	CAppWindow win;
-	return win.Run();
-}
-
-``` 
-
-And now the same using WinApi.Windows:
-
-```c#
-using System;
-using WinApi.Windows;
-using WinApi.User32;
-
-namespace MySuperLowLevelProgram {
-    internal class Program
-    {
-        // STA not strictly required for simple applications
-        // that doesn't use COM, but just keeping up with convention here.
-        [STAThread]
-        static int Main(string[] args)
-        {
-            using (var win = Window.Create<AppWindow>(text: "Hello"))
-            {
-                win.Show();
-                return new EventLoop().Run(win);
-            }
-        }
-    }
-
-    public class AppWindow : Window
-    {
-        protected override void OnPaint(ref WindowMessage msg, IntPtr hdc)
-        {
-            PaintStruct ps;
-            hdc = User32Methods.BeginPaint(Handle, out ps);
-            User32Methods.FillRect(hdc, ref ps.PaintRect,
-                Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
-            User32Methods.EndPaint(Handle, ref ps);
-
-            // Prevent default processing. Not actually
-            // required here. This is one of the reasons msg ref is 
-            // always passed along to all message loop events.
-            msg.SetHandled();
-        }
-
-        protected override void OnMessage(ref WindowMessage msg)
-        {
-            switch (msg.Id)
-            {
-                // Note: OnEraseBkgnd method is already available in 
-                // WindowBase, but directly interception here
-                // just for the sake of overriding the
-                // message loop.
-                // Also, note that the message loop is 
-                // short-cicuited here.
-
-                case WM.ERASEBKGND:
-                {
-                    // I can even build the loop only on pay-per-use
-                    // basis, when I need it since all the default methods
-                    // are publicly, exposed with the MessageHandlers class.
-                    //
-                    // MessageHandlers.ProcessEraseBkgnd(ref msg, this.OnEraseBkgnd);
-                    // return;
-
-                    msg.Result = new IntPtr(1);
-                    msg.SetHandled();
-                    return;
-                }
-            }
-            base.OnMessage(ref msg);
-        }
-    }
-}
-``` 
+- Raw equivalent of C Sample: https://github.com/prasannavl/WinApi/blob/master/Samples/Sample.Win32/Program.cs
+- Equivalent of C and ATL/C++ using `WinApi.Windows` - https://github.com/prasannavl/WinApi/blob/master/Samples/Sample.SimpleWindow/Program.cs
+- DirectX using `WinApi.DxUtils` - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.DirectX
+- OpenGL - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.OpenGL
+- Keyboard Input Simulation with `SendInput` helpers - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.SimulateInput
+- Using Skia as the primary 2D drawing backend with `SkiaSharp` - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.Skia
