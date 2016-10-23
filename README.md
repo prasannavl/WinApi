@@ -21,6 +21,7 @@ Platform: `netstandard 1.2`
 ### Articles
 - <a href="https://www.prasannavl.com/2016/09/introducing-winapi-the-evolution/">Introducing WinApi: The Evolution</a>
 - <a href="https://www.prasannavl.com/2016/09/introducing-winapi-basics/">Introducing WinApi: Basics</a>
+- <a href="https://www.prasannavl.com/2016/09/introducing-winapi-graphics-with-direct3d-d2d1-gdi-opengl-and-skia">Introducing WinApi: Graphics with Direct3D, D2D1, GDI, OpenGL and Skia</a>
 
 ### Packages
 - **`WinApi`** - The core package that contains all the methods, helpers, and the tiny `WinApi.Windows` namespace.
@@ -46,13 +47,13 @@ Platform: `netstandard 1.2`
 ### WinApi.Windows
 
 - Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
-- Zero GC allocations on during window messages, and event loop cycles.
-- Fundamental concepts similar to ATL/WTL, but in a C# idiomatic way.
+- `Zero GC allocations` on during window messages, and event loop cycles.
+- `Fundamental concepts similar to ATL/WTL`, but in a C# idiomatic way.
 - NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
 - NativeWindow can also be extended to work with any subclasses like Button, ComboBox, etc, with the same principles.
-- A GUI wrapper for Win32 that can work with CoreCLR.
+- A GUI wrapper for Win32 that `can work with CoreCLR`.
 - Can be wrapped over any existing windows, just by using the handle.
-- Strict pay-only-for-what-you-use model.
+- Strict `pay-only-for-what-you-use model`.
 - Several different event loops depending on the need (For example, `RealtimeEventLoop` for games while the simple `EventLoop` is ideal for normal applications).
 
 ### Notes
