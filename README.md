@@ -18,18 +18,18 @@ A simple, direct, ultra-thin CLR library for high-performance Win32 Native Inter
 
 Platform: `netstandard 1.2`
 
-**Articles:**
+### Articles
 - <a href="https://www.prasannavl.com/2016/09/introducing-winapi-the-evolution/">Introducing WinApi: The Evolution</a>
 - <a href="https://www.prasannavl.com/2016/09/introducing-winapi-basics/">Introducing WinApi: Basics</a>
 
-**Packages**:
+### Packages
 - **`WinApi`** - The core package that contains all the methods, helpers, and the tiny `WinApi.Windows` namespace.
 - **`WinApi.Desktop`** - Desktop-only helpers.
 - **`WinApi.Utils`** - Provides utilities like `NativePixelBuffer`, `DwmWindow` etc.
 - **`WinApi.DxUtils`** - Provides DirectX utilities that ease the version management of SharpDX factories, and provides cohesive automatic device management to write DirectX application with just a few lines of code automatically managing device loss, device errors, etc.
 - **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which nothing but a helper to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
 
-**Goals:**
+### Goals
 
 - Provide both safe (through helpers, and safety wrappers like SafeHandles, CriticalHandles), and unsafe wrappers (pure with minimal performance impact), in a clean way supplemented with inline documentation.
 - Provide a single DLL that can over time, be a direct equivalent of C/C++ `windows.h` header file for the CLR. Other Windows SDK wrappers may, or may not be in fragmented into separate packages.
@@ -39,11 +39,11 @@ Platform: `netstandard 1.2`
 - All structs, flags, should always have the names in the idiomatic C# style. (Eg: `public enum WindowStyles { .. WS_OVERLAPPEDWINDOW = 0x00.  }`). Never WINDOWSTYLE, or MARGINS or RECT. Always `Margin`, `Rectangle`, etc. (It actually is surprisingly clean once drop the usual depencendies like WinForms, or WPF which always provide alternative forms).
 - Use variants such as `int` for Windows types like `BOOL` - to ensure minimum Marashalling impact when inside a structure. Using `bool` requires another copy, since bool in CLR is 1 byte, but the unmanaged variant could be 1, 2 or 4 bytes, depending on the context. However, when it comes to functions `bool` is used directly, since int conversion there is not only tedious but is bound to loose semantic value.
 
-**Secondary goals:**
+### Secondary goals
 
 - Provide fully documented API (both from headers and MSDN, where-ever applicable) in the releases. Everything should be `IntelliSense capable`. No MSDN round-trips, while doing low level programming with CLR.
 
-**WinApi.Windows:**
+### WinApi.Windows
 
 - Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
 - Zero GC allocations on during window messages, and event loop cycles.
@@ -55,17 +55,17 @@ Platform: `netstandard 1.2`
 - Strict pay-only-for-what-you-use model.
 - Several different event loops depending on the need (For example, `RealtimeEventLoop` for games while the simple `EventLoop` is ideal for normal applications).
 
-**Notes**:
+### Notes
 
 - All methods in its minimal interop form (no SafeHandles, CriticalHandles, etc) unless absolutely required, for maximum micro-optimization of interop scenarios in the class with `Methods` suffix. (`User32Methods`, `Kernel32Methods`, `DwmApiMethods`, etc). Prefered to use `int`, `uint` etc inside the `*Methods` class to ensure parity with native APIs. Enums can be used for flags only if the value is a strictly well defined constant set. Otherwise prefer int, uint, etc. However, type safe wrappers can be supplemented in the `Helpers`.
 - All methods with handles, enums and other supplemented types go into `Helpers` (`User32Helpers`, `Kernel32Helpers`, etc).
 - Everything that uses undocumented APIs is maintained in a separate `Experimental` namespace similarly.
 
-**Why re-invent the wheel?**
+### Why re-invent the wheel?
 
 While there aren't many well defined reliable wrappers, there are a few - my favorite being Pinvoke (https://github.com/AArnott/pinvoke). While `Goals` above, should explain the reasons for re-inventing the wheel, it's also mostly a matter for coding style, and about having the ability to micro-optimizate when you really need to.
 
-**Filesystem structure:**
+### Filesystem structure
 ```
 --- LibraryName
     --  Types.cs (Structs, enums and other constants)
@@ -74,14 +74,14 @@ While there aren't many well defined reliable wrappers, there are a few - my fav
     ##  Constants.cs (Optionally, if there are too many types, split constants (enums) from pure structs)
 ```
 
-**Samples:**
+## Samples
 
 
-C/C++ Samples to serve as comparison standard:
+#### C/C++ Samples to serve as comparison standard:
 - Win32 C - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.Native.Win32/main.cpp
 - ATL/C++ - https://github.com/prasannavl/WinApi/blob/master/Samples/Sample.Native.Atl/CAppWindow.cpp
 
-C# Samples using `WinApi`:
+#### C# Samples using `WinApi`:
 
 - Raw equivalent of C Sample: https://github.com/prasannavl/WinApi/blob/master/Samples/Sample.Win32/Program.cs
 - Equivalent of C and ATL/C++ using `WinApi.Windows` - https://github.com/prasannavl/WinApi/blob/master/Samples/Sample.SimpleWindow/Program.cs
