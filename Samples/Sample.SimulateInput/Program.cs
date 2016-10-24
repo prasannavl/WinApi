@@ -34,6 +34,7 @@ namespace Sample.SimulateInput
 
         public sealed class SampleWindow : Window
         {
+            private readonly Input[] m_inputs = new Input[11];
             private readonly HorizontalStretchLayout m_layout = new HorizontalStretchLayout();
             private EditBox m_editBox;
             private StaticBox m_textBox;
@@ -64,16 +65,17 @@ namespace Sample.SimulateInput
                     try
                     {
                         m_timesExecuted++;
-                        var inputs = new Input[8];
-                        Input.InitKeyboardInput(out inputs[0], VirtualKey.H, true);
-                        Input.InitKeyboardInput(out inputs[1], VirtualKey.H, false);
-                        Input.InitKeyboardInput(out inputs[2], VirtualKey.E, true);
-                        Input.InitKeyboardInput(out inputs[3], VirtualKey.E, false);
-                        Input.InitKeyboardInput(out inputs[4], VirtualKey.L, true);
-                        Input.InitKeyboardInput(out inputs[5], VirtualKey.L, false);
-                        Input.InitKeyboardInput(out inputs[6], VirtualKey.O, true);
-                        Input.InitKeyboardInput(out inputs[7], VirtualKey.O, false);
-                        var x = User32Helpers.SendInput(inputs);
+                        Input.InitKeyboardInput(out m_inputs[0], VirtualKey.H, false);
+                        Input.InitKeyboardInput(out m_inputs[1], VirtualKey.H, true);
+                        Input.InitKeyboardInput(out m_inputs[3], VirtualKey.E, false);
+                        Input.InitKeyboardInput(out m_inputs[4], VirtualKey.E, true);
+                        Input.InitKeyboardInput(out m_inputs[5], VirtualKey.L, false);
+                        Input.InitKeyboardInput(out m_inputs[6], VirtualKey.L, true);
+                        Input.InitKeyboardInput(out m_inputs[7], VirtualKey.L, false);
+                        Input.InitKeyboardInput(out m_inputs[8], VirtualKey.L, true);
+                        Input.InitKeyboardInput(out m_inputs[9], VirtualKey.O, false);
+                        Input.InitKeyboardInput(out m_inputs[10], VirtualKey.O, true);
+                        var x = User32Helpers.SendInput(m_inputs);
                     }
                     catch (Exception ex)
                     {
@@ -99,10 +101,18 @@ namespace Sample.SimulateInput
                 base.OnKey(ref msg, key, isKeyUp, inputState, isSystemContext);
             }
 
+            protected override void OnMouseButton(ref WindowMessage msg, ref Point point, MouseButton button,
+                bool isButtonUp,
+                MouseInputKeyStateFlags mouseInputKeyState)
+            {
+                if ((button == MouseButton.Left) && !isButtonUp)
+                    SetFocus();
+                base.OnMouseButton(ref msg, ref point, button, isButtonUp, mouseInputKeyState);
+            }
+
             protected override void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size)
             {
                 m_layout.SetSize(ref size);
-                SetFocus();
                 base.OnSize(ref msg, flag, ref size);
             }
         }
