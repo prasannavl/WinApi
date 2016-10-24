@@ -51,7 +51,7 @@ namespace Sample.SimpleWindow
                     // basis, when I need it since all the default methods
                     // are publicly, exposed with the MessageDecoder class.
                     //
-                    // MessageDecoder.OnEraseBkgnd(this, ref msg);
+                    // MessageDecoder.ProcessEraseBkgnd(ref msg, this.OnEraseBkgnd);
                     // return;
 
                     msg.Result = new IntPtr(1);
