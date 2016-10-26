@@ -89,9 +89,19 @@ namespace WinApi.Extensions
             return unchecked ((short)dword);
         }
 
+        public static int WithLow(this int dword, short low16)
+        {
+            return unchecked((int)(dword & 0xffff_0000) | (ushort)low16);
+        }
+
         public static short High(this int dword)
         {
             return unchecked((short) (dword >> 16));
+        }
+
+        public static int WithHigh(this int dword, short high16)
+        {
+            return unchecked((int)high16 << 16 | dword.LowAsInt());
         }
 
         public static int LowAsInt(this int dword)
@@ -112,17 +122,27 @@ namespace WinApi.Extensions
             return unchecked((ushort)dword);
         }
 
+        public static uint WithLow(this uint dword, ushort low16)
+        {
+            return (dword & 0xffff_0000) | low16;
+        }
+
         public static ushort High(this uint dword)
         {
             return unchecked((ushort)(dword >> 16));
         }
 
-        public static uint LowAsInt(this uint dword)
+        public static uint WithHigh(this uint dword, ushort high16)
+        {
+            return ((uint)high16 << 16) | dword.LowAsUInt();
+        }
+
+        public static uint LowAsUInt(this uint dword)
         {
             return dword & 0xffff;
         }
 
-        public static uint HighAsInt(this uint dword)
+        public static uint HighAsUInt(this uint dword)
         {
             return dword >> 16 & 0xffff;
         }
@@ -135,19 +155,29 @@ namespace WinApi.Extensions
             return unchecked((int) qword);
         }
 
+        public static long WithLow(this long qword, int low32)
+        {
+            return unchecked((qword & (long)0xffff_ffff_0000_0000)) | (uint)low32;
+        }
+
         public static int High(this long qword)
         {
             return unchecked((int) (qword >> 32));
         }
 
+        public static long WithHigh(this long qword, int high32)
+        {
+            return unchecked(((long)high32 << 32) | qword.LowAsLong());
+        }
+
         public static long LowAsLong(this long qword)
         {
-            return qword & 0xffffffff;
+            return qword & 0xffff_ffff;
         }
 
         public static long HighAsLong(this long qword)
         {
-            return qword >> 32 & 0xffffffff;
+            return qword >> 32 & 0xffff_ffff;
         }
     }
 
@@ -158,17 +188,27 @@ namespace WinApi.Extensions
             return unchecked((uint)qword);
         }
 
+        public static ulong WithLow(this ulong qword, uint low32)
+        {
+            return (qword & 0xffff_ffff_0000_0000) | low32;
+        }
+
         public static uint High(this ulong qword)
         {
             return unchecked((uint)(qword >> 32));
         }
 
-        public static ulong LowAsLong(this ulong qword)
+        public static ulong WithHigh(this ulong qword, uint high32)
+        {
+            return ((ulong)high32 << 32) | qword.LowAsULong();
+        }
+
+        public static ulong LowAsULong(this ulong qword)
         {
             return qword & 0xffffffff;
         }
 
-        public static ulong HighAsLong(this ulong qword)
+        public static ulong HighAsULong(this ulong qword)
         {
             return qword >> 32 & 0xffffffff;
         }
