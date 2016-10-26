@@ -19,7 +19,7 @@ namespace WinApi.Windows.Helpers
 
         public static void RunWindowProc(WindowCore coreWindow, ref WindowMessage msg)
         {
-            msg.SetResult(coreWindow.CallWindowProc(ref msg));
+            msg.SetResult(coreWindow.WindowProc(msg.Hwnd, (uint) msg.Id, msg.WParam, msg.LParam));
         }
     }
 }
