@@ -91,7 +91,7 @@ namespace WinApi.Extensions
 
         public static short High(this int dword)
         {
-            return unchecked((short) (dword >> 16 & 0xffff));
+            return unchecked((short) (dword >> 16));
         }
 
         public static int LowAsInt(this int dword)
@@ -114,7 +114,7 @@ namespace WinApi.Extensions
 
         public static ushort High(this uint dword)
         {
-            return unchecked((ushort)(dword >> 16 & 0xffff));
+            return unchecked((ushort)(dword >> 16));
         }
 
         public static uint LowAsInt(this uint dword)
@@ -137,7 +137,7 @@ namespace WinApi.Extensions
 
         public static int High(this long qword)
         {
-            return unchecked((int) (qword >> 32 & 0xffffffff));
+            return unchecked((int) (qword >> 32));
         }
 
         public static long LowAsLong(this long qword)
@@ -160,7 +160,7 @@ namespace WinApi.Extensions
 
         public static uint High(this ulong qword)
         {
-            return unchecked((uint)(qword >> 32 & 0xffffffff));
+            return unchecked((uint)(qword >> 32));
         }
 
         public static ulong LowAsLong(this ulong qword)
