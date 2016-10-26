@@ -1683,6 +1683,11 @@ namespace WinApi.User32
     public enum WindowViewRegionFlags
     {
         /// <summary>
+        /// During NCCALCSIZE, if shouldCalcValidRects is true, this option preserves the previous area and aligns top-left
+        /// </summary>
+        WVR_DEFAULT = 0,
+
+        /// <summary>
         ///     Specifies that the client area of the window is to be preserved and aligned with the top of the new position of the
         ///     window. For example, to align the client area to the upper-left corner, return the WVR_ALIGNTOP and WVR_ALIGNLEFT
         ///     values.
