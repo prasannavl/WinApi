@@ -119,7 +119,7 @@ namespace WinApi.Extensions
     {
         public static ushort Low(this uint dword)
         {
-            return unchecked((ushort)dword);
+            return (ushort)dword;
         }
 
         public static uint WithLow(this uint dword, ushort low16)
@@ -129,7 +129,7 @@ namespace WinApi.Extensions
 
         public static ushort High(this uint dword)
         {
-            return unchecked((ushort)(dword >> 16));
+            return (ushort)(dword >> 16);
         }
 
         public static uint WithHigh(this uint dword, ushort high16)
@@ -185,7 +185,7 @@ namespace WinApi.Extensions
     {
         public static uint Low(this ulong qword)
         {
-            return unchecked((uint)qword);
+            return (uint)qword;
         }
 
         public static ulong WithLow(this ulong qword, uint low32)
@@ -195,7 +195,7 @@ namespace WinApi.Extensions
 
         public static uint High(this ulong qword)
         {
-            return unchecked((uint)(qword >> 32));
+            return (uint)(qword >> 32);
         }
 
         public static ulong WithHigh(this ulong qword, uint high32)
