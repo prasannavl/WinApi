@@ -23,436 +23,606 @@ namespace WinApi.Windows
             switch (msg.Id)
             {
                 case WM.PAINT:
-                {
-                    // The only specially handled message
-                    var flag = false;
-                    try
                     {
-                        MessageDecoder.ProcessPaint(ref msg, OnPaint);
-                        flag = true;
+                        // The only specially handled message
+                        var flag = false;
+                        try
+                        {
+                            Packetizer.ProcessPaint(ref msg, this);
+                            flag = true;
+                        }
+                        finally
+                        {
+                            // Validate window if an OnPaint handler throws. This is done to prevent a flood of WM_PAINT
+                            // messages if the OnPaint errors are uncaught. For example, if a messagebox is shown with an 
+                            // error that's unhandled from OnPaint, the flood of WM_PAINT to the thread's message loop 
+                            // will prevent the MessageBox from being displayed, and the application ends up with 
+                            // inconsistent state. This prevents that from happening. This is the ONLY non-standard
+                            // behaviour that's applied - and it also happens only if the code in OnPaint throws an 
+                            // exception. 
+                            if (!flag)
+                                Validate();
+                        }
+                        break;
                     }
-                    finally
-                    {
-                        // Validate window if an OnPaint handler throws. This is done to prevent a flood of WM_PAINT
-                        // messages if the OnPaint errors are uncaught. For example, if a messagebox is shown with an 
-                        // error that's unhandled from OnPaint, the flood of WM_PAINT to the thread's message loop 
-                        // will prevent the MessageBox from being displayed, and the application ends up with 
-                        // inconsistent state. This prevents that from happening. This is the ONLY non-standard
-                        // behaviour that's applied - and it also happens only if the code in OnPaint throws an 
-                        // exception. 
-                        if (!flag)
-                            Validate();
-                    }
-                    break;
-                }
                 case WM.NCDESTROY:
-                {
-                    OnNcDestroy(ref msg);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcDestroy(ref msg, this);
+                        break;
+                    }
                 case WM.CLOSE:
-                {
-                    OnClose(ref msg);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessClose(ref msg, this);
+                        break;
+                    }
                 case WM.TIMECHANGE:
-                {
-                    OnSystemTimeChange(ref msg);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessSystemTimeChange(ref msg, this);
+                        break;
+                    }
                 case WM.DESTROY:
-                {
-                    OnDestroy(ref msg);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessDestroy(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSELEAVE:
-                {
-                    OnMouseLeave(ref msg);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseLeave(ref msg, this);
+                        break;
+                    }
                 case WM.NCACTIVATE:
-                {
-                    MessageDecoder.ProcessNcActivate(ref msg, OnNcActivate);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcActivate(ref msg, this);
+                        break;
+                    }
                 case WM.NCCALCSIZE:
-                {
-                    MessageDecoder.ProcessNcCalcSize(ref msg, OnNcCalcSize);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcCalcSize(ref msg, this);
+                        break;
+                    }
                 case WM.SHOWWINDOW:
-                {
-                    MessageDecoder.ProcessShowWindow(ref msg, OnShow);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessShowWindow(ref msg, this);
+                        break;
+                    }
                 case WM.QUIT:
-                {
-                    MessageDecoder.ProcessQuit(ref msg, OnQuit);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessQuit(ref msg, this);
+                        break;
+                    }
                 case WM.CREATE:
-                {
-                    MessageDecoder.ProcessCreate(ref msg, OnCreate);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessCreate(ref msg, this);
+                        break;
+                    }
                 case WM.SIZE:
-                {
-                    MessageDecoder.ProcessSize(ref msg, OnSize);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessSize(ref msg, this);
+                        break;
+                    }
                 case WM.MOVE:
-                {
-                    MessageDecoder.ProcessMove(ref msg, OnMove);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMove(ref msg, this);
+                        break;
+                    }
                 case WM.WINDOWPOSCHANGED:
-                {
-                    MessageDecoder.ProcessWindowPositionChange(ref msg, OnPositionChanged);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessWindowPositionChanged(ref msg, this);
+                        break;
+                    }
                 case WM.WINDOWPOSCHANGING:
-                {
-                    MessageDecoder.ProcessWindowPositionChange(ref msg, OnPositionChanging);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessWindowPositionChanging(ref msg, this);
+                        break;
+                    }
                 case WM.ACTIVATE:
-                {
-                    MessageDecoder.ProcessActivate(ref msg, OnActivate);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessActivate(ref msg, this);
+                        break;
+                    }
                 case WM.ERASEBKGND:
-                {
-                    MessageDecoder.ProcessEraseBkgnd(ref msg, OnEraseBkgnd);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessEraseBkgnd(ref msg, this);
+                        break;
+                    }
                 case WM.ACTIVATEAPP:
-                {
-                    MessageDecoder.ProcessActivateApp(ref msg, OnActivateApp);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessActivateApp(ref msg, this);
+                        break;
+                    }
                 case WM.DISPLAYCHANGE:
-                {
-                    MessageDecoder.ProcessDisplayChange(ref msg, OnDisplayChange);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessDisplayChange(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEMOVE:
-                {
-                    MessageDecoder.ProcessMouseMove(ref msg, OnMouseMove);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseMove(ref msg, this);
+                        break;
+                    }
                 case WM.LBUTTONUP:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.LBUTTONDOWN:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.LBUTTONDBLCLK:
-                {
-                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.RBUTTONUP:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.RBUTTONDOWN:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.RBUTTONDBLCLK:
-                {
-                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.MBUTTONUP:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.MBUTTONDOWN:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.MBUTTONDBLCLK:
-                {
-                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.XBUTTONUP:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.XBUTTONDOWN:
-                {
-                    MessageDecoder.ProcessMouseButton(ref msg, OnMouseButton);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.XBUTTONDBLCLK:
-                {
-                    MessageDecoder.ProcessMouseDoubleClick(ref msg, OnMouseDoubleClick);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEACTIVATE:
-                {
-                    MessageDecoder.ProcessMouseActivate(ref msg, OnMouseActivate);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseActivate(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEHOVER:
-                {
-                    MessageDecoder.ProcessMouseHover(ref msg, OnMouseHover);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseHover(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEWHEEL:
-                {
-                    MessageDecoder.ProcessMouseWheel(ref msg, OnMouseWheel);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseWheel(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEHWHEEL:
-                {
-                    MessageDecoder.ProcessMouseWheel(ref msg, OnMouseWheel);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseWheel(ref msg, this);
+                        break;
+                    }
                 case WM.CHAR:
-                {
-                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.SYSCHAR:
-                {
-                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.DEADCHAR:
-                {
-                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.SYSDEADCHAR:
-                {
-                    MessageDecoder.ProcessKeyChar(ref msg, OnKeyChar);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.KEYUP:
-                {
-                    MessageDecoder.ProcessKey(ref msg, OnKey);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.KEYDOWN:
-                {
-                    MessageDecoder.ProcessKey(ref msg, OnKey);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.SYSKEYUP:
-                {
-                    MessageDecoder.ProcessKey(ref msg, OnKey);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.SYSKEYDOWN:
-                {
-                    MessageDecoder.ProcessKey(ref msg, OnKey);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.COMMAND:
-                {
-                    MessageDecoder.ProcessCommand(ref msg, OnCommand);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessCommand(ref msg, this);
+                        break;
+                    }
                 case WM.SYSCOMMAND:
-                {
-                    MessageDecoder.ProcessSysCommand(ref msg, OnSysCommand);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessSysCommand(ref msg, this);
+                        break;
+                    }
                 case WM.MENUCOMMAND:
-                {
-                    MessageDecoder.ProcessMenuCommand(ref msg, OnMenuCommand);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMenuCommand(ref msg, this);
+                        break;
+                    }
                 case WM.APPCOMMAND:
-                {
-                    MessageDecoder.ProcessAppCommand(ref msg, OnAppCommand);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessAppCommand(ref msg, this);
+                        break;
+                    }
                 case WM.KILLFOCUS:
-                {
-                    MessageDecoder.ProcessFocus(ref msg, OnLostFocus);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessLostFocus(ref msg, this);
+                        break;
+                    }
                 case WM.SETFOCUS:
-                {
-                    MessageDecoder.ProcessFocus(ref msg, OnGotFocus);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessGotFocus(ref msg, this);
+                        break;
+                    }
                 case WM.CAPTURECHANGED:
-                {
-                    MessageDecoder.ProcessCaptureChanged(ref msg, OnInputCaptureChanged);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessCaptureChanged(ref msg, this);
+                        break;
+                    }
                 case WM.NCHITTEST:
-                {
-                    MessageDecoder.ProcessHitTest(ref msg, OnHitTest);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessHitTest(ref msg, this);
+                        break;
+                    }
                 case WM.HOTKEY:
-                {
-                    MessageDecoder.ProcessHotKey(ref msg, OnHotKey);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessHotKey(ref msg, this);
+                        break;
+                    }
                 case WM.GETMINMAXINFO:
-                {
-                    MessageDecoder.ProcessGetMinMaxInfo(ref msg, OnMinMaxInfo);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessGetMinMaxInfo(ref msg, this);
+                        break;
+                    }
                 case WM.NCPAINT:
-                {
-                    MessageDecoder.ProcessNcPaint(ref msg, OnNcPaint);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcPaint(ref msg, this);
+                        break;
+                    }
                 default:
-                {
-                    OnMessageDefault(ref msg);
-                    return;
-                }
+                    {
+                        OnMessageDefault(ref msg);
+                        return;
+                    }
             }
         }
 
-        private int OnMessageDefaultAndGetAsInt(ref WindowMessage msg)
+        protected internal virtual void OnPositionChanged(ref WindowPositionPacket packet)
         {
-            OnMessageDefault(ref msg);
-            return msg.Result.ToSafeInt32();
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
         }
 
-        protected virtual void OnPositionChanged(ref WindowMessage msg, ref WindowPosition windowPosition)
-            => OnMessageDefault(ref msg);
+        protected internal virtual void OnPositionChanging(ref WindowPositionPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnPositionChanging(ref WindowMessage msg, ref WindowPosition windowPosition)
-            => OnMessageDefault(ref msg);
+        protected internal virtual void OnClose(ref Packet packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnClose(ref WindowMessage msg) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnEraseBkgnd(ref EraseBkgndPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual EraseBackgroundResult OnEraseBkgnd(ref WindowMessage msg, IntPtr cHdc)
-            => (EraseBackgroundResult) OnMessageDefaultAndGetAsInt(ref msg);
+        protected internal virtual void OnMinMaxInfo(ref MinMaxInfoPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMinMaxInfo(ref WindowMessage msg, ref MinMaxInfo minmaxinfo) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnDestroy(ref Packet packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnDestroy(ref WindowMessage msg) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnSystemTimeChange(ref Packet packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnSystemTimeChange(ref WindowMessage msg) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnSize(ref SizePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnMove(ref MovePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMove(ref WindowMessage msg, ref Point point) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnCreate(ref CreateWindowPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
-            => (CreateWindowResult) OnMessageDefaultAndGetAsInt(ref msg);
+        protected internal virtual void OnActivate(ref ActivatePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
-                IntPtr oppositeHwnd) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnPaint(ref PaintPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnPaint(ref WindowMessage msg, IntPtr cHdc) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnDisplayChange(ref DisplayChangePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnDisplayChange(ref WindowMessage msg, uint imageDepthBitsPerPixel, ref Size size) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnActivateApp(ref ActivateAppPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnActivateApp(ref WindowMessage msg, bool isActive, uint oppositeThreadId) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnMouseMove(ref MousePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMouseMove(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnHitTest(ref HitTestPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual HitTestResult OnHitTest(ref WindowMessage msg, ref Point point)
-            => (HitTestResult) OnMessageDefaultAndGetAsInt(ref msg);
+        protected internal virtual void OnMouseActivate(ref MouseActivatePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual MouseActivationResult OnMouseActivate(ref WindowMessage msg, IntPtr activeTopLevelParentHwnd,
-                ushort messageId, HitTestResult hitTestResult)
-            => (MouseActivationResult) OnMessageDefaultAndGetAsInt(ref msg);
+        protected internal virtual void OnMouseWheel(ref MouseWheelPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMouseWheel(ref WindowMessage msg, ref Point point, short wheelDelta,
-                bool isWheelHorizontal, MouseInputKeyStateFlags flags) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnMouseLeave(ref Packet packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMouseLeave(ref WindowMessage msg) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnMouseHover(ref MousePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMouseHover(ref WindowMessage msg, ref Point point, MouseInputKeyStateFlags flags) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnInputCaptureChanged(ref CaptureChangedPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
+        protected internal virtual void OnGotFocus(ref FocusPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnInputCaptureChanged(ref WindowMessage msg, IntPtr handleOfWindowReceivingCapture) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnLostFocus(ref FocusPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnGotFocus(ref WindowMessage msg, IntPtr oppositeHwnd) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnMenuCommand(ref MenuCommandPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnLostFocus(ref WindowMessage msg, IntPtr oppositeHwnd) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnSysCommand(ref SysCommandPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMenuCommand(ref WindowMessage msg, int menuIndex, IntPtr menuHandle) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnCommand(ref CommandPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnSysCommand(ref WindowMessage msg, SysCommand cmd, short mouseCursorX,
-                short mouseCursorYOrKeyMnemonic) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnKey(ref KeyPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnCommand(ref WindowMessage msg, CommandSource cmdSource, short id, IntPtr hWnd) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnKeyChar(ref KeyCharPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnKey(ref WindowMessage msg, VirtualKey key, bool isKeyUp,
-                KeyboardInputState inputState, bool isSystemContext) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnHotKey(ref HotKeyPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnKeyChar(ref WindowMessage msg, char inputChar, KeyboardInputState inputState,
-                bool isSystemContext, bool isDeadChar) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnAppCommand(ref AppCommandPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnHotKey(ref WindowMessage msg, VirtualKey key, HotKeyInputState keyState,
-                ScreenshotHotKey screenshotHotKey) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnMouseButton(ref MouseButtonPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
+        protected internal virtual void OnNcCalcSize(ref NcCalcSizePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual AppCommandResult OnAppCommand(ref WindowMessage msg, AppCommand cmd, AppCommandDevice device,
-                KeyboardInputState keyState, IntPtr hwnd)
-            => (AppCommandResult) OnMessageDefaultAndGetAsInt(ref msg);
+        protected internal virtual void OnShow(ref ShowWindowPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnMouseButton(ref WindowMessage msg, ref Point point, MouseButton button,
-                bool inputKeyState, MouseInputKeyStateFlags mouseInputKeyState) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnQuit(ref QuitPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual WindowViewRegionFlags OnNcCalcSize(ref WindowMessage msg, bool shouldCalcValidRects,
-                ref NcCalcSizeParams ncCalcSizeParams)
-            => (WindowViewRegionFlags) OnMessageDefaultAndGetAsInt(ref msg);
+        protected internal virtual void OnNcActivate(ref NcActivatePacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnShow(ref WindowMessage msg, bool isShown, ShowWindowStatusFlags flags)
-            => OnMessageDefault(ref msg);
+        protected internal virtual void OnNcDestroy(ref Packet packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
 
-        protected virtual void OnQuit(ref WindowMessage msg, int code) =>
-            OnMessageDefault(ref msg);
-
-        protected virtual void OnNcActivate(ref WindowMessage msg, bool isActive,
-            ref IntPtr updateRegion) => OnMessageDefault(ref msg);
-
-        protected virtual void OnNcDestroy(ref WindowMessage msg) =>
-            OnMessageDefault(ref msg);
-
-        protected virtual void OnNcPaint(ref WindowMessage msg, ref IntPtr updateregion) =>
-            OnMessageDefault(ref msg);
-
-        protected virtual void OnMouseDoubleClick(ref WindowMessage msg, ref Point point, MouseButton button,
-                MouseInputKeyStateFlags mouseInputKeyState) =>
-            OnMessageDefault(ref msg);
+        protected internal virtual void OnNcPaint(ref NcPaintPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
+        protected internal virtual void OnMouseDoubleClick(ref MouseDoubleClickPacket packet)
+        {
+            unsafe
+            {
+                OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value);
+            }
+        }
     }
 
     public sealed class EventedWindow : EventedWindowCore {}

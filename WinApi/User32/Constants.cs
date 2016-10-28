@@ -4539,6 +4539,7 @@ namespace WinApi.User32
 
     public enum ScreenshotHotKey
     {
+        IDHOT_NONE = 0,
         /// <summary>
         ///     The "snap desktop" hot key was pressed. /* PRINTSCRN */
         /// </summary>

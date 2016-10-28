@@ -15,7 +15,7 @@ namespace WinApi.Kernel32
         public static Version GetVersion()
         {
             var dwVersion = Kernel32Methods.GetVersion();
-            var build = dwVersion < 0x80000000 ? dwVersion.HighAsInt() : 0; // (DWORD) (HIWORD(dwVersion))
+            var build = dwVersion < 0x80000000 ? dwVersion.HighAsUInt() : 0; // (DWORD) (HIWORD(dwVersion))
             var v = new Version(
                 (byte) dwVersion.Low(), // (DWORD)(LOBYTE(LOWORD(dwVersion)))
                 (dwVersion.Low() >> 8) & 0xff,
