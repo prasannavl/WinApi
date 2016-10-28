@@ -1,10 +1,8 @@
 ﻿using System;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.DirectComposition;
 using SharpDX.Mathematics.Interop;
 using WinApi.Core;
-using WinApi.DxUtils;
 using WinApi.DxUtils.Component;
 using WinApi.User32;
 using WinApi.Utils;
@@ -79,9 +77,9 @@ namespace Sample.DirectX
             base.OnSize(ref packet);
         }
 
-        protected override void OnHitTest(ref HitTestPacket packet)
+        protected override void OnNcHitTest(ref NcHitTestPacket packet)
         {
-            base.OnHitTest(ref packet);
+            packet.Result = DwmHelper.HitTestWithCaptionArea(packet.Point, DwmHelper.GetTopMarginHeight(true));
             var rect = new Rectangle(packet.Point.X, packet.Point.Y, 0, 0);
             var res = this.ScreenToClient(ref rect);
             value = new Point(res.Left, res.Top);
