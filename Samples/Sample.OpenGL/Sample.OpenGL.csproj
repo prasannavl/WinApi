@@ -104,7 +104,7 @@
       <Name>WinApi.Desktop</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinApi.Windows.Controls\WinApi.Windows.Controls.csproj">
-      <Project>{2c2bdb70-2d96-41e6-b033-3b43b4969ef8}</Project>
+      <Project>{90b83bd2-977c-4708-b33f-175399fad942}</Project>
       <Name>WinApi.Windows.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">

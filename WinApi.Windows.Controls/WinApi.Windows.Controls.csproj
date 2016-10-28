@@ -5,7 +5,7 @@
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2C2BDB70-2D96-41E6-B033-3B43B4969EF8}</ProjectGuid>
+    <ProjectGuid>{90B83BD2-977C-4708-B33F-175399FAD942}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WinApi.Windows.Controls</RootNamespace>
