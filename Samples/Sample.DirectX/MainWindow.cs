@@ -10,7 +10,7 @@ using WinApi.Windows;
 
 namespace Sample.DirectX
 {
-    public sealed class MainWindow : DwmWindow
+    public sealed class MainWindow : EventedWindowCore
     {
         private readonly Dx11Component m_dx = new Dx11Component();
 
@@ -34,8 +34,7 @@ namespace Sample.DirectX
                 var context = m_dx.D2D.Context;
 
                 context.BeginDraw();
-                context.Clear(new RawColor4(0.6f, 0.4f, 0.4f, 0.7f));
-                context.PushAxisAlignedClip(new RawRectangleF(500, 300, size.Width, size.Height), AntialiasMode.Aliased);
+                context.Clear(new RawColor4(0, 0, 0, 0f));
                 var b = new SolidColorBrush(context,
                     new RawColor4(rand.NextFloat(), rand.NextFloat(), rand.NextFloat(), 0.4f));
 
@@ -51,11 +50,6 @@ namespace Sample.DirectX
                         new RawRectangleF(rand.NextFloat(0, w), rand.NextFloat(0, h), rand.NextFloat(0, w),
                             rand.NextFloat(0, h)), b);
                 }
-                context.PopAxisAlignedClip();
-                b.Color = new RawColor4(0, 0, 0, 255);
-                var textFormat = new SharpDX.DirectWrite.TextFormat(m_dx.TextFactory, "Segoe UI", 40);
-                context.DrawText($"{value.X}, {value.Y}\r\n HitTestResult: {htResult}\r\nSize: {size.Width}, {size.Height}", textFormat, new RawRectangleF(100, 100, 500, 300), b);
-                textFormat.Dispose();
                 b.Dispose();
 
                 context.EndDraw();
@@ -69,22 +63,10 @@ namespace Sample.DirectX
             }
         }
 
-        Point value;
-        HitTestResult htResult;
         protected override void OnSize(ref SizePacket packet)
         {
             m_dx.Resize(packet.Size);
             base.OnSize(ref packet);
-        }
-
-        protected override void OnNcHitTest(ref NcHitTestPacket packet)
-        {
-            packet.Result = DwmHelper.HitTestWithCaptionArea(packet.Point, DwmHelper.GetTopMarginHeight(true));
-            var rect = new Rectangle(packet.Point.X, packet.Point.Y, 0, 0);
-            var res = this.ScreenToClient(ref rect);
-            value = new Point(res.Left, res.Top);
-            htResult = packet.Result;
-            this.Invalidate();
         }
 
         protected override void Dispose(bool disposing)
