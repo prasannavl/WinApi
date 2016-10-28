@@ -53,7 +53,7 @@ namespace WinApi.Utils
                 base.OnNcCalcSize(ref packet);
         }
 
-        protected override void OnHitTest(ref HitTestPacket packet)
+        protected override void OnNcHitTest(ref NcHitTestPacket packet)
         {
             packet.Result = DwmHelper.HitTestWithCaptionArea(packet.Point);
         }
