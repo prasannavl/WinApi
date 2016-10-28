@@ -41,16 +41,12 @@ namespace WinApi.DxUtils.Composition
                 Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
                 Visual = new Visual2(device);
             }
-
-            //             TODO: Wait for SharpDX PR to be released before uncommenting the
-            //             Windows 8 version of the codepath below.
-
-            //            if (DeviceVariant == 1)
-            //            {
-            //                var device = (Device) Device;
-            //                Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
-            //                Visual = new Visual(device);
-            //            }
+            if (DeviceVariant == 1)
+            {
+                var device = (Device)Device;
+                Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
+                Visual = new Visual(device);
+            }
         }
 
         public void SetContent(ComObject rootContent)

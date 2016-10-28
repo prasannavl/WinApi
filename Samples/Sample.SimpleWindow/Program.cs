@@ -24,14 +24,14 @@ namespace Sample.SimpleWindow
 
     public class AppWindow : Window
     {
-        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
+        protected override void OnPaint(ref PaintPacket packet)
         {
             PaintStruct ps;
             var hdc = BeginPaint(out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRect,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
             EndPaint(ref ps);
-            base.OnPaint(ref msg, cHdc);
+            base.OnPaint(ref packet);
         }
 
         protected override void OnMessage(ref WindowMessage msg)

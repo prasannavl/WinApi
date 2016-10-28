@@ -92,12 +92,16 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
+      <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
+      <Name>WinApi.Desktop</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi.Windows.Controls\WinApi.Windows.Controls.csproj">
-      <Project>{c00c4085-244e-4013-b9eb-b1f86e19b3d5}</Project>
+      <Project>{2c2bdb70-2d96-41e6-b033-3b43b4969ef8}</Project>
       <Name>WinApi.Windows.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
-      <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
+      <Project>{47e2f556-bf11-4e35-9c7a-f97e3f402707}</Project>
       <Name>WinApi</Name>
     </ProjectReference>
   </ItemGroup>

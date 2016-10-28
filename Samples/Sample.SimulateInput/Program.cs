@@ -42,7 +42,7 @@ namespace Sample.SimulateInput
             private TimerProc m_timerProc;
             private int m_timesExecuted;
 
-            protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
+            protected override void OnCreate(ref CreateWindowPacket packet)
             {
                 m_textBox = StaticBox.Create(
                     "Ahoy!",
@@ -84,36 +84,38 @@ namespace Sample.SimulateInput
                 };
 
                 m_timerId = User32Methods.SetTimer(Handle, IntPtr.Zero, 20, m_timerProc);
-                return base.OnCreate(ref msg, ref createStruct);
+                base.OnCreate(ref packet);
             }
 
-            protected override void OnKey(ref WindowMessage msg, VirtualKey key, bool isKeyUp,
-                KeyboardInputState inputState, bool isSystemContext)
+            protected override void OnKey(ref KeyPacket packet)
             {
-                var str = $"\r\n{DateTime.Now} :" +
-                          $" {key} => {inputState.IsKeyUpTransition}; " +
-                          $"{inputState.RepeatCount}; " +
-                          $"{inputState.ScanCode}; " +
-                          $"{inputState.IsContextual}; " +
-                          $"{inputState.IsExtendedKey}" + "\r\n" +
-                          $"No. of text display changes: {m_timesExecuted}" + "\0";
-                m_textBox.SetText(str);
-                base.OnKey(ref msg, key, isKeyUp, inputState, isSystemContext);
+                var key = packet.Key;
+                var inputState = packet.InputState;
+                        var str = $"\r\n{DateTime.Now} :" +
+                  $" {key} => {inputState.IsKeyUpTransition}; " +
+                  $"{inputState.RepeatCount}; " +
+                  $"{inputState.ScanCode}; " +
+                  $"{inputState.IsContextual}; " +
+                  $"{inputState.IsExtendedKey}" + "\r\n" +
+                  $"No. of text display changes: {m_timesExecuted}" + "\0";
+                        m_textBox.SetText(str);
+                        base.OnKey(ref packet);
             }
 
-            protected override void OnMouseButton(ref WindowMessage msg, ref Point point, MouseButton button,
-                bool isButtonUp,
-                MouseInputKeyStateFlags mouseInputKeyState)
+            protected override void OnMouseButton(ref MouseButtonPacket packet)
             {
-                if ((button == MouseButton.Left) && !isButtonUp)
+                var button = packet.Button;
+                var isButtonDown = packet.IsButtonDown;
+                if ((button == MouseButton.Left) && isButtonDown)
                     SetFocus();
-                base.OnMouseButton(ref msg, ref point, button, isButtonUp, mouseInputKeyState);
+                base.OnMouseButton(ref packet);
             }
 
-            protected override void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size)
+            protected override void OnSize(ref SizePacket packet)
             {
+                var size = packet.Size;
                 m_layout.SetSize(ref size);
-                base.OnSize(ref msg, flag, ref size);
+                base.OnSize(ref packet);
             }
         }
     }

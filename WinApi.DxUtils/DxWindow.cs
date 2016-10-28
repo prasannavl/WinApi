@@ -16,35 +16,36 @@ namespace WinApi.DxUtils
     {
         protected readonly Dx11Component Dx = new Dx11Component();
 
-        protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
+        protected override void OnCreate(ref CreateWindowPacket packet)
         {
             Dx.Initialize(Handle, GetClientSize());
-            return base.OnCreate(ref msg, ref createStruct);
+            base.OnCreate(ref packet);
         }
 
         protected virtual void OnDxPaint(Dx11Component resource) {}
 
-        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
+        protected override void OnPaint(ref PaintPacket packet)
         {
             DxPainter.HandlePaint(this, Dx, OnDxPaint);
         }
 
-        protected override void OnSize(ref WindowMessage msg, WindowSizeFlag flag, ref Size size)
+        protected override void OnSize(ref SizePacket packet)
         {
-            Dx.Resize(size);
+            Dx.Resize(packet.Size);
+            base.OnSize(ref packet);
         }
 
         private bool m_isFirstBkgdErased;
 
-
-        protected override EraseBackgroundResult OnEraseBkgnd(ref WindowMessage msg, IntPtr cHdc)
+        protected override void OnEraseBkgnd(ref EraseBkgndPacket packet)
         {
             if (m_isFirstBkgdErased)
             {
-                return EraseBackgroundResult.DisableDefaultErase;
+                packet.Result = EraseBackgroundResult.DisableDefaultErase;
+                return;
             }
             m_isFirstBkgdErased = true;
-            return base.OnEraseBkgnd(ref msg, cHdc);
+            base.OnEraseBkgnd(ref packet);
         }
 
         protected override void Dispose(bool disposing)

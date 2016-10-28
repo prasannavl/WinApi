@@ -86,24 +86,24 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpDX, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpDX.3.0.2\lib\net45\SharpDX.dll</HintPath>
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.Direct2D1, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpDX.Direct2D1.3.0.2\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+    <Reference Include="SharpDX.Direct2D1, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.Direct2D1.3.1.1\lib\net45\SharpDX.Direct2D1.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpDX.Direct3D11.3.0.2\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    <Reference Include="SharpDX.Direct3D11, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.Direct3D11.3.1.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.DirectComposition, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpDX.DirectComposition.3.0.2\lib\net45\SharpDX.DirectComposition.dll</HintPath>
+    <Reference Include="SharpDX.DirectComposition, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.DirectComposition.3.1.1\lib\net45\SharpDX.DirectComposition.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.DXGI, Version=3.0.2.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpDX.DXGI.3.0.2\lib\net45\SharpDX.DXGI.dll</HintPath>
+    <Reference Include="SharpDX.DXGI, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpDX.DXGI.3.1.1\lib\net45\SharpDX.DXGI.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -122,20 +122,20 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Utility\WinApi.DxUtils\WinApi.DxUtils.csproj">
-      <Project>{e6dc94c4-03f9-492f-8347-3bce32e8e853}</Project>
-      <Name>WinApi.DxUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Utility\WinApi.Utils\WinApi.Utils.csproj">
-      <Project>{BDB2A27F-FB53-4258-9579-4AF36F20C26A}</Project>
-      <Name>WinApi.Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
       <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.DxUtils\WinApi.DxUtils.csproj">
+      <Project>{beab783c-4527-46d0-a05a-d978ed63008a}</Project>
+      <Name>WinApi.DxUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.Utils\WinApi.Utils.csproj">
+      <Project>{238eb8b5-d535-4849-9cd0-95a1db604803}</Project>
+      <Name>WinApi.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
-      <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
+      <Project>{47e2f556-bf11-4e35-9c7a-f97e3f402707}</Project>
       <Name>WinApi</Name>
     </ProjectReference>
   </ItemGroup>

@@ -23,10 +23,10 @@ namespace WinApi.Utils
         protected bool DrawCaptionTitle { get; set; }
         protected bool AllowSystemMenu { get; set; }
 
-        protected override CreateWindowResult OnCreate(ref WindowMessage msg, ref CreateStruct createStruct)
+        protected override void OnCreate(ref CreateWindowPacket packet)
         {
             DwmHelper.Initialize(DrawCaptionIcon, DrawCaptionTitle, AllowSystemMenu);
-            return base.OnCreate(ref msg, ref createStruct);
+            base.OnCreate(ref packet);
         }
 
         public override void ClientToScreen(ref Rectangle clientRect, out Rectangle screenRect)
@@ -41,24 +41,21 @@ namespace WinApi.Utils
             base.ScreenToClient(ref screenRect, out clientRect);
         }
 
-        protected override void OnActivate(ref WindowMessage msg, WindowActivateFlag flag, bool isMinimized,
-            IntPtr oppositeHwnd)
+        protected override void OnActivate(ref ActivatePacket packet)
         {
             DwmHelper.ApplyDwmConfig();
-            base.OnActivate(ref msg, flag, isMinimized, oppositeHwnd);
+            base.OnActivate(ref packet);
         }
 
-        protected override WindowViewRegionFlags OnNcCalcSize(ref WindowMessage msg, bool shouldCalcValidRects,
-            ref NcCalcSizeParams ncCalcSizeParams)
+        protected override void OnNcCalcSize(ref NcCalcSizePacket packet)
         {
-            if (DwmHelper.TryHandleNcCalcSize(ref ncCalcSizeParams))
-                return (WindowViewRegionFlags) msg.Result;
-            return base.OnNcCalcSize(ref msg, shouldCalcValidRects, ref ncCalcSizeParams);
+            if (!DwmHelper.TryHandleNcCalcSize(ref packet))
+                base.OnNcCalcSize(ref packet);
         }
 
-        protected override HitTestResult OnHitTest(ref WindowMessage msg, ref Point point)
+        protected override void OnHitTest(ref HitTestPacket packet)
         {
-            return DwmHelper.HitTestWithCaptionArea(ref point);
+            packet.Result = DwmHelper.HitTestWithCaptionArea(packet.Point);
         }
     }
 }

@@ -85,16 +85,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Utility\WinApi.Utils\WinApi.Utils.csproj">
-      <Project>{bdb2a27f-fb53-4258-9579-4af36f20c26a}</Project>
-      <Name>WinApi.Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">
       <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.Utils\WinApi.Utils.csproj">
+      <Project>{238eb8b5-d535-4849-9cd0-95a1db604803}</Project>
+      <Name>WinApi.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
-      <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
+      <Project>{47e2f556-bf11-4e35-9c7a-f97e3f402707}</Project>
       <Name>WinApi</Name>
     </ProjectReference>
   </ItemGroup>

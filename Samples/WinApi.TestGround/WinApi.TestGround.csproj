@@ -34,6 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -109,12 +110,20 @@
       <Project>{509f07fa-cfac-4316-bb8d-d4571a0a6379}</Project>
       <Name>WinApi.Desktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.DxUtils\WinApi.DxUtils.csproj">
+      <Project>{beab783c-4527-46d0-a05a-d978ed63008a}</Project>
+      <Name>WinApi.DxUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WinApi.Utils\WinApi.Utils.csproj">
+      <Project>{238eb8b5-d535-4849-9cd0-95a1db604803}</Project>
+      <Name>WinApi.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\WinApi.Windows.Controls\WinApi.Windows.Controls.csproj">
-      <Project>{c00c4085-244e-4013-b9eb-b1f86e19b3d5}</Project>
+      <Project>{2c2bdb70-2d96-41e6-b033-3b43b4969ef8}</Project>
       <Name>WinApi.Windows.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\WinApi\WinApi.csproj">
-      <Project>{a4e73928-c66c-4051-8964-d8319a489d4a}</Project>
+      <Project>{47e2f556-bf11-4e35-9c7a-f97e3f402707}</Project>
       <Name>WinApi</Name>
     </ProjectReference>
   </ItemGroup>

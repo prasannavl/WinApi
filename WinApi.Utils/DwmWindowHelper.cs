@@ -93,7 +93,7 @@ namespace WinApi.Utils
                 User32ExperimentalHelpers.EnableBlurBehind(window.Handle);
         }
 
-        public virtual bool TryHandleNcCalcSize(ref NcCalcSizeParams ncCalcSizeParams)
+        public virtual unsafe bool TryHandleNcCalcSize(ref NcCalcSizePacket packet)
         {
             if (!m_isFirstNcCalcDone)
             {
@@ -102,13 +102,15 @@ namespace WinApi.Utils
                 m_isFirstNcCalcDone = true;
                 return false;
             }
+            var ncCalcSizeParams = packet.Params;
+            var tagetRect = &ncCalcSizeParams.Region.Output.TargetClientRect;
             // Keep the top unchanged, aligns the client top to the window top.
             // The caption Nc outsets are shifted later and offset by Dwm frame extensions.
             // This has to be done in order to retain system default behaviour
-            ncCalcSizeParams.Region.Output.TargetClientRect.Top += 0;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Bottom -= NcOutsetThickness.Bottom;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Left -= NcOutsetThickness.Left;
-            ncCalcSizeParams.Region.Output.TargetClientRect.Right -= NcOutsetThickness.Right;
+            tagetRect->Top += 0;
+            tagetRect->Bottom -= NcOutsetThickness.Bottom;
+            tagetRect->Left -= NcOutsetThickness.Left;
+            tagetRect->Right -= NcOutsetThickness.Right;
             return true;
         }
 
@@ -203,7 +205,7 @@ namespace WinApi.Utils
 
         #region Instance Hit-Testing
 
-        public virtual HitTestResult HitTest(ref Point point)
+        public virtual HitTestResult HitTest(Point point)
         {
             Rectangle frameThickness;
             CartesianValue sizingFrameThickness;
@@ -212,9 +214,9 @@ namespace WinApi.Utils
             return FrameHitTest(ref point, ref frameThickness, ref sizingFrameThickness);
         }
 
-        public virtual HitTestResult HitTestWithCaptionArea(ref Point point, int? captionAreaHeight = null)
+        public virtual HitTestResult HitTestWithCaptionArea(Point point, int? captionAreaHeight = null)
         {
-            var res = HitTest(ref point);
+            var res = HitTest(point);
             var clientPoint = point;
             User32Helpers.MapWindowPoints(IntPtr.Zero, m_window.Handle, ref clientPoint);
             return (res == HitTestResult.HTCLIENT) && (clientPoint.Y < (captionAreaHeight ?? GetTopMarginHeight(RetainSystemCaptionArea)))

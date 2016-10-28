@@ -29,7 +29,7 @@ namespace Sample.OpenGL
 
         protected virtual void OnGlPaint(ref PaintStruct ps) {}
 
-        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
+        protected override void OnPaint(ref PaintPacket packet)
         {
             PaintStruct ps;
             var hdc = BeginPaint(out ps);
@@ -39,14 +39,13 @@ namespace Sample.OpenGL
                 Init();
             }
             OnGlPaint(ref ps);
-            base.OnPaint(ref msg, cHdc);
             EndPaint(ref ps);
         }
 
-        protected override void OnDestroy(ref WindowMessage msg)
+        protected override void OnDestroy(ref Packet packet)
         {
             DeleteContext();
-            base.OnDestroy(ref msg);
+            base.OnDestroy(ref packet);
         }
 
         #region OpenGL Related Properties

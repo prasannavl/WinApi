@@ -14,10 +14,10 @@ namespace Sample.Skia
 {
     public class SkiaPainter
     {
-        public static void ProcessPaint(ref WindowMessage msg, NativePixelBuffer pixelBuffer,
+        public static void ProcessPaint(ref PaintPacket packet, NativePixelBuffer pixelBuffer,
             Action<SKSurface> handler)
         {
-            var hwnd = msg.Hwnd;
+            var hwnd = packet.Hwnd;
             Rectangle clientRect;
             User32Methods.GetClientRect(hwnd, out clientRect);
             var size = clientRect.GetSize();
@@ -56,9 +56,9 @@ namespace Sample.Skia
 
         protected virtual void OnSkiaPaint(SKSurface surface) {}
 
-        protected override void OnPaint(ref WindowMessage msg, IntPtr cHdc)
+        protected override void OnPaint(ref PaintPacket packet)
         {
-            SkiaPainter.ProcessPaint(ref msg, m_pixelBuffer, OnSkiaPaint);
+            SkiaPainter.ProcessPaint(ref packet, m_pixelBuffer, OnSkiaPaint);
         }
 
         protected override void Dispose(bool disposing)
