@@ -13,6 +13,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
     }
     public struct SizePacket
     {
@@ -21,11 +26,15 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe WindowSizeFlag Flag
         {
             get { return (WindowSizeFlag)Message->WParam.ToSafeInt32(); }
-            set { Message->WParam = new IntPtr((int)value); }
+            set { Message->WParam = new IntPtr(unchecked((int)value)); }
         }
 
         public unsafe Size Size
@@ -50,7 +59,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe Point Point
         {
             get
@@ -80,7 +93,7 @@ namespace WinApi.Windows
             get { return Message->Hwnd; }
             set { Message->Hwnd = value; }
         }
-    
+
         public unsafe IntPtr Hdc
         {
             get
@@ -100,6 +113,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe ref MinMaxInfo Info => ref ((MinMaxInfoWrapper*)Message->LParam)->Value;
 
     }
@@ -111,7 +129,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe IntPtr Hdc
         {
             get
@@ -132,7 +154,7 @@ namespace WinApi.Windows
             }
             set
             {
-                this.Message->Result = new IntPtr((int)value);
+                this.Message->Result = new IntPtr(unchecked((int)value));
             }
         }
     }
@@ -142,6 +164,11 @@ namespace WinApi.Windows
         public unsafe WindowPositionPacket(WindowMessage* message)
         {
             this.Message = message;
+        }
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
         }
         public unsafe ref WindowPosition Position => ref ((WindowPositionWrapper*)Message->LParam)->Value;
     }
@@ -153,10 +180,16 @@ namespace WinApi.Windows
             this.Message = message;
         }
 
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
+
         public unsafe ShowWindowStatusFlags Flags
         {
             get { return (ShowWindowStatusFlags)Message->LParam.ToSafeInt32(); }
-            set { Message->LParam = new IntPtr((int)value); }
+            set { Message->LParam = new IntPtr(unchecked((int)value)); }
         }
 
         public unsafe bool IsShown
@@ -179,6 +212,12 @@ namespace WinApi.Windows
             this.Message = message;
         }
 
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
+
         public unsafe int Code
         {
             get
@@ -198,13 +237,18 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe ref CreateStruct CreateStruct => ref ((CreateStructWrapper*)Message->LParam)->Value;
 
         // Return 0 to continue creation. -1 to destroy and prevent
         public unsafe CreateWindowResult Result
         {
             get { return (CreateWindowResult)Message->Result.ToSafeInt32(); }
-            set { Message->Result = new IntPtr((int)value); }
+            set { Message->Result = new IntPtr(unchecked((int)value)); }
         }
     }
     public struct ActivatePacket
@@ -215,7 +259,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe IntPtr ConverseHwnd
         {
             get
@@ -243,7 +291,7 @@ namespace WinApi.Windows
         public unsafe WindowActivateFlag Flag
         {
             get { return (WindowActivateFlag)GetWParamAsInt().LowAsInt(); }
-            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow((short)value)); }
+            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow(unchecked((short)value))); }
         }
 
 
@@ -255,21 +303,25 @@ namespace WinApi.Windows
     public struct ActivateAppPacket
     {
         public unsafe WindowMessage* Message;
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe ActivateAppPacket(WindowMessage* message)
         {
             this.Message = message;
         }
 
-        public unsafe IntPtr ConverseHwnd
+        public unsafe uint ConverseThreadId
         {
             get
             {
-                return this.Message->LParam;
+                return this.Message->LParam.ToSafeUInt32();
             }
             set
             {
-                this.Message->LParam = value;
+                this.Message->LParam = new IntPtr((unchecked((int)value)));
             }
         }
 
@@ -293,17 +345,21 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe char Key
         {
             get { return (char)Message->WParam.ToSafeInt32(); }
-            set { Message->WParam = new IntPtr((int)value); }
+            set { Message->WParam = new IntPtr(value); }
         }
 
         public unsafe KeyboardInputState InputState
         {
-            get { return new KeyboardInputState((uint)Message->LParam.ToSafeInt32()); }
-            set { Message->LParam = new IntPtr(value.Value); }
+            get { return new KeyboardInputState(Message->LParam.ToSafeUInt32()); }
+            set { Message->LParam = new IntPtr(unchecked((int)value.Value)); }
         }
 
         public unsafe bool IsDeadChar
@@ -344,17 +400,21 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe VirtualKey Key
         {
             get { return (VirtualKey)Message->WParam.ToSafeInt32(); }
-            set { Message->WParam = new IntPtr((int)value); }
+            set { Message->WParam = new IntPtr(unchecked((int)value)); }
         }
 
         public unsafe KeyboardInputState InputState
         {
-            get { return new KeyboardInputState((uint)Message->LParam.ToSafeInt32()); }
-            set { Message->LParam = new IntPtr(value.Value); }
+            get { return new KeyboardInputState(Message->LParam.ToSafeUInt32()); }
+            set { Message->LParam = new IntPtr(unchecked((int)value.Value)); }
         }
 
         public unsafe bool IsKeyDown
@@ -395,7 +455,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe Point Point
         {
             get
@@ -411,109 +475,25 @@ namespace WinApi.Windows
             }
         }
 
-        public unsafe MouseInputKeyStateFlags Flag
+        public unsafe MouseInputKeyStateFlags InputState
         {
             get { return (MouseInputKeyStateFlags)GetWParamAsInt(); }
-            set { Message->WParam = new IntPtr((int)value); }
+            set { Message->WParam = new IntPtr(unchecked((int)value)); }
         }
 
         private unsafe int GetWParamAsInt()
         {
             return Message->WParam.ToSafeInt32();
-        }
-    }
-    public struct MouseDoubleClickPacket
-    {
-        public unsafe WindowMessage* Message;
-
-        public unsafe MouseDoubleClickPacket(WindowMessage* message)
-        {
-            this.Message = message;
-        }
-
-        private unsafe int GetWParamAsInt()
-        {
-            return Message->WParam.ToSafeInt32();
-        }
-
-        public unsafe Point Point
-        {
-            get
-            {
-                Point point;
-                Message->LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
-                return point;
-            }
-
-            set
-            {
-                Message->LParam = new IntPtr(value.ToInt32());
-            }
-        }
-
-        public unsafe MouseButton Button
-        {
-            get { return GetButton(); }
-            set { SetButton(value); }
-        }
-
-        public unsafe MouseInputKeyStateFlags Flag
-        {
-            get { return (MouseInputKeyStateFlags)GetWParamAsInt().LowAsInt(); }
-            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow((short)value)); }
-        }
-
-        public unsafe MouseButtonResult Result
-        {
-            get { return (MouseButtonResult)Message->Result; }
-            set { Message->Result = new IntPtr((int)value); }
-        }
-
-        private unsafe void SetButton(MouseButton value)
-        {
-            switch (value)
-            {
-                case MouseButton.Left:
-                    Message->Id = WM.LBUTTONDBLCLK;
-                    return;
-                case MouseButton.Right:
-                    Message->Id = WM.RBUTTONDBLCLK;
-                    return;
-                case MouseButton.Middle:
-                    Message->Id = WM.MBUTTONDBLCLK;
-                    return;
-                default:
-                    Message->Id = WM.XBUTTONDBLCLK;
-                    Message->WParam = new IntPtr(GetWParamAsInt().WithHigh((short)value));
-                    return;
-            }
-        }
-
-        private unsafe MouseButton GetButton()
-        {
-            var id = Message->Id;
-            switch (id)
-            {
-                case WM.LBUTTONDBLCLK:
-                    return MouseButton.Left;
-                case WM.RBUTTONDBLCLK:
-                    return MouseButton.Right;
-                case WM.MBUTTONDBLCLK:
-                    return MouseButton.Middle;
-                default:
-                    {
-                        return (MouseInputXButtonFlag)GetWParamAsInt().HighAsInt()
-                            == MouseInputXButtonFlag.XBUTTON1
-                                ? MouseButton.XButton1
-                                : MouseButton.XButton2;
-                    }
-            }
         }
     }
     public struct MouseButtonPacket
     {
         public unsafe WindowMessage* Message;
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe MouseButtonPacket(WindowMessage* message)
         {
             this.Message = message;
@@ -576,16 +556,16 @@ namespace WinApi.Windows
             }
         }
 
-        public unsafe MouseInputKeyStateFlags Flag
+        public unsafe MouseInputKeyStateFlags InputState
         {
             get { return (MouseInputKeyStateFlags)GetWParamAsInt().LowAsInt(); }
-            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow((short)value)); }
+            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow(unchecked((short)value))); }
         }
 
         public unsafe MouseButtonResult Result
         {
             get { return (MouseButtonResult)Message->Result; }
-            set { Message->Result = new IntPtr((int)value); }
+            set { Message->Result = new IntPtr(unchecked((int)value)); }
         }
 
         private unsafe void SetButton(MouseButton value)
@@ -603,7 +583,7 @@ namespace WinApi.Windows
                     return;
                 default:
                     Message->Id = IsButtonDown ? WM.XBUTTONDOWN : WM.XBUTTONUP;
-                    Message->WParam = new IntPtr(GetWParamAsInt().WithHigh((short)value));
+                    Message->WParam = new IntPtr(GetWParamAsInt().WithHigh(unchecked((short)value)));
                     return;
             }
         }
@@ -632,6 +612,157 @@ namespace WinApi.Windows
             }
         }
     }
+    public struct MouseDoubleClickPacket
+    {
+        public unsafe WindowMessage* Message;
+
+        public unsafe MouseDoubleClickPacket(WindowMessage* message)
+        {
+            this.Message = message;
+        }
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
+        private unsafe int GetWParamAsInt()
+        {
+            return Message->WParam.ToSafeInt32();
+        }
+
+        public unsafe Point Point
+        {
+            get
+            {
+                Point point;
+                Message->LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
+                return point;
+            }
+
+            set
+            {
+                Message->LParam = new IntPtr(value.ToInt32());
+            }
+        }
+
+        public unsafe MouseButton Button
+        {
+            get { return GetButton(); }
+            set { SetButton(value); }
+        }
+
+        public unsafe MouseInputKeyStateFlags InputState
+        {
+            get { return (MouseInputKeyStateFlags)GetWParamAsInt().LowAsInt(); }
+            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow(unchecked((short)value))); }
+        }
+
+        public unsafe MouseButtonResult Result
+        {
+            get { return (MouseButtonResult)Message->Result; }
+            set { Message->Result = new IntPtr(unchecked((int)value)); }
+        }
+
+        private unsafe void SetButton(MouseButton value)
+        {
+            switch (value)
+            {
+                case MouseButton.Left:
+                    Message->Id = WM.LBUTTONDBLCLK;
+                    return;
+                case MouseButton.Right:
+                    Message->Id = WM.RBUTTONDBLCLK;
+                    return;
+                case MouseButton.Middle:
+                    Message->Id = WM.MBUTTONDBLCLK;
+                    return;
+                default:
+                    Message->Id = WM.XBUTTONDBLCLK;
+                    Message->WParam = new IntPtr(GetWParamAsInt().WithHigh(unchecked((short)value)));
+                    return;
+            }
+        }
+
+        private unsafe MouseButton GetButton()
+        {
+            var id = Message->Id;
+            switch (id)
+            {
+                case WM.LBUTTONDBLCLK:
+                    return MouseButton.Left;
+                case WM.RBUTTONDBLCLK:
+                    return MouseButton.Right;
+                case WM.MBUTTONDBLCLK:
+                    return MouseButton.Middle;
+                default:
+                    {
+                        return (MouseInputXButtonFlag)GetWParamAsInt().HighAsInt()
+                            == MouseInputXButtonFlag.XBUTTON1
+                                ? MouseButton.XButton1
+                                : MouseButton.XButton2;
+                    }
+            }
+        }
+    }
+    public struct MouseWheelPacket
+    {
+        public unsafe WindowMessage* Message;
+
+        public unsafe MouseWheelPacket(WindowMessage* message)
+        {
+            this.Message = message;
+        }
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
+        private unsafe int GetWParamAsInt()
+        {
+            return Message->WParam.ToSafeInt32();
+        }
+
+        public unsafe Point Point
+        {
+            get
+            {
+                Point point;
+                Message->LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
+                return point;
+            }
+
+            set
+            {
+                Message->LParam = new IntPtr(value.ToInt32());
+            }
+        }
+
+        public unsafe MouseInputKeyStateFlags InputState
+        {
+            get { return (MouseInputKeyStateFlags)GetWParamAsInt().LowAsInt(); }
+            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow(unchecked((short)value))); }
+        }
+
+        // Multiple or divisons of (WHEEL_DELTA = 120)
+        public unsafe short WheelDelta
+        {
+            get { return GetWParamAsInt().High(); }
+            set { Message->WParam = new IntPtr(GetWParamAsInt().WithHigh(value)); }
+        }
+
+        public unsafe bool IsVertical
+        {
+            get
+            {
+                return this.Message->Id == WM.MOUSEWHEEL;
+            }
+            set
+            {
+                this.Message->Id = value ? WM.MOUSEWHEEL : WM.MOUSEHWHEEL;
+            }
+        }
+
+    }
     public struct MouseActivatePacket
     {
         public unsafe WindowMessage* Message;
@@ -640,7 +771,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         private unsafe int GetLParamAsInt()
         {
             return Message->LParam.ToSafeInt32();
@@ -670,7 +805,6 @@ namespace WinApi.Windows
             set { Message->LParam = new IntPtr(GetLParamAsInt().WithHigh(unchecked((short)value))); }
         }
 
-
         public unsafe MouseActivationResult Result
         {
             get
@@ -679,64 +813,9 @@ namespace WinApi.Windows
             }
             set
             {
-                this.Message->Result = new IntPtr((int)value);
+                this.Message->Result = new IntPtr(unchecked((int)value));
             }
         }
-    }
-    public struct MouseWheelPacket
-    {
-        public unsafe WindowMessage* Message;
-
-        public unsafe MouseWheelPacket(WindowMessage* message)
-        {
-            this.Message = message;
-        }
-
-        private unsafe int GetWParamAsInt()
-        {
-            return Message->WParam.ToSafeInt32();
-        }
-
-        public unsafe Point Point
-        {
-            get
-            {
-                Point point;
-                Message->LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
-                return point;
-            }
-
-            set
-            {
-                Message->LParam = new IntPtr(value.ToInt32());
-            }
-        }
-
-        public unsafe MouseInputKeyStateFlags Flag
-        {
-            get { return (MouseInputKeyStateFlags)GetWParamAsInt().LowAsInt(); }
-            set { Message->WParam = new IntPtr(GetWParamAsInt().WithLow((short)value)); }
-        }
-
-        // Multiple or divisons of (WHEEL_DELTA = 120)
-        public unsafe short WheelDelta
-        {
-            get { return (short)GetWParamAsInt().High(); }
-            set { Message->WParam = new IntPtr(GetWParamAsInt().WithHigh(unchecked(value))); }
-        }
-
-        public unsafe bool IsVertical
-        {
-            get
-            {
-                return this.Message->Id == WM.MOUSEWHEEL;
-            }
-            set
-            {
-                this.Message->Id = value ? WM.MOUSEWHEEL : WM.MOUSEHWHEEL;
-            }
-        }
-
     }
     public struct DisplayChangePacket
     {
@@ -745,7 +824,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe uint ImageDepthAsBitsPerPixel
         {
             get { return (uint)Message->WParam.ToPointer(); }
@@ -774,8 +857,12 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
         public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
+        public unsafe IntPtr CommandHwnd
         {
             get
             {
@@ -795,7 +882,7 @@ namespace WinApi.Windows
         public unsafe CommandSource CommandSource
         {
             get { return (CommandSource)GetWParamAsInt().HighAsInt(); }
-            set { Message->WParam = new IntPtr(GetWParamAsInt().WithHigh((short)value)); }
+            set { Message->WParam = new IntPtr(GetWParamAsInt().WithHigh(unchecked((short)value))); }
         }
 
         private unsafe int GetWParamAsInt()
@@ -810,7 +897,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe short X
         {
             get { return GetLParamAsInt().Low(); }
@@ -826,19 +917,22 @@ namespace WinApi.Windows
         public unsafe SysCommand Command
         {
             get { return (SysCommand)this.Message->WParam.ToSafeInt32(); }
-            set { Message->WParam = new IntPtr((int)value); }
+            set { Message->WParam = new IntPtr(unchecked((int)value)); }
         }
 
         public unsafe bool IsAccelerator
         {
             get { return Y == -1; }
-            set { Y = (short)(value ? -1 : 0); }
+            set
+            {
+                if (value) Y = -1;
+            }
         }
 
         public unsafe bool IsMnemonic
         {
             get { return GetLParamAsInt() == 0; }
-            set { Message->LParam = IntPtr.Zero; }
+            set { if (value) Message->LParam = IntPtr.Zero; }
         }
 
         private unsafe int GetLParamAsInt()
@@ -853,7 +947,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe int MenuIndex
         {
             get { return this.Message->WParam.ToSafeInt32(); }
@@ -873,8 +971,13 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
         public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
+
+        public unsafe IntPtr CommandHwnd
         {
             get { return this.Message->WParam; }
             set { Message->WParam = value; }
@@ -883,7 +986,7 @@ namespace WinApi.Windows
         public unsafe KeyboardInputState InputState
         {
             get { return new KeyboardInputState((uint)GetLParamAsInt().LowAsInt()); }
-            set { Message->LParam = new IntPtr(GetLParamAsInt().WithLow((short)value.Value)); }
+            set { Message->LParam = new IntPtr(GetLParamAsInt().WithLow(unchecked((short)value.Value))); }
         }
 
         public unsafe AppCommand Command
@@ -894,8 +997,8 @@ namespace WinApi.Windows
             {
                 var high16 = GetLParamAsInt().High();
                 var mask = ~(uint)AppCommandDevice.FAPPCOMMAND_MASK;
-                var final = high16 & ~mask | (int)value & mask;
-                Message->LParam = new IntPtr(final);
+                var final = high16 & ~mask | unchecked((int)value) & mask;
+                Message->LParam = new IntPtr(unchecked((int)final));
             }
         }
 
@@ -907,15 +1010,15 @@ namespace WinApi.Windows
             {
                 var high16 = GetLParamAsInt().High();
                 var mask = (uint)AppCommandDevice.FAPPCOMMAND_MASK;
-                var final = high16 & ~mask | (int)value & mask;
-                Message->LParam = new IntPtr(final);
+                var final = high16 & ~mask | unchecked((int)value) & mask;
+                Message->LParam = new IntPtr(unchecked((int)final));
             }
         }
 
         public unsafe AppCommandResult Result
         {
             get { return (AppCommandResult)Message->Result; }
-            set { Message->Result = new IntPtr((int)value); }
+            set { Message->Result = new IntPtr(unchecked((int)value)); }
         }
 
         private unsafe int GetLParamAsInt()
@@ -930,8 +1033,12 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
-        public unsafe IntPtr HwndReceivingCapture
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
+        public unsafe IntPtr CapturingHwnd
         {
             get { return Message->LParam; }
             set { Message->LParam = value; }
@@ -943,6 +1050,11 @@ namespace WinApi.Windows
         public unsafe FocusPacket(WindowMessage* message)
         {
             this.Message = message;
+        }
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
         }
         public unsafe IntPtr ConverseHwnd
         {
@@ -957,7 +1069,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         private unsafe int GetLParamAsInt()
         {
             return this.Message->LParam.ToSafeInt32();
@@ -966,29 +1082,33 @@ namespace WinApi.Windows
         public unsafe ScreenshotHotKey ScreenshotHotKey
         {
             get { return (ScreenshotHotKey)Message->WParam.ToSafeInt32(); }
-            set { Message->LParam = new IntPtr((int)value); }
+            set { Message->WParam = new IntPtr(unchecked((int)value)); }
         }
 
         public unsafe HotKeyInputState KeyState
         {
             get { return (HotKeyInputState)GetLParamAsInt().Low(); }
-            set { Message->LParam = new IntPtr(GetLParamAsInt().WithLow((short)value)); }
+            set { Message->LParam = new IntPtr(GetLParamAsInt().WithLow(unchecked((short)value))); }
         }
 
         public unsafe VirtualKey Key
         {
             get { return (VirtualKey)GetLParamAsInt().High(); }
-            set { Message->LParam = new IntPtr(GetLParamAsInt().WithHigh((short)value)); }
+            set { Message->LParam = new IntPtr(GetLParamAsInt().WithHigh(unchecked((short)value))); }
         }
     }
-    public struct HitTestPacket
+    public struct NcHitTestPacket
     {
         public unsafe WindowMessage* Message;
-        public unsafe HitTestPacket(WindowMessage* message)
+        public unsafe NcHitTestPacket(WindowMessage* message)
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe Point Point
         {
             get
@@ -1007,7 +1127,7 @@ namespace WinApi.Windows
         public unsafe HitTestResult Result
         {
             get { return (HitTestResult)Message->Result; }
-            set { Message->Result = new IntPtr((int)value); }
+            set { Message->Result = new IntPtr(unchecked((int)value)); }
         }
     }
     public struct NcPaintPacket
@@ -1018,7 +1138,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe IntPtr UpdateRegion
         {
             get
@@ -1039,7 +1163,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe bool IsActive
         {
             get
@@ -1082,16 +1210,8 @@ namespace WinApi.Windows
             }
             set
             {
-                this.Message->Result = new IntPtr((int)value);
+                this.Message->Result = new IntPtr(unchecked((int)value));
             }
-        }
-
-        public enum NcActivateResult
-        {
-            // var result = TRUE // Default processing;
-            // var result = FALSE // Prevent changes.
-            Default = 1,
-            PreventDefault = 0,
         }
     }
     public struct NcCalcSizePacket
@@ -1102,7 +1222,11 @@ namespace WinApi.Windows
         {
             this.Message = message;
         }
-
+        public unsafe IntPtr Hwnd
+        {
+            get { return Message->Hwnd; }
+            set { Message->Hwnd = value; }
+        }
         public unsafe bool ShouldCalcValidRects
         {
             get { return Message->WParam.ToSafeInt32() > 0; }
@@ -1114,7 +1238,7 @@ namespace WinApi.Windows
         public unsafe WindowViewRegionFlags Result
         {
             get { return (WindowViewRegionFlags)Message->Result.ToSafeInt32(); }
-            set { Message->Result = new IntPtr((int)value); }
+            set { Message->Result = new IntPtr(unchecked((int)value)); }
         }
     }
 
@@ -1152,6 +1276,13 @@ namespace WinApi.Windows
     {
         Default = 0,
         Handled = 1
+    }
+    public enum NcActivateResult
+    {
+        // var result = TRUE // Default processing;
+        // var result = FALSE // Prevent changes.
+        Default = 1,
+        PreventDefault = 0,
     }
 
     #endregion
