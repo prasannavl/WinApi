@@ -297,7 +297,7 @@ namespace WinApi.Windows
                     }
                 case WM.NCHITTEST:
                     {
-                        Packetizer.ProcessHitTest(ref msg, this);
+                        Packetizer.ProcessNcHitTest(ref msg, this);
                         break;
                     }
                 case WM.HOTKEY:
@@ -355,7 +355,7 @@ namespace WinApi.Windows
             }
         }
 
-        protected internal virtual void OnMinMaxInfo(ref MinMaxInfoPacket packet)
+        protected internal virtual void OnGetMinMaxInfo(ref MinMaxInfoPacket packet)
         {
             unsafe
             {
@@ -443,7 +443,7 @@ namespace WinApi.Windows
             }
         }
 
-        protected internal virtual void OnHitTest(ref HitTestPacket packet)
+        protected internal virtual void OnNcHitTest(ref NcHitTestPacket packet)
         {
             unsafe
             {
