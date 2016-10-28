@@ -102,15 +102,14 @@ namespace WinApi.Utils
                 m_isFirstNcCalcDone = true;
                 return false;
             }
-            var ncCalcSizeParams = packet.Params;
-            var tagetRect = &ncCalcSizeParams.Region.Output.TargetClientRect;
+            ref var ncCalcSizeParams = ref packet.Params;
             // Keep the top unchanged, aligns the client top to the window top.
             // The caption Nc outsets are shifted later and offset by Dwm frame extensions.
             // This has to be done in order to retain system default behaviour
-            tagetRect->Top += 0;
-            tagetRect->Bottom -= NcOutsetThickness.Bottom;
-            tagetRect->Left -= NcOutsetThickness.Left;
-            tagetRect->Right -= NcOutsetThickness.Right;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Top += 0;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Bottom -= NcOutsetThickness.Bottom;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Left -= NcOutsetThickness.Left;
+            ncCalcSizeParams.Region.Output.TargetClientRect.Right -= NcOutsetThickness.Right;
             return true;
         }
 
@@ -166,7 +165,7 @@ namespace WinApi.Utils
             if (y < topEdge + sizerYWidth)
             {
                 // Inside the top sizing area
-                if (x < leftEdge + 2*sizerXWidth)
+                if (x <= leftEdge + 2*sizerXWidth)
                 {
                     return HitTestResult.HTTOPLEFT;
                 }
@@ -179,7 +178,7 @@ namespace WinApi.Utils
             if (y < bottomEdge - sizerYWidth)
             {
                 // Inside the client area
-                if (x < leftEdge + sizerXWidth)
+                if (x <= leftEdge + sizerXWidth)
                 {
                     return HitTestResult.HTLEFT;
                 }

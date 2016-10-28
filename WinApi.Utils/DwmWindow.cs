@@ -49,8 +49,9 @@ namespace WinApi.Utils
 
         protected override void OnNcCalcSize(ref NcCalcSizePacket packet)
         {
-            if (!DwmHelper.TryHandleNcCalcSize(ref packet))
-                base.OnNcCalcSize(ref packet);
+            if (DwmHelper.TryHandleNcCalcSize(ref packet))
+                return;
+            base.OnNcCalcSize(ref packet);
         }
 
         protected override void OnNcHitTest(ref NcHitTestPacket packet)
