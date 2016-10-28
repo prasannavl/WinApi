@@ -53,7 +53,7 @@ namespace WinApi.Windows
             fixed (WindowMessage* ptr = &msg)
             {
                 var packet = new MinMaxInfoPacket(ptr);
-                window.OnMinMaxInfo(ref packet);
+                window.OnGetMinMaxInfo(ref packet);
             }
         }
 
@@ -302,8 +302,6 @@ namespace WinApi.Windows
             }
         }
 
-
-
         public static unsafe void ProcessCaptureChanged(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
@@ -313,12 +311,12 @@ namespace WinApi.Windows
             }
         }
 
-        public static unsafe void ProcessHitTest(ref WindowMessage msg, EventedWindowCore window)
+        public static unsafe void ProcessNcHitTest(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
             {
-                var packet = new HitTestPacket(ptr);
-                window.OnHitTest(ref packet);
+                var packet = new NcHitTestPacket(ptr);
+                window.OnNcHitTest(ref packet);
             }
         }
 
@@ -330,6 +328,7 @@ namespace WinApi.Windows
                 window.OnNcDestroy(ref packet);
             }
         }
+
         public static unsafe void ProcessClose(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
@@ -338,14 +337,16 @@ namespace WinApi.Windows
                 window.OnClose(ref packet);
             }
         }
+
         public static unsafe void ProcessSystemTimeChange(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
             {
                 var packet = new Packet(ptr);
-                window.OnNcDestroy(ref packet);
+                window.OnSystemTimeChange(ref packet);
             }
         }
+
         public static unsafe void ProcessMouseLeave(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
