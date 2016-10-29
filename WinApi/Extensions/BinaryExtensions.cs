@@ -91,7 +91,7 @@ namespace WinApi.Extensions
 
         public static int WithLow(this int dword, short low16)
         {
-            return unchecked((int)(dword & 0xffff_0000) | (ushort)low16);
+            return unchecked((int) (dword & 0xffff0000) | (ushort) low16);
         }
 
         public static short High(this int dword)
@@ -101,7 +101,7 @@ namespace WinApi.Extensions
 
         public static int WithHigh(this int dword, short high16)
         {
-            return unchecked((int)high16 << 16 | dword.LowAsInt());
+            return (high16 << 16) | dword.LowAsInt();
         }
 
         public static int LowAsInt(this int dword)
@@ -124,7 +124,7 @@ namespace WinApi.Extensions
 
         public static uint WithLow(this uint dword, ushort low16)
         {
-            return (dword & 0xffff_0000) | low16;
+            return (dword & 0xffff0000) | low16;
         }
 
         public static ushort High(this uint dword)
@@ -157,7 +157,7 @@ namespace WinApi.Extensions
 
         public static long WithLow(this long qword, int low32)
         {
-            return unchecked((qword & (long)0xffff_ffff_0000_0000)) | (uint)low32;
+            return unchecked(qword & (long) 0xffffffff00000000) | (uint) low32;
         }
 
         public static int High(this long qword)
@@ -167,17 +167,17 @@ namespace WinApi.Extensions
 
         public static long WithHigh(this long qword, int high32)
         {
-            return unchecked(((long)high32 << 32) | qword.LowAsLong());
+            return ((long) high32 << 32) | qword.LowAsLong();
         }
 
         public static long LowAsLong(this long qword)
         {
-            return qword & 0xffff_ffff;
+            return qword & 0xffffffff;
         }
 
         public static long HighAsLong(this long qword)
         {
-            return qword >> 32 & 0xffff_ffff;
+            return (qword >> 32) & 0xffffffff;
         }
     }
 
@@ -190,7 +190,7 @@ namespace WinApi.Extensions
 
         public static ulong WithLow(this ulong qword, uint low32)
         {
-            return (qword & 0xffff_ffff_0000_0000) | low32;
+            return (qword & 0xffffffff00000000) | low32;
         }
 
         public static uint High(this ulong qword)
@@ -205,12 +205,12 @@ namespace WinApi.Extensions
 
         public static ulong LowAsULong(this ulong qword)
         {
-            return qword & 0xffff_ffff;
+            return qword & 0xffffffff;
         }
 
         public static ulong HighAsULong(this ulong qword)
         {
-            return (qword >> 32) & 0xffff_ffff;
+            return (qword >> 32) & 0xffffffff;
         }
     }
 }

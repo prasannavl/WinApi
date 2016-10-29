@@ -23,302 +23,285 @@ namespace WinApi.Windows
             switch (msg.Id)
             {
                 case WM.PAINT:
-                {
-                    // The only specially handled message
-                    var flag = false;
-                    try
                     {
                         Packetizer.ProcessPaint(ref msg, this);
-                        flag = true;
+                        break;
                     }
-                    finally
-                    {
-                        // Validate window if an OnPaint handler throws. This is done to prevent a flood of WM_PAINT
-                        // messages if the OnPaint errors are uncaught. For example, if a messagebox is shown with an 
-                        // error that's unhandled from OnPaint, the flood of WM_PAINT to the thread's message loop 
-                        // will prevent the MessageBox from being displayed, and the application ends up with 
-                        // inconsistent state. This prevents that from happening. This is the ONLY non-standard
-                        // behaviour that's applied - and it also happens only if the code in OnPaint throws an 
-                        // exception. 
-                        if (!flag) this.Validate();
-                    }
-                    break;
-                }
                 case WM.NCDESTROY:
-                {
-                    Packetizer.ProcessNcDestroy(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcDestroy(ref msg, this);
+                        break;
+                    }
                 case WM.CLOSE:
-                {
-                    Packetizer.ProcessClose(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessClose(ref msg, this);
+                        break;
+                    }
                 case WM.TIMECHANGE:
-                {
-                    Packetizer.ProcessSystemTimeChange(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessSystemTimeChange(ref msg, this);
+                        break;
+                    }
                 case WM.DESTROY:
-                {
-                    Packetizer.ProcessDestroy(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessDestroy(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSELEAVE:
-                {
-                    Packetizer.ProcessMouseLeave(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseLeave(ref msg, this);
+                        break;
+                    }
                 case WM.NCACTIVATE:
-                {
-                    Packetizer.ProcessNcActivate(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcActivate(ref msg, this);
+                        break;
+                    }
                 case WM.NCCALCSIZE:
-                {
-                    Packetizer.ProcessNcCalcSize(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcCalcSize(ref msg, this);
+                        break;
+                    }
                 case WM.SHOWWINDOW:
-                {
-                    Packetizer.ProcessShowWindow(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessShowWindow(ref msg, this);
+                        break;
+                    }
                 case WM.QUIT:
-                {
-                    Packetizer.ProcessQuit(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessQuit(ref msg, this);
+                        break;
+                    }
                 case WM.CREATE:
-                {
-                    Packetizer.ProcessCreate(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessCreate(ref msg, this);
+                        break;
+                    }
                 case WM.SIZE:
-                {
-                    Packetizer.ProcessSize(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessSize(ref msg, this);
+                        break;
+                    }
                 case WM.MOVE:
-                {
-                    Packetizer.ProcessMove(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMove(ref msg, this);
+                        break;
+                    }
                 case WM.WINDOWPOSCHANGED:
-                {
-                    Packetizer.ProcessWindowPositionChanged(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessWindowPositionChanged(ref msg, this);
+                        break;
+                    }
                 case WM.WINDOWPOSCHANGING:
-                {
-                    Packetizer.ProcessWindowPositionChanging(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessWindowPositionChanging(ref msg, this);
+                        break;
+                    }
                 case WM.ACTIVATE:
-                {
-                    Packetizer.ProcessActivate(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessActivate(ref msg, this);
+                        break;
+                    }
                 case WM.ERASEBKGND:
-                {
-                    Packetizer.ProcessEraseBkgnd(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessEraseBkgnd(ref msg, this);
+                        break;
+                    }
                 case WM.ACTIVATEAPP:
-                {
-                    Packetizer.ProcessActivateApp(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessActivateApp(ref msg, this);
+                        break;
+                    }
                 case WM.DISPLAYCHANGE:
-                {
-                    Packetizer.ProcessDisplayChange(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessDisplayChange(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEMOVE:
-                {
-                    Packetizer.ProcessMouseMove(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseMove(ref msg, this);
+                        break;
+                    }
                 case WM.LBUTTONUP:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.LBUTTONDOWN:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.LBUTTONDBLCLK:
-                {
-                    Packetizer.ProcessMouseDoubleClick(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.RBUTTONUP:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.RBUTTONDOWN:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.RBUTTONDBLCLK:
-                {
-                    Packetizer.ProcessMouseDoubleClick(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.MBUTTONUP:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.MBUTTONDOWN:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.MBUTTONDBLCLK:
-                {
-                    Packetizer.ProcessMouseDoubleClick(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.XBUTTONUP:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.XBUTTONDOWN:
-                {
-                    Packetizer.ProcessMouseButton(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseButton(ref msg, this);
+                        break;
+                    }
                 case WM.XBUTTONDBLCLK:
-                {
-                    Packetizer.ProcessMouseDoubleClick(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseDoubleClick(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEACTIVATE:
-                {
-                    Packetizer.ProcessMouseActivate(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseActivate(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEHOVER:
-                {
-                    Packetizer.ProcessMouseHover(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseHover(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEWHEEL:
-                {
-                    Packetizer.ProcessMouseWheel(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseWheel(ref msg, this);
+                        break;
+                    }
                 case WM.MOUSEHWHEEL:
-                {
-                    Packetizer.ProcessMouseWheel(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMouseWheel(ref msg, this);
+                        break;
+                    }
                 case WM.CHAR:
-                {
-                    Packetizer.ProcessKeyChar(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.SYSCHAR:
-                {
-                    Packetizer.ProcessKeyChar(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.DEADCHAR:
-                {
-                    Packetizer.ProcessKeyChar(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.SYSDEADCHAR:
-                {
-                    Packetizer.ProcessKeyChar(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKeyChar(ref msg, this);
+                        break;
+                    }
                 case WM.KEYUP:
-                {
-                    Packetizer.ProcessKey(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.KEYDOWN:
-                {
-                    Packetizer.ProcessKey(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.SYSKEYUP:
-                {
-                    Packetizer.ProcessKey(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.SYSKEYDOWN:
-                {
-                    Packetizer.ProcessKey(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessKey(ref msg, this);
+                        break;
+                    }
                 case WM.COMMAND:
-                {
-                    Packetizer.ProcessCommand(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessCommand(ref msg, this);
+                        break;
+                    }
                 case WM.SYSCOMMAND:
-                {
-                    Packetizer.ProcessSysCommand(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessSysCommand(ref msg, this);
+                        break;
+                    }
                 case WM.MENUCOMMAND:
-                {
-                    Packetizer.ProcessMenuCommand(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessMenuCommand(ref msg, this);
+                        break;
+                    }
                 case WM.APPCOMMAND:
-                {
-                    Packetizer.ProcessAppCommand(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessAppCommand(ref msg, this);
+                        break;
+                    }
                 case WM.KILLFOCUS:
-                {
-                    Packetizer.ProcessLostFocus(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessLostFocus(ref msg, this);
+                        break;
+                    }
                 case WM.SETFOCUS:
-                {
-                    Packetizer.ProcessGotFocus(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessGotFocus(ref msg, this);
+                        break;
+                    }
                 case WM.CAPTURECHANGED:
-                {
-                    Packetizer.ProcessCaptureChanged(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessCaptureChanged(ref msg, this);
+                        break;
+                    }
                 case WM.NCHITTEST:
-                {
-                    Packetizer.ProcessNcHitTest(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcHitTest(ref msg, this);
+                        break;
+                    }
                 case WM.HOTKEY:
-                {
-                    Packetizer.ProcessHotKey(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessHotKey(ref msg, this);
+                        break;
+                    }
                 case WM.GETMINMAXINFO:
-                {
-                    Packetizer.ProcessGetMinMaxInfo(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessGetMinMaxInfo(ref msg, this);
+                        break;
+                    }
                 case WM.NCPAINT:
-                {
-                    Packetizer.ProcessNcPaint(ref msg, this);
-                    break;
-                }
+                    {
+                        Packetizer.ProcessNcPaint(ref msg, this);
+                        break;
+                    }
                 default:
-                {
-                    this.OnMessageDefault(ref msg);
-                    return;
-                }
+                    {
+                        this.OnMessageDefault(ref msg);
+                        return;
+                    }
             }
         }
 

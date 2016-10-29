@@ -39,20 +39,20 @@ namespace WinApi.TestGround
             private DateTime m_endTime;
             private DateTime m_startTime;
             private Task m_task;
-            private NativeWindow m_textBox1;
-            private StaticBox m_textBox2;
+            private StaticBox m_textBox1;
+            private NativeWindow m_textBox2;
             private int m_times;
 
             protected override void OnCreate(ref CreateWindowPacket packet)
             {
+ 
+                this.m_textBox1 = StaticBox.Create(hParent: this.Handle,
+                    styles: WindowStyles.WS_CHILD | WindowStyles.WS_VISIBLE, exStyles: 0);
+                
                 // You can use this to create the static box like this as well. 
                 // But there's rarely any performance benefit in doing so, and
                 // this doesn't have a WindowProc that's connected.
-
-                this.m_textBox1 = WindowFactory.CreateExternalWindow("static", hParent: this.Handle,
-                    styles: WindowStyles.WS_CHILD | WindowStyles.WS_VISIBLE, exStyles: 0);
-
-                this.m_textBox2 = StaticBox.Create(hParent: this.Handle,
+                this.m_textBox2 = WindowFactory.CreateExternalWindow("static", hParent: this.Handle,
                     styles: WindowStyles.WS_CHILD | WindowStyles.WS_VISIBLE, exStyles: 0);
 
                 this.m_layout.ClientArea = this.GetClientRect();
