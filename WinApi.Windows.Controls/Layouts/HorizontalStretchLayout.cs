@@ -7,13 +7,13 @@ namespace WinApi.Windows.Controls.Layouts
 {
     public class HorizontalStretchLayout
     {
-        public List<WindowCore> Children;
+        public List<NativeWindow> Children;
         public Rectangle ClientArea;
         public Rectangle Margin;
 
         public HorizontalStretchLayout(int capacity = 0)
         {
-            this.Children = new List<WindowCore>(capacity);
+            this.Children = new List<NativeWindow>(capacity);
         }
 
         public void SetSize(ref Size size)
