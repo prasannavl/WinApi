@@ -190,7 +190,7 @@ function Set-NuSpecVersion {
         }
 }
 
-function Set-CsConfigVersion {
+function Set-CsPackageVersion {
     [CmdletBinding()]
     param(
         [string]$NuSpec,
@@ -200,32 +200,6 @@ function Set-CsConfigVersion {
         $verbose = $PSBoundParameters['Verbose'] -eq $true;
         Set-CsAssemblyVersionForPath $CsAssemblyInfoFile $Version -verbose:$verbose
         Set-NuSpecVersionForPath $NuSpec $Version -verbose:$verbose
-}
-
-function Run-CsConfigBumpVersion {
-    [CmdletBinding()]
-    param(
-        [string]$NuSpec,
-        [string]$CsAssemblyInfoPath = ".",
-        [string]$CsAssemblyInfoFilter = "AssemblyInfo.cs",
-        [switch]$NoRecurse = $False,
-        [switch]$Major,
-        [switch]$Minor,
-        [switch]$Patch,
-        [switch]$Build,
-        [int]$Increment = 1)
-
-        $verbose = $PSBoundParameters['Verbose'] -eq $true;
-        $params = @{ Path = $CsAssemblyInfoPath; 
-            Filter = $CsAssemblyInfoFilter; 
-            NoRecurse = $NoRecurse; };
-        $csAssemFile = Find-FirstFile @params;
-        if (-not $csAssemFile) { return; }
-        $v = Get-CsAssemblyVersionFromPath $csAssemFile -Verbose:$verbose;
-        if (-not $v) { return; }
-        $vParams = @{ Major = $Major; Minor = $Minor; Patch = $Patch; Build = $Build; Increment = $Increment };
-        $v = Get-IncrementedVersion $v @vParams;
-        Set-CsConfigVersion $NuSpec $csAssemFile $v -Verbose:$verbose;
 }
 
 function Run-MsBuild {
@@ -249,7 +223,72 @@ function Run-MsBuild {
     Pop-Location;
 }
 
-function Run-CsConfigBumpBuildPack {
+function Run-NuspecPackWithVersion {
+    [CmdletBinding()]
+    param(
+    [string]$NuSpec,
+    [string]$Version,
+    [string]$Destination = ".")
+
+    $verbose = $PSBoundParameters['Verbose'] -eq $true;
+    Set-NuSpecVersionForPath $NuSpec $Version -verbose:$verbose;
+    Pack-Nugets $NuSpec -Destination $Destination -Verbose:$verbose;
+}
+
+function Run-CsPackageIncrementVersion {
+    [CmdletBinding()]
+    param(
+        [string]$NuSpec,
+        [string]$CsAssemblyInfoPath = ".",
+        [string]$CsAssemblyInfoFilter = "AssemblyInfo.cs",
+        [switch]$NoRecurse = $False,
+        [switch]$Major,
+        [switch]$Minor,
+        [switch]$Patch,
+        [switch]$Build,
+        [int]$Increment = 1)
+
+        $verbose = $PSBoundParameters['Verbose'] -eq $true;
+        $params = @{ Path = $CsAssemblyInfoPath; 
+            Filter = $CsAssemblyInfoFilter; 
+            NoRecurse = $NoRecurse; };
+        $csAssemFile = Find-FirstFile @params;
+        if (-not $csAssemFile) { return; }
+        $v = Get-CsAssemblyVersionFromPath $csAssemFile -Verbose:$verbose;
+        if (-not $v) { return; }
+        $vParams = @{ Major = $Major; Minor = $Minor; Patch = $Patch; Build = $Build; Increment = $Increment };
+        $v = Get-IncrementedVersion $v @vParams;
+        Set-CsPackageVersion $NuSpec $csAssemFile $v -Verbose:$verbose;
+}
+
+
+function Run-CsPackageBuildPackWithVersion {
+    [CmdletBinding()]
+    param(
+    [string]$NuSpec,
+    [string]$Version,
+    [string]$CsSourcePath = ".",
+    [string]$CsAssemblyInfoPath = $Null,
+    [string]$CsAssemblyInfoFilter = "AssemblyInfo.cs",
+    [switch]$NoRecurse = $False,
+    [string]$Destination = ".")
+
+    $verbose = $PSBoundParameters['Verbose'] -eq $true;
+    if (-not $CsAssemblyInfoPath) {
+        $CsAssemblyInfoPath = $CsSourcePath;
+    }
+
+    $params = @{ Path = $CsAssemblyInfoPath; 
+        Filter = $CsAssemblyInfoFilter; 
+        NoRecurse = $NoRecurse; };
+    $csAssemFile = Find-FirstFile @params;
+    if (-not $csAssemFile) { return; }
+    Set-CsPackageVersion $NuSpec $csAssemFile $Version -Verbose:$verbose;
+    Run-MsBuild $CsSourcePath;
+    Pack-Nugets $NuSpec -Destination $Destination -Verbose:$verbose;
+}
+
+function Run-CsPackageBuildPackIncrementalVersion {
     [CmdletBinding()]
     param(
         [string]$NuSpec,
@@ -268,6 +307,10 @@ function Run-CsConfigBumpBuildPack {
         if (-not $CsAssemblyInfoPath) {
             $CsAssemblyInfoPath = $CsSourcePath;
         }
+        Write-Verbose "NuSpec: $NuSpec";
+        Write-Verbose "Source Path: $CsSourcePath";
+        Write-Verbose "AssemblyInfo Search Path: $CsAssemblyInfoPath\$CsAssemblyInfoFilter";
+
         $params = @{ NuSpec = $NuSpec; 
             CsAssemblyInfoPath = $CsAssemblyInfoPath;
             CsAssemblyInfoFilter = $CsAssemblyInfoFilter;
@@ -279,7 +322,7 @@ function Run-CsConfigBumpBuildPack {
             Increment = $Increment;
             Verbose = $verbose;
         };
-        Run-CsConfigBumpVersion @params;
+        Run-CsPackageIncrementVersion @params;
         Run-MsBuild $CsSourcePath;
         Pack-Nugets $NuSpec -Destination $Destination -Verbose:$verbose;
 }
