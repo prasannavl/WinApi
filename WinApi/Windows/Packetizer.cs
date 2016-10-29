@@ -10,12 +10,12 @@ namespace WinApi.Windows
     {
         public static int ToInt32(this Size size)
         {
-            return unchecked(size.Height << 16 | size.Width);
+            return (size.Height << 16) | size.Width;
         }
 
         public static int ToInt32(this Point point)
         {
-            return unchecked(point.Y << 16 | point.X);
+            return (point.Y << 16) | point.X;
         }
     }
 
@@ -57,7 +57,7 @@ namespace WinApi.Windows
             }
         }
 
-        public unsafe static void ProcessSize(ref WindowMessage msg, EventedWindowCore window)
+        public static unsafe void ProcessSize(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
             {
@@ -66,7 +66,7 @@ namespace WinApi.Windows
             }
         }
 
-        public unsafe static void ProcessMove(ref WindowMessage msg, EventedWindowCore window)
+        public static unsafe void ProcessMove(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
             {
@@ -75,7 +75,7 @@ namespace WinApi.Windows
             }
         }
 
-        public unsafe static void ProcessPaint(ref WindowMessage msg, EventedWindowCore window)
+        public static unsafe void ProcessPaint(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
             {
@@ -84,7 +84,7 @@ namespace WinApi.Windows
             }
         }
 
-        public unsafe static void ProcessEraseBkgnd(ref WindowMessage msg, EventedWindowCore window)
+        public static unsafe void ProcessEraseBkgnd(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
             {
@@ -192,7 +192,7 @@ namespace WinApi.Windows
             }
         }
 
-        public static  unsafe void ProcessMouseButton(ref WindowMessage msg, EventedWindowCore window)
+        public static unsafe void ProcessMouseButton(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
             {

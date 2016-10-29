@@ -19,49 +19,41 @@ namespace WinApi.DxUtils.Composition
         private Visual m_visual;
         public WindowCompositor(int variant = -1) : base(variant) {}
 
-        public Target Target
-        {
-            get { return m_target; }
-            private set { m_target = value; }
-        }
+        public Target Target { get { return this.m_target; } private set { this.m_target = value; } }
 
-        public Visual Visual
-        {
-            get { return m_visual; }
-            private set { m_visual = value; }
-        }
+        public Visual Visual { get { return this.m_visual; } private set { this.m_visual = value; } }
 
         protected override void InitializeResources()
         {
-            EnsureDevice();
-            var opts = Options;
-            if (DeviceVariant > 1)
+            this.EnsureDevice();
+            var opts = this.Options;
+            if (this.DeviceVariant > 1)
             {
-                var device = (DesktopDevice) Device;
-                Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
-                Visual = new Visual2(device);
+                var device = (DesktopDevice) this.Device;
+                this.Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
+                this.Visual = new Visual2(device);
             }
-            if (DeviceVariant == 1)
+            if (this.DeviceVariant == 1)
             {
-                var device = (Device)Device;
-                Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
-                Visual = new Visual(device);
+                var device = (Device) this.Device;
+                this.Target = Target.FromHwnd(device, opts.Hwnd, opts.IsTopMost);
+                this.Visual = new Visual(device);
             }
         }
 
         public void SetContent(ComObject rootContent)
         {
-            if (Target != null)
+            if (this.Target != null)
             {
-                Visual.Content = rootContent;
-                Target.Root = Visual;
+                this.Visual.Content = rootContent;
+                this.Target.Root = this.Visual;
             }
         }
 
         protected override void DestroyResources()
         {
-            DisposableHelpers.DisposeAndSetNull(ref m_visual);
-            DisposableHelpers.DisposeAndSetNull(ref m_target);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_visual);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_target);
         }
     }
 
@@ -72,8 +64,8 @@ namespace WinApi.DxUtils.Composition
         protected override void InitializeResources()
         {
             base.InitializeResources();
-            SetContent(DxgiContainer.SwapChain);
-            Commit();
+            this.SetContent(this.DxgiContainer.SwapChain);
+            this.Commit();
         }
     }
 
@@ -84,8 +76,8 @@ namespace WinApi.DxUtils.Composition
 
         public WindowCompositorOptions(IntPtr hwnd, bool isTopMost = false)
         {
-            Hwnd = hwnd;
-            IsTopMost = isTopMost;
+            this.Hwnd = hwnd;
+            this.IsTopMost = isTopMost;
         }
     }
 }

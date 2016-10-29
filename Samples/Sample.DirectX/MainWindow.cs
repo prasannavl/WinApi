@@ -16,7 +16,7 @@ namespace Sample.DirectX
 
         protected override void OnCreate(ref CreateWindowPacket packet)
         {
-            m_dx.Initialize(Handle, GetClientSize());
+            this.m_dx.Initialize(this.Handle, this.GetClientSize());
             base.OnCreate(ref packet);
         }
 
@@ -24,14 +24,14 @@ namespace Sample.DirectX
         {
             var rand = new Random();
 
-            var size = GetClientSize();
+            var size = this.GetClientSize();
             var w = size.Width;
             var h = size.Height;
 
-            m_dx.EnsureInitialized();
+            this.m_dx.EnsureInitialized();
             try
             {
-                var context = m_dx.D2D.Context;
+                var context = this.m_dx.D2D.Context;
 
                 context.BeginDraw();
                 context.Clear(new RawColor4(0, 0, 0, 0f));
@@ -53,25 +53,24 @@ namespace Sample.DirectX
                 b.Dispose();
 
                 context.EndDraw();
-                m_dx.D3D.SwapChain.Present(1, 0);
+                this.m_dx.D3D.SwapChain.Present(1, 0);
                 this.Validate();
             }
             catch (SharpDXException ex)
             {
-                if (!m_dx.PerformResetOnException(ex))
-                    throw;
+                if (!this.m_dx.PerformResetOnException(ex)) throw;
             }
         }
 
         protected override void OnSize(ref SizePacket packet)
         {
-            m_dx.Resize(packet.Size);
+            this.m_dx.Resize(packet.Size);
             base.OnSize(ref packet);
         }
 
         protected override void Dispose(bool disposing)
         {
-            m_dx.Dispose();
+            this.m_dx.Dispose();
             base.Dispose(disposing);
         }
     }

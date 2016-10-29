@@ -6,8 +6,10 @@ namespace WinApi.Windows.Controls
 {
     public class Button : EventedWindowCore, IConstructionParamsProvider
     {
-        public static Lazy<WindowFactory> ClassFactory = new Lazy<WindowFactory>(() => WindowFactory.CreateForExistingClass("button"));
-        protected Button() { }
+        public static Lazy<WindowFactory> ClassFactory =
+            new Lazy<WindowFactory>(() => WindowFactory.CreateForExistingClass("button"));
+
+        protected Button() {}
 
         IConstructionParams IConstructionParamsProvider.GetConstructionParams() => new ButtonConstructionParams();
 
@@ -17,8 +19,9 @@ namespace WinApi.Windows.Controls
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
             WindowFactory factory = null, ButtonStyles? controlStyles = null)
         {
-            return (factory ?? ClassFactory.Value).CreateWindowEx(() => new Button(), text, styles, exStyles, x, y, width,
-                height, hParent, hMenu, (uint)(controlStyles ?? 0));
+            return (factory ?? ClassFactory.Value).CreateWindowEx(() => new Button(), text, styles, exStyles, x, y,
+                width,
+                height, hParent, hMenu, (uint) (controlStyles ?? 0));
         }
 
         public class ButtonConstructionParams : VisibleChildConstructionParams
@@ -59,7 +62,7 @@ namespace WinApi.Windows.Controls
             BS_MULTILINE = 0x00002000,
             BS_NOTIFY = 0x00004000,
             BS_FLAT = 0x00008000,
-            BS_RIGHTBUTTON = BS_LEFTTEXT,
+            BS_RIGHTBUTTON = BS_LEFTTEXT
         }
     }
 }

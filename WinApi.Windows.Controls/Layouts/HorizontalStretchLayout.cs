@@ -18,27 +18,27 @@ namespace WinApi.Windows.Controls.Layouts
 
         public void SetSize(ref Size size)
         {
-            if (ClientArea.GetSize() == size) return;
-            ClientArea.Width = size.Width;
-            ClientArea.Height = size.Height;
-            PerformLayout();
+            if (this.ClientArea.GetSize() == size) return;
+            this.ClientArea.Width = size.Width;
+            this.ClientArea.Height = size.Height;
+            this.PerformLayout();
         }
 
         public void PerformLayout()
         {
-            var clientArea = ClientArea;
-            var margin = Margin;
+            var clientArea = this.ClientArea;
+            var margin = this.Margin;
             var clientRect = clientArea;
             RectangleHelpers.PadInside(ref clientRect, ref margin);
-            var len = Children.Count;
+            var len = this.Children.Count;
 
             var childSize = clientRect.GetSize();
-            childSize.Width = childSize.Width / len;
+            childSize.Width = childSize.Width/len;
 
             var cx = clientRect.Left;
             var cy = clientRect.Top;
 
-            foreach (var windowCore in Children)
+            foreach (var windowCore in this.Children)
             {
                 windowCore.SetPosition(cx, cy, childSize.Width, childSize.Height);
                 cx += childSize.Width;

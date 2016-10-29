@@ -23,135 +23,124 @@ namespace WinApi.DxUtils.D3D11
 
         public D3D11MetaResource(D3D11MetaResourceOptions creationOpts)
         {
-            m_creationOpts = creationOpts;
+            this.m_creationOpts = creationOpts;
         }
 
         public IntPtr Hwnd { get; private set; }
         public Size Size { get; private set; }
 
-        public override Device1 Device1
-        {
-            get { return m_device; }
-            protected set { m_device = value; }
-        }
+        public override Device1 Device1 { get { return this.m_device; } protected set { this.m_device = value; } }
 
         public override DeviceContext1 Context1
         {
-            get { return m_context; }
-            protected set { m_context = value; }
+            get { return this.m_context; }
+            protected set { this.m_context = value; }
         }
 
         public override SharpDX.DXGI.Device2 DxgiDevice2
         {
-            get { return m_dxgiDevice; }
-            protected set { m_dxgiDevice = value; }
+            get { return this.m_dxgiDevice; }
+            protected set { this.m_dxgiDevice = value; }
         }
 
         public override Factory2 DxgiFactory2
         {
-            get { return m_dxgiFactory; }
-            protected set { m_dxgiFactory = value; }
+            get { return this.m_dxgiFactory; }
+            protected set { this.m_dxgiFactory = value; }
         }
 
         public override SwapChain1 SwapChain1
         {
-            get { return m_swapChain; }
-            protected set { m_swapChain = value; }
+            get { return this.m_swapChain; }
+            protected set { this.m_swapChain = value; }
         }
 
         public override RenderTargetView RenderTargetView
         {
-            get { return m_renderTargetView; }
-            protected set { m_renderTargetView = value; }
+            get { return this.m_renderTargetView; }
+            protected set { this.m_renderTargetView = value; }
         }
 
-        public override Adapter Adapter
-        {
-            get { return m_adapter; }
-            protected set { m_adapter = value; }
-        }
+        public override Adapter Adapter { get { return this.m_adapter; } protected set { this.m_adapter = value; } }
 
         public void Dispose()
         {
-            m_isDisposed = true;
+            this.m_isDisposed = true;
             GC.SuppressFinalize(this);
-            Destroy();
-            LinkedResources.Clear();
+            this.Destroy();
+            this.LinkedResources.Clear();
         }
 
         public void Initialize(IntPtr hwnd, Size size)
         {
-            CheckDisposed();
-            if (Device1 != null)
-                Destroy();
-            Hwnd = hwnd;
-            Size = GetValidatedSize(ref size);
-            ConnectRenderTargetView();
-            InvokeInitializedEvent();
+            this.CheckDisposed();
+            if (this.Device1 != null) this.Destroy();
+            this.Hwnd = hwnd;
+            this.Size = GetValidatedSize(ref size);
+            this.ConnectRenderTargetView();
+            this.InvokeInitializedEvent();
         }
 
         public void EnsureInitialized()
         {
-            CheckDisposed();
-            if (Device1 == null)
-                Initialize(Hwnd, Size);
+            this.CheckDisposed();
+            if (this.Device1 == null) this.Initialize(this.Hwnd, this.Size);
         }
 
         public void Resize(Size size)
         {
-            CheckDisposed();
-            Size = GetValidatedSize(ref size);
+            this.CheckDisposed();
+            this.Size = GetValidatedSize(ref size);
             try
             {
-                DisconnectLinkedResources();
-                DisconnectRenderTargetView();
-                DisposableHelpers.DisposeAndSetNull(ref m_renderTargetView);
+                this.DisconnectLinkedResources();
+                this.DisconnectRenderTargetView();
+                DisposableHelpers.DisposeAndSetNull(ref this.m_renderTargetView);
                 // Resize retaining other properties.
-                SwapChain1?.ResizeBuffers(0, Size.Width, Size.Height, Format.Unknown, SwapChainFlags.None);
-                ConnectRenderTargetView();
-                ConnectLinkedResources();
+                this.SwapChain1?.ResizeBuffers(0, this.Size.Width, this.Size.Height, Format.Unknown, SwapChainFlags.None);
+                this.ConnectRenderTargetView();
+                this.ConnectLinkedResources();
             }
             catch (SharpDXException ex)
             {
-                if (ErrorHelpers.ShouldResetDxgiForError(ex.Descriptor))
-                    Destroy();
+                if (ErrorHelpers.ShouldResetDxgiForError(ex.Descriptor)) this.Destroy();
                 else throw;
             }
         }
 
+        public void Destroy()
+        {
+            this.DisconnectLinkedResources();
+            DisposableHelpers.DisposeAndSetNull(ref this.m_renderTargetView);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_swapChain);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_context);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_dxgiFactory);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_adapter);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_dxgiDevice);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_device);
+            this.InvokeDestroyedEvent();
+        }
+
         ~D3D11MetaResource()
         {
-            Dispose();
+            this.Dispose();
         }
 
         private void CheckDisposed()
         {
-            if (m_isDisposed) throw new ObjectDisposedException(nameof(D3D11MetaResource));
-        }
-
-        public void Destroy()
-        {
-            DisconnectLinkedResources();
-            DisposableHelpers.DisposeAndSetNull(ref m_renderTargetView);
-            DisposableHelpers.DisposeAndSetNull(ref m_swapChain);
-            DisposableHelpers.DisposeAndSetNull(ref m_context);
-            DisposableHelpers.DisposeAndSetNull(ref m_dxgiFactory);
-            DisposableHelpers.DisposeAndSetNull(ref m_adapter);
-            DisposableHelpers.DisposeAndSetNull(ref m_dxgiDevice);
-            DisposableHelpers.DisposeAndSetNull(ref m_device);
-            InvokeDestroyedEvent();
+            if (this.m_isDisposed) throw new ObjectDisposedException(nameof(D3D11MetaResource));
         }
 
         protected override void CreateDevice()
         {
-            Device1 = D3D11MetaFactory.CreateD3DDevice1(m_creationOpts);
+            this.Device1 = D3D11MetaFactory.CreateD3DDevice1(this.m_creationOpts);
         }
 
         protected override void CreateSwapChain()
         {
-            EnsureDevice();
-            EnsureDxgiFactory();
-            SwapChain1 = D3D11MetaFactory.CreateSwapChain1(m_creationOpts, this);
+            this.EnsureDevice();
+            this.EnsureDxgiFactory();
+            this.SwapChain1 = D3D11MetaFactory.CreateSwapChain1(this.m_creationOpts, this);
         }
     }
 }

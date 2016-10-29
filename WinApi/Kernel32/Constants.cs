@@ -67,17 +67,17 @@ namespace WinApi.Kernel32
         /// <summary>
         ///     The standard input device. Initially, this is the console input buffer, CONIN$.
         /// </summary>
-        STD_INPUT_HANDLE = unchecked((int)(uint)-10),
+        STD_INPUT_HANDLE = unchecked((int) (uint) -10),
 
         /// <summary>
         ///     The standard output device. Initially, this is the active console screen buffer, CONOUT$.
         /// </summary>
-        STD_OUTPUT_HANDLE = unchecked((int)(uint)-11),
+        STD_OUTPUT_HANDLE = unchecked((int) (uint) -11),
 
         /// <summary>
         ///     The standard error device. Initially, this is the active console screen buffer, CONOUT$.
         /// </summary>
-        STD_ERROR_HANDLE = unchecked((int)(uint)-12)
+        STD_ERROR_HANDLE = unchecked((int) (uint) -12)
     }
 
     public enum SecurityImpersonationLevel

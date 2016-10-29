@@ -15,14 +15,14 @@ namespace WinApi.Windows
 
         protected EventLoopCore(object state)
         {
-            State = state;
+            this.State = state;
         }
 
         public int Run(WindowCore mainWindow = null)
         {
             Action destroyHandler = () => { MessageHelpers.PostQuitMessage(); };
             if (mainWindow != null) mainWindow.Destroyed += destroyHandler;
-            var res = RunCore();
+            var res = this.RunCore();
             // Technically, this can be avoided by setting the handler to auto disconnect.
             // However, this helps keep the mainWindow alive, and use this instead of 
             // GC.KeepAlive pattern.
@@ -89,12 +89,11 @@ namespace WinApi.Windows
             int res;
             while ((res = User32Methods.GetMessage(out msg, IntPtr.Zero, 0, 0)) > 0)
             {
-                if (Preprocess(ref msg))
+                if (this.Preprocess(ref msg))
                 {
                     User32Methods.TranslateMessage(ref msg);
-                    if (PostTranslate(ref msg))
-                        User32Methods.DispatchMessage(ref msg);
-                    PostProcess(ref msg);
+                    if (this.PostTranslate(ref msg)) User32Methods.DispatchMessage(ref msg);
+                    this.PostProcess(ref msg);
                 }
             }
             return res;
@@ -112,12 +111,11 @@ namespace WinApi.Windows
             do
             {
                 if (User32Helpers.PeekMessage(out msg, IntPtr.Zero, 0, 0, PeekMessageFlags.PM_REMOVE))
-                    if (Preprocess(ref msg))
+                    if (this.Preprocess(ref msg))
                     {
                         User32Methods.TranslateMessage(ref msg);
-                        if (PostTranslate(ref msg))
-                            User32Methods.DispatchMessage(ref msg);
-                        PostProcess(ref msg);
+                        if (this.PostTranslate(ref msg)) User32Methods.DispatchMessage(ref msg);
+                        this.PostProcess(ref msg);
                     }
             } while (msg.Value != quitMsg);
             return 0;

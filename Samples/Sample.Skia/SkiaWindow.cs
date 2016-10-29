@@ -58,12 +58,12 @@ namespace Sample.Skia
 
         protected override void OnPaint(ref PaintPacket packet)
         {
-            SkiaPainter.ProcessPaint(ref packet, m_pixelBuffer, OnSkiaPaint);
+            SkiaPainter.ProcessPaint(ref packet, this.m_pixelBuffer, this.OnSkiaPaint);
         }
 
         protected override void Dispose(bool disposing)
         {
-            m_pixelBuffer.Dispose();
+            this.m_pixelBuffer.Dispose();
             base.Dispose(disposing);
         }
     }

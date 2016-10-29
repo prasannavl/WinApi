@@ -12,49 +12,48 @@ namespace WinApi.Utils
         public int ImageWidth { get; private set; }
         public int ImageHeight { get; private set; }
 
-        ~NativePixelBuffer()
-        {
-            Dispose();
-        }
-
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            if (Handle != IntPtr.Zero)
+            if (this.Handle != IntPtr.Zero)
             {
-                Marshal.FreeHGlobal(Handle);
-                Handle = IntPtr.Zero;
-                BufferLength = 0;
-                ImageWidth = ImageHeight = 0;
+                Marshal.FreeHGlobal(this.Handle);
+                this.Handle = IntPtr.Zero;
+                this.BufferLength = 0;
+                this.ImageWidth = this.ImageHeight = 0;
             }
+        }
+
+        ~NativePixelBuffer()
+        {
+            this.Dispose();
         }
 
         public bool CheckSize(int imageWidth, int imageHeight)
         {
-            return imageWidth == ImageWidth && imageHeight == ImageHeight;
+            return (imageWidth == this.ImageWidth) && (imageHeight == this.ImageHeight);
         }
 
         public void EnsureSize(int imageWidth, int imageHeight)
         {
-            if (CheckSize(imageWidth, imageHeight)) return;
-            Resize(imageWidth, imageHeight);
+            if (this.CheckSize(imageWidth, imageHeight)) return;
+            this.Resize(imageWidth, imageHeight);
         }
 
         public void Resize(int imageWidth, int imageHeight)
         {
             var stride = 4*((imageWidth*32 + 31)/32);
-            var bufferLength = imageHeight * stride;
-            if (bufferLength != BufferLength)
+            var bufferLength = imageHeight*stride;
+            if (bufferLength != this.BufferLength)
             {
-                if (Handle != IntPtr.Zero)
-                    Marshal.FreeHGlobal(Handle);
-                Handle = Marshal.AllocHGlobal(bufferLength);
-                BufferLength = bufferLength;
+                if (this.Handle != IntPtr.Zero) Marshal.FreeHGlobal(this.Handle);
+                this.Handle = Marshal.AllocHGlobal(bufferLength);
+                this.BufferLength = bufferLength;
             }
 
-            Stride = stride;
-            ImageWidth = imageWidth;
-            ImageHeight = imageHeight;
+            this.Stride = stride;
+            this.ImageWidth = imageWidth;
+            this.ImageHeight = imageHeight;
         }
     }
 }

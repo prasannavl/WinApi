@@ -26,8 +26,7 @@ namespace WinApi.Kernel32
 
         public static bool IsWin8OrGreater(Version version = null)
         {
-            if (version == null)
-                version = GetVersion();
+            if (version == null) version = GetVersion();
             if (version.Major > 5)
             {
                 if ((version.Major > 6) || (version.Minor > 1)) return true;
@@ -37,8 +36,7 @@ namespace WinApi.Kernel32
 
         public static bool IsWin8Point1OrGreater(Version version = null)
         {
-            if (version == null)
-                version = GetVersion();
+            if (version == null) version = GetVersion();
             if (version.Major > 5)
             {
                 if ((version.Major > 6) || (version.Minor > 2)) return true;
@@ -48,8 +46,7 @@ namespace WinApi.Kernel32
 
         public static bool IsWin10OrGreater(Version version = null)
         {
-            if (version == null)
-                version = GetVersion();
+            if (version == null) version = GetVersion();
             return version.Major > 6;
         }
 

@@ -31,8 +31,7 @@ namespace WinApi.DxUtils.D2D1
             // Note: These have no impact on solution outside
             // of this project. This is only for internal testing
             // purposes
-            if (props.DebugLevel == 0)
-                props.DebugLevel = DebugLevel.Information;
+            if (props.DebugLevel == 0) props.DebugLevel = DebugLevel.Information;
 #endif
             return new D2D1MetaResource<IDxgi1Container>(props, null, null);
         }
@@ -63,8 +62,7 @@ namespace WinApi.DxUtils.D2D1
             // Note: These have no impact on solution outside
             // of this project. This is only for internal testing
             // purposes
-            if (props.DebugLevel == 0)
-                props.DebugLevel = DebugLevel.Information;
+            if (props.DebugLevel == 0) props.DebugLevel = DebugLevel.Information;
 #endif
             return new D2D1MetaResource<IDxgi1_2ContainerWithSwapChain>(props, D2D1Helper.ConnectContextToDxgiSwapChain,
                 D2D1Helper.DisconnectContextFromDxgiSwapChain);

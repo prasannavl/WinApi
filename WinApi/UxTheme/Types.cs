@@ -12,21 +12,21 @@ namespace WinApi.UxTheme
     {
         public Margins(int left = 0, int right = 0, int top = 0, int bottom = 0)
         {
-            Left = left;
-            Right = right;
-            Top = top;
-            Bottom = bottom;
+            this.Left = left;
+            this.Right = right;
+            this.Top = top;
+            this.Bottom = bottom;
         }
 
         public Margins(int x = 0, int y = 0)
         {
-            Left = Right = x;
-            Top = Bottom = y;
+            this.Left = this.Right = x;
+            this.Top = this.Bottom = y;
         }
 
         public Margins(int all = 0)
         {
-            Left = Right = Top = Bottom = all;
+            this.Left = this.Right = this.Top = this.Bottom = all;
         }
 
         public int Left, Right, Top, Bottom;
@@ -69,7 +69,7 @@ namespace WinApi.UxTheme
         WTNCA_NOMIRRORHELP = 0x00000008,
 
         /// <summary>
-        /// All valid bits
+        ///     All valid bits
         /// </summary>
         WTNCA_VALIDBITS = WTNCA_NODRAWCAPTION | WTNCA_NODRAWICON | WTNCA_NOMIRRORHELP | WTNCA_NOSYSMENU
     }

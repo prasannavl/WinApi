@@ -170,34 +170,24 @@ namespace WinApi.User32
             var len = (uint) inputs.Length;
             var size = Marshal.SizeOf<Input>();
             var gcHandle = GCHandle.Alloc(inputs, GCHandleType.Pinned);
-            try
-            {
-                return User32Methods.SendInput(len, gcHandle.AddrOfPinnedObject(), size);
-            }
-            finally
-            {
-                gcHandle.Free();
-            }
+            try { return User32Methods.SendInput(len, gcHandle.AddrOfPinnedObject(), size); }
+            finally { gcHandle.Free(); }
         }
 
         public static unsafe uint SendInput(ref Input input)
         {
-            fixed (Input* ptr = &input)
-                return User32Methods.SendInput(1, new IntPtr(ptr), Marshal.SizeOf<Input>());
+            fixed (Input* ptr = &input) return User32Methods.SendInput(1, new IntPtr(ptr), Marshal.SizeOf<Input>());
         }
 
         public static unsafe bool GetTitleBarInfo(IntPtr hwnd, ref TitleBarInfo pti)
         {
-            if (pti.Size == 0)
-                pti.Size = (uint) Marshal.SizeOf<TitleBarInfo>();
-            fixed (TitleBarInfo* ptr = &pti)
-                return User32Methods.GetTitleBarInfo(hwnd, new IntPtr(ptr));
+            if (pti.Size == 0) pti.Size = (uint) Marshal.SizeOf<TitleBarInfo>();
+            fixed (TitleBarInfo* ptr = &pti) return User32Methods.GetTitleBarInfo(hwnd, new IntPtr(ptr));
         }
 
         public static unsafe int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Point point)
         {
-            fixed (Point* ptr = &point)
-                return User32Methods.MapWindowPoints(hWndFrom, hWndTo, new IntPtr(ptr), 1);
+            fixed (Point* ptr = &point) return User32Methods.MapWindowPoints(hWndFrom, hWndTo, new IntPtr(ptr), 1);
         }
 
         public static unsafe int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, ref Rectangle rect)

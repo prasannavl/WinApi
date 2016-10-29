@@ -72,8 +72,7 @@ namespace WinApi.Gdi32
         public static unsafe int SetRgbBitsToDevice(IntPtr hdc, int width, int height, byte[] bits, int xSrc = 0,
             int ySrc = 0, int xDest = 0, int yDest = 0, bool isRgba = true, bool isImageTopDown = true)
         {
-            fixed (byte* ptr = &bits[0])
-            {
+            fixed (byte* ptr = &bits[0]) {
                 return SetRgbBitsToDevice(hdc, width, height, (IntPtr) ptr, xSrc, ySrc, xDest, yDest, isRgba);
             }
         }

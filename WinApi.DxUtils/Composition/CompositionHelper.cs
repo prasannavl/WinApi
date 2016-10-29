@@ -12,8 +12,7 @@ namespace WinApi.DxUtils.Composition
     {
         public static int GetVariantForPlatform(Version platformVersion = null)
         {
-            if (platformVersion == null)
-                platformVersion = Environment.OSVersion.Version;
+            if (platformVersion == null) platformVersion = Environment.OSVersion.Version;
             if (platformVersion.Major > 6) return 2;
             if (platformVersion.Major == 6)
             {
@@ -26,10 +25,7 @@ namespace WinApi.DxUtils.Composition
         public static ComObject CreateDevice(SharpDX.DXGI.Device dxgiDevice, int variant = -1)
         {
             if (variant == -1) variant = GetVariantForPlatform();
-            if (variant > 1)
-            {
-                return new DesktopDevice(dxgiDevice);
-            }
+            if (variant > 1) { return new DesktopDevice(dxgiDevice); }
             return variant == 1 ? new Device(dxgiDevice) : null;
         }
 
@@ -42,10 +38,7 @@ namespace WinApi.DxUtils.Composition
         public static Surface CreateSurface(ComObject device, int variant, int width, int height, Format pixelFormat,
             AlphaMode alphaMode)
         {
-            if (variant > 1)
-            {
-                return new Surface((DesktopDevice) device, width, height, pixelFormat, alphaMode);
-            }
+            if (variant > 1) { return new Surface((DesktopDevice) device, width, height, pixelFormat, alphaMode); }
             return variant == 1 ? new Surface((Device) device, width, height, pixelFormat, alphaMode) : null;
         }
     }

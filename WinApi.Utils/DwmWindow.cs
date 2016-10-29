@@ -16,7 +16,7 @@ namespace WinApi.Utils
 
         public DwmWindow()
         {
-            DwmHelper = new DwmWindowHelper(this);
+            this.DwmHelper = new DwmWindowHelper(this);
         }
 
         protected bool DrawCaptionIcon { get; set; }
@@ -25,38 +25,37 @@ namespace WinApi.Utils
 
         protected override void OnCreate(ref CreateWindowPacket packet)
         {
-            DwmHelper.Initialize(DrawCaptionIcon, DrawCaptionTitle, AllowSystemMenu);
+            this.DwmHelper.Initialize(this.DrawCaptionIcon, this.DrawCaptionTitle, this.AllowSystemMenu);
             base.OnCreate(ref packet);
         }
 
         public override void ClientToScreen(ref Rectangle clientRect, out Rectangle screenRect)
         {
             base.ClientToScreen(ref clientRect, out screenRect);
-            screenRect.Top += -DwmHelper.NcOutsetThickness.Top;
+            screenRect.Top += -this.DwmHelper.NcOutsetThickness.Top;
         }
 
         public override void ScreenToClient(ref Rectangle screenRect, out Rectangle clientRect)
         {
-            screenRect.Top -= -DwmHelper.NcOutsetThickness.Top;
+            screenRect.Top -= -this.DwmHelper.NcOutsetThickness.Top;
             base.ScreenToClient(ref screenRect, out clientRect);
         }
 
         protected override void OnActivate(ref ActivatePacket packet)
         {
-            DwmHelper.ApplyDwmConfig();
+            this.DwmHelper.ApplyDwmConfig();
             base.OnActivate(ref packet);
         }
 
         protected override void OnNcCalcSize(ref NcCalcSizePacket packet)
         {
-            if (DwmHelper.TryHandleNcCalcSize(ref packet))
-                return;
+            if (this.DwmHelper.TryHandleNcCalcSize(ref packet)) return;
             base.OnNcCalcSize(ref packet);
         }
 
         protected override void OnNcHitTest(ref NcHitTestPacket packet)
         {
-            packet.Result = DwmHelper.HitTestWithCaptionArea(packet.Point);
+            packet.Result = this.DwmHelper.HitTestWithCaptionArea(packet.Point);
         }
     }
 }

@@ -197,7 +197,8 @@ namespace WinApi.Kernel32
         public static extern bool SetFileAttributes(string lpFileName, FileAttributes dwFileAttributes);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
-        public static extern bool GetFileAttributesEx(string lpFileName, FileAttributeInfoLevel fInfoLevelId, out FileAttributeData lpFileInformation);
+        public static extern bool GetFileAttributesEx(string lpFileName, FileAttributeInfoLevel fInfoLevelId,
+            out FileAttributeData lpFileInformation);
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
         public static extern IntPtr CreateFile(string lpFileName,
@@ -218,6 +219,5 @@ namespace WinApi.Kernel32
             IntPtr hTemplateFile);
 
         #endregion
-
     }
 }

@@ -44,7 +44,7 @@ namespace Sample.Skia
     {
         protected override void OnSkiaPaint(SKSurface surface)
         {
-            var windowRect = GetWindowRect();
+            var windowRect = this.GetWindowRect();
             var clientRect = new Rectangle(windowRect.Width, windowRect.Height);
             var canvas = surface.Canvas;
             canvas.Clear(new SKColor(120, 50, 70, 200));
@@ -52,7 +52,7 @@ namespace Sample.Skia
             var str = "Hello there!";
             var textBounds = new SKRect();
             var m = textPainter.MeasureText(str, ref textBounds);
-            
+
             canvas.DrawText(str, (clientRect.Width - textBounds.Width)/2, (clientRect.Height - textBounds.Height)/2,
                 textPainter);
 

@@ -16,64 +16,62 @@ namespace WinApi.DxUtils.Component
         private ID3D11_1MetaResource m_d3D;
         public Size Size;
 
-        public ID3D11MetaResourceCore D3D => m_d3D;
+        public ID3D11MetaResourceCore D3D => this.m_d3D;
 
-        public bool IsInitialized => m_d3D?.Device != null;
+        public bool IsInitialized => this.m_d3D?.Device != null;
 
         public void Dispose()
         {
-            DisposableHelpers.DisposeAndSetNull(ref Compositor);
-            DisposableHelpers.DisposeAndSetNull(ref m_d3D);
+            DisposableHelpers.DisposeAndSetNull(ref this.Compositor);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_d3D);
         }
 
         public void Initialize(IntPtr hwnd, Size size, int directCompositionVariant = -1)
         {
-            if (IsInitialized)
-                Destroy();
-            Hwnd = hwnd;
-            Size = size;
-            m_compVariant = directCompositionVariant != -1
+            if (this.IsInitialized) this.Destroy();
+            this.Hwnd = hwnd;
+            this.Size = size;
+            this.m_compVariant = directCompositionVariant != -1
                 ? directCompositionVariant
                 : CompositionHelper.GetVariantForPlatform();
-            Create();
-            InitializeInternal();
+            this.Create();
+            this.InitializeInternal();
         }
 
         public void EnsureInitialized()
         {
-            if (!IsInitialized)
-                Initialize(Hwnd, Size, m_compVariant);
+            if (!this.IsInitialized) this.Initialize(this.Hwnd, this.Size, this.m_compVariant);
         }
 
         public void Resize(Size size)
         {
-            if ((m_compVariant > 0) && ((size.Width <= 0) || (size.Height <= 0))) return;
-            Size = size;
-            m_d3D?.Resize(size);
+            if ((this.m_compVariant > 0) && ((size.Width <= 0) || (size.Height <= 0))) return;
+            this.Size = size;
+            this.m_d3D?.Resize(size);
         }
 
         private void InitializeInternal()
         {
-            m_d3D.Initialize(Hwnd, Size);
-            if (m_compVariant > 0)
-                Compositor.Initialize(m_d3D,
-                    new WindowCompositorOptions(Hwnd));
+            this.m_d3D.Initialize(this.Hwnd, this.Size);
+            if (this.m_compVariant > 0)
+                this.Compositor.Initialize(this.m_d3D,
+                    new WindowCompositorOptions(this.Hwnd));
         }
 
         private void Create()
         {
             var d3dCreationFlags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded;
-            m_d3D = m_compVariant > 0
+            this.m_d3D = this.m_compVariant > 0
                 ? D3D11MetaFactory.CreateForComposition(creationFlags: d3dCreationFlags)
                 : D3D11MetaFactory.CreateForWindowTarget(creationFlags: d3dCreationFlags);
-            Compositor = new WindowSwapChainCompositor(m_compVariant);
+            this.Compositor = new WindowSwapChainCompositor(this.m_compVariant);
         }
 
         public bool PerformResetOnException(SharpDXException ex)
         {
             if (ErrorHelpers.ShouldResetDxgiForError(ex.Descriptor))
             {
-                m_d3D?.Destroy();
+                this.m_d3D?.Destroy();
                 return true;
             }
             return false;
@@ -81,8 +79,8 @@ namespace WinApi.DxUtils.Component
 
         public void Destroy()
         {
-            Compositor?.Destroy();
-            m_d3D?.Destroy();
+            this.Compositor?.Destroy();
+            this.m_d3D?.Destroy();
         }
     }
 }

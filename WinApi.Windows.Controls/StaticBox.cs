@@ -6,8 +6,10 @@ namespace WinApi.Windows.Controls
 {
     public class StaticBox : EventedWindowCore, IConstructionParamsProvider
     {
-        public static Lazy<WindowFactory> ClassFactory = new Lazy<WindowFactory>(() => WindowFactory.CreateForExistingClass("static"));
-        protected StaticBox() { }
+        public static Lazy<WindowFactory> ClassFactory =
+            new Lazy<WindowFactory>(() => WindowFactory.CreateForExistingClass("static"));
+
+        protected StaticBox() {}
 
         IConstructionParams IConstructionParamsProvider.GetConstructionParams() => new VisibleChildConstructionParams();
 
@@ -57,7 +59,7 @@ namespace WinApi.Windows.Controls
             SS_ENDELLIPSIS = 0x00004000,
             SS_PATHELLIPSIS = 0x00008000,
             SS_WORDELLIPSIS = 0x0000C000,
-            SS_ELLIPSISMASK = 0x0000C000,
+            SS_ELLIPSISMASK = 0x0000C000
         }
     }
 }

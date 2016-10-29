@@ -10,7 +10,7 @@ private:
 		MSG_WM_DESTROY(OnDestroy)
 		MSG_WM_PAINT(OnPaint)
 		MSG_WM_ERASEBKGND(OnEraseBkgnd)
-	END_MSG_MAP()
+		END_MSG_MAP()
 
 public:
 	DECLARE_WND_CLASS(L"AppWindow")

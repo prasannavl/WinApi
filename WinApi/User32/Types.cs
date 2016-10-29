@@ -9,6 +9,7 @@ namespace WinApi.User32
     public delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
 
     public delegate IntPtr GetMsgProc(int code, IntPtr wParam, IntPtr lParam);
+
     public delegate void TimerProc(IntPtr hWnd, uint uMsg, IntPtr nIdEvent, uint dwTickCountMillis);
 
     [StructLayout(LayoutKind.Sequential)]
@@ -32,10 +33,10 @@ namespace WinApi.User32
 
         public Rectangle(int left = 0, int top = 0, int right = 0, int bottom = 0)
         {
-            Left = left;
-            Top = top;
-            Right = right;
-            Bottom = bottom;
+            this.Left = left;
+            this.Top = top;
+            this.Right = right;
+            this.Bottom = bottom;
         }
 
         public Rectangle(int width = 0, int height = 0)
@@ -48,26 +49,18 @@ namespace WinApi.User32
 
         public Rectangle(int all = 0)
         {
-            Left = Right = Top = Bottom = all;
+            this.Left = this.Right = this.Top = this.Bottom = all;
         }
 
         public int Left, Top, Right, Bottom;
 
-        public int Width
-        {
-            get { return Right - Left; }
-            set { Right = Left + value; }
-        }
+        public int Width { get { return this.Right - this.Left; } set { this.Right = this.Left + value; } }
 
-        public int Height
-        {
-            get { return Bottom - Top; }
-            set { Bottom = Top + value; }
-        }
+        public int Height { get { return this.Bottom - this.Top; } set { this.Bottom = this.Top + value; } }
 
         public Size GetSize()
         {
-            return new Size(Width, Height);
+            return new Size(this.Width, this.Height);
         }
     }
 
@@ -83,8 +76,8 @@ namespace WinApi.User32
 
         public bool ShouldEraseBackground
         {
-            get { return EraseBackgroundValue > 0; }
-            set { EraseBackgroundValue = value ? 1 : 0; }
+            get { return this.EraseBackgroundValue > 0; }
+            set { this.EraseBackgroundValue = value ? 1 : 0; }
         }
     }
 
@@ -187,8 +180,8 @@ namespace WinApi.User32
         /// <param name="iMinAnimate">If non-zero and SPI_SETANIMATION is specified, enables minimize/restore animation.</param>
         public AnimationInfo(int iMinAnimate)
         {
-            Size = (uint) Marshal.SizeOf<AnimationInfo>();
-            MinAnimate = iMinAnimate;
+            this.Size = (uint) Marshal.SizeOf<AnimationInfo>();
+            this.MinAnimate = iMinAnimate;
         }
 
         /// <summary>
@@ -227,20 +220,30 @@ namespace WinApi.User32
     public struct MinMaxInfo
     {
         Point Reserved;
+
         /// <summary>
-        /// The maximized width (x member) and the maximized height (y member) of the window. For top-level windows, this value is based on the width of the primary monitor.
+        ///     The maximized width (x member) and the maximized height (y member) of the window. For top-level windows, this value
+        ///     is based on the width of the primary monitor.
         /// </summary>
         public Point MaxSize;
+
         /// <summary>
-        /// The position of the left side of the maximized window (x member) and the position of the top of the maximized window (y member). For top-level windows, this value is based on the position of the primary monitor.
+        ///     The position of the left side of the maximized window (x member) and the position of the top of the maximized
+        ///     window (y member). For top-level windows, this value is based on the position of the primary monitor.
         /// </summary>
         public Point MaxPosition;
+
         /// <summary>
-        /// The minimum tracking width (x member) and the minimum tracking height (y member) of the window. This value can be obtained programmatically from the system metrics SM_CXMINTRACK and SM_CYMINTRACK (see the GetSystemMetrics function).
+        ///     The minimum tracking width (x member) and the minimum tracking height (y member) of the window. This value can be
+        ///     obtained programmatically from the system metrics SM_CXMINTRACK and SM_CYMINTRACK (see the GetSystemMetrics
+        ///     function).
         /// </summary>
         public Point MinTrackSize;
+
         /// <summary>
-        /// The maximum tracking width (x member) and the maximum tracking height (y member) of the window. This value is based on the size of the virtual screen and can be obtained programmatically from the system metrics SM_CXMAXTRACK and SM_CYMAXTRACK (see the GetSystemMetrics function).
+        ///     The maximum tracking width (x member) and the maximum tracking height (y member) of the window. This value is based
+        ///     on the size of the virtual screen and can be obtained programmatically from the system metrics SM_CXMAXTRACK and
+        ///     SM_CYMAXTRACK (see the GetSystemMetrics function).
         /// </summary>
         public Point MaxTrackSize;
     }
@@ -291,19 +294,25 @@ namespace WinApi.User32
     public struct MonitorInfo
     {
         /// <summary>
-        /// The size of the structure, in bytes.
+        ///     The size of the structure, in bytes.
         /// </summary>
         public uint Size;
+
         /// <summary>
-        /// A RECT structure that specifies the display monitor rectangle, expressed in virtual-screen coordinates. Note that if the monitor is not the primary display monitor, some of the rectangle's coordinates may be negative values.
+        ///     A RECT structure that specifies the display monitor rectangle, expressed in virtual-screen coordinates. Note that
+        ///     if the monitor is not the primary display monitor, some of the rectangle's coordinates may be negative values.
         /// </summary>
         public Rectangle MonitorRect;
+
         /// <summary>
-        /// A RECT structure that specifies the work area rectangle of the display monitor, expressed in virtual-screen coordinates. Note that if the monitor is not the primary display monitor, some of the rectangle's coordinates may be negative values.
+        ///     A RECT structure that specifies the work area rectangle of the display monitor, expressed in virtual-screen
+        ///     coordinates. Note that if the monitor is not the primary display monitor, some of the rectangle's coordinates may
+        ///     be negative values.
         /// </summary>
         public Rectangle WorkRect;
+
         /// <summary>
-        /// A set of flags that represent attributes of the display monitor.
+        ///     A set of flags that represent attributes of the display monitor.
         /// </summary>
         public MonitorInfoFlag Flags;
     }

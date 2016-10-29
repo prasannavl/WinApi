@@ -13,57 +13,48 @@ namespace WinApi.DxUtils.Composition
         private Surface m_surface;
         public WindowSurfaceCompositor(int variant = -1) : base(variant) {}
 
-        public Surface Surface
-        {
-            get { return m_surface; }
-            set { m_surface = value; }
-        }
+        public Surface Surface { get { return this.m_surface; } set { this.m_surface = value; } }
 
-        public Size Size
-        {
-            get { return Options.Size; }
-            set { Options.Size = value; }
-        }
+        public Size Size { get { return this.Options.Size; } set { this.Options.Size = value; } }
 
         public void EnsureInitialized(Size size)
         {
-            EnsureInitialized();
-            if (Size != size)
-                Resize(size);
+            this.EnsureInitialized();
+            if (this.Size != size) this.Resize(size);
         }
 
         protected override void InitializeResources()
         {
             base.InitializeResources();
-            CreateSurface();
+            this.CreateSurface();
         }
 
         public void Resize(Size size)
         {
-            if (Options.Size != size)
+            if (this.Options.Size != size)
             {
-                Options.Size = size;
-                DestroySurface();
-                CreateSurface();
+                this.Options.Size = size;
+                this.DestroySurface();
+                this.CreateSurface();
             }
         }
 
         private void CreateSurface()
         {
-            var size = Options.Size;
-            Surface = CompositionHelper.CreateSurface(Device, DeviceVariant, size.Width, size.Height,
-                Options.PixelFormat, Options.AlphaMode);
-            SetContent(Surface);
+            var size = this.Options.Size;
+            this.Surface = CompositionHelper.CreateSurface(this.Device, this.DeviceVariant, size.Width, size.Height,
+                this.Options.PixelFormat, this.Options.AlphaMode);
+            this.SetContent(this.Surface);
         }
 
         private void DestroySurface()
         {
-            DisposableHelpers.DisposeAndSetNull(ref m_surface);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_surface);
         }
 
         protected override void DestroyResources()
         {
-            DestroySurface();
+            this.DestroySurface();
             base.DestroyResources();
         }
     }
@@ -78,9 +69,9 @@ namespace WinApi.DxUtils.Composition
         public WindowSurfaceCompositorOptions(IntPtr hwnd, Size size, Format format, AlphaMode mode,
             bool isTopMost = false) : base(hwnd, isTopMost)
         {
-            Size = size;
-            PixelFormat = format;
-            AlphaMode = mode;
+            this.Size = size;
+            this.PixelFormat = format;
+            this.AlphaMode = mode;
         }
     }
 }

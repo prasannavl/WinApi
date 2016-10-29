@@ -10,12 +10,12 @@ namespace WinApi.Extensions
     {
         public static int ToSafeInt32(this IntPtr ptr)
         {
-            return unchecked(IntPtr.Size > 4 ? (int)ptr.ToInt64() : ptr.ToInt32());
+            return unchecked(IntPtr.Size > 4 ? (int) ptr.ToInt64() : ptr.ToInt32());
         }
 
         public static uint ToSafeUInt32(this IntPtr ptr)
         {
-            return IntPtr.Size > 4 ? (uint)ptr.ToInt64() : (uint)ptr.ToInt32();
+            return IntPtr.Size > 4 ? (uint) ptr.ToInt64() : (uint) ptr.ToInt32();
         }
 
         public static void BreakInt64Into32(this IntPtr ptr, out int high32, out int low32)
@@ -86,7 +86,7 @@ namespace WinApi.Extensions
     {
         public static short Low(this int dword)
         {
-            return unchecked ((short)dword);
+            return unchecked ((short) dword);
         }
 
         public static int WithLow(this int dword, short low16)
@@ -111,7 +111,7 @@ namespace WinApi.Extensions
 
         public static int HighAsInt(this int dword)
         {
-            return dword >> 16 & 0xffff;
+            return (dword >> 16) & 0xffff;
         }
     }
 
@@ -119,7 +119,7 @@ namespace WinApi.Extensions
     {
         public static ushort Low(this uint dword)
         {
-            return (ushort)dword;
+            return (ushort) dword;
         }
 
         public static uint WithLow(this uint dword, ushort low16)
@@ -129,12 +129,12 @@ namespace WinApi.Extensions
 
         public static ushort High(this uint dword)
         {
-            return (ushort)(dword >> 16);
+            return (ushort) (dword >> 16);
         }
 
         public static uint WithHigh(this uint dword, ushort high16)
         {
-            return ((uint)high16 << 16) | dword.LowAsUInt();
+            return ((uint) high16 << 16) | dword.LowAsUInt();
         }
 
         public static uint LowAsUInt(this uint dword)
@@ -144,7 +144,7 @@ namespace WinApi.Extensions
 
         public static uint HighAsUInt(this uint dword)
         {
-            return dword >> 16 & 0xffff;
+            return (dword >> 16) & 0xffff;
         }
     }
 
@@ -185,7 +185,7 @@ namespace WinApi.Extensions
     {
         public static uint Low(this ulong qword)
         {
-            return (uint)qword;
+            return (uint) qword;
         }
 
         public static ulong WithLow(this ulong qword, uint low32)
@@ -195,22 +195,22 @@ namespace WinApi.Extensions
 
         public static uint High(this ulong qword)
         {
-            return (uint)(qword >> 32);
+            return (uint) (qword >> 32);
         }
 
         public static ulong WithHigh(this ulong qword, uint high32)
         {
-            return ((ulong)high32 << 32) | qword.LowAsULong();
+            return ((ulong) high32 << 32) | qword.LowAsULong();
         }
 
         public static ulong LowAsULong(this ulong qword)
         {
-            return qword & 0xffffffff;
+            return qword & 0xffff_ffff;
         }
 
         public static ulong HighAsULong(this ulong qword)
         {
-            return qword >> 32 & 0xffffffff;
+            return (qword >> 32) & 0xffff_ffff;
         }
     }
 }

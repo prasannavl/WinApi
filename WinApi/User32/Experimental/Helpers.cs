@@ -22,10 +22,7 @@ namespace WinApi.User32.Experimental
                 };
                 User32ExperimentalMethods.SetWindowCompositionAttribute(hwnd, ref data);
             }
-            finally
-            {
-                Marshal.FreeHGlobal(accentPtr);
-            }
+            finally { Marshal.FreeHGlobal(accentPtr); }
         }
     }
 }

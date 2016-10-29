@@ -27,10 +27,10 @@ namespace Sample.SimpleWindow
         protected override void OnPaint(ref PaintPacket packet)
         {
             PaintStruct ps;
-            var hdc = BeginPaint(out ps);
+            var hdc = this.BeginPaint(out ps);
             User32Methods.FillRect(hdc, ref ps.PaintRect,
                 Gdi32Helpers.GetStockObject(StockObject.WHITE_BRUSH));
-            EndPaint(ref ps);
+            this.EndPaint(ref ps);
             base.OnPaint(ref packet);
         }
 

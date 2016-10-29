@@ -16,7 +16,7 @@ namespace WinApi.User32
 
         public KeyboardInputState(uint value)
         {
-            Value = value;
+            this.Value = value;
         }
 
         /// <summary>
@@ -24,31 +24,31 @@ namespace WinApi.User32
         ///     result of the user holding down the key. If the keystroke is held long enough, multiple messages are sent. However,
         ///     the repeat count is not cumulative.
         /// </summary>
-        public uint RepeatCount => Value & 0x0000ffff;
+        public uint RepeatCount => this.Value & 0x0000ffff;
 
-        public uint ScanCode => (Value >> 16) & 0x000000ff;
+        public uint ScanCode => (this.Value >> 16) & 0x000000ff;
 
         /// <summary>
         ///     Indicates whether the key is an extended key, such as the right-hand ALT and CTRL keys that appear on an enhanced
         ///     101- or 102-key keyboard. The value is 1 if it is an extended key; otherwise, it is 0.
         /// </summary>
-        public bool IsExtendedKey => unchecked(((int) Value >> 24) & 0x1) == 1;
+        public bool IsExtendedKey => unchecked(((int) this.Value >> 24) & 0x1) == 1;
 
         /// <summary>
         ///     The value is 1 if the ALT key is down while the key is pressed; it is 0 if the WM_SYSKEYDOWN message is posted to
         ///     the active window because no window has the keyboard focus.
         /// </summary>
-        public bool IsContextual => unchecked(((int) Value >> 29) & 0x1) == 1;
+        public bool IsContextual => unchecked(((int) this.Value >> 29) & 0x1) == 1;
 
         /// <summary>
         ///     The value is 1 if the key is down before the message is sent, or it is 0 if the key is up.
         /// </summary>
-        public bool IsPreviousKeyStatePressed => unchecked(((int) Value >> 30) & 0x1) == 1;
+        public bool IsPreviousKeyStatePressed => unchecked(((int) this.Value >> 30) & 0x1) == 1;
 
         /// <summary>
         ///     The value is 1 if the key is being released, or it is 0 if the key is being pressed.
         /// </summary>
-        public bool IsKeyUpTransition => unchecked(((int) Value >> 31) & 0x1) == 1;
+        public bool IsKeyUpTransition => unchecked(((int) this.Value >> 31) & 0x1) == 1;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -60,11 +60,11 @@ namespace WinApi.User32
 
         public uint WParam
         {
-            get { return ((uint) High << 16) | Low; }
+            get { return ((uint) this.High << 16) | this.Low; }
             set
             {
-                Low = (ushort) value;
-                High = (ushort) (value >> 16);
+                this.Low = (ushort) value;
+                this.High = (ushort) (value >> 16);
             }
         }
     }
@@ -91,20 +91,17 @@ namespace WinApi.User32
 
         public VirtualKey Key
         {
-            get { return (VirtualKey) VirtualKeyCode; }
-            set { VirtualKeyCode = (ushort) value; }
+            get { return (VirtualKey) this.VirtualKeyCode; }
+            set { this.VirtualKeyCode = (ushort) value; }
         }
     }
 
     [StructLayout(LayoutKind.Explicit)]
     public struct InputPacket
     {
-        [FieldOffset(0)]
-        public MouseInput MouseInput;
-        [FieldOffset(0)]
-        public KeyboardInput KeyboardInput;
-        [FieldOffset(0)]
-        public HardwareInput HardwareInput;
+        [FieldOffset(0)] public MouseInput MouseInput;
+        [FieldOffset(0)] public KeyboardInput KeyboardInput;
+        [FieldOffset(0)] public HardwareInput HardwareInput;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -118,7 +115,7 @@ namespace WinApi.User32
             input = new Input
             {
                 Type = InputType.INPUT_HARDWARE,
-                Packet = new InputPacket()
+                Packet = new InputPacket
                 {
                     HardwareInput = new HardwareInput
                     {
@@ -141,21 +138,19 @@ namespace WinApi.User32
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
-                Packet = new InputPacket()
+                Packet = new InputPacket
                 {
                     KeyboardInput =
                     {
                         Time = timestampMillis,
                         Flags = KeyboardInputFlags.KEYEVENTF_SCANCODE,
                         ScanCode = scanCode,
-                        VirtualKeyCode = 0,
+                        VirtualKeyCode = 0
                     }
                 }
             };
-            if (isKeyUp)
-                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
-            if (isExtendedKey)
-                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_EXTENDEDKEY;
+            if (isKeyUp) input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
+            if (isExtendedKey) input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_EXTENDEDKEY;
         }
 
         public static void InitKeyboardInput(out Input input, char charCode, bool isKeyUp, uint timestampMillis = 0)
@@ -163,19 +158,18 @@ namespace WinApi.User32
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
-                Packet = new InputPacket()
+                Packet = new InputPacket
                 {
                     KeyboardInput =
                     {
                         Time = timestampMillis,
                         Flags = KeyboardInputFlags.KEYEVENTF_UNICODE,
                         ScanCode = charCode,
-                        VirtualKeyCode = 0,
+                        VirtualKeyCode = 0
                     }
                 }
             };
-            if (isKeyUp)
-                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
+            if (isKeyUp) input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
         }
 
         public static void InitKeyboardInput(out Input input, VirtualKey key, bool isKeyUp,
@@ -184,19 +178,18 @@ namespace WinApi.User32
             input = new Input
             {
                 Type = InputType.INPUT_KEYBOARD,
-                Packet = new InputPacket()
+                Packet = new InputPacket
                 {
                     KeyboardInput =
                     {
                         Time = timestampMillis,
                         Key = key,
                         ScanCode = 0,
-                        Flags = 0,
+                        Flags = 0
                     }
                 }
             };
-            if (isKeyUp)
-                input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
+            if (isKeyUp) input.Packet.KeyboardInput.Flags |= KeyboardInputFlags.KEYEVENTF_KEYUP;
         }
 
         public static void InitMouseInput(out Input input, int x, int y, MouseInputFlags flags, uint data = 0,
@@ -205,7 +198,7 @@ namespace WinApi.User32
             input = new Input
             {
                 Type = InputType.INPUT_MOUSE,
-                Packet = new InputPacket()
+                Packet = new InputPacket
                 {
                     MouseInput =
                     {
@@ -213,7 +206,7 @@ namespace WinApi.User32
                         X = x,
                         Y = y,
                         Data = data,
-                        Flags = flags,
+                        Flags = flags
                     }
                 }
             };
@@ -234,31 +227,27 @@ namespace WinApi.User32
 
         public KeyState(short value)
         {
-            Value = value;
+            this.Value = value;
         }
 
         public bool IsPressed
         {
             // Note: The boolean check is performed on int, not short.
-            get { return (Value & 0x8000) > 0; }
+            get { return (this.Value & 0x8000) > 0; }
             set
             {
-                if (value)
-                    Value = unchecked ((short) (Value | 0x8000));
-                else
-                    Value = unchecked ((short) (Value & 0x7fff));
+                if (value) this.Value = unchecked ((short) (this.Value | 0x8000));
+                else this.Value = unchecked ((short) (this.Value & 0x7fff));
             }
         }
 
         public bool IsToggled
         {
-            get { return (Value & 0x1) == 1; }
+            get { return (this.Value & 0x1) == 1; }
             set
             {
-                if (value)
-                    Value = unchecked ((short) (Value | 0x1));
-                else
-                    Value = unchecked ((short) (Value & 0xfffe));
+                if (value) this.Value = unchecked ((short) (this.Value | 0x1));
+                else this.Value = unchecked ((short) (this.Value & 0xfffe));
             }
         }
     }

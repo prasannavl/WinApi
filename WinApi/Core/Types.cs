@@ -15,21 +15,18 @@ namespace WinApi.Core
 
         public bool Equals(Point other)
         {
-            return (X == other.X) && (Y == other.Y);
+            return (this.X == other.X) && (this.Y == other.Y);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Point && Equals((Point) obj);
+            return obj is Point && this.Equals((Point) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (X*397) ^ Y;
-            }
+            unchecked { return (this.X*397) ^ this.Y; }
         }
 
         public int X, Y;
@@ -48,28 +45,26 @@ namespace WinApi.Core
     [StructLayout(LayoutKind.Sequential)]
     public struct Size
     {
-        public Size(int width, int height) {
+        public Size(int width, int height)
+        {
             this.Width = width;
             this.Height = height;
         }
 
         public bool Equals(Size other)
         {
-            return (Width == other.Width) && (Height == other.Height);
+            return (this.Width == other.Width) && (this.Height == other.Height);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Size && Equals((Size) obj);
+            return obj is Size && this.Equals((Size) obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                return (Width*397) ^ Height;
-            }
+            unchecked { return (this.Width*397) ^ this.Height; }
         }
 
         public int Width;
@@ -89,48 +84,58 @@ namespace WinApi.Core
     public enum HResult : uint
     {
         /// <summary>
-        /// Operation successful
+        ///     Operation successful
         /// </summary>
         S_OK = 0x00000000,
+
         /// <summary>
-        /// Not implemented
+        ///     Not implemented
         /// </summary>
         E_NOTIMPL = 0x80004001,
+
         /// <summary>
-        /// No such interface supported
+        ///     No such interface supported
         /// </summary>
         E_NOINTERFACE = 0x80004002,
+
         /// <summary>
-        /// Pointer that is not valid
+        ///     Pointer that is not valid
         /// </summary>
         E_POINTER = 0x80004003,
+
         /// <summary>
-        /// Operation aborted
+        ///     Operation aborted
         /// </summary>
         E_ABORT = 0x80004004,
+
         /// <summary>
-        /// Unspecified failure
+        ///     Unspecified failure
         /// </summary>
         E_FAIL = 0x80004005,
+
         /// <summary>
-        /// Unexpected failure
+        ///     Unexpected failure
         /// </summary>
         E_UNEXPECTED = 0x8000FFFF,
+
         /// <summary>
-        /// General access denied error
+        ///     General access denied error
         /// </summary>
         E_ACCESSDENIED = 0x80070005,
+
         /// <summary>
-        /// Handle that is not valid
+        ///     Handle that is not valid
         /// </summary>
         E_HANDLE = 0x80070006,
+
         /// <summary>
-        /// Failed to allocate necessary memory
+        ///     Failed to allocate necessary memory
         /// </summary>
         E_OUTOFMEMORY = 0x8007000E,
+
         /// <summary>
-        /// One or more arguments are not valid
+        ///     One or more arguments are not valid
         /// </summary>
-        E_INVALIDARG = 0x80070057,
+        E_INVALIDARG = 0x80070057
     }
 }

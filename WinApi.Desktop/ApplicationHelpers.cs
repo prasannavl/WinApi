@@ -5,9 +5,6 @@ namespace WinApi.Desktop
 {
     public static class ApplicationHelpers
     {
-        public static WindowExceptionHandler DefaultWindowExceptionHandler { get; private set; }
-        public static UnhandledExceptionEventHandler DefaultUnhandledExceptionHandler { get; private set; }
-
         static ApplicationHelpers()
         {
             DefaultUnhandledExceptionHandler =
@@ -22,12 +19,15 @@ namespace WinApi.Desktop
                     }
                 };
 
-            DefaultWindowExceptionHandler = (ex) =>
+            DefaultWindowExceptionHandler = ex =>
             {
                 ShowCriticalError(ex.InnerException);
                 ex.SetHandled();
             };
         }
+
+        public static WindowExceptionHandler DefaultWindowExceptionHandler { get; }
+        public static UnhandledExceptionEventHandler DefaultUnhandledExceptionHandler { get; }
 
         public static void SetupDefaultExceptionHandlers()
         {
@@ -53,7 +53,7 @@ namespace WinApi.Desktop
             else
             {
                 msg = $"{Environment.NewLine}[CRITICAL] {message}{Environment.NewLine}{Environment.NewLine}" +
-                      $"{exceptionObj.ToString()}{Environment.NewLine}";
+                      $"{exceptionObj}{Environment.NewLine}";
             }
             Console.Error.WriteLine(msg);
         }

@@ -567,8 +567,9 @@ namespace WinApi.User32
         // GetWindowLongPtr directly
         public static IntPtr GetWindowLongPtr(IntPtr hwnd, int nIndex)
         {
-            return IntPtr.Size > 4 ? GetWindowLongPtr_x64(hwnd, nIndex) : 
-                new IntPtr(GetWindowLong(hwnd, nIndex));
+            return IntPtr.Size > 4
+                ? GetWindowLongPtr_x64(hwnd, nIndex)
+                : new IntPtr(GetWindowLong(hwnd, nIndex));
         }
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
@@ -601,8 +602,9 @@ namespace WinApi.User32
 
         public static IntPtr GetClassLongPtr(IntPtr hwnd, int nIndex)
         {
-            return IntPtr.Size > 4 ? GetClassLongPtr_x64(hwnd, nIndex) :
-                new IntPtr(unchecked((int)GetClassLong(hwnd, nIndex)));
+            return IntPtr.Size > 4
+                ? GetClassLongPtr_x64(hwnd, nIndex)
+                : new IntPtr(unchecked((int) GetClassLong(hwnd, nIndex)));
         }
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
@@ -616,7 +618,7 @@ namespace WinApi.User32
         {
             return IntPtr.Size > 4
                 ? SetClassLongPtr_x64(hWnd, nIndex, dwNewLong)
-                : new IntPtr(unchecked((int)SetClassLong(hWnd, nIndex, dwNewLong.ToInt32())));
+                : new IntPtr(unchecked((int) SetClassLong(hWnd, nIndex, dwNewLong.ToInt32())));
         }
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]

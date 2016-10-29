@@ -20,32 +20,28 @@ namespace WinApi.DxUtils.D3D11
 
         protected void EnsureDxgiDevice()
         {
-            if (DxgiDevice == null)
-                CreateDxgiDevice();
+            if (this.DxgiDevice == null) this.CreateDxgiDevice();
         }
 
         protected abstract void CreateDxgiDevice();
 
         protected void EnsureAdapter()
         {
-            if (Adapter == null)
-                CreateAdapter();
+            if (this.Adapter == null) this.CreateAdapter();
         }
 
         protected abstract void CreateAdapter();
 
         protected void EnsureDxgiFactory()
         {
-            if (DxgiFactory == null)
-                CreateDxgiFactory();
+            if (this.DxgiFactory == null) this.CreateDxgiFactory();
         }
 
         protected abstract void CreateDxgiFactory();
 
         protected void EnsureDevice()
         {
-            if (Device == null)
-                CreateDevice();
+            if (this.Device == null) this.CreateDevice();
         }
 
         protected abstract void CreateDevice();
@@ -54,10 +50,10 @@ namespace WinApi.DxUtils.D3D11
     // ReSharper disable once InconsistentNaming
     public abstract class D3D11Dxgi1_2ContainerCore : D3D11Dxgi1ContainerCore, IDxgi1_2Container
     {
-        public override Device Device => Device1;
+        public override Device Device => this.Device1;
         public virtual Device1 Device1 { get; protected set; }
-        public override Factory DxgiFactory => DxgiFactory2;
-        public override SharpDX.DXGI.Device DxgiDevice => DxgiDevice2;
+        public override Factory DxgiFactory => this.DxgiFactory2;
+        public override SharpDX.DXGI.Device DxgiDevice => this.DxgiDevice2;
 
         public virtual Factory2 DxgiFactory2 { get; protected set; }
         public virtual SharpDX.DXGI.Device2 DxgiDevice2 { get; protected set; }

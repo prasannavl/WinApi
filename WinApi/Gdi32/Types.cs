@@ -224,14 +224,14 @@ namespace WinApi.Gdi32
         DKGRAY_BRUSH = 3,
         BLACK_BRUSH = 4,
         NULL_BRUSH = 5,
-        HOLLOW_BRUSH = NULL_BRUSH,
+        HOLLOW_BRUSH = NULL_BRUSH
     }
 
     public enum StockPen
     {
         WHITE_PEN = 6,
         BLACK_PEN = 7,
-        NULL_PEN = 8,
+        NULL_PEN = 8
     }
 
     public enum StockFont
@@ -242,7 +242,7 @@ namespace WinApi.Gdi32
         SYSTEM_FONT = 13,
         DEVICE_DEFAULT_FONT = 14,
         SYSTEM_FIXED_FONT = 16,
-        DEFAULT_GUI_FONT = 17,
+        DEFAULT_GUI_FONT = 17
     }
 
     public enum DcRegionType
@@ -250,7 +250,7 @@ namespace WinApi.Gdi32
         Clip = 1,
         Meta = 2,
         IntersectedMetaClip = 3,
-        System = 4,
+        System = 4
     }
 
     [Flags]
@@ -310,7 +310,6 @@ namespace WinApi.Gdi32
         /// <summary>
         ///     Prevents the bitmap from being mirrored.
         /// </summary>
-        NOMIRRORBITMAP = unchecked((int)0x80000000)
+        NOMIRRORBITMAP = unchecked((int) 0x80000000)
     }
-
 }

@@ -22,16 +22,11 @@ namespace WinApi.Windows.Helpers
                     $"\n\n{errorObject?.ToString() ?? "No additional information available."}",
                     title, flags);
             }
-            var exMessage = (ex.Message ?? "No information message available.");
+            var exMessage = ex.Message ?? "No information message available.";
             string msg;
-            if (infoMessage != null)
-            {
-                msg = infoMessage + "\n\n" + exMessage;
-            }
+            if (infoMessage != null) { msg = infoMessage + "\n\n" + exMessage; }
             else
-            {
-                msg = defaultInfoMessage + "\n\n" + exMessage;
-            }
+            { msg = defaultInfoMessage + "\n\n" + exMessage; }
             return User32Helpers.MessageBox(parentHwnd,
                 $"{msg}" +
                 $"\n\nStackTrace:\n\n{ex.StackTrace}",

@@ -24,24 +24,21 @@ namespace WinApi.DxUtils.D3D11
 
         protected void EnsureSwapChain()
         {
-            if (SwapChain == null)
-                CreateSwapChain();
+            if (this.SwapChain == null) this.CreateSwapChain();
         }
 
         protected abstract void CreateSwapChain();
 
         protected void EnsureContext()
         {
-            if (Context == null)
-                CreateContext();
+            if (this.Context == null) this.CreateContext();
         }
 
         protected abstract void CreateContext();
 
         protected void EnsureRenderTargetView()
         {
-            if (RenderTargetView == null)
-                CreateRenderTargetView();
+            if (this.RenderTargetView == null) this.CreateRenderTargetView();
         }
 
         protected abstract void CreateRenderTargetView();
@@ -50,13 +47,12 @@ namespace WinApi.DxUtils.D3D11
     // ReSharper disable once InconsistentNaming
     public abstract class D3D11_1ContainerCore : D3D11ContainerCore, IDxgi1_2ContainerWithSwapChain
     {
-        public override Factory DxgiFactory => DxgiFactory2;
-        public override SharpDX.DXGI.Device DxgiDevice => DxgiDevice2;
-
-        public override DeviceContext Context => Context1;
-        public override SwapChain SwapChain => SwapChain1;
+        public override DeviceContext Context => this.Context1;
 
         public virtual DeviceContext1 Context1 { get; protected set; }
+        public override Factory DxgiFactory => this.DxgiFactory2;
+        public override SharpDX.DXGI.Device DxgiDevice => this.DxgiDevice2;
+        public override SwapChain SwapChain => this.SwapChain1;
         public virtual SwapChain1 SwapChain1 { get; protected set; }
     }
 
@@ -65,49 +61,48 @@ namespace WinApi.DxUtils.D3D11
     {
         protected override void CreateDxgiDevice()
         {
-            EnsureDevice();
-            DxgiDevice2 = Device1.QueryInterface<SharpDX.DXGI.Device2>();
+            this.EnsureDevice();
+            this.DxgiDevice2 = this.Device1.QueryInterface<SharpDX.DXGI.Device2>();
         }
 
         protected override void CreateAdapter()
         {
-            EnsureDxgiDevice();
-            Adapter = DxgiDevice2.GetParent<Adapter>();
+            this.EnsureDxgiDevice();
+            this.Adapter = this.DxgiDevice2.GetParent<Adapter>();
         }
 
         protected override void CreateDxgiFactory()
         {
-            EnsureAdapter();
-            DxgiFactory2 = Adapter.GetParent<Factory2>();
+            this.EnsureAdapter();
+            this.DxgiFactory2 = this.Adapter.GetParent<Factory2>();
         }
 
         protected override void CreateContext()
         {
-            EnsureDevice();
-            Context1 = Device1.ImmediateContext1;
+            this.EnsureDevice();
+            this.Context1 = this.Device1.ImmediateContext1;
         }
 
         protected override void CreateRenderTargetView()
         {
-            EnsureDevice();
-            EnsureSwapChain();
-            using (var backBuffer = SwapChain1.GetBackBuffer<Texture2D>(0))
-            {
-                RenderTargetView = new RenderTargetView(Device1, backBuffer);
+            this.EnsureDevice();
+            this.EnsureSwapChain();
+            using (var backBuffer = this.SwapChain1.GetBackBuffer<Texture2D>(0)) {
+                this.RenderTargetView = new RenderTargetView(this.Device1, backBuffer);
             }
         }
 
         protected void ConnectRenderTargetView()
         {
-            EnsureContext();
-            EnsureRenderTargetView();
-            Context1.OutputMerger.SetRenderTargets(RenderTargetView);
+            this.EnsureContext();
+            this.EnsureRenderTargetView();
+            this.Context1.OutputMerger.SetRenderTargets(this.RenderTargetView);
         }
 
         protected void DisconnectRenderTargetView()
         {
-            if (Context == null) return;
-            Context1.OutputMerger.SetRenderTargets((RenderTargetView) null);
+            if (this.Context == null) return;
+            this.Context1.OutputMerger.SetRenderTargets((RenderTargetView) null);
         }
     }
 }

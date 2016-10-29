@@ -4,9 +4,9 @@
 #include <iostream>
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-	PWSTR pCmdLine, int nCmdShow);
+                    PWSTR pCmdLine, int nCmdShow);
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam,
-	LPARAM lParam);
+                            LPARAM lParam);
 
 int wmain()
 {
@@ -14,9 +14,9 @@ int wmain()
 }
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-	PWSTR pCmdLine, int nCmdShow)
+                    PWSTR pCmdLine, int nCmdShow)
 {
-	WNDCLASSEX wc = { 0 };
+	WNDCLASSEX wc = {0};
 	wc.hInstance = hInstance;
 	wc.lpszClassName = L"MainWindow";
 	wc.cbSize = sizeof(WNDCLASSEX);
@@ -31,8 +31,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return regRes;
 	}
 	auto hwnd = CreateWindowEx(0, wc.lpszClassName, L"Hello",
-		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-		CW_USEDEFAULT, nullptr, nullptr, hInstance, nullptr);
+	                           WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+	                           CW_USEDEFAULT, nullptr, nullptr, hInstance, nullptr);
 	if (hwnd == nullptr)
 	{
 		std::cerr << "window couldn't be created" << std::endl;

@@ -14,10 +14,10 @@ namespace WinApi.UxTheme
             WindowThemeNcAttributeFlags mask,
             WindowThemeNcAttributeFlags attributes)
         {
-            var opts = new WindowThemeAttributeOptions()
+            var opts = new WindowThemeAttributeOptions
             {
-                Mask = (uint)mask,
-                Flags = (uint)attributes
+                Mask = (uint) mask,
+                Flags = (uint) attributes
             };
             return UxThemeMethods.SetWindowThemeAttribute(hwnd, WindowThemeAttributeType.WTA_NONCLIENT,
                 new IntPtr(&opts), (uint) Marshal.SizeOf<WindowThemeAttributeOptions>());

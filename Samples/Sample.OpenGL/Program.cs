@@ -60,7 +60,7 @@ namespace Sample.OpenGL
         protected override void OnGlPaint(ref PaintStruct ps)
         {
             Gl.Clear(ClearBufferMask.ColorBufferBit);
-            var size = GetClientSize();
+            var size = this.GetClientSize();
             Gl.Viewport(0, 0, size.Width, size.Height);
             Gl.Begin(PrimitiveType.Triangles);
             Gl.Color3(1.0f, 0.0f, 0.0f);
@@ -70,7 +70,7 @@ namespace Sample.OpenGL
             Gl.Color3(0.0f, 0.0f, 1.0f);
             Gl.Vertex2(1.0f, 0.0f);
             Gl.End();
-            DeviceContext.SwapBuffers();
+            this.DeviceContext.SwapBuffers();
         }
     }
 }

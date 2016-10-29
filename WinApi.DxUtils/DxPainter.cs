@@ -25,8 +25,7 @@ namespace WinApi.DxUtils
             }
             catch (SharpDXException ex)
             {
-                if (!resource.PerformResetOnException(ex))
-                    throw;
+                if (!resource.PerformResetOnException(ex)) throw;
             }
         }
 
@@ -45,8 +44,7 @@ namespace WinApi.DxUtils
             }
             catch (SharpDXException ex)
             {
-                if (!resource.PerformResetOnException(ex))
-                    throw;
+                if (!resource.PerformResetOnException(ex)) throw;
             }
         }
 
@@ -64,8 +62,7 @@ namespace WinApi.DxUtils
             {
                 var context = resource.D2D.Context;
                 context.BeginDraw();
-                if (clearColorBeforeClip.HasValue)
-                    context.Clear(clearColorBeforeClip.Value);
+                if (clearColorBeforeClip.HasValue) context.Clear(clearColorBeforeClip.Value);
                 context.PushAxisAlignedClip(clip,
                     AntialiasMode.Aliased);
                 handler(context);
@@ -76,8 +73,7 @@ namespace WinApi.DxUtils
             }
             catch (SharpDXException ex)
             {
-                if (!resource.PerformResetOnException(ex))
-                    throw;
+                if (!resource.PerformResetOnException(ex)) throw;
             }
         }
     }

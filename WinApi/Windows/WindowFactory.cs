@@ -9,12 +9,12 @@ namespace WinApi.Windows
 {
     public class WindowFactory
     {
-        public delegate void ClassInfoMutator(ref WindowClassExBlittable classInfo);
-
         public static WindowProc DefWindowProc = User32Methods.DefWindowProc;
         // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly WindowProc m_classInitializerProcRef;
         private readonly WindowProc m_windowProc;
+
+        public delegate void ClassInfoMutator(ref WindowClassExBlittable classInfo);
 
         public WindowFactory(string name, WindowClassStyles styles, IntPtr hInstance, IntPtr hIcon, IntPtr hCursor,
             IntPtr hBgBrush, WindowProc wndProc)
@@ -22,11 +22,11 @@ namespace WinApi.Windows
             var cache = Cache.Instance;
             var className = name ?? Guid.NewGuid().ToString();
 
-            ClassName = className;
-            InstanceHandle = hInstance;
-            m_windowProc = wndProc ?? DefWindowProc;
+            this.ClassName = className;
+            this.InstanceHandle = hInstance;
+            this.m_windowProc = wndProc ?? DefWindowProc;
 
-            m_classInitializerProcRef = ClassInitializerProc;
+            this.m_classInitializerProcRef = this.ClassInitializerProc;
 
             var classInfo = new WindowClassEx
             {
@@ -36,24 +36,24 @@ namespace WinApi.Windows
                 IconHandle = hIcon,
                 Styles = styles,
                 BackgroundBrushHandle = hBgBrush,
-                WindowProc = m_classInitializerProcRef,
+                WindowProc = this.m_classInitializerProcRef,
                 InstanceHandle = hInstance
             };
-            RegisterClass(ref classInfo);
+            this.RegisterClass(ref classInfo);
         }
 
         public WindowFactory(ref WindowClassEx classEx)
         {
-            ClassName = classEx.ClassName;
-            InstanceHandle = classEx.InstanceHandle;
-            m_windowProc = classEx.WindowProc ?? DefWindowProc;
+            this.ClassName = classEx.ClassName;
+            this.InstanceHandle = classEx.InstanceHandle;
+            this.m_windowProc = classEx.WindowProc ?? DefWindowProc;
 
-            m_classInitializerProcRef = ClassInitializerProc;
+            this.m_classInitializerProcRef = this.ClassInitializerProc;
             // Leave the reference untouched. So, use a copy for the modified registration.
             var classExClone = classEx;
-            classExClone.WindowProc = m_classInitializerProcRef;
+            classExClone.WindowProc = this.m_classInitializerProcRef;
 
-            RegisterClass(ref classExClone);
+            this.RegisterClass(ref classExClone);
         }
 
         public WindowFactory(string existingClassName, string targetClassName,
@@ -61,8 +61,7 @@ namespace WinApi.Windows
             ClassInfoMutator mutator)
         {
             WindowClassExBlittable classInfo;
-            if (!User32Methods.GetClassInfoEx(srcInstanceHandle, existingClassName, out classInfo))
-                throw new Exception("Class is not registered - " + existingClassName);
+            if (!User32Methods.GetClassInfoEx(srcInstanceHandle, existingClassName, out classInfo)) throw new Exception("Class is not registered - " + existingClassName);
 
             var className = targetClassName ?? Guid.NewGuid().ToString();
             var ciClassName = Marshal.SystemDefaultCharSize == 1
@@ -77,20 +76,18 @@ namespace WinApi.Windows
             {
                 mutator?.Invoke(ref classInfo);
 
-                ClassName = className;
-                InstanceHandle = classInfo.InstanceHandle;
-                m_windowProc = Marshal.GetDelegateForFunctionPointer<WindowProc>(classInfo.WindowProc);
-                classInfo.WindowProc = Marshal.GetFunctionPointerForDelegate<WindowProc>(ClassInitializerProc);
-                RegisterClass(ref classInfo);
+                this.ClassName = className;
+                this.InstanceHandle = classInfo.InstanceHandle;
+                this.m_windowProc = Marshal.GetDelegateForFunctionPointer<WindowProc>(classInfo.WindowProc);
+                classInfo.WindowProc = Marshal.GetFunctionPointerForDelegate<WindowProc>(this.ClassInitializerProc);
+                this.RegisterClass(ref classInfo);
             }
-            finally
-            {
+            finally {
                 Marshal.FreeHGlobal(ciClassName);
             }
         }
 
         public string ClassName { get; }
-
         public IntPtr InstanceHandle { get; }
 
         private void RegisterClass(ref WindowClassEx classEx)
@@ -134,7 +131,7 @@ namespace WinApi.Windows
                 WindowProc winInstanceInitializerProc = null;
                 if (msg == (int) WM.NCCREATE)
                 {
-                    var wParamForNcCreate = Marshal.GetFunctionPointerForDelegate(m_windowProc);
+                    var wParamForNcCreate = Marshal.GetFunctionPointerForDelegate(this.m_windowProc);
                     var createStruct = *(CreateStruct*) lParam.ToPointer();
                     var instancePtr = createStruct.CreateParams;
                     if (instancePtr != IntPtr.Zero)
@@ -148,7 +145,7 @@ namespace WinApi.Windows
                     }
                 }
                 return winInstanceInitializerProc?.Invoke(hwnd, msg, wParam, lParam) ??
-                       m_windowProc(hwnd, msg, wParam, lParam);
+                       this.m_windowProc(hwnd, msg, wParam, lParam);
             }
             catch (Exception ex)
             {
@@ -165,8 +162,7 @@ namespace WinApi.Windows
         private static void VerifyWindowInstanceNotInitialized<TWindow>(TWindow windowInstance)
             where TWindow : WindowCore
         {
-            if (windowInstance.Factory != null)
-                throw new Exception("Window instance is already initialized");
+            if (windowInstance.Factory != null) throw new Exception("Window instance is already initialized");
         }
 
         public static void DestroyAllWindows(WindowFactory factory)
@@ -206,7 +202,7 @@ namespace WinApi.Windows
                 hInstance ?? cache.ProcessHandle,
                 hIcon ?? cache.AppIconHandle,
                 hCursor ?? cache.ArrowCursorHandle,
-                hBgBrush ?? (IntPtr)SystemColor.COLOR_WINDOW, wndProc);
+                hBgBrush ?? (IntPtr) SystemColor.COLOR_WINDOW, wndProc);
         }
 
 
@@ -246,8 +242,7 @@ namespace WinApi.Windows
         {
             var hwnd = User32Methods.CreateWindowEx(exStyles, className, text,
                 styles | (WindowStyles) controlStyles, x, y, width, height, hParent, hMenu, hInstance, extraParams);
-            if (hwnd == IntPtr.Zero)
-                ThrowWindowCreationFailed();
+            if (hwnd == IntPtr.Zero) ThrowWindowCreationFailed();
             return CreateWindowFromHandle(hwnd);
         }
 
@@ -255,7 +250,8 @@ namespace WinApi.Windows
             string text = null, WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
-            IntPtr? hInstance = null, IntPtr? extraParams = null, uint? controlStyles = null, IConstructionParams constructionParams = null)
+            IntPtr? hInstance = null, IntPtr? extraParams = null, uint? controlStyles = null,
+            IConstructionParams constructionParams = null)
         {
             if (string.IsNullOrWhiteSpace(className)) throw new ArgumentException("className is not valid");
             if (constructionParams == null) constructionParams = new ConstructionParams();
@@ -285,8 +281,7 @@ namespace WinApi.Windows
         {
             var hwnd = User32Methods.CreateWindowEx(exStyles, className, text,
                 styles | (WindowStyles) controlStyles, x, y, width, height, hParent, hMenu, hInstance, extraParams);
-            if (hwnd == IntPtr.Zero)
-                ThrowWindowCreationFailed();
+            if (hwnd == IntPtr.Zero) ThrowWindowCreationFailed();
             return CreateWindowFromHandle(instanceCreator, hwnd, takeOwnership);
         }
 
@@ -295,7 +290,8 @@ namespace WinApi.Windows
             string text = null, WindowStyles? styles = null,
             WindowExStyles? exStyles = null, int? x = null, int? y = null,
             int? width = null, int? height = null, IntPtr? hParent = null, IntPtr? hMenu = null,
-            IntPtr? hInstance = null, IntPtr? extraParams = null, uint? controlStyles = null, IConstructionParams constructionParams = null)
+            IntPtr? hInstance = null, IntPtr? extraParams = null, uint? controlStyles = null,
+            IConstructionParams constructionParams = null)
             where TWindow : WindowCore
         {
             if (string.IsNullOrWhiteSpace(className)) throw new ArgumentException("className is not valid");
@@ -332,8 +328,8 @@ namespace WinApi.Windows
             var hwnd = IntPtr.Zero;
             try
             {
-                hwnd = User32Methods.CreateWindowEx(exStyles, ClassName, text,
-                    styles | (WindowStyles) controlStyles, x, y, width, height, hParent, hMenu, InstanceHandle,
+                hwnd = User32Methods.CreateWindowEx(exStyles, this.ClassName, text,
+                    styles | (WindowStyles) controlStyles, x, y, width, height, hParent, hMenu, this.InstanceHandle,
                     extraParam);
             }
             finally
@@ -353,7 +349,8 @@ namespace WinApi.Windows
             int width, int height, IntPtr hParent, IntPtr hMenu, uint controlStyles)
             where TWindow : WindowCore
         {
-            return CreateWindowCoreFromInstance(instanceCreator(), text, styles, exStyles, x, y, width, height, hParent,
+            return this.CreateWindowCoreFromInstance(instanceCreator(), text, styles, exStyles, x, y, width, height,
+                hParent,
                 hMenu, controlStyles);
         }
 
@@ -365,7 +362,7 @@ namespace WinApi.Windows
             where TWindow : WindowCore
         {
             var win = instanceCreator();
-            return CreateWindowInnerCore(win, text, styles, exStyles, x, y, width, height, hParent, hMenu,
+            return this.CreateWindowInnerCore(win, text, styles, exStyles, x, y, width, height, hParent, hMenu,
                 controlStyles, constructionParams);
         }
 
@@ -378,18 +375,19 @@ namespace WinApi.Windows
         {
             var win = instanceCreator();
             var constructionParams = win.GetConstructionParams();
-            return CreateWindowInnerCore(win, text, styles, exStyles, x, y, width, height, hParent, hMenu,
+            return this.CreateWindowInnerCore(win, text, styles, exStyles, x, y, width, height, hParent, hMenu,
                 controlStyles, constructionParams);
         }
 
         private TWindow CreateWindowInnerCore<TWindow>(TWindow instance,
             string text, WindowStyles? styles,
             WindowExStyles? exStyles, int? x, int? y,
-            int? width, int? height, IntPtr? hParent, IntPtr? hMenu, uint? controlStyles, IConstructionParams constructionParams)
+            int? width, int? height, IntPtr? hParent, IntPtr? hMenu, uint? controlStyles,
+            IConstructionParams constructionParams)
             where TWindow : WindowCore
         {
             if (constructionParams == null) constructionParams = new ConstructionParams();
-            return CreateWindowCoreFromInstance(instance,
+            return this.CreateWindowCoreFromInstance(instance,
                 text,
                 styles ?? constructionParams.Styles,
                 exStyles ?? constructionParams.ExStyles,
@@ -410,10 +408,10 @@ namespace WinApi.Windows
 
             private Cache()
             {
-                ProcessHandle = Kernel32Methods.GetCurrentProcess();
-                AppIconHandle = User32Helpers.LoadIcon(IntPtr.Zero, SystemIcon.IDI_APPLICATION);
-                ArrowCursorHandle = User32Helpers.LoadCursor(IntPtr.Zero, SystemCursor.IDC_ARROW);
-                WindowClassExSize = (uint) Marshal.SizeOf<WindowClassEx>();
+                this.ProcessHandle = Kernel32Methods.GetCurrentProcess();
+                this.AppIconHandle = User32Helpers.LoadIcon(IntPtr.Zero, SystemIcon.IDI_APPLICATION);
+                this.ArrowCursorHandle = User32Helpers.LoadCursor(IntPtr.Zero, SystemCursor.IDC_ARROW);
+                this.WindowClassExSize = (uint) Marshal.SizeOf<WindowClassEx>();
             }
 
             public IntPtr ArrowCursorHandle { get; set; }
@@ -426,8 +424,7 @@ namespace WinApi.Windows
                 get
                 {
                     if (t_instance != null) return t_instance;
-                    if ((t_weakRefInstance == null) || !t_weakRefInstance.TryGetTarget(out t_instance))
-                    {
+                    if ((t_weakRefInstance == null) || !t_weakRefInstance.TryGetTarget(out t_instance)) {
                         t_instance = new Cache();
                     }
                     return t_instance;
@@ -437,10 +434,8 @@ namespace WinApi.Windows
             public static void TransitionCacheToWeakReference()
             {
                 if (t_instance == null) return;
-                if (t_weakRefInstance == null)
-                    t_weakRefInstance = new WeakReference<Cache>(t_instance);
-                else
-                    t_weakRefInstance.SetTarget(t_instance);
+                if (t_weakRefInstance == null) t_weakRefInstance = new WeakReference<Cache>(t_instance);
+                else t_weakRefInstance.SetTarget(t_instance);
                 t_instance = null;
             }
         }

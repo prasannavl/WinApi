@@ -11,62 +11,51 @@ namespace WinApi.DxUtils.D2D1
     public class D2D1MetaResource<TDxgiContainer> : ID2D1_1MetaResource<TDxgiContainer>
         where TDxgiContainer : IDxgi1Container
     {
-        private readonly Action m_onDxgiDestroyedAction;
-        private readonly Action m_onDxgiInitializedAction;
         private readonly Action<D2D1MetaResource<TDxgiContainer>> m_dxgiConnector;
         private readonly Action<D2D1MetaResource<TDxgiContainer>> m_dxgiDisconnector;
+        private readonly Action m_onDxgiDestroyedAction;
+        private readonly Action m_onDxgiInitializedAction;
 
         public TDxgiContainer DxgiContainer;
-        private bool m_isDisposed;
-        private bool m_isLinked;
         private DeviceContext m_context;
         private CreationProperties m_creationProperties;
         private Device m_device;
         private Factory1 m_factory;
+        private bool m_isDisposed;
+        private bool m_isLinked;
 
-        public D2D1MetaResource(CreationProperties props, Action<D2D1MetaResource<TDxgiContainer>> dxgiConnector, Action<D2D1MetaResource<TDxgiContainer>> dxgiDisconnector)
+        public D2D1MetaResource(CreationProperties props, Action<D2D1MetaResource<TDxgiContainer>> dxgiConnector,
+            Action<D2D1MetaResource<TDxgiContainer>> dxgiDisconnector)
         {
-            m_creationProperties = props;
-            m_onDxgiDestroyedAction = () => DestroyInternal(true);
-            m_onDxgiInitializedAction = () => InitializeInternal(true);
-            m_dxgiConnector = dxgiConnector;
-            m_dxgiDisconnector = dxgiDisconnector;
+            this.m_creationProperties = props;
+            this.m_onDxgiDestroyedAction = () => this.DestroyInternal(true);
+            this.m_onDxgiInitializedAction = () => this.InitializeInternal(true);
+            this.m_dxgiConnector = dxgiConnector;
+            this.m_dxgiDisconnector = dxgiDisconnector;
         }
 
-        public Device Device
-        {
-            get { return m_device; }
-            private set { m_device = value; }
-        }
+        public Device Device { get { return this.m_device; } private set { this.m_device = value; } }
 
-        public DeviceContext Context
-        {
-            get { return m_context; }
-            private set { m_context = value; }
-        }
+        public DeviceContext Context { get { return this.m_context; } private set { this.m_context = value; } }
 
-        public Factory1 Factory1
-        {
-            get { return m_factory; }
-            private set { m_factory = value; }
-        }
+        public Factory1 Factory1 { get { return this.m_factory; } private set { this.m_factory = value; } }
 
         public void Dispose()
         {
-            m_isDisposed = true;
+            this.m_isDisposed = true;
             GC.SuppressFinalize(this);
-            Destroy();
+            this.Destroy();
         }
 
         public void ConnectToDxgi()
         {
-            CheckDisposed();
-            ConnectContextToDxgiSurface();
+            this.CheckDisposed();
+            this.ConnectContextToDxgiSurface();
         }
 
         public void DisconnectFromDxgi()
         {
-            DisconnectContextFromDxgiSurface();
+            this.DisconnectContextFromDxgiSurface();
         }
 
         public event Action Initialized;
@@ -74,117 +63,108 @@ namespace WinApi.DxUtils.D2D1
 
         public void Initialize(TDxgiContainer dxgiContainer, bool autoLink = true)
         {
-            CheckDisposed();
-            if (Device != null)
-                Destroy();
-            DxgiContainer = dxgiContainer;
-            m_isLinked = autoLink;
-            InitializeInternal(false);
+            this.CheckDisposed();
+            if (this.Device != null) this.Destroy();
+            this.DxgiContainer = dxgiContainer;
+            this.m_isLinked = autoLink;
+            this.InitializeInternal(false);
         }
 
         public void EnsureInitialized()
         {
-            CheckDisposed();
-            if (Device == null)
-                Initialize(DxgiContainer, m_isLinked);
-        }
-
-        private void InitializeInternal(bool dxgiSourcePreserved)
-        {
-            ConnectContextToDxgiSurface();
-            if (!dxgiSourcePreserved) ConnectToDxgiSource(m_isLinked);
-            Initialized?.Invoke();
-        }
-
-        private void ConnectToDxgiSource(bool shouldLink)
-        {
-            DxgiContainer.Destroyed += m_onDxgiDestroyedAction;
-            DxgiContainer.Initialized += m_onDxgiInitializedAction;
-            if (shouldLink)
-            {
-                DxgiContainer.AddLinkedResource(this);
-            }
-        }
-
-        private void DisconnectFromDxgiSource()
-        {
-            if (DxgiContainer == null) return;
-            DxgiContainer.Initialized -= m_onDxgiInitializedAction;
-            DxgiContainer.Destroyed -= m_onDxgiDestroyedAction;
-            if (m_isLinked) DxgiContainer.RemoveLinkedResource(this);
+            this.CheckDisposed();
+            if (this.Device == null) this.Initialize(this.DxgiContainer, this.m_isLinked);
         }
 
         public void Destroy()
         {
-            DestroyInternal(false);
+            this.DestroyInternal(false);
+        }
+
+        private void InitializeInternal(bool dxgiSourcePreserved)
+        {
+            this.ConnectContextToDxgiSurface();
+            if (!dxgiSourcePreserved) this.ConnectToDxgiSource(this.m_isLinked);
+            this.Initialized?.Invoke();
+        }
+
+        private void ConnectToDxgiSource(bool shouldLink)
+        {
+            this.DxgiContainer.Destroyed += this.m_onDxgiDestroyedAction;
+            this.DxgiContainer.Initialized += this.m_onDxgiInitializedAction;
+            if (shouldLink) { this.DxgiContainer.AddLinkedResource(this); }
+        }
+
+        private void DisconnectFromDxgiSource()
+        {
+            if (this.DxgiContainer == null) return;
+            this.DxgiContainer.Initialized -= this.m_onDxgiInitializedAction;
+            this.DxgiContainer.Destroyed -= this.m_onDxgiDestroyedAction;
+            if (this.m_isLinked) this.DxgiContainer.RemoveLinkedResource(this);
         }
 
         private void DestroyInternal(bool preserveDxgiSource)
         {
-            if (!preserveDxgiSource) DisconnectFromDxgiSource();
-            DisconnectContextFromDxgiSurface();
-            DisposableHelpers.DisposeAndSetNull(ref m_context);
-            DisposableHelpers.DisposeAndSetNull(ref m_device);
-            DisposableHelpers.DisposeAndSetNull(ref m_factory);
-            Destroyed?.Invoke();
+            if (!preserveDxgiSource) this.DisconnectFromDxgiSource();
+            this.DisconnectContextFromDxgiSurface();
+            DisposableHelpers.DisposeAndSetNull(ref this.m_context);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_device);
+            DisposableHelpers.DisposeAndSetNull(ref this.m_factory);
+            this.Destroyed?.Invoke();
         }
 
         private void CreateFactory()
         {
-            var props = m_creationProperties;
-            Factory1 = new Factory1((FactoryType) props.ThreadingMode, props.DebugLevel);
+            var props = this.m_creationProperties;
+            this.Factory1 = new Factory1((FactoryType) props.ThreadingMode, props.DebugLevel);
         }
 
         private void EnsureFactory()
         {
-            if (Factory1 == null)
-                CreateFactory();
+            if (this.Factory1 == null) this.CreateFactory();
         }
 
         private void CreateDevice()
         {
-            EnsureFactory();
-            Device = new Device(DxgiContainer.DxgiDevice, m_creationProperties);
+            this.EnsureFactory();
+            this.Device = new Device(this.DxgiContainer.DxgiDevice, this.m_creationProperties);
         }
 
         private void EnsureDevice()
         {
-            if (Device == null)
-                CreateDevice();
+            if (this.Device == null) this.CreateDevice();
         }
 
         private void CreateContext()
         {
-            EnsureDevice();
-            Context = new DeviceContext(Device, m_creationProperties.Options);
+            this.EnsureDevice();
+            this.Context = new DeviceContext(this.Device, this.m_creationProperties.Options);
         }
 
         private void EnsureContext()
         {
-            if (Context == null)
-                CreateContext();
+            if (this.Context == null) this.CreateContext();
         }
 
         private void CheckDisposed()
         {
-            if (m_isDisposed)
-                throw new ObjectDisposedException(nameof(D2D1MetaResource<TDxgiContainer>));
+            if (this.m_isDisposed) throw new ObjectDisposedException(nameof(D2D1MetaResource<TDxgiContainer>));
         }
 
         ~D2D1MetaResource()
         {
-            Dispose();
+            this.Dispose();
         }
 
         private void ConnectContextToDxgiSurface()
         {
-            EnsureContext();
-            m_dxgiConnector?.Invoke(this);
+            this.EnsureContext();
+            this.m_dxgiConnector?.Invoke(this);
         }
 
         private void DisconnectContextFromDxgiSurface()
         {
-            m_dxgiDisconnector?.Invoke(this);
+            this.m_dxgiDisconnector?.Invoke(this);
         }
     }
 }

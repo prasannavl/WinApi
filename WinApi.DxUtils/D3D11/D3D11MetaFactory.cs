@@ -59,10 +59,8 @@ namespace WinApi.DxUtils.D3D11
             SwapChainTarget target)
         {
             SwapChainDescription1 desc;
-            if (description.HasValue)
-                desc = description.Value;
-            else
-                GetDefaultSwapChainDescription(out desc, target);
+            if (description.HasValue) desc = description.Value;
+            else GetDefaultSwapChainDescription(out desc, target);
 
 #if DEBUG
             // Note: These have no impact on solution outside
@@ -85,10 +83,7 @@ namespace WinApi.DxUtils.D3D11
 
         public static Device1 CreateD3DDevice1(D3D11DxgiOptions creationOpts)
         {
-            using (var device = CreateD3DDevice(creationOpts))
-            {
-                return device.QueryInterface<Device1>();
-            }
+            using (var device = CreateD3DDevice(creationOpts)) { return device.QueryInterface<Device1>(); }
         }
 
         public static Device CreateD3DDevice(D3D11DxgiOptions creationOpts)
@@ -100,10 +95,7 @@ namespace WinApi.DxUtils.D3D11
             var allowWarpFallback = creationOpts.WarpFallbackEnabled;
 
             if (adapter != null) return new Device(adapter, flags);
-            try
-            {
-                return levels != null ? new Device(type, flags, levels) : new Device(type, flags);
-            }
+            try { return levels != null ? new Device(type, flags, levels) : new Device(type, flags); }
             catch
             {
                 const DriverType warpDriverType = DriverType.Warp;
@@ -139,8 +131,7 @@ namespace WinApi.DxUtils.D3D11
 
         public static SwapEffect GetBestSwapEffectForPlatform(Version version = null)
         {
-            if (version == null)
-                version = Environment.OSVersion.Version;
+            if (version == null) version = Environment.OSVersion.Version;
             if (version.Major > 6) return SwapEffect.FlipDiscard; // Win 10+
             if ((version.Major > 5) && (version.Minor > 1)) return SwapEffect.FlipSequential; // 6.2+ - Win 8+
             return SwapEffect.Discard;
@@ -180,26 +171,26 @@ namespace WinApi.DxUtils.D3D11
         public DriverType Type;
         public bool WarpFallbackEnabled;
 
-        public D3D11DxgiOptions() { }
+        public D3D11DxgiOptions() {}
 
         public D3D11DxgiOptions(DriverType type,
             DeviceCreationFlags flags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded,
             FeatureLevel[] levels = null, bool warpFallbackEnabled = true)
         {
-            Type = type;
-            CreationFlags = flags;
-            Levels = levels;
-            WarpFallbackEnabled = warpFallbackEnabled;
+            this.Type = type;
+            this.CreationFlags = flags;
+            this.Levels = levels;
+            this.WarpFallbackEnabled = warpFallbackEnabled;
         }
 
         public D3D11DxgiOptions(Adapter adapter,
             DeviceCreationFlags flags = DeviceCreationFlags.BgraSupport | DeviceCreationFlags.SingleThreaded,
             FeatureLevel[] levels = null, bool warpFallbackEnabled = true)
         {
-            Adapter = adapter;
-            CreationFlags = flags;
-            Levels = levels;
-            WarpFallbackEnabled = warpFallbackEnabled;
+            this.Adapter = adapter;
+            this.CreationFlags = flags;
+            this.Levels = levels;
+            this.WarpFallbackEnabled = warpFallbackEnabled;
         }
     }
 

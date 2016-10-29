@@ -23,10 +23,10 @@ namespace WinApi.Windows
 
     public class ConstructionParams : IConstructionParams
     {
-        public virtual int X => (int)CreateWindowFlags.CW_USEDEFAULT;
-        public virtual int Y => (int)CreateWindowFlags.CW_USEDEFAULT;
-        public virtual int Width => (int)CreateWindowFlags.CW_USEDEFAULT;
-        public virtual int Height => (int)CreateWindowFlags.CW_USEDEFAULT;
+        public virtual int X => (int) CreateWindowFlags.CW_USEDEFAULT;
+        public virtual int Y => (int) CreateWindowFlags.CW_USEDEFAULT;
+        public virtual int Width => (int) CreateWindowFlags.CW_USEDEFAULT;
+        public virtual int Height => (int) CreateWindowFlags.CW_USEDEFAULT;
         public virtual IntPtr ParentHandle => IntPtr.Zero;
         public virtual IntPtr MenuHandle => IntPtr.Zero;
         public virtual WindowStyles Styles => 0;

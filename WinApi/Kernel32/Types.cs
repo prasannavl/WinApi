@@ -12,8 +12,8 @@ namespace WinApi.Kernel32
     {
         public ShortPoint(short x, short y)
         {
-            X = x;
-            Y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         public short X, Y;
@@ -24,24 +24,24 @@ namespace WinApi.Kernel32
     {
         public ShortRectangle(short left = 0, short top = 0, short right = 0, short bottom = 0)
         {
-            Left = left;
-            Top = top;
-            Right = right;
-            Bottom = bottom;
+            this.Left = left;
+            this.Top = top;
+            this.Right = right;
+            this.Bottom = bottom;
         }
 
         public short Left, Top, Right, Bottom;
 
         public short Width
         {
-            get { return (short) (Right - Left); }
-            set { Right = (short) (Left + value); }
+            get { return (short) (this.Right - this.Left); }
+            set { this.Right = (short) (this.Left + value); }
         }
 
         public short Height
         {
-            get { return (short) (Bottom - Top); }
-            set { Bottom = (short) (Top + value); }
+            get { return (short) (this.Bottom - this.Top); }
+            set { this.Bottom = (short) (this.Top + value); }
         }
     }
 
@@ -59,7 +59,7 @@ namespace WinApi.Kernel32
         public uint AllocationGranularity;
         public ushort ProcessorLevel;
         public ushort ProcessorRevision;
-        public uint OemId => ((uint) ProcessorArchitecture << 8) | Reserved;
+        public uint OemId => ((uint) this.ProcessorArchitecture << 8) | this.Reserved;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -69,7 +69,7 @@ namespace WinApi.Kernel32
         public IntPtr SecurityDescriptor;
         public uint IsHandleInheritedValue;
 
-        public bool IsHandleInherited => IsHandleInheritedValue > 0;
+        public bool IsHandleInherited => this.IsHandleInheritedValue > 0;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -78,7 +78,7 @@ namespace WinApi.Kernel32
         public uint Low;
         public uint High;
 
-        public ulong Value => ((ulong) High << 32) | Low;
+        public ulong Value => ((ulong) this.High << 32) | this.Low;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -105,6 +105,6 @@ namespace WinApi.Kernel32
         public uint FileSizeHigh;
         public uint FileSizeLow;
 
-        public ulong FileSize => ((ulong)FileSizeHigh << 32) | FileSizeLow;
+        public ulong FileSize => ((ulong) this.FileSizeHigh << 32) | this.FileSizeLow;
     }
 }

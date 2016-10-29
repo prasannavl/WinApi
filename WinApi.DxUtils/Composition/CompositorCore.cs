@@ -18,24 +18,20 @@ namespace WinApi.DxUtils.Composition
         protected CompositorCore(int variant)
         {
             if (variant == -1) variant = CompositionHelper.GetVariantForPlatform();
-            DeviceVariant = variant;
-            m_onDxgiDestroyedAction = () => DestroyInternal(true);
-            m_onDxgiInitializedAction = () => InitializeInternal(true);
+            this.DeviceVariant = variant;
+            this.m_onDxgiDestroyedAction = () => this.DestroyInternal(true);
+            this.m_onDxgiInitializedAction = () => this.InitializeInternal(true);
         }
 
         public int DeviceVariant { get; }
 
-        public ComObject Device
-        {
-            get { return m_device; }
-            private set { m_device = value; }
-        }
+        public ComObject Device { get { return this.m_device; } private set { this.m_device = value; } }
 
         public void Dispose()
         {
-            m_disposed = true;
+            this.m_disposed = true;
             GC.SuppressFinalize(this);
-            Destroy();
+            this.Destroy();
         }
 
         public event Action Initialized;
@@ -43,53 +39,51 @@ namespace WinApi.DxUtils.Composition
 
         private void CheckDisposed()
         {
-            if (m_disposed) throw new ObjectDisposedException(GetType().Name);
+            if (this.m_disposed) throw new ObjectDisposedException(this.GetType().Name);
         }
 
         ~CompositorCore()
         {
-            Dispose();
+            this.Dispose();
         }
 
         public void Destroy()
         {
-            DestroyInternal(false);
+            this.DestroyInternal(false);
         }
 
         public void Commit()
         {
-            CompositionHelper.Commit(Device, DeviceVariant);
+            CompositionHelper.Commit(this.Device, this.DeviceVariant);
         }
 
         private void DestroyInternal(bool preserveDxgiSource)
         {
-            if (!preserveDxgiSource) DisconnectFromDxgiSource();
-            DestroyResources();
-            DisposableHelpers.DisposeAndSetNull(ref m_device);
-            Destroyed?.Invoke();
+            if (!preserveDxgiSource) this.DisconnectFromDxgiSource();
+            this.DestroyResources();
+            DisposableHelpers.DisposeAndSetNull(ref this.m_device);
+            this.Destroyed?.Invoke();
         }
 
         protected void EnsureDevice()
         {
-            if (Device == null)
-                Device = CompositionHelper.CreateDevice(DxgiContainer.DxgiDevice, DeviceVariant);
+            if (this.Device == null) this.Device = CompositionHelper.CreateDevice(this.DxgiContainer.DxgiDevice, this.DeviceVariant);
         }
 
         public void Initialize(TDxgiContainer dxgiContainer, TOptions opts = default(TOptions))
         {
-            CheckDisposed();
-            if (Device != null)
-                Destroy();
-            Options = opts;
-            DxgiContainer = dxgiContainer;
-            InitializeInternal(false);
+            this.CheckDisposed();
+            if (this.Device != null) this.Destroy();
+            this.Options = opts;
+            this.DxgiContainer = dxgiContainer;
+            this.InitializeInternal(false);
         }
 
         private void InitializeInternal(bool dxgiSourcePreserved)
         {
-            InitializeResources();
-            if (!dxgiSourcePreserved) ConnectToDxgiSource();
-            Initialized?.Invoke();
+            this.InitializeResources();
+            if (!dxgiSourcePreserved) this.ConnectToDxgiSource();
+            this.Initialized?.Invoke();
         }
 
         protected abstract void InitializeResources();
@@ -98,22 +92,21 @@ namespace WinApi.DxUtils.Composition
 
         private void ConnectToDxgiSource()
         {
-            DxgiContainer.Destroyed += m_onDxgiDestroyedAction;
-            DxgiContainer.Initialized += m_onDxgiInitializedAction;
+            this.DxgiContainer.Destroyed += this.m_onDxgiDestroyedAction;
+            this.DxgiContainer.Initialized += this.m_onDxgiInitializedAction;
         }
 
         private void DisconnectFromDxgiSource()
         {
-            if (DxgiContainer == null) return;
-            DxgiContainer.Initialized -= m_onDxgiInitializedAction;
-            DxgiContainer.Destroyed -= m_onDxgiDestroyedAction;
+            if (this.DxgiContainer == null) return;
+            this.DxgiContainer.Initialized -= this.m_onDxgiInitializedAction;
+            this.DxgiContainer.Destroyed -= this.m_onDxgiDestroyedAction;
         }
 
         public void EnsureInitialized()
         {
-            CheckDisposed();
-            if (Device == null)
-                InitializeInternal(true);
+            this.CheckDisposed();
+            if (this.Device == null) this.InitializeInternal(true);
         }
     }
 }

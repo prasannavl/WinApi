@@ -17,12 +17,12 @@ namespace Sample.OpenGL
         private void Init()
         {
             // Create device/render context
-            CreateDeviceContext();
-            CreateContext();
+            this.CreateDeviceContext();
+            this.CreateContext();
             // The context is made current unconditionally: it will be current also on OnPaint, avoiding
             // rendundant calls to glMakeCurrent ini nominal implementations
-            MakeCurrentContext();
-            OnGlContextCreated();
+            this.MakeCurrentContext();
+            this.OnGlContextCreated();
         }
 
         protected virtual void OnGlContextCreated() {}
@@ -32,19 +32,19 @@ namespace Sample.OpenGL
         protected override void OnPaint(ref PaintPacket packet)
         {
             PaintStruct ps;
-            var hdc = BeginPaint(out ps);
-            if (!m_isInit)
+            var hdc = this.BeginPaint(out ps);
+            if (!this.m_isInit)
             {
-                m_isInit = true;
-                Init();
+                this.m_isInit = true;
+                this.Init();
             }
-            OnGlPaint(ref ps);
-            EndPaint(ref ps);
+            this.OnGlPaint(ref ps);
+            this.EndPaint(ref ps);
         }
 
         protected override void OnDestroy(ref Packet packet)
         {
-            DeleteContext();
+            this.DeleteContext();
             base.OnDestroy(ref packet);
         }
 
@@ -148,31 +148,29 @@ namespace Sample.OpenGL
 
         private void CreateDeviceContext()
         {
-            DeviceContext = DeviceContextFactory.Create(Handle);
-            DeviceContext.IncRef();
+            this.DeviceContext = DeviceContextFactory.Create(this.Handle);
+            this.DeviceContext.IncRef();
 
             // Set pixel format
-            var pixelFormats = DeviceContext.PixelsFormats;
+            var pixelFormats = this.DeviceContext.PixelsFormats;
             var controlReqFormat = new DevicePixelFormat
             {
-                ColorBits = (int) ColorBits,
-                DepthBits = (int) DepthBits,
-                StencilBits = (int) StencilBits,
-                MultisampleBits = (int) MultisampleBits,
-                DoubleBuffer = DoubleBuffer
+                ColorBits = (int) this.ColorBits,
+                DepthBits = (int) this.DepthBits,
+                StencilBits = (int) this.StencilBits,
+                MultisampleBits = (int) this.MultisampleBits,
+                DoubleBuffer = this.DoubleBuffer
             };
 
             var matchingPixelFormats = pixelFormats.Choose(controlReqFormat);
-            if (matchingPixelFormats.Count == 0)
-                throw new InvalidOperationException("unable to find a suitable pixel format");
+            if (matchingPixelFormats.Count == 0) throw new InvalidOperationException("unable to find a suitable pixel format");
 
-            DeviceContext.SetPixelFormat(matchingPixelFormats[0]);
+            this.DeviceContext.SetPixelFormat(matchingPixelFormats[0]);
         }
 
         protected virtual void CreateContext()
         {
-            if (RenderContextHandle != IntPtr.Zero)
-                throw new InvalidOperationException("context already created");
+            if (this.RenderContextHandle != IntPtr.Zero) throw new InvalidOperationException("context already created");
 
             var currentVersion = Gl.CurrentVersion;
             var currentExtensions = Gl.CurrentExtensions;
@@ -212,12 +210,12 @@ namespace Sample.OpenGL
                 // (e.g. 3.0, 3.1 + GL_ARB_compatibility, or 3.2 compatibility profile) [from WGL_ARB_create_context spec]
                 Debug.Assert(Wgl.CONTEXT_MAJOR_VERSION_ARB == Glx.CONTEXT_MAJOR_VERSION_ARB);
                 Debug.Assert(Wgl.CONTEXT_MINOR_VERSION_ARB == Glx.CONTEXT_MINOR_VERSION_ARB);
-                if (Version != null)
+                if (this.Version != null)
                 {
                     attributes.AddRange(new[]
                     {
-                        Wgl.CONTEXT_MAJOR_VERSION_ARB, Version.Major,
-                        Wgl.CONTEXT_MINOR_VERSION_ARB, Version.Minor
+                        Wgl.CONTEXT_MAJOR_VERSION_ARB, this.Version.Major,
+                        Wgl.CONTEXT_MINOR_VERSION_ARB, this.Version.Minor
                     });
                 }
                 else
@@ -229,15 +227,15 @@ namespace Sample.OpenGL
                     });
                 }
 
-                if ((DebugContext == AttributePermission.Enabled) ||
-                    (debuggerAttached && (DebugContext == AttributePermission.EnabledInDebugger)))
+                if ((this.DebugContext == AttributePermission.Enabled) ||
+                    (debuggerAttached && (this.DebugContext == AttributePermission.EnabledInDebugger)))
                 {
                     Debug.Assert(Wgl.CONTEXT_DEBUG_BIT_ARB == Glx.CONTEXT_DEBUG_BIT_ARB);
                     contextFlags |= Wgl.CONTEXT_DEBUG_BIT_ARB;
                 }
 
-                if ((ForwardCompatibleContext == AttributePermission.Enabled) ||
-                    (debuggerAttached && (ForwardCompatibleContext == AttributePermission.EnabledInDebugger)))
+                if ((this.ForwardCompatibleContext == AttributePermission.Enabled) ||
+                    (debuggerAttached && (this.ForwardCompatibleContext == AttributePermission.EnabledInDebugger)))
                 {
                     Debug.Assert(Wgl.CONTEXT_FORWARD_COMPATIBLE_BIT_ARB == Glx.CONTEXT_FORWARD_COMPATIBLE_BIT_ARB);
                     contextFlags |= Wgl.CONTEXT_FORWARD_COMPATIBLE_BIT_ARB;
@@ -249,12 +247,12 @@ namespace Sample.OpenGL
 
                 if (hasCreateContextProfile)
                 {
-                    if (ContextProfile == ProfileType.Core)
+                    if (this.ContextProfile == ProfileType.Core)
                     {
                         Debug.Assert(Wgl.CONTEXT_CORE_PROFILE_BIT_ARB == Glx.CONTEXT_CORE_PROFILE_BIT_ARB);
                         contextProfile |= Wgl.CONTEXT_CORE_PROFILE_BIT_ARB;
                     }
-                    else if (ContextProfile == ProfileType.Compatibility)
+                    else if (this.ContextProfile == ProfileType.Compatibility)
                     {
                         Debug.Assert(Wgl.CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB ==
                                      Glx.CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB);
@@ -268,8 +266,8 @@ namespace Sample.OpenGL
 
                 if (hasCreateContextRobustness)
                 {
-                    if ((RobustContext == AttributePermission.Enabled) ||
-                        (debuggerAttached && (RobustContext == AttributePermission.EnabledInDebugger)))
+                    if ((this.RobustContext == AttributePermission.Enabled) ||
+                        (debuggerAttached && (this.RobustContext == AttributePermission.EnabledInDebugger)))
                     {
                         Debug.Assert(Wgl.CONTEXT_ROBUST_ACCESS_BIT_ARB == Glx.CONTEXT_ROBUST_ACCESS_BIT_ARB);
                         contextFlags |= Wgl.CONTEXT_ROBUST_ACCESS_BIT_ARB;
@@ -279,24 +277,22 @@ namespace Sample.OpenGL
                 #endregion
 
                 Debug.Assert(Wgl.CONTEXT_FLAGS_ARB == Glx.CONTEXT_FLAGS_ARB);
-                if (contextFlags != 0)
-                    attributes.AddRange(new[] {Wgl.CONTEXT_FLAGS_ARB, unchecked((int) contextFlags)});
+                if (contextFlags != 0) attributes.AddRange(new[] {Wgl.CONTEXT_FLAGS_ARB, unchecked((int) contextFlags)});
 
                 Debug.Assert(Wgl.CONTEXT_PROFILE_MASK_ARB == Glx.CONTEXT_PROFILE_MASK_ARB);
-                if (contextProfile != 0)
-                    attributes.AddRange(new[] {Wgl.CONTEXT_PROFILE_MASK_ARB, unchecked((int) contextProfile)});
+                if (contextProfile != 0) attributes.AddRange(new[] {Wgl.CONTEXT_PROFILE_MASK_ARB, unchecked((int) contextProfile)});
 
                 attributes.Add(0);
 
-                if ((RenderContextHandle = DeviceContext.CreateContextAttrib(IntPtr.Zero, attributes.ToArray())) ==
-                    IntPtr.Zero)
-                    throw new InvalidOperationException($"unable to create render context ({Gl.GetError()})");
+                if (
+                    (this.RenderContextHandle =
+                        this.DeviceContext.CreateContextAttrib(IntPtr.Zero, attributes.ToArray())) ==
+                    IntPtr.Zero) throw new InvalidOperationException($"unable to create render context ({Gl.GetError()})");
             }
             else
             {
                 // Create OpenGL context using compatibility profile
-                if ((RenderContextHandle = DeviceContext.CreateContext(IntPtr.Zero)) == IntPtr.Zero)
-                    throw new InvalidOperationException("unable to create render context");
+                if ((this.RenderContextHandle = this.DeviceContext.CreateContext(IntPtr.Zero)) == IntPtr.Zero) throw new InvalidOperationException("unable to create render context");
             }
         }
 
@@ -306,8 +302,7 @@ namespace Sample.OpenGL
         protected virtual void MakeCurrentContext()
         {
             // Make context current
-            if (DeviceContext.MakeCurrent(RenderContextHandle) == false)
-                throw new InvalidOperationException("unable to make context current");
+            if (this.DeviceContext.MakeCurrent(this.RenderContextHandle) == false) throw new InvalidOperationException("unable to make context current");
         }
 
         /// <summary>
@@ -316,8 +311,8 @@ namespace Sample.OpenGL
         protected virtual void DeleteContext()
         {
             // Delete OpenGL context
-            DeviceContext.DeleteContext(RenderContextHandle);
-            RenderContextHandle = IntPtr.Zero;
+            this.DeviceContext.DeleteContext(this.RenderContextHandle);
+            this.RenderContextHandle = IntPtr.Zero;
         }
 
         #endregion

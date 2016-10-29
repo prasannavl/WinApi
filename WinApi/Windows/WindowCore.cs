@@ -24,7 +24,7 @@ namespace WinApi.Windows
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         void INativeAttachable.Attach(IntPtr handle)
@@ -34,28 +34,28 @@ namespace WinApi.Windows
 
         void INativeConnectable.Attach(IntPtr handle, bool takeOwnership)
         {
-            ThrowIfDisposed();
-            Handle = handle;
-            IsSourceOwner = takeOwnership;
+            this.ThrowIfDisposed();
+            this.Handle = handle;
+            this.IsSourceOwner = takeOwnership;
         }
 
         IntPtr INativeAttachable.Detach()
         {
             ((INativeConnectable) this).DisconnectWindowProc();
-            var h = Handle;
-            Handle = IntPtr.Zero;
-            IsSourceOwner = false;
+            var h = this.Handle;
+            this.Handle = IntPtr.Zero;
+            this.IsSourceOwner = false;
             return h;
         }
 
         void INativeConnectable.ConnectWindowProc(IntPtr baseWindowProcPtr)
         {
-            m_baseWindowProcPtr = baseWindowProcPtr == IntPtr.Zero
-                ? GetParam(WindowLongFlags.GWLP_WNDPROC)
+            this.m_baseWindowProcPtr = baseWindowProcPtr == IntPtr.Zero
+                ? this.GetParam(WindowLongFlags.GWLP_WNDPROC)
                 : baseWindowProcPtr;
-            m_instanceWindowProc = WindowProc;
-            SetParam(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(m_instanceWindowProc));
-            OnSourceConnected();
+            this.m_instanceWindowProc = this.WindowProc;
+            this.SetParam(WindowLongFlags.GWLP_WNDPROC, Marshal.GetFunctionPointerForDelegate(this.m_instanceWindowProc));
+            this.OnSourceConnected();
         }
 
         void INativeConnectable.ConnectWindowProc()
@@ -65,16 +65,16 @@ namespace WinApi.Windows
 
         void INativeConnectable.DisconnectWindowProc()
         {
-            if (m_baseWindowProcPtr != IntPtr.Zero)
+            if (this.m_baseWindowProcPtr != IntPtr.Zero)
             {
-                SetParam(WindowLongFlags.GWLP_WNDPROC, m_baseWindowProcPtr);
-                m_baseWindowProcPtr = IntPtr.Zero;
+                this.SetParam(WindowLongFlags.GWLP_WNDPROC, this.m_baseWindowProcPtr);
+                this.m_baseWindowProcPtr = IntPtr.Zero;
             }
         }
 
         void INativeConnectable.SetFactory(WindowFactory factory)
         {
-            Factory = factory;
+            this.Factory = factory;
         }
 
         public event Action Destroyed;
@@ -82,26 +82,21 @@ namespace WinApi.Windows
 
         protected void ThrowIfDisposed()
         {
-            if (IsDisposed) throw new ObjectDisposedException(nameof(WindowCore));
+            if (this.IsDisposed) throw new ObjectDisposedException(nameof(WindowCore));
         }
 
         ~WindowCore()
         {
-            Dispose(false);
+            this.Dispose(false);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (IsDisposed) return;
-            if (IsSourceOwner)
-            {
-                User32Methods.DestroyWindow(Handle);
-            }
+            if (this.IsDisposed) return;
+            if (this.IsSourceOwner) { User32Methods.DestroyWindow(this.Handle); }
             else
-            {
-                ((INativeConnectable) this).Detach();
-            }
-            IsDisposed = true;
+            { ((INativeConnectable) this).Detach(); }
+            this.IsDisposed = true;
             GC.SuppressFinalize(this);
         }
 
@@ -116,17 +111,17 @@ namespace WinApi.Windows
             var windowConnector = (INativeConnectable) this;
             windowConnector.Attach(hwnd, true);
             windowConnector.ConnectWindowProc(wParam);
-            return WindowProc(hwnd, msg, IntPtr.Zero, lParam);
+            return this.WindowProc(hwnd, msg, IntPtr.Zero, lParam);
         }
 
         protected virtual void OnMessage(ref WindowMessage msg)
         {
-            OnMessageDefault(ref msg);
+            this.OnMessageDefault(ref msg);
         }
 
         protected virtual void OnMessageDefault(ref WindowMessage msg)
         {
-            msg.SetResult(User32Methods.CallWindowProc(m_baseWindowProcPtr, msg.Hwnd, (uint) msg.Id, msg.WParam,
+            msg.SetResult(User32Methods.CallWindowProc(this.m_baseWindowProcPtr, msg.Hwnd, (uint) msg.Id, msg.WParam,
                 msg.LParam));
         }
 
@@ -142,7 +137,7 @@ namespace WinApi.Windows
             };
             try
             {
-                OnMessage(ref wmsg);
+                this.OnMessage(ref wmsg);
                 return wmsg.Result;
             }
             catch (Exception ex)
@@ -152,14 +147,11 @@ namespace WinApi.Windows
             }
             finally
             {
-                if (wmsg.Id == WM.CREATE)
-                {
-                    Created?.Invoke();
-                }
+                if (wmsg.Id == WM.CREATE) { this.Created?.Invoke(); }
                 else if (wmsg.Id == WM.NCDESTROY)
                 {
-                    Destroyed?.Invoke();
-                    IsSourceOwner = false;
+                    this.Destroyed?.Invoke();
+                    this.IsSourceOwner = false;
                 }
             }
         }
@@ -197,21 +189,21 @@ namespace WinApi.Windows
 
         public WindowMessage(IntPtr hwnd, uint id, IntPtr wParam, IntPtr lParam)
         {
-            Hwnd = hwnd;
-            Id = (WM) id;
-            WParam = wParam;
-            LParam = lParam;
-            Result = IntPtr.Zero;
+            this.Hwnd = hwnd;
+            this.Id = (WM) id;
+            this.WParam = wParam;
+            this.LParam = lParam;
+            this.Result = IntPtr.Zero;
         }
 
         public void SetResult(IntPtr result)
         {
-            Result = result;
+            this.Result = result;
         }
 
         public void SetResult(int result)
         {
-            SetResult(new IntPtr(result));
+            this.SetResult(new IntPtr(result));
         }
     }
 
@@ -225,8 +217,8 @@ namespace WinApi.Windows
 
         public WindowException(Exception ex, WindowCore window, string message) : base(message, ex)
         {
-            Window = window;
-            IsHandled = false;
+            this.Window = window;
+            this.IsHandled = false;
         }
 
         public bool IsHandled { get; set; }
@@ -234,7 +226,7 @@ namespace WinApi.Windows
 
         public void SetHandled(bool value = true)
         {
-            IsHandled = value;
+            this.IsHandled = value;
         }
     }
 }

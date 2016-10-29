@@ -1683,7 +1683,7 @@ namespace WinApi.User32
     public enum WindowViewRegionFlags
     {
         /// <summary>
-        /// During NCCALCSIZE, if shouldCalcValidRects is true, this option preserves the previous area and aligns top-left
+        ///     During NCCALCSIZE, if shouldCalcValidRects is true, this option preserves the previous area and aligns top-left
         /// </summary>
         WVR_DEFAULT = 0,
 
@@ -4540,6 +4540,7 @@ namespace WinApi.User32
     public enum ScreenshotHotKey
     {
         IDHOT_NONE = 0,
+
         /// <summary>
         ///     The "snap desktop" hot key was pressed. /* PRINTSCRN */
         /// </summary>

@@ -664,6 +664,6 @@ namespace WinApi.User32
         ZOOM = 98,
         NONAME = 0,
         PA1 = 0,
-        OEM_CLEAR = 0,
+        OEM_CLEAR = 0
     }
 }
