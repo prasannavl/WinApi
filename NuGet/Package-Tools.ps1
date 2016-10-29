@@ -90,6 +90,19 @@ function Get-CsAssemblyVersionFromPath($path) {
         }
 }
 
+function Get-NuSpecVersionFromPath($path) {
+        Write-Verbose "Using NuSpec from: $path";
+        $path = (Resolve-Path $path | select -ExpandProperty Path);        
+        $data = cat $path;
+        $m = $data | sls -Pattern "^\s*<version>(.*)</version>";
+        if ($m) {
+            $version = $m.Matches[0].Groups[1].Value;
+            return New-Object Version($version);
+        } else {
+            Write-Error "Version info not found in $path";
+        }
+}
+
 function Set-CsAssemblyVersionForPath($path, $version) {
         Write-Verbose "Setting CsAssemblyVersion for: $path";
         Write-Verbose "Version: $version";
