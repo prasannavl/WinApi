@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>WinApi.Universe.Source</id>
-        <version>1.1.1.0</version>
+        <version>2.0.0.0</version>
         <title>WinApi.Universe.Source</title>
         <authors>Prasanna V. Loganathar</authors>
         <owners>Prasanna V. Loganathar</owners>
@@ -18,7 +18,7 @@
         <file src="..\WinApi\**.cs" target="content\WinApi\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
         <file src="..\WinApi.Desktop\**.cs" target="content\WinApi\Desktop\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
         <file src="..\WinApi.Windows.Controls\**.cs" target="content\WinApi\Windows\Controls" exclude="**\obj\**;**\AssemblyInfo.cs"/>
-        <file src="..\Utility\WinApi.Utils\**.cs" target="content\WinApi\Utils\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
-        <file src="..\Utility\WinApi.DxUtils\**.cs" target="content\WinApi\DxUtils\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
+        <file src="..\WinApi.Utils\**.cs" target="content\WinApi\Utils\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
+        <file src="..\WinApi.DxUtils\**.cs" target="content\WinApi\DxUtils\" exclude="**\obj\**;**\AssemblyInfo.cs"/>
     </files>
 </package>
