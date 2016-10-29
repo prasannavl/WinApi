@@ -11,10 +11,10 @@ namespace WinApi.Windows
     ///     Derives from the WindowCore, and provides all the life cycle, and input events.
     ///     It doesn't really handle them in any way but just provides the events with the
     ///     correct decoded parameters. All the processing and decoding are done
-    ///     transparently inside the `MessageDecoder` class.
+    ///     transparently with `Packets`.
     ///     If in certain high-performance requirements, you need only a few events, this
-    ///     can be manually implemented only for the events required using the `MessageDecoder`
-    ///     class. All of the parameter decoding are transparent.
+    ///     can be manually implemented only for the events required using the correspoding
+    ///     Packet structure, and `Packetizer`.
     /// </summary>
     public abstract class EventedWindowCore : WindowCore
     {

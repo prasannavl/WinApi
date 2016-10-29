@@ -32,7 +32,7 @@ namespace WinApi.TestGround
 
         public sealed class MainWindow : EventedWindowCore
         {
-            private const int Iterations = 100
+            private const int Iterations = 100_000;
 
             private readonly HorizontalStretchLayout m_layout = new HorizontalStretchLayout();
             private bool m_done;
@@ -42,7 +42,6 @@ namespace WinApi.TestGround
             private StaticBox m_textBox1;
             private StaticBox m_textBox2;
             private int m_times;
-            _000;
 
             protected override void OnCreate(ref CreateWindowPacket packet)
             {

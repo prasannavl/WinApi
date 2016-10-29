@@ -48,10 +48,15 @@ namespace Sample.SimpleWindow
                 case WM.ERASEBKGND:
                 {
                     // I can even build the loop only on pay-per-use
-                    // basis, when I need it since all the default methods
-                    // are publicly, exposed with the MessageDecoder class.
+                    // basis, when I need it since all the Packets decoding,
+                    // and encoding are cleanly abstracted away into the Packet
+                    // structs itself.
                     //
-                    // MessageDecoder.ProcessEraseBkgnd(ref msg, this.OnEraseBkgnd);
+                    // fixed (var msgPtr = &msg)
+                    // {
+                    //    var packet = new EraseBkgndPacket(msg);
+                    //    // Do anything you want with the packet.
+                    // }
                     // return;
 
                     msg.Result = new IntPtr(1);
