@@ -20,6 +20,14 @@ A simple, direct, ultra-thin CLR library for high-performance Win32 Native Inter
 - <a href="https://www.prasannavl.com/2016/10/introducing-winapi-the-evolution/">Introducing WinApi: The Evolution</a>
 - <a href="https://www.prasannavl.com/2016/10/introducing-winapi-basics/">Introducing WinApi: Basics</a>
 - <a href="https://www.prasannavl.com/2016/10/introducing-winapi-graphics-with-direct3d-d2d1-gdi-opengl-and-skia">Introducing WinApi: Graphics with Direct3D, D2D1, GDI, OpenGL and Skia</a>
+- <a href="https://www.prasannavl.com/2016/10/introducing-winapi-comparing-gc-pressure-and-performance-with-winforms">Introducing WinApi: Comparing GC pressure and performance with WinForms</a>
+
+#### TL;DR: WinForms Comparison
+```
+Direct message loop performance: 20-35% faster.
+Heap allocation: 0MB vs. roughly, 0.75GB / 100k messages.
+Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k messages)
+```
 
 ### Packages
 - **`WinApi`** - The core package that contains all the methods, helpers, and the tiny `WinApi.Windows` namespace.
