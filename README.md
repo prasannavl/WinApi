@@ -16,6 +16,8 @@ A simple, direct, ultra-thin CLR library for high-performance Win32 Native Inter
 **Nuget:**
 > Install-Package WinApi
 
+Fully supports the **CoreCLR.**
+
 ### Articles
 - <a href="https://www.prasannavl.com/2016/10/introducing-winapi-the-evolution/">Introducing WinApi: The Evolution</a>
 - <a href="https://www.prasannavl.com/2016/10/introducing-winapi-basics/">Introducing WinApi: Basics</a>
@@ -38,7 +40,7 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 
 ### Goals
 
-- Every single method is `hand-written from a combination of Windows SDK headers and MSDN`, and tested for correctness.
+- Every single method is `hand-written from a combination of auto-generation from Windows SDK headers and MSDN`, and tested for correctness.
 - Provide both safe (through helpers, and safety wrappers like SafeHandles, CriticalHandles), and unsafe wrappers (pure with minimal performance impact), in a clean way supplemented with inline documentation.
 - Provide a single DLL that can over time, be a direct equivalent of C/C++ `windows.h` header file for the CLR. Other Windows SDK wrappers may, or may not be in fragmented into separate packages.
 - Sufficient base to be able to write custom toolkits over Win32 based on Direct2D, Direct3D or even an external graphics library like Skia, without depending on WPF or WinForms - `Examples of usage with Direct2D, 3D, Skia, OpenGL are all in the samples`.
