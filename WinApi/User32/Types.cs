@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using WinApi.Core;
+using NetCoreEx.Geometry;
 
 namespace WinApi.User32
 {
@@ -21,47 +21,6 @@ namespace WinApi.User32
         public IntPtr LParam;
         public uint Time;
         public Point Point;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Rectangle
-    {
-        public static Rectangle Create(int x, int y, int width, int height)
-        {
-            return new Rectangle(x, y, width + x, height + y);
-        }
-
-        public Rectangle(int left = 0, int top = 0, int right = 0, int bottom = 0)
-        {
-            this.Left = left;
-            this.Top = top;
-            this.Right = right;
-            this.Bottom = bottom;
-        }
-
-        public Rectangle(int width = 0, int height = 0)
-        {
-            this.Left = 0;
-            this.Top = 0;
-            this.Right = width;
-            this.Bottom = height;
-        }
-
-        public Rectangle(int all = 0)
-        {
-            this.Left = this.Right = this.Top = this.Bottom = all;
-        }
-
-        public int Left, Top, Right, Bottom;
-
-        public int Width { get { return this.Right - this.Left; } set { this.Right = this.Left + value; } }
-
-        public int Height { get { return this.Bottom - this.Top; } set { this.Bottom = this.Top + value; } }
-
-        public Size GetSize()
-        {
-            return new Size(this.Width, this.Height);
-        }
     }
 
     [StructLayout(LayoutKind.Sequential)]

@@ -8,11 +8,11 @@ using WinApi.User32;
 using WinApi.UxTheme;
 using System.Linq;
 using WinApi.Desktop;
-using WinApi.Extensions;
 using WinApi.Gdi32;
 using WinApi.User32.Experimental;
 using WinApi.Windows;
 using WinApi.Windows.Helpers;
+using NetCoreEx.Geometry;
 
 namespace Sample.Skia
 {

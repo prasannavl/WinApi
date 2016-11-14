@@ -36,19 +36,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Core\Types.cs" />
     <Compile Include="DwmApi\Helpers.cs" />
     <Compile Include="DwmApi\Methods.cs" />
     <Compile Include="DwmApi\Types.cs" />
-    <Compile Include="Extensions\BinaryExtensions.cs" />
     <Compile Include="Gdi32\CustomTypes.cs" />
     <Compile Include="Gdi32\Helpers.cs" />
     <Compile Include="Gdi32\Methods.cs" />
     <Compile Include="Gdi32\Types.cs" />
-    <Compile Include="Helpers\RectangleHelpers.cs" />
     <Compile Include="Kernel32\Constants.cs" />
     <Compile Include="Kernel32\Helpers.cs" />
     <Compile Include="Kernel32\Methods.cs" />
@@ -80,6 +75,19 @@
     <Compile Include="Windows\PacketTypes.cs" />
     <Compile Include="Windows\WindowCore.cs" />
     <Compile Include="Windows\WindowFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NetCoreEx.BinaryExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetCoreEx.BinaryExtensions.1.0.0\lib\portable46-net451+win81\NetCoreEx.BinaryExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetCoreEx.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetCoreEx.Geometry.1.0.0\lib\portable46-net451+win81\NetCoreEx.Geometry.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

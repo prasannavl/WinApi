@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NetCoreEx.Geometry;
+using System;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Text;
 
 namespace WinApi.Kernel32

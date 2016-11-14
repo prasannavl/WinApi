@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Text;
-using WinApi.Core;
+using NetCoreEx.Geometry;
 
 namespace WinApi.User32
 {

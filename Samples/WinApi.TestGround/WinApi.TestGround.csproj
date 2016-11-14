@@ -87,6 +87,14 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NetCoreEx.BinaryExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetCoreEx.BinaryExtensions.1.0.0\lib\portable46-net451+win81\NetCoreEx.BinaryExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetCoreEx.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetCoreEx.Geometry.1.0.0\lib\portable46-net451+win81\NetCoreEx.Geometry.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>

@@ -1,9 +1,7 @@
 using System;
 using System.Text;
-using WinApi.Core;
-using WinApi.Extensions;
-using WinApi.Helpers;
-using WinApi.Kernel32;
+using NetCoreEx.BinaryExtensions;
+using NetCoreEx.Geometry;
 using WinApi.User32;
 
 namespace WinApi.Windows

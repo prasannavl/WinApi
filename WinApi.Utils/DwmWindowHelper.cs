@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetCoreEx.Geometry;
+using System;
 using System.Diagnostics;
 using WinApi.Core;
 using WinApi.DwmApi;

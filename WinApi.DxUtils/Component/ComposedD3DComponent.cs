@@ -5,6 +5,7 @@ using WinApi.Core;
 using WinApi.DxUtils.Composition;
 using WinApi.DxUtils.Core;
 using WinApi.DxUtils.D3D11;
+using NetCoreEx.Geometry;
 
 namespace WinApi.DxUtils.Component
 {

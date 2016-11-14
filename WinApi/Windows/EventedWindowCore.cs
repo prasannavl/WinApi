@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using WinApi.Core;
-using WinApi.Extensions;
 using WinApi.User32;
 using WinApi.Windows.Helpers;
 

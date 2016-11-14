@@ -4,8 +4,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using NetCoreEx.Geometry;
 using WinApi.Core;
-using WinApi.User32;
 
 // ReSharper disable InconsistentNaming
 

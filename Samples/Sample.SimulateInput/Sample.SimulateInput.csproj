@@ -39,6 +39,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NetCoreEx.BinaryExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetCoreEx.BinaryExtensions.1.0.0\lib\portable46-net451+win81\NetCoreEx.BinaryExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NetCoreEx.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetCoreEx.Geometry.1.0.0\lib\portable46-net451+win81\NetCoreEx.Geometry.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +63,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="app.manifest" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\WinApi.Desktop\WinApi.Desktop.csproj">

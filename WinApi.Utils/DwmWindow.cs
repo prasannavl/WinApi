@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NetCoreEx.Geometry;
+using System;
 using WinApi.Core;
 using WinApi.DwmApi;
-using WinApi.Helpers;
 using WinApi.User32;
 using WinApi.User32.Experimental;
 using WinApi.UxTheme;

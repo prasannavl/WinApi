@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetCoreEx.Geometry;
+using System;
 using System.Text;
 using System.Threading.Tasks;
 using WinApi.Desktop;

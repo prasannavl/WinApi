@@ -8,6 +8,7 @@ using WinApi.DxUtils.D2D1;
 using WinApi.DxUtils.D3D11;
 using Factory = SharpDX.DirectWrite.Factory;
 using FactoryType = SharpDX.DirectWrite.FactoryType;
+using NetCoreEx.Geometry;
 
 namespace WinApi.DxUtils.Component
 {

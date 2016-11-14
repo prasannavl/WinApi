@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetCoreEx.Geometry;
+using System;
 using System.Runtime.ExceptionServices;
 using WinApi.Core;
 using WinApi.Desktop;

@@ -9,6 +9,7 @@ using WinApi.User32.Experimental;
 using WinApi.Utils;
 using WinApi.UxTheme;
 using WinApi.Windows;
+using NetCoreEx.Geometry;
 
 namespace Sample.Skia
 {

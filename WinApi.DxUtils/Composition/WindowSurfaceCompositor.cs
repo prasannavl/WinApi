@@ -5,6 +5,7 @@ using WinApi.Core;
 using WinApi.DxUtils.Core;
 using Device = SharpDX.DirectComposition.Device;
 using Surface = SharpDX.DirectComposition.Surface;
+using NetCoreEx.Geometry;
 
 namespace WinApi.DxUtils.Composition
 {

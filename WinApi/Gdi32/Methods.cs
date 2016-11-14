@@ -1,7 +1,6 @@
-﻿using System;
+﻿using NetCoreEx.Geometry;
+using System;
 using System.Runtime.InteropServices;
-using System.Security;
-using WinApi.Core;
 using WinApi.User32;
 
 namespace WinApi.Gdi32

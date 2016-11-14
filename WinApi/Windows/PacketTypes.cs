@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using WinApi.Core;
-using WinApi.Extensions;
+using NetCoreEx.BinaryExtensions;
+using NetCoreEx.Geometry;
 using WinApi.User32;
 
 namespace WinApi.Windows

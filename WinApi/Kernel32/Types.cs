@@ -8,44 +8,6 @@ using System.Threading.Tasks;
 namespace WinApi.Kernel32
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct PointS
-    {
-        public PointS(short x, short y)
-        {
-            this.X = x;
-            this.Y = y;
-        }
-
-        public short X, Y;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct RectangleS
-    {
-        public RectangleS(short left = 0, short top = 0, short right = 0, short bottom = 0)
-        {
-            this.Left = left;
-            this.Top = top;
-            this.Right = right;
-            this.Bottom = bottom;
-        }
-
-        public short Left, Top, Right, Bottom;
-
-        public short Width
-        {
-            get { return (short) (this.Right - this.Left); }
-            set { this.Right = (short) (this.Left + value); }
-        }
-
-        public short Height
-        {
-            get { return (short) (this.Bottom - this.Top); }
-            set { this.Bottom = (short) (this.Top + value); }
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
     public struct SystemInfo
     {
         public ushort ProcessorArchitecture;

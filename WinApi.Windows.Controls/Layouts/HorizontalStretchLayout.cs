@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using NetCoreEx.Geometry;
+using NetCoreEx.Geometry.Helpers;
+using System.Collections.Generic;
 using WinApi.Core;
-using WinApi.Helpers;
 using WinApi.User32;
 
 namespace WinApi.Windows.Controls.Layouts

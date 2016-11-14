@@ -6,6 +6,7 @@ using SharpDX.Mathematics.Interop;
 using WinApi.Core;
 using WinApi.DxUtils.Core;
 using Device = SharpDX.Direct3D11.Device;
+using NetCoreEx.Geometry;
 
 namespace WinApi.DxUtils.D3D11
 {

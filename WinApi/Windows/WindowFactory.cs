@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using WinApi.Gdi32;
 using WinApi.Kernel32;
 using WinApi.User32;
 
