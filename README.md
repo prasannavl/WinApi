@@ -2,6 +2,14 @@
 
 A simple, direct, ultra-thin CLR library for high-performance Win32 Native Interop
 
+[![NuGet badge](https://buildstats.info/nuget/WinApi)](https://www.nuget.org/packages/WinApi)
+[![NuGet badge](https://buildstats.info/nuget/WinApi.Desktop)](https://www.nuget.org/packages/WinApi.Desktop)
+[![NuGet badge](https://buildstats.info/nuget/WinApi.Utils)](https://www.nuget.org/packages/WinApi.Utils)
+[![NuGet badge](https://buildstats.info/nuget/WinApi.DxUtils)](https://www.nuget.org/packages/WinApi.DxUtils)
+[![NuGet badge](https://buildstats.info/nuget/WinApi.Windows.Controls)](https://www.nuget.org/packages/WinApi.Windows.Controls)
+[![NuGet badge](https://buildstats.info/nuget/WinApi.Source)](https://www.nuget.org/packages/WinApi.Source)
+[![NuGet badge](https://buildstats.info/nuget/WinApi.Universe.Source)](https://www.nuget.org/packages/WinApi.Universe.Source)
+
 ```c#
     static int Main(string[] args)
     {
@@ -15,15 +23,6 @@ A simple, direct, ultra-thin CLR library for high-performance Win32 Native Inter
 
 **Nuget:**
 > Install-Package WinApi
-
-[![NuGet badge](https://buildstats.info/nuget/WinApi)](https://www.nuget.org/packages/WinApi)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.Desktop)](https://www.nuget.org/packages/WinApi.Desktop)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.Utils)](https://www.nuget.org/packages/WinApi.Utils)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.DxUtils)](https://www.nuget.org/packages/WinApi.DxUtils)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.Windows.Controls)](https://www.nuget.org/packages/WinApi.Windows.Controls)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.Source)](https://www.nuget.org/packages/WinApi.Source)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.Universe.Source)](https://www.nuget.org/packages/WinApi.Universe.Source)
-
 
 Fully supports the **CoreCLR.**
 
