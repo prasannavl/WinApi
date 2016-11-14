@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace WinApi.Kernel32
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct ShortPoint
+    public struct PointS
     {
-        public ShortPoint(short x, short y)
+        public PointS(short x, short y)
         {
             this.X = x;
             this.Y = y;
@@ -20,9 +20,9 @@ namespace WinApi.Kernel32
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct ShortRectangle
+    public struct RectangleS
     {
-        public ShortRectangle(short left = 0, short top = 0, short right = 0, short bottom = 0)
+        public RectangleS(short left = 0, short top = 0, short right = 0, short bottom = 0)
         {
             this.Left = left;
             this.Top = top;

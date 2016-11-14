@@ -73,7 +73,7 @@ namespace WinApi.Kernel32
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool SetConsoleWindowInfo(IntPtr hConsoleOutput, int bAbsolute,
-            [In] ref ShortRectangle lpConsoleWindow);
+            [In] ref RectangleS lpConsoleWindow);
 
         #endregion
 
