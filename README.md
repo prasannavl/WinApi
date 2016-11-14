@@ -37,6 +37,8 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 - **`WinApi.Utils`** - Provides utilities like `NativePixelBuffer`, `DwmWindow` etc.
 - **`WinApi.DxUtils`** - Provides DirectX utilities that ease the version management of SharpDX factories, and provides cohesive automatic device management to write DirectX application with just a few lines of code automatically managing device loss, device errors, etc.
 - **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which nothing but a helper to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
+- **`WinApi.Source`** - Source-only package of the `WinApi` library.
+- **`WinApi.Universe.Source`** - A fully inclusive source-only package.
 
 ### Goals
 
