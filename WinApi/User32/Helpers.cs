@@ -211,7 +211,7 @@ namespace WinApi.User32
         {
             var rc = new Rectangle();
             var res = User32Methods.AdjustWindowRectEx(ref rc, dwStyle, hasMenu, dwExStyle);
-            if (res) RectangleHelpers.Subtract(ref lpRect, ref rc);
+            if (res) Rectangle.Subtract(ref lpRect, ref rc);
             return res;
         }
     }

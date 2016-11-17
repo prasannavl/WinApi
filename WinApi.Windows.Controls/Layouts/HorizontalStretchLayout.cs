@@ -30,7 +30,7 @@ namespace WinApi.Windows.Controls.Layouts
             var clientArea = this.ClientArea;
             var margin = this.Margin;
             var clientRect = clientArea;
-            RectangleHelpers.PadInside(ref clientRect, ref margin);
+            Rectangle.Deflate(ref clientRect, ref margin);
             var len = this.Children.Count;
 
             var childSize = clientRect.GetSize();
