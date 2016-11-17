@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using NetCoreEx.Geometry;
-using NetCoreEx.Geometry.Helpers;
 
 namespace WinApi.User32
 {

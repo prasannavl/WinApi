@@ -1,5 +1,4 @@
 ﻿using NetCoreEx.Geometry;
-using NetCoreEx.Geometry.Helpers;
 using System.Collections.Generic;
 using WinApi.Core;
 using WinApi.User32;
@@ -20,7 +19,7 @@ namespace WinApi.Windows.Controls.Layouts
 
         public void SetSize(ref Size size)
         {
-            if (this.ClientArea.GetSize() == size) return;
+            if (this.ClientArea.Size == size) return;
             this.ClientArea.Width = size.Width;
             this.ClientArea.Height = size.Height;
             this.PerformLayout();
@@ -36,7 +35,7 @@ namespace WinApi.Windows.Controls.Layouts
             Rectangle.Deflate(ref clientRect, ref margin);
             var len = this.Children.Count;
 
-            var childSize = clientRect.GetSize();
+            var childSize = clientRect.Size;
             childSize.Width = childSize.Width/len;
 
             var cx = clientRect.Left + innerMargin.Left;

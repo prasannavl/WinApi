@@ -21,7 +21,7 @@ namespace Sample.Skia
             var hwnd = packet.Hwnd;
             Rectangle clientRect;
             User32Methods.GetClientRect(hwnd, out clientRect);
-            var size = clientRect.GetSize();
+            var size = clientRect.Size;
             pixelBuffer.EnsureSize(size.Width, size.Height);
             PaintStruct ps;
             var hdc = User32Methods.BeginPaint(hwnd, out ps);

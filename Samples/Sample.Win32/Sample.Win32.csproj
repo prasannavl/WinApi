@@ -79,8 +79,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NetCoreEx.Geometry, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NetCoreEx.Geometry.1.0.0\lib\portable46-net451+win81\NetCoreEx.Geometry.dll</HintPath>
+    <Reference Include="NetCoreEx.Geometry, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetCoreEx.Geometry.2.1.0\lib\portable46-net451+win81\NetCoreEx.Geometry.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
