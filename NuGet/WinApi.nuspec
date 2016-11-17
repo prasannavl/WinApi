@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>WinApi</id>
-        <version>2.0.1.0</version>
+        <version>3.0.1.0</version>
         <title>WinApi</title>
         <authors>Prasanna V. Loganathar</authors>
         <owners>Prasanna V. Loganathar</owners>
