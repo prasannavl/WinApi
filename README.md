@@ -24,7 +24,7 @@ A simple, direct, ultra-thin CLR library for high-performance Win32 Native Inter
 **Nuget:**
 > Install-Package WinApi
 
-Fully supports the **CoreCLR.**
+Fully supports the **CoreCLR.** Uses C# 7 features like `ref returns` to achieve performance without losing semantic value.
 
 ### Articles
 - <a href="https://www.prasannavl.com/2016/10/introducing-winapi-the-evolution/">Introducing WinApi: The Evolution</a>
