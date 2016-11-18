@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>WinApi.Universe.Source</id>
-        <version>3.0.1.0</version>
+        <version>3.1.0.0</version>
         <title>WinApi.Universe.Source</title>
         <authors>Prasanna V. Loganathar</authors>
         <owners>Prasanna V. Loganathar</owners>
@@ -13,6 +13,9 @@
         <description>A simple, direct, ultra-thin CLR library for high-performance Win32 Native Interop</description>
         <copyright>Copyright © Prasanna V. Loganathar</copyright>
         <tags>win32 native interop</tags>
+        <dependencies>
+            <dependency id="NetCoreEx.Source" version="2.0.0" />
+        </dependencies>
     </metadata>
     <files>
         <file src="..\WinApi\**.cs" target="content\WinApi\" exclude="**\obj\**;**\AssemblyInfo.cs"/>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>WinApi.DxUtils</id>
-        <version>3.0.1.0</version>
+        <version>3.1.0.0</version>
         <title>WinApi.DxUtils</title>
         <authors>Prasanna V. Loganathar</authors>
         <owners>Prasanna V. Loganathar</owners>
@@ -17,7 +17,7 @@
             <dependency id="SharpDX.Direct2D1" version="3.1.1" />
             <dependency id="SharpDX.Direct3D11" version="3.1.1" />
             <dependency id="SharpDX.DirectComposition" version="3.1.1" />
-            <dependency id="WinApi" version="2.0.0" />
+            <dependency id="WinApi" version="3.1.0" />
         </dependencies>
     </metadata>
     <files>

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>WinApi.Windows.Controls</id>
-        <version>3.0.1.0</version>
+        <version>3.1.0.0</version>
         <title>WinApi.Windows.Controls</title>
         <authors>Prasanna V. Loganathar</authors>
         <owners>Prasanna V. Loganathar</owners>
@@ -14,7 +14,7 @@
         <copyright>Copyright © Prasanna V. Loganathar</copyright>
         <tags>win32 native interop</tags>
         <dependencies>
-            <dependency id="WinApi" version="2.0.0" />
+            <dependency id="WinApi" version="3.1.0" />
         </dependencies>
     </metadata>
     <files>
