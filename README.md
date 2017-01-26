@@ -44,7 +44,7 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 - **`WinApi.Desktop`** - Desktop-only helpers.
 - **`WinApi.Utils`** - Provides utilities like `NativePixelBuffer`, `DwmWindow` etc.
 - **`WinApi.DxUtils`** - Provides DirectX utilities that ease the version management of SharpDX factories, and provides cohesive automatic device management to write DirectX application with just a few lines of code automatically managing device loss, device errors, etc.
-- **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which nothing but a helper to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
+- **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which are nothing but helpers to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
 - **`WinApi.Source`** - Source-only package of the `WinApi` library.
 - **`WinApi.Universe.Source`** - A fully inclusive source-only package.
 
@@ -66,7 +66,7 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 ### WinApi.Windows
 
 - Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
-- `Zero GC allocations` on during window messages, and event loop cycles.
+- `Zero GC allocations` during window messages, and event loop cycles.
 - `Fundamental concepts similar to ATL/WTL`, but in a C# idiomatic way.
 - NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
 - NativeWindow can also be extended to work with any subclasses like Button, ComboBox, etc, with the same principles.
