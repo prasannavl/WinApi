@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Configuration;
 using SharpDX;
 using WinApi.DxUtils.Core;
 
@@ -39,6 +38,26 @@ namespace WinApi.DxUtils
         public static bool ShouldResetD2DForError(int code)
         {
             return code == SharpDX.Direct2D1.ResultCode.RecreateTarget.Code;
+        }
+    }
+
+    internal static class VersionHelpers {
+        public static Version GetWindowsVersion()
+        {
+            var desc = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+            if (desc.Contains(" 10."))
+            {
+                return new Version(10, 0, 0, 0);
+            }
+            else if (desc.Contains(" 6.3"))
+            {
+                return new Version(6, 3, 0, 0);
+            }
+            else if (desc.Contains(" 6.2"))
+            {
+                return new Version(6, 2, 0, 0);
+            }
+            return new Version(6, 1, 0, 0);
         }
     }
 }

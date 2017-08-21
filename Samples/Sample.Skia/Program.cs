@@ -52,7 +52,6 @@ namespace Sample.Skia
             var str = "Hello there!";
             var textBounds = new SKRect();
             var m = textPainter.MeasureText(str, ref textBounds);
-
             canvas.DrawText(str, (clientRect.Width - textBounds.Width)/2, (clientRect.Height - textBounds.Height)/2,
                 textPainter);
 

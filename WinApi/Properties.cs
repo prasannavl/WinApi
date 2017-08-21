@@ -9,7 +9,7 @@ namespace WinApi
 {
     internal static class Properties
     {
-#if UNICODE
+#if !ANSI
         public const CharSet BuildCharSet = CharSet.Unicode;
 #else
         public const CharSet BuildCharSet = CharSet.Ansi;

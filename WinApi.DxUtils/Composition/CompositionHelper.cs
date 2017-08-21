@@ -12,7 +12,7 @@ namespace WinApi.DxUtils.Composition
     {
         public static int GetVariantForPlatform(Version platformVersion = null)
         {
-            if (platformVersion == null) platformVersion = Environment.OSVersion.Version;
+            if (platformVersion == null) platformVersion = VersionHelpers.GetWindowsVersion();
             if (platformVersion.Major > 6) return 2;
             if (platformVersion.Major == 6)
             {
@@ -24,7 +24,7 @@ namespace WinApi.DxUtils.Composition
 
         public static ComObject CreateDevice(SharpDX.DXGI.Device dxgiDevice, int variant = -1)
         {
-            if (variant == -1) variant = GetVariantForPlatform();
+            if (variant == -1) variant = 2;
             if (variant > 1) { return new DesktopDevice(dxgiDevice); }
             return variant == 1 ? new Device(dxgiDevice) : null;
         }

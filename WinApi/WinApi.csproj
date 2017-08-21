@@ -1,100 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{47E2F556-BF11-4E35-9C7A-F97E3F402707}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WinApi</RootNamespace>
-    <AssemblyName>WinApi</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile44</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNICODE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD1_4</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;UNICODE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_4</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="Core\Types.cs" />
-    <Compile Include="DwmApi\Helpers.cs" />
-    <Compile Include="DwmApi\Methods.cs" />
-    <Compile Include="DwmApi\Types.cs" />
-    <Compile Include="Gdi32\CustomTypes.cs" />
-    <Compile Include="Gdi32\Helpers.cs" />
-    <Compile Include="Gdi32\Methods.cs" />
-    <Compile Include="Gdi32\Types.cs" />
-    <Compile Include="Kernel32\Constants.cs" />
-    <Compile Include="Kernel32\Helpers.cs" />
-    <Compile Include="Kernel32\Methods.cs" />
-    <Compile Include="Kernel32\Types.cs" />
-    <Compile Include="KernelBase\Methods.cs" />
-    <Compile Include="Properties.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShCore\Methods.cs" />
-    <Compile Include="ShCore\Types.cs" />
-    <Compile Include="User32\Constants.cs" />
-    <Compile Include="User32\Experimental\Helpers.cs" />
-    <Compile Include="User32\Experimental\Methods.cs" />
-    <Compile Include="User32\Experimental\Types.cs" />
-    <Compile Include="User32\Helpers.cs" />
-    <Compile Include="User32\InputConstants.cs" />
-    <Compile Include="User32\InputTypes.cs" />
-    <Compile Include="User32\Methods.cs" />
-    <Compile Include="User32\Types.cs" />
-    <Compile Include="UxTheme\Helpers.cs" />
-    <Compile Include="UxTheme\Methods.cs" />
-    <Compile Include="UxTheme\Types.cs" />
-    <Compile Include="Windows\ConstructionParams.cs" />
-    <Compile Include="Windows\EventedWindowCore.cs" />
-    <Compile Include="Windows\EventLoop.cs" />
-    <Compile Include="Windows\Helpers\MessageBoxHelpers.cs" />
-    <Compile Include="Windows\Helpers\MessageHelpers.cs" />
-    <Compile Include="Windows\NativeWindow.cs" />
-    <Compile Include="Windows\Packetizer.cs" />
-    <Compile Include="Windows\PacketTypes.cs" />
-    <Compile Include="Windows\WindowCore.cs" />
-    <Compile Include="Windows\WindowFactory.cs" />
+    <PackageReference Include="NetCoreEx.BinaryExtensions" Version="3.0.0" />
+    <PackageReference Include="NetCoreEx.Geometry" Version="3.0.0" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="NetCoreEx.BinaryExtensions, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetCoreEx.BinaryExtensions.2.0.0\lib\portable46-net451+win81\NetCoreEx.BinaryExtensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NetCoreEx.Geometry, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NetCoreEx.Geometry.2.1.0\lib\portable46-net451+win81\NetCoreEx.Geometry.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

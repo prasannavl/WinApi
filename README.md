@@ -7,8 +7,6 @@ A simple, direct, ultra-thin CLR library for high-performance Win32 Native Inter
 [![NuGet badge](https://buildstats.info/nuget/WinApi.Utils)](https://www.nuget.org/packages/WinApi.Utils)
 [![NuGet badge](https://buildstats.info/nuget/WinApi.DxUtils)](https://www.nuget.org/packages/WinApi.DxUtils)
 [![NuGet badge](https://buildstats.info/nuget/WinApi.Windows.Controls)](https://www.nuget.org/packages/WinApi.Windows.Controls)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.Source)](https://www.nuget.org/packages/WinApi.Source)
-[![NuGet badge](https://buildstats.info/nuget/WinApi.Universe.Source)](https://www.nuget.org/packages/WinApi.Universe.Source)
 
 ```c#
     static int Main(string[] args)
@@ -44,9 +42,9 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 - **`WinApi.Desktop`** - Desktop-only helpers.
 - **`WinApi.Utils`** - Provides utilities like `NativePixelBuffer`, `DwmWindow` etc.
 - **`WinApi.DxUtils`** - Provides DirectX utilities that ease the version management of SharpDX factories, and provides cohesive automatic device management to write DirectX application with just a few lines of code automatically managing device loss, device errors, etc.
-- **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which are nothing but helpers to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
-- **`WinApi.Source`** - Source-only package of the `WinApi` library.
-- **`WinApi.Universe.Source`** - A fully inclusive source-only package.
+- **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which nothing but a helper to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
+
+**Note:** - Starting from v4, all packages are of minimum `netstandard 1.4`, and `Source` nuget packages are no more. `Desktop` package is `netstandard 2.0`.
 
 ### Goals
 
@@ -66,7 +64,7 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 ### WinApi.Windows
 
 - Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
-- `Zero GC allocations` during window messages, and event loop cycles.
+- `Zero GC allocations` on during window messages, and event loop cycles.
 - `Fundamental concepts similar to ATL/WTL`, but in a C# idiomatic way.
 - NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
 - NativeWindow can also be extended to work with any subclasses like Button, ComboBox, etc, with the same principles.

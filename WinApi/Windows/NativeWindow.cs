@@ -42,8 +42,9 @@ namespace WinApi.Windows
             var size = User32Methods.GetWindowTextLength(this.Handle);
             if (size > 0)
             {
-                var sb = new StringBuilder(size);
-                return User32Methods.GetWindowText(this.Handle, sb, size + 1) > 0 ? sb.ToString() : string.Empty;
+                var len = size + 1;
+                var sb = new StringBuilder(len);
+                return User32Methods.GetWindowText(this.Handle, sb, len) > 0 ? sb.ToString() : string.Empty;
             }
             return string.Empty;
         }
