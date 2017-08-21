@@ -1,11 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
+    <Authors>Prasanna V. Loganathar</Authors>
+    <Company>Prasanna V. Loganathar</Company>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/prasannavl/WinApi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/prasannavl/WinApi</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/prasannavl/WinApi/master/Misc/Logo.png</PackageIconUrl>
+    <Copyright>Copyright © Prasanna V. Loganathar</Copyright>
+    <Description>Utility library that supplements WinApi</Description>
+    <Version>4.0.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>win32 native interop</PackageTags>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\WinApi\WinApi.csproj" />
   </ItemGroup>
-
 </Project>
