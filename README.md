@@ -42,7 +42,7 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 - **`WinApi.Desktop`** - Desktop-only helpers.
 - **`WinApi.Utils`** - Provides utilities like `NativePixelBuffer`, `DwmWindow` etc.
 - **`WinApi.DxUtils`** - Provides DirectX utilities that ease the version management of SharpDX factories, and provides cohesive automatic device management to write DirectX application with just a few lines of code automatically managing device loss, device errors, etc.
-- **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which nothing but a helper to ease direct derivation of EventedWindowCore. This library is currently incomplete, and just provides the implementations to serve as an example.
+- **`WinApi.Windows.Controls`** [Incomplete] - A small library that implements the `EventedWindowCore` for standard classes like `Static`, `Edit` and also provides `Window`, which is just a helper to ease direct derivation of EventedWindowCore. This library is currently incomplete and just provides the implementations to serve as an example.
 
 **Note:** - Starting from v4, all packages are of minimum `netstandard 1.4`, and `Source` nuget packages are no more. `Desktop` package is `netstandard 2.0`.
 
@@ -81,7 +81,7 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 
 ### Why re-invent the wheel?
 
-While there aren't many well defined reliable wrappers, there are a few - my favorite being Pinvoke (https://github.com/AArnott/pinvoke). While `Goals` above, should explain the reasons for re-inventing the wheel, it's also mostly a matter for coding style, and about having the ability to micro-optimizate when you really need to.
+While there aren't many well defined reliable wrappers, there are a few - my favorite being Pinvoke (https://github.com/AArnott/pinvoke). While `Goals` above, should explain the reasons for re-inventing the wheel, it's also mostly a matter for coding style, and about having the ability to micro-optimize when you really need to.
 
 ### Filesystem structure
 ```
