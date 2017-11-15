@@ -46,6 +46,18 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 
 **Note:** - Starting from v4, all packages are of minimum `netstandard 1.4`, and `Source` nuget packages are no more. `Desktop` package is `netstandard 2.0`.
 
+### WinApi.Windows
+
+- Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
+- `Zero GC allocations` on during window messages, and event loop cycles.
+- `Fundamental concepts similar to ATL/WTL`, but in a C# idiomatic way.
+- NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
+- NativeWindow can also be extended to work with any subclasses like Button, ComboBox, etc, with the same principles.
+- A GUI wrapper for Win32 that `can work with CoreCLR`.
+- Can be wrapped over any existing windows, just by using the handle.
+- Strict `pay-only-for-what-you-use model`.
+- Several different event loops depending on the need (For example, `RealtimeEventLoop` for games while the simple `EventLoop` is ideal for normal applications).
+
 ### Goals
 
 - Every single method is `hand-written from a combination of auto-generation from Windows SDK headers and MSDN`, and tested for correctness.
@@ -61,17 +73,6 @@ Memory page faults (Soft): 0.005% - A mere 5k vs. roughly 1 million faults/100k 
 
 - Provide fully documented API (both from headers and MSDN, where-ever applicable) in the releases. Everything should be `IntelliSense capable`. No MSDN round-trips, while doing low level programming with CLR.
 
-### WinApi.Windows
-
-- Ultra-light weight, extremely simple and tiny wrappers that can be used to create, manipulate or use windows extensively.
-- `Zero GC allocations` on during window messages, and event loop cycles.
-- `Fundamental concepts similar to ATL/WTL`, but in a C# idiomatic way.
-- NativeWindow class is a very thin Window class that processes no messages, and provides no extra functionality. Great for using with custom GUI toolkits, DirectX, OpenGL games.
-- NativeWindow can also be extended to work with any subclasses like Button, ComboBox, etc, with the same principles.
-- A GUI wrapper for Win32 that `can work with CoreCLR`.
-- Can be wrapped over any existing windows, just by using the handle.
-- Strict `pay-only-for-what-you-use model`.
-- Several different event loops depending on the need (For example, `RealtimeEventLoop` for games while the simple `EventLoop` is ideal for normal applications).
 
 ### Notes
 
