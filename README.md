@@ -108,3 +108,14 @@ While there aren't many well defined reliable wrappers, there are a few - my fav
 - OpenGL - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.OpenGL
 - Keyboard Input Simulation with `SendInput` helpers - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.SimulateInput
 - Using Skia as the primary 2D drawing backend with `SkiaSharp` - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.Skia
+
+
+Credits
+---
+Thanks to [JetBrains](https://www.jetbrains.com) for the OSS license of Resharper Ultimate.
+
+Proudly developed using:
+
+<a href="https://www.jetbrains.com/resharper/
+"><img src="https://blog.jetbrains.com/wp-content/uploads/2014/04/logo_resharper.gif" alt="Resharper logo" width="100" /></a>
+
