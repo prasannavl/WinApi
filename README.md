@@ -109,6 +109,9 @@ While there aren't many well defined reliable wrappers, there are a few - my fav
 - Keyboard Input Simulation with `SendInput` helpers - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.SimulateInput
 - Using Skia as the primary 2D drawing backend with `SkiaSharp` - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.Skia
 
+#### Projects using `WinApi`:
+
+- [Chromely](https://github.com/mattkol/Chromely) : Build .NET/.NET Core HTML5 desktop apps using cross-platform native GUI API.
 
 Credits
 ---
