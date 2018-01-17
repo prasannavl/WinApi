@@ -1,6 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
+using NetCoreEx.BinaryExtensions;
 using NetCoreEx.Geometry;
+using WinApi.Gdi32;
+using WinApi.Kernel32;
 
 namespace WinApi.User32
 {
@@ -212,6 +219,64 @@ namespace WinApi.User32
             var res = User32Methods.AdjustWindowRectEx(ref rc, dwStyle, hasMenu, dwExStyle);
             if (res) Rectangle.Subtract(ref lpRect, ref rc);
             return res;
+        }
+
+        public static void PasteTextToClipboard(byte[] data)
+        {
+            if (User32Methods.OpenClipboard(new IntPtr()))
+            {
+                var bytesLength = data.Length;
+                var allocatedMemory = Marshal.AllocHGlobal(bytesLength);
+                try
+                {
+                    Marshal.Copy(data, 0, allocatedMemory, bytesLength);
+
+                    var result = User32Methods.SetClipboardData((uint)ClipboardFormat.CF_TEXT, allocatedMemory);
+
+                    if (result == IntPtr.Zero)
+                        throw new Exception(Kernel32Methods.GetLastError().ToString());
+                }
+                finally
+                {
+                    Marshal.FreeHGlobal(allocatedMemory);
+                }
+            }
+            User32Methods.CloseClipboard();
+
+        }
+
+        public static unsafe string GetUnicodeTextFromClipboard()
+        {
+            var outString = default(string);
+            if (User32Methods.OpenClipboard(new IntPtr()))
+            {
+                var data = (char*)User32Methods.GetClipboardData((uint) ClipboardFormat.CF_UNICODETEXT);
+                outString = new string(data);
+            }
+            User32Methods.CloseClipboard();
+            return outString;
+        }
+
+        public static unsafe string GetTextFromClipboard()
+        {
+            var outString = default(string);
+            if (User32Methods.OpenClipboard(new IntPtr()))
+            {
+                var data = (char*)User32Methods.GetClipboardData((uint)ClipboardFormat.CF_TEXT);
+                outString = new string(data);
+            }
+            User32Methods.CloseClipboard();
+            return outString;
+        }
+
+        public static unsafe ClipboardFormat GetPriorityClipboardFormat(ClipboardFormat[] format)
+        {
+            fixed (ClipboardFormat* first = &format[0])
+            {
+                var result = User32Methods.GetPriorityClipboardFormat((IntPtr) first, format.Length);
+
+                return result >= 0 ? (ClipboardFormat) result : ClipboardFormat.CF_ZERO;
+            }
         }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WinApi.Gdi32;
 using WinApi.User32;
 using WinApi.Windows;
@@ -16,6 +12,7 @@ namespace Sample.SimpleWindow
         {
             using (var win = Window.Create<AppWindow>("Hello"))
             {
+                User32Methods.AddClipboardFormatListener(win.Handle);
                 win.Show();
                 return new EventLoop().Run(win);
             }
@@ -62,6 +59,13 @@ namespace Sample.SimpleWindow
                     msg.Result = new IntPtr(1);
                     return;
                 }
+                case WM.CLIPBOARDUPDATE:
+                {
+                    var text = User32Helpers.GetUnicodeTextFromClipboard();
+                    User32Helpers.MessageBox(text, "You've just copied something");
+                    break;
+                }
+
             }
             base.OnMessage(ref msg);
         }

@@ -50,6 +50,8 @@ namespace Sample.Win32
             User32Methods.ShowWindow(hwnd, ShowWindowCommands.SW_SHOWNORMAL);
             User32Methods.UpdateWindow(hwnd);
 
+            User32Methods.AddClipboardFormatListener(hwnd);
+
             Message msg;
             int res;
             while ((res = User32Methods.GetMessage(out msg, IntPtr.Zero, 0, 0)) != 0)
@@ -83,6 +85,13 @@ namespace Sample.Win32
                     User32Methods.EndPaint(hwnd, ref ps);
                     break;
                 }
+                case WM.CLIPBOARDUPDATE:
+                {
+                    var text = User32Helpers.GetUnicodeTextFromClipboard();
+                    User32Helpers.MessageBox(text, "You've just copied something");
+                    break;
+                }
+
             }
             return User32Methods.DefWindowProc(hwnd, umsg, wParam, lParam);
         }
