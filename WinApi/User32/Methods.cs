@@ -828,20 +828,20 @@ namespace WinApi.User32
         /// </summary>
         /// <param name="hWndNewOwner">A handle to the window to be associated with the open clipboard. If this parameter is NULL, the open clipboard is associated with the current task.</param>
         /// <returns>If the function succeeds, the return value is nonzero.</returns>
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool OpenClipboard(IntPtr hWndNewOwner);
         /// <summary>
         /// Closes the clipboard.
         /// </summary>
         /// <returns>If the function succeeds, the return value is nonzero.</returns>
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool CloseClipboard();
         /// <summary>
         /// Retrieves data from the clipboard in a specified format. The clipboard must have been opened previously.
         /// </summary>
         /// <param name="uFormat">A clipboard format.</param>
         /// <returns>If the function succeeds, the return value is the handle to a clipboard object in the specified format.</returns>
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr GetClipboardData(uint uFormat);
 
         /// <summary>
@@ -850,31 +850,29 @@ namespace WinApi.User32
         /// <param name="uFormat">The clipboard format</param>
         /// <param name="handle">A handle to the data in the specified format</param>
         /// <returns>If the function succeeds, the return value is the handle to the data.</returns>
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr SetClipboardData(uint uFormat, IntPtr handle);
 
         /// <summary>
         /// Empties the clipboard and frees handles to data in the clipboard. The function then assigns ownership of the clipboard to the window that currently has the clipboard open.
         /// </summary>
         /// <returns></returns>
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool EmptyClipboard();
 
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
 
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
-        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
 
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
-        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool AddClipboardFormatListener(IntPtr hwnd);
 
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern int GetPriorityClipboardFormat(IntPtr paFormatPriorityList, int cFormats);
 
-        [DllImport(LibraryName, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint EnumClipboardFormats(uint format);
 
         #endregion
