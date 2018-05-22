@@ -5236,10 +5236,12 @@ namespace WinApi.User32
         /// A handle to a bitmap (HBITMAP)
         /// </summary>
         CF_BITMAP = 2u,
+
         /// <summary>
         /// Flag for text-format
         /// </summary>
         CF_TEXT = 1u,
+
         /// <summary>
         /// Flag for unicode-text-format
         /// </summary>
@@ -5250,5 +5252,6 @@ namespace WinApi.User32
         /// </summary>
         CF_ZERO = 0u
     }
+
     #endregion
 }
