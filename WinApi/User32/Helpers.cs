@@ -221,62 +221,111 @@ namespace WinApi.User32
             return res;
         }
 
-        public static void PasteTextToClipboard(byte[] data)
+        #region Clipboard helpers
+
+        /// <summary>
+        /// Will try to set the specified data to the clipboard. 
+        /// If it is a string keep in mind that string should be passed with a null-terminated character.
+        /// </summary>
+        /// <param name="data">The data to set</param>
+        /// <param name="clipboardFormat"></param>
+        /// <returns></returns>
+        public static bool TrySetClipboardData(byte[] data, ClipboardFormat clipboardFormat)
         {
-            if (User32Methods.OpenClipboard(new IntPtr()))
-            {
-                var bytesLength = data.Length;
-                var allocatedMemory = Marshal.AllocHGlobal(bytesLength);
-                try
-                {
-                    Marshal.Copy(data, 0, allocatedMemory, bytesLength);
+            if (!User32Methods.OpenClipboard(new IntPtr())) return false;
 
-                    var result = User32Methods.SetClipboardData((uint)ClipboardFormat.CF_TEXT, allocatedMemory);
+            var bytesLength = data.Length;
+            var allocatedMemory = Marshal.AllocHGlobal(bytesLength);
 
-                    if (result == IntPtr.Zero)
-                        throw new Exception(Kernel32Methods.GetLastError().ToString());
-                }
-                finally
-                {
-                    Marshal.FreeHGlobal(allocatedMemory);
-                }
-            }
+            Marshal.Copy(data, 0, allocatedMemory, bytesLength);
+
+            var result = User32Methods.SetClipboardData((uint)clipboardFormat, allocatedMemory);
+
             User32Methods.CloseClipboard();
 
+            //https://msdn.microsoft.com/en-us/library/windows/desktop/ms649051%28v=vs.85%29.aspx
+            // If SetClipboardData succeeds, the system owns the object identified by the hMem parameter.
+            // The application may not write to or free the data once ownership has been transferred to the system, 
+            //but it can lock and read from the data until the CloseClipboard function is called
+
+            //The allocated memory should not be freed
+
+            return result != IntPtr.Zero;
         }
 
-        public static unsafe string GetUnicodeTextFromClipboard()
+        /// <summary>
+        /// Will try to set the specified text to the clipboard
+        /// </summary>
+        /// <param name="textToSet">The text to set</param>
+        /// <returns></returns>
+        public static bool TrySetClipboardUnicodeText(string textToSet)
         {
-            var outString = default(string);
-            if (User32Methods.OpenClipboard(new IntPtr()))
-            {
-                var data = (char*)User32Methods.GetClipboardData((uint) ClipboardFormat.CF_UNICODETEXT);
-                outString = new string(data);
-            }
+            if (!User32Methods.OpenClipboard(new IntPtr())) return false;
+
+            var ptrToStr = Marshal.StringToHGlobalUni(textToSet);
+
+            var result = User32Methods.SetClipboardData((uint)ClipboardFormat.CF_UNICODETEXT, ptrToStr);
+
             User32Methods.CloseClipboard();
-            return outString;
+
+            //https://msdn.microsoft.com/en-us/library/windows/desktop/ms649051%28v=vs.85%29.aspx
+            // If SetClipboardData succeeds, the system owns the object identified by the hMem parameter.
+            // The application may not write to or free the data once ownership has been transferred to the system, 
+            //but it can lock and read from the data until the CloseClipboard function is called
+
+            //The allocated memory should not be freed
+
+            return result != IntPtr.Zero;
         }
 
-        public static unsafe string GetTextFromClipboard()
+        /// <summary>
+        /// Will try to get a unicode-string from the clipbard
+        /// </summary>
+        /// <param name="outString"></param>
+        /// <returns></returns>
+        public static unsafe bool TryGetUnicodeTextFromClipboard(out string outString)
         {
-            var outString = default(string);
-            if (User32Methods.OpenClipboard(new IntPtr()))
-            {
-                var data = (char*)User32Methods.GetClipboardData((uint)ClipboardFormat.CF_TEXT);
-                outString = new string(data);
-            }
+            outString = string.Empty;
+            if (!User32Methods.OpenClipboard(new IntPtr())) return true;
+
+            var ptrToData = User32Methods.GetClipboardData((uint)ClipboardFormat.CF_UNICODETEXT);
             User32Methods.CloseClipboard();
-            return outString;
+
+            if (ptrToData == IntPtr.Zero)
+                return false;
+
+            outString = new string((char*)ptrToData);
+
+            return true;
         }
 
-        public static unsafe ClipboardFormat GetPriorityClipboardFormat(ClipboardFormat[] format)
+        /// <summary>
+        /// Will try to retrieve the first available clipboard format.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="clipBoardFormat"></param>
+        /// <returns></returns>
+        public static unsafe bool TryGetPriorityClipboardFormat(ClipboardFormat[] format, out ClipboardFormat clipBoardFormat)
         {
+            clipBoardFormat = ClipboardFormat.CF_ZERO;
             fixed (ClipboardFormat* first = &format[0])
             {
-                var result = User32Methods.GetPriorityClipboardFormat((IntPtr) first, format.Length);
+                var result = User32Methods.GetPriorityClipboardFormat((IntPtr)first, format.Length);
 
-                return result >= 0 ? (ClipboardFormat) result : ClipboardFormat.CF_ZERO;
+                //https://msdn.microsoft.com/ru-ru/library/windows/desktop/ms649045(v=vs.85).aspx
+                switch (result)
+                {
+                    case -1:
+                        return false;
+                    case 0:
+                        return true;
+                    default:
+                        clipBoardFormat = (ClipboardFormat)result;
+                        return true;
+                }
             }
         }
+
+        #endregion
     }
 }

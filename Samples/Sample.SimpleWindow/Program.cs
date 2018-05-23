@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using WinApi.Gdi32;
 using WinApi.User32;
 using WinApi.Windows;
@@ -13,6 +14,8 @@ namespace Sample.SimpleWindow
             using (var win = Window.Create<AppWindow>("Hello"))
             {
                 User32Methods.AddClipboardFormatListener(win.Handle);
+                User32Helpers.TrySetClipboardData(Encoding.Unicode.GetBytes("WOWSER"), ClipboardFormat.CF_UNICODETEXT);
+
                 win.Show();
                 return new EventLoop().Run(win);
             }
@@ -61,8 +64,10 @@ namespace Sample.SimpleWindow
                 }
                 case WM.CLIPBOARDUPDATE:
                 {
-                    var text = User32Helpers.GetUnicodeTextFromClipboard();
-                    User32Helpers.MessageBox(text, "You've just copied something");
+                    if (User32Helpers.TryGetUnicodeTextFromClipboard(out var text))
+                        User32Helpers.MessageBox(text, "You've just copied something");
+                    else
+                        User32Helpers.MessageBox("This form can handle only the text-copy event");
                     break;
                 }
 

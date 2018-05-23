@@ -87,11 +87,12 @@ namespace Sample.Win32
                 }
                 case WM.CLIPBOARDUPDATE:
                 {
-                    var text = User32Helpers.GetUnicodeTextFromClipboard();
-                    User32Helpers.MessageBox(text, "You've just copied something");
+                    if (User32Helpers.TryGetUnicodeTextFromClipboard(out var text))
+                        User32Helpers.MessageBox(text, "You've just copied something");
+                    else
+                        User32Helpers.MessageBox("This form can handle only the text-copy event");
                     break;
                 }
-
             }
             return User32Methods.DefWindowProc(hwnd, umsg, wParam, lParam);
         }
