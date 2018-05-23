@@ -283,7 +283,7 @@ namespace WinApi.User32
         /// </summary>
         /// <param name="outString"></param>
         /// <returns></returns>
-        public static unsafe bool TryGetUnicodeTextFromClipboard(out string outString)
+        public static unsafe bool TryGetClipboardUnicodeText(out string outString)
         {
             outString = string.Empty;
             if (!User32Methods.OpenClipboard(new IntPtr())) return true;
