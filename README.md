@@ -109,10 +109,10 @@ While there aren't many well defined reliable wrappers, there are a few - my fav
 - Keyboard Input Simulation with `SendInput` helpers - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.SimulateInput
 - Using Skia as the primary 2D drawing backend with `SkiaSharp` - https://github.com/prasannavl/WinApi/tree/master/Samples/Sample.Skia
 
-Contibutions
+Contributions
 ---
 - Please follow the file structure detailed. 
-- Please avoid batch up PRs. Keep pure Win32 methods, and constants. (Anything that usually belongs in `Methods.cs` or `Constants.cs`)
+- Please avoid batching up commits in your PRs. Keep pure Win32 methods, and constants in a separate one so they can easily be merged. (Anything that usually belongs in `Methods.cs` or `Constants.cs`)
 - Use your discretion to decide whether `Helpers.cs`, and/or any other library features require a separate PR as well. When in doubt, separate it out.
 - Beyond that feel free to follow your usual standards - feature/bugfix, etc based batching.
 
