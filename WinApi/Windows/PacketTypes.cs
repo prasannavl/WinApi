@@ -488,12 +488,12 @@ namespace WinApi.Windows
 
         private unsafe MouseButton GetButton()
         {
-            var id = this.Message->Id;
+            var id = (int) this.Message->Id;
             // Unfortunately, there's no better way than to do a full check here, since the numerical
             // values don't have any valid pattern to do it in one-go.
-            if (id == WM.LBUTTONDBLCLK || id == WM.LBUTTONDOWN || id == WM.LBUTTONUP) { return MouseButton.Left; }
-            if (id == WM.RBUTTONDBLCLK || id == WM.RBUTTONDOWN || id == WM.RBUTTONUP) { return MouseButton.Right; }
-            if (id == WM.MBUTTONDBLCLK || id == WM.MBUTTONDOWN || id == WM.MBUTTONUP) { return MouseButton.Middle; }
+            if((id > 0x200) && (id < 0x204)) { return MouseButton.Left; }
+            if((id > 0x203) && (id < 0x207)) { return MouseButton.Right; }
+            if((id > 0x206) && (id <= 0x209)) { return MouseButton.Middle; }
             return (MouseInputXButtonFlag) this.GetWParamAsInt().HighAsInt() == MouseInputXButtonFlag.XBUTTON1
                 ? MouseButton.XButton1
                 : MouseButton.XButton2;
