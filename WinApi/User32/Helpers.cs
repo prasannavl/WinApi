@@ -241,8 +241,6 @@ namespace WinApi.User32
 
             var result = User32Methods.SetClipboardData((uint)clipboardFormat, allocatedMemory);
 
-            User32Methods.CloseClipboard();
-
             //https://msdn.microsoft.com/en-us/library/windows/desktop/ms649051%28v=vs.85%29.aspx
             // If SetClipboardData succeeds, the system owns the object identified by the hMem parameter.
             // The application may not write to or free the data once ownership has been transferred to the system, 
@@ -250,7 +248,7 @@ namespace WinApi.User32
 
             //The allocated memory should not be freed
 
-            return result != IntPtr.Zero;
+            return User32Methods.CloseClipboard() && result != IntPtr.Zero;
         }
 
         /// <summary>
@@ -266,8 +264,6 @@ namespace WinApi.User32
 
             var result = User32Methods.SetClipboardData((uint)ClipboardFormat.CF_UNICODETEXT, ptrToStr);
 
-            User32Methods.CloseClipboard();
-
             //https://msdn.microsoft.com/en-us/library/windows/desktop/ms649051%28v=vs.85%29.aspx
             // If SetClipboardData succeeds, the system owns the object identified by the hMem parameter.
             // The application may not write to or free the data once ownership has been transferred to the system, 
@@ -275,7 +271,7 @@ namespace WinApi.User32
 
             //The allocated memory should not be freed
 
-            return result != IntPtr.Zero;
+            return User32Methods.CloseClipboard() && result != IntPtr.Zero;
         }
 
         /// <summary>
@@ -289,9 +285,8 @@ namespace WinApi.User32
             if (!User32Methods.OpenClipboard(new IntPtr())) return true;
 
             var ptrToData = User32Methods.GetClipboardData((uint)ClipboardFormat.CF_UNICODETEXT);
-            User32Methods.CloseClipboard();
 
-            if (ptrToData == IntPtr.Zero)
+            if (User32Methods.CloseClipboard() == false || ptrToData == IntPtr.Zero)
                 return false;
 
             outString = new string((char*)ptrToData);
