@@ -9,14 +9,14 @@ A simple, direct, ultra-thin CLR library for high-performance Win32 Native Inter
 [![NuGet badge](https://buildstats.info/nuget/WinApi.Windows.Controls)](https://www.nuget.org/packages/WinApi.Windows.Controls)
 
 ```c#
-    static int Main(string[] args)
+static int Main(string[] args)
+{
+    using (var win = Window.Create(text: "Hello"))
     {
-        using (var win = Window.Create(text: "Hello"))
-        {
-            win.Show();
-            return new EventLoop().Run(win);
-        }
+        win.Show();
+        return new EventLoop().Run(win);
     }
+}
 ```
 
 **Nuget:**
