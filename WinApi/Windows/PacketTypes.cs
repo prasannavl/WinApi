@@ -975,6 +975,36 @@ namespace WinApi.Windows
         public unsafe IntPtr UpdateRegion { get { return this.Message->WParam; } set { this.Message->WParam = value; } }
     }
 
+    public struct NcMouseMovePacket
+    {
+        public unsafe WindowMessage* Message;
+
+        public unsafe NcMouseMovePacket(WindowMessage* message)
+        {
+            this.Message = message;
+        }
+
+        public unsafe IntPtr Hwnd { get { return this.Message->Hwnd; } set { this.Message->Hwnd = value; } }
+
+        public unsafe HitTestResult HitTestValue
+        {
+            get { return (HitTestResult) this.Message->WParam; }
+            set { this.Message->WParam = new IntPtr((int) value); }
+        }
+
+        public unsafe Point Point
+        {
+            get
+            {
+                Point point;
+                this.Message->LParam.BreakSafeInt32To16Signed(out point.Y, out point.X);
+                return point;
+            }
+
+            set { this.Message->LParam = new IntPtr(value.ToInt32()); }
+        }
+    }
+
     public struct NcActivatePacket
     {
         public unsafe WindowMessage* Message;

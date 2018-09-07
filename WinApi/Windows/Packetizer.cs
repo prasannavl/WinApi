@@ -45,6 +45,15 @@ namespace WinApi.Windows
             }
         }
 
+        public static unsafe void ProcessNcMouseMove(ref WindowMessage msg, EventedWindowCore window)
+        {
+            fixed (WindowMessage* ptr = &msg)
+            {
+                var packet = new NcMouseMovePacket(ptr);
+                window.OnNcMouseMove(ref packet);
+            }
+        }
+
         public static unsafe void ProcessGetMinMaxInfo(ref WindowMessage msg, EventedWindowCore window)
         {
             fixed (WindowMessage* ptr = &msg)
