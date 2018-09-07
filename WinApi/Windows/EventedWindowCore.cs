@@ -296,6 +296,11 @@ namespace WinApi.Windows
                         Packetizer.ProcessNcPaint(ref msg, this);
                         break;
                     }
+                case WM.NCMOUSEMOVE:
+                    {
+                        Packetizer.ProcessNcMouseMove(ref msg, this);
+                        break;
+                    }
                 default:
                     {
                         this.OnMessageDefault(ref msg);
@@ -487,6 +492,11 @@ namespace WinApi.Windows
         protected internal virtual void OnNcPaint(ref NcPaintPacket packet)
         {
             unsafe { this.OnMessageDefault(ref ((WindowMessageWrapper*) packet.Message)->Value); }
+        }
+
+        protected internal virtual void OnNcMouseMove(ref NcMouseMovePacket packet)
+        {
+            unsafe { this.OnMessageDefault(ref ((WindowMessageWrapper*)packet.Message)->Value); }
         }
 
         protected internal virtual void OnMouseDoubleClick(ref MouseDoubleClickPacket packet)
