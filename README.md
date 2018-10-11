@@ -131,3 +131,10 @@ Proudly developed using:
 <a href="https://www.jetbrains.com/resharper/
 "><img src="https://blog.jetbrains.com/wp-content/uploads/2014/04/logo_resharper.gif" alt="Resharper logo" width="100" /></a>
 
+Say thanks!
+---
+
+If this project helped you save time, headaches, or push the boundaries of earth, I do appreciate a coffee as thanks! :D 
+You may buy me one here, should you wish:
+
+[![PayPalDonate](https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg)](https://www.paypal.me/prasannavl)
