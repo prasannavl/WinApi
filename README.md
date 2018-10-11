@@ -134,7 +134,6 @@ Proudly developed using:
 Say thanks!
 ---
 
-If this project helped you save time, headaches, or push the boundaries of earth, I do appreciate a coffee as thanks! :D 
-You may buy me one here, should you wish:
+If this project helped you save time, headaches, or push the boundaries of earth, I do appreciate a coffee as thanks! :smiley:. You may buy me one here, should you wish:
 
 [![PayPalDonate](https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg)](https://www.paypal.me/prasannavl)
