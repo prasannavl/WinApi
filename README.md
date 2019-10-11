@@ -139,16 +139,6 @@ This project is licensed under either of the following, at your choice:
 * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or [https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0))
 * GPL 3.0 license ([LICENSE-GPL](LICENSE-GPL) or [https://opensource.org/licenses/GPL-3.0](https://opensource.org/licenses/GPL-3.0))
 
-
-Say thanks!
----
-
-If this project helped you save time, headaches, or push the boundaries of earth, I do appreciate a coffee as thanks! :smiley:. You may buy me one here, should you wish:
-
-[![Donate-PayPal](https://www.paypalobjects.com/webstatic/i/logo/rebrand/ppcom.svg)](https://www.paypal.me/prasannavl)
-
-
-
 Code of Conduct
 ---
 
