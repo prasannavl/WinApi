@@ -13,6 +13,9 @@ namespace WinApi.Kernel32
         public static extern uint GetLastError();
 
         [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern void SetLastError(uint dwErrCode);
+
+        [DllImport(LibraryName, ExactSpelling = true)]
         public static extern bool DisableThreadLibraryCalls(IntPtr hModule);
 
         [DllImport(LibraryName, ExactSpelling = true)]
