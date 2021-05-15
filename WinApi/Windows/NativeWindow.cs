@@ -18,7 +18,26 @@ namespace WinApi.Windows
     /// </summary>
     public class NativeWindow : INativeAttachable
     {
-        public IntPtr Handle { get; protected set; }
+        IntPtr handle;
+
+        public IntPtr Handle
+        {
+            get
+            {
+                return handle;
+            }
+
+            protected set
+            {
+                handle = value;
+                OnHandleChange();
+            }
+        }
+
+        /// <summary>
+        /// This method is invoked when the value of the Handle property has changed.
+        /// </summary>
+        protected virtual void OnHandleChange() { }
 
         void INativeAttachable.Attach(IntPtr handle)
         {
