@@ -188,9 +188,31 @@ namespace WinApi.Kernel32
 
         [DllImport(LibraryName, ExactSpelling = true)]
         public static extern uint GetCurrentProcessorNumber();
-
+        
         #endregion
 
+        #region Debug Functions
+            
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool DebugBreakProcess(IntPtr Process);
+        
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern void DebugBreak();
+        
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool DebugActiveProcess(uint dwProcessId);    
+        
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool DebugActiveProcessStop(uint dwProcessId);        
+        
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool CheckRemoteDebuggerPresent(IntPtr hProcess, out int pbDebuggerPresent); 
+            
+        [DllImport(LibraryName, ExactSpelling = true)]
+        public static extern bool ContinueDebugEvent(uint dwProcessId, uint dwThreadId, uint dwContinueStatus);         
+         
+        #endregion
+        
         #region File Management Functions
 
         [DllImport(LibraryName, CharSet = Properties.BuildCharSet)]
